@@ -1,0 +1,49 @@
+@CHARSET "UTF-8";
+
+header  {
+/*     background-image: -moz-linear-gradient(top, #666666 25%, #333333 75%); */
+    background: -khtml-linear-gradient(left top, #666666 25%, #333333 75%);
+background: -moz-linear-gradient( top left, white, black 25% );
+background: -webkit-linear-gradient( top left, white, black 25% );
+background: -o-linear-gradient( top left, white, black 25% );
+background: -khtml-linear-gradient( top left, white, black 25% );
+background: -ms-linear-gradient( top left, white, black 25% );
+background: linear-gradient( top left, white, black 25% );
+    
+}
+
+#wrapper    {
+/* 	background-color: yellow; */
+}
+
+.tooltip .box   {
+/*     -moz-box-shadow:2px 2px 10px gray inset; */
+    background-image: -khtml-gradient(linear, left top, left bottom, from(#666666)), to(#333333));
+}
+
+footer  {
+/*     background-image: -khtml-gradient(top, circle farthest-corner, #555555 0%, #444444 25%, #333333 75%); */
+/*         background: -khtml-linear-gradient( top left, #555555 0%, #444444 25%, #333333 75%); */
+        background: -khtml-radial-gradient( top 50%, contain, #ffffff, #ffffff 20%, transparent 25% )
+}
+
+#sperre {
+    filter: alpha(opacity=70);
+    opacity: 0.7;
+    -moz-opacity:0.7;
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+}
+
+#message    {
+    opacity: 0.9;
+    -moz-opacity:0.9;
+    filter:alpha(opacity=90);
+}
+
+#progress,
+#work_progress,
+#message    {
+                box-shadow:0px 0px 10px #FFFFFF;
+                -moz-box-shadow: 0 0 10px #FFFFFF;
+                -webkit-box-shadow: 0 0 10px #FFFFFF;
+            }

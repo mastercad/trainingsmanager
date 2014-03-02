@@ -1,0 +1,362 @@
+@charset "UTF-8";
+
+body    {
+    background-color: #FFFFFF;
+    background-image: url('/images/content/statisch/layout/background.gif');
+    background-repeat: repeat-x;
+    background-position: top left;
+    background-attachment: fixed;
+}
+/*
+input,
+textarea    {
+    color: #FEFEFE;
+    background-color: #333333;
+    border-top: 1px solid #111111;
+    border-left: 1px solid #111111;
+    border-right: 1px solid #999999;
+    border-bottom: 1px solid #999999; 
+}
+
+input[type=submit],
+input[type=button],
+input[type=img],
+input[type=reset]   {
+    border-top: 1px solid #999999;
+    border-left: 1px solid #999999;
+    border-right: 1px solid #111111;
+    border-bottom: 1px solid #111111; 
+}
+
+input[type=submit]:active,
+input[type=button]:active,
+input[type=img]:active,
+input[type=reset]:active    {
+    border-top: 1px solid #111111;
+    border-left: 1px solid #111111;
+    border-right: 1px solid #999999;
+    border-bottom: 1px solid #999999; 
+}
+*/
+
+input,
+textarea {
+    border: 1px solid #666666;
+    border-radius: 2px 2px 2px;
+    box-shadow:2px 2px 10px gray inset;
+/*     color: #333333 !important; */
+    background-color: #FFFFFF;
+}
+
+select  {
+    background-color: #FFFFFF;
+    border: 1px solid #666666;
+    border-radius: 2px 2px 2px 2px;
+    box-shadow: 2px 2px 10px gray inset;
+}
+
+header  {
+    background-color: #FFC130;
+    background-image: url('/images/content/statisch/layout/header.jpg');
+    background-position: top left;
+    background-repeat: no-repeat;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+header h1   {
+    color: #CCCCCC;
+    text-shadow: 3px 3px 5px #000000;
+}
+
+footer  {
+    background-color: #FFC130;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    /*background-color: #333333;*/
+    /*border-top: 1px solid #555555;*/
+}
+
+footer p    {   
+    color: #111111;
+}
+
+footer h3   {
+    color: #111111;
+}
+
+footer #second_navi a   {
+    color: #111111;
+}
+
+code    {
+    color: #111111;
+}
+
+pre {
+    color: #111111;
+}
+
+.ueberschrift   {
+    color: #111111;
+    
+}
+
+.name   {
+    color: #111111;
+    
+}
+
+.status-name ,
+.sprache-name   {
+    color: #111111;
+}
+
+.beschreibung-ueberschrift   {
+    color: #111111;
+    
+}
+
+.beschreibung   {
+    color: #111111;
+    
+}
+
+.kurzbeschreibung-ueberschrift{
+    color: #111111;
+    
+}
+
+.kurzbeschreibung   {
+    color: #111111;
+    
+}
+
+.container  {
+}
+
+.trennlinie {
+    border-top:  1px groove #EEEEEE;
+    background-color: transparent;
+}
+
+.fixed_bar  {
+    background-color: #FFFFFF;
+}
+
+.fixed  {
+    border: 1px solid #333333;
+    border-top: 0 none;
+    box-shadow: 1px 1px 5px #000000;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.message    {
+    background-color: #FFFFFF;
+    border: 1px solid #666666;
+    color: #333333;
+}
+
+.message p  {
+    color: #666666;
+}
+
+#progress #progress_percent {
+    color: #111111;
+}
+
+#sperre {
+    background-color: #000000;
+}
+
+.button {
+    background-color: #FFFFFF;
+    color: #333333;
+    border: 1px solid #333333;
+    border-radius: 5px 5px 5px;
+}
+
+.input {
+    background-color: #FFFFFF;
+    color: #333333;
+    border: 1px solid #333333;
+    border-radius: 5px 5px 5px;
+}
+
+.input *    {
+    color: #333333;
+}
+
+.button_ok  {
+    border: 1px solid #666666;
+    color: #333333;
+}
+
+.button_cancel  {
+    border: 1px solid #666666;
+    color: #333333;
+}
+
+/****************************************************************/
+/******************          Navigation         *****************/
+/****************************************************************/
+#navi li.aktiv a    {
+    color: #FFFFFF;
+}
+
+#navi a.tooltip_target  {
+    color: #CCCCCC;
+    text-shadow: 1px 1px 0px #202020, -1px -1px 0px #606060;
+}
+
+#navi a.tooltip_target:hover    {
+    color: #FFFFFF;
+}
+
+#navi a.tooltip_target:active   {
+    color: #000000;
+    text-shadow: -1px -1px #333333, 1px 1px #888888;
+}
+
+#second_navi    {
+    color: #CCCCCC;
+}
+/****************************************************************/
+/******************         Kontaktformular     *****************/
+/****************************************************************/
+
+#dummy_container h3 {
+    color: #333333;
+}
+
+#kontakt_container input,
+#kontakt_container textarea {
+    border: 1px solid #666666;
+    border-radius: 2px 2px 2px;
+    box-shadow:2px 2px 10px gray inset;
+    color: #333333 !important;
+    background-color: #FFFFFF;
+}
+
+#kontakt_container input.pflichtfeld,
+#kontakt_container textarea.pflichtfeld {
+    color: #999999;
+}
+
+#kontakt_container .button  {
+    color: #333333;
+    border-top: 1px solid #999999;
+    border-left: 1px solid #999999;
+    border-right: 1px solid #333333;
+    border-bottom: 1px solid #333333;
+    border-radius: 2px 2px 2px;
+    box-shadow:2px 2px 10px gray inset;
+}
+
+#kontakt_container .button:active   {
+    border-top: 1px solid #333333;
+    border-left: 1px solid #333333;
+    border-right: 1px solid #999999;
+    border-bottom: 1px solid #999999;
+}
+
+.success * {
+    color: green;
+    text-shadow: 1px 1px 4px #111111;
+}
+
+.error * {
+    color: red;
+    text-shadow: 1px 1px 4px #111111;
+}
+
+
+/******************************************************************************/
+/****************               CAD CMS                 ***********************/
+/******************************************************************************/
+.cad-cms-text-hover {
+    background-color: lightblue;
+    opacity: 0.3;
+}
+
+#cad-cms-editor {
+    background-color: #FFFFFF;
+    border: 1px solid #000000;
+    position: absolute;
+    width: 499px;
+    top: -5000px;
+    left: -5000px;
+}
+/******************************************************************************/
+/****************              Kommentare               ***********************/
+/******************************************************************************/
+#kommentar-box input,
+#kommentar-box textarea {
+    border: 1px solid #666666;
+    border-radius: 2px 2px 2px;
+    box-shadow:2px 2px 10px gray inset;
+    color: #333333 !important;
+    background-color: #FFFFFF;
+}
+
+#social-media-shares #count-container ul {
+    background-color: #FFFFFF;
+    box-shadow: 5px 5px 5px #333333;
+}
+
+#social-media-shares #count-container a, 
+#social-media-shares #count-container span{
+    color: #666666;
+}
+
+#social-media-shares #count-container a:hover{
+    color: #111111;
+}
+
+#social-media-shares #summe-count {
+    color: #666666 !important;
+    background-image: url('/images/content/statisch/grafiken/share_button.png');
+    background-repeat: no-repeat;
+    background-position: left center; 
+}
+
+#dummy_container    {
+    background-color: #FFFFFF;
+}
+
+#login-container a,
+#login-container span,
+#login-container #logout-button {
+    color: #CCCCCC;
+    text-shadow: 1px 1px 0px #202020, -1px -1px 0px #606060;
+}
+
+#login-container a:hover,
+#login-container #logout-button:hover    {
+    color: #FFFFFF;
+}
+
+#login-container a:active,
+#login-container #logout-button:active   {
+    color: #000000;
+    text-shadow: -1px -1px #333333, 1px 1px #888888;
+}
+
+#login-container #logout-button {
+	border: 0 none;
+	background-color: transparent;
+	padding: 0;
+	box-shadow: none;
+}
+
+.link {
+	color: #333333;
+	font-weight: bold;
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.link:hover {
+	text-decoration: underline;
+}

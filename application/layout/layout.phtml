@@ -1,0 +1,151 @@
+<?php echo $this->doctype(); ?>
+<html lang="de" <?php if($this->obj_social_media){ echo $this->obj_social_media->getHtmlAttributes();}?> >
+    <head <?php if($this->obj_social_media){ echo $this->obj_social_media->getHeadAttributes();}?> >
+    	<?php echo $this->headMeta();?>
+    	
+        <?php echo $this->headTitle()->setSeparator(' | ')->setAutoEscape(false) ?>
+
+		<?php echo $this->headLink();?>
+		
+		<?php echo $this->headScript();?>
+
+    </head>
+    <body itemscope itemtype="http://schema.org/Article" <?php if($this->obj_social_media){ echo $this->obj_social_media->getBodyAttributes();}?> >
+    <div id="wrapper">
+	    <header>
+	      <div id="login-container">
+<?php
+	$obj_user_identity = Zend_Auth::getInstance()->getIdentity();
+
+	$obj_checkRecht = new Application_Plugin_CheckeRecht();
+	
+	if($obj_user_identity)
+	{
+?>
+			<form method="post" action="" id="login_form">
+				<span>Willkommen, <?php echo ucfirst($obj_user_identity->user_vorname);?> <?php echo ucfirst($obj_user_identity->user_nachname);?></span>
+				<input type="hidden" name="user_logout" id="user_logout" value="1" />
+				<input type="submit" id="logout-button" value=" Logout " />
+			</form>
+<?php
+	}
+	else
+	{
+?>
+	      	<a href="/auth/login" id="login-button" >Login</a>
+<?php
+	} 
+?>
+	      </div>
+            </header>
+        <div class="container">
+            <ul id="navi">
+                <li class="<?php if($this->controller == "handbuch"){ echo 'active';}?>">
+                    <a href="/downloads/Rundumfit.pdf" target="_blank">
+                        Handbuch
+                    </a>
+                </li>
+                <li class="<?php if($this->controller == "muskeln"){ echo 'active';}?>">
+                    <a href="/muskeln/">
+                        Muskeln
+                    </a>
+                    <ul>
+                        <li class="<?php if($this->controller == "muskeln" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/muskeln/">
+                                Übersicht
+                            </a>
+                        </li>
+                        <li class="<?php if($this->controller == "muskeln" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/muskeln/edit/">
+                                Neu anlegen
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="<?php if($this->controller == "muskelgruppen"){ echo 'active';}?>">
+                    <a href="/muskelgruppen/">
+                        Muskelgruppen
+                    </a>
+                    <ul>
+                        <li class="<?php if($this->controller == "muskelgruppen" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/muskelgruppen/">
+                                Übersicht
+                            </a>
+                        </li>
+                        <li class="<?php if($this->controller == "muskelgruppen" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/muskelgruppen/edit/">
+                                Neu anlegen
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="<?php if($this->controller == "geraete"){ echo 'active';}?>">
+                    <a href="/geraete/">
+                        Geräte
+                    </a>
+                    <ul>
+                        <li class="<?php if($this->controller == "geraete" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/geraete/">
+                                Übersicht
+                            </a>
+                        </li>
+                        <li class="<?php if($this->controller == "geraete" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/geraete/edit/">
+                                Neu anlegen
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="<?php if($this->controller == "geraetegruppen"){ echo 'active';}?>">
+                    <a href="/geraetegruppen/">
+                        Gerätegruppen
+                    </a>
+                    <ul>
+                        <li class="<?php if($this->controller == "geraetegruppen" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/geraetegruppen/">
+                                Übersicht
+                            </a>
+                        </li>
+                        <li class="<?php if($this->controller == "geraetegruppen" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/geraetegruppen/edit/">
+                                Neu anlegen
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="<?php if($this->controller == "uebungen"){ echo 'active';}?>">
+                    <a href="/uebungen/">
+                        Übungen
+                    </a>
+                    <ul>
+                        <li class="<?php if($this->controller == "uebungen" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/uebungen">
+                                Übersicht
+                            </a>
+                        </li>
+                        <li class="<?php if($this->controller == "uebungen" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/uebungen/edit/">
+                                Neu anlegen
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <br class="clearfix" />
+            </ul>
+	        <div id="content">
+	         
+	         <?php  echo $this->layout()->content;?>
+	         
+                <br class="clearfix" />      
+	        </div> <!-- /container -->
+                <br class="clearfix" />
+            </div>
+            
+            <footer>
+            	
+            </footer>
+        </div>
+		
+        <?php echo $this->inlineScript(); ?>
+    </body>
+</html>

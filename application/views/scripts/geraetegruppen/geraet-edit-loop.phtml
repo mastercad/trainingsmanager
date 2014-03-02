@@ -1,0 +1,15 @@
+<div class="geraet" style="margin-top: 5px; position: relative; width: 325px;">
+    <input type="text" class="geraet-name"
+           style="float: left;"
+           value="<?php echo $this->geraet_name;?>" 
+           data-geraet-name="<?php echo $this->geraet_name;?>" 
+           data-geraet-id="<?php echo $this->geraet_id;?>" />
+    <div style="float: left; margin-left: 10px;">
+        <img src="/images/content/statisch/grafiken/delete.png" 
+             title="zum entfernen hier klicken!" 
+             style="position: absolute; height: 20px; width: 20px;
+                    right: 5px; top: 0; <?php if($this->geraet_id > 0){ echo ' display: block; ';} else
+                    { echo ' display: none; ';}?>"
+             class="geraet-delete" />
+    <br class="clearfix" />
+</div>

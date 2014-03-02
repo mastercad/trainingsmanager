@@ -1,0 +1,95 @@
+<div>
+    <h3>
+        Gerätegruppe Name:<span
+            class="editable" 
+            style="margin-left: 20px; border-bottom: 1px dotted gray;"
+            id="geraetegruppe_name" data-cad-cms-content-orig="<?php echo base64_encode($this->geraetegruppe_name);?>" 
+		><?php echo $this->geraetegruppe_name;?></span>
+    </h3>
+    
+    <br class="clearfix" />
+    
+    <h3 style="float: left; display: inline; margin-top: 15px;">
+        Geräte:
+    </h3>
+    
+    <img class="geraet-add" src="/images/content/statisch/grafiken/add_normal.png" 
+         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>
+    
+    <br class="clearfix" />
+    
+    <div class="geraetegruppe-geraete"
+         style="margin-top: 5px;">
+        
+    </div>
+    
+    <br class="clearfix" />
+    
+    <input type="hidden" class="id" name="geraetegruppe-id" id="geraetegruppe_id" value="<?php echo $this->geraetegruppe_id;?>" />
+</div>
+
+<br class="clearfix" />
+
+<div class="geraet-vorschlaege" 
+     style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
+            background-color: #FFFFFF; opacity: 0.9; 
+            box-shadow: 5px 5px 5px #111111;" ></div>
+
+<button onclick="save();" 
+        style="margin-top: 15px;"
+        class="button">
+    Speichern
+</button>
+
+<script type="text/javascript">
+	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+	function save()
+	{
+            var b_fehler = false;
+            var a_messages = new Array();
+            
+            if(!trim(jQuery('#geraetegruppe_name').html()).length)
+            {
+                b_fehler = true;
+                a_messages.push({'type': 'fehler', 'message': 'Die Gerätegruppe braucht einen Namen!'});
+            }
+            
+            var elemente_geraete = jQuery('.geraetegruppe-geraete').find('.geraet');
+            var geraete = [];
+
+            for(var i = 0, len = elemente_geraete.length; i < len; i++)
+            {
+                var geraet_id              = jQuery(elemente_geraete[i]).find('.geraet-name').data('geraet-id');
+                var geraet_beanspruchung   = jQuery(elemente_geraete[i]).find('.geraet-beanspruchung').data('geraet-beanspruchung');
+                
+                if(geraet_id)
+                {
+                    geraete.push({'id': geraet_id, 'beanspruchung': geraet_beanspruchung});
+                }
+            }
+            
+            if(!geraete.length)
+            {
+                b_fehler = true;
+                a_messages.push({'type': 'fehler', 'message': 'Es muss mindestens ein Gerät für diese Gerätegruppe vollständig ausgefüllt sein!'});
+            }
+            
+            if(!b_fehler)
+            {
+                jQuery().setEditedElements('geraetegruppe_geraete',   geraete);
+                jQuery().setEditedElements('geraetegruppe_id',        jQuery('#geraetegruppe_id').val());
+                jQuery().setAjax(true);
+
+                CADEditSave();
+            }
+            else
+            {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init(a_messages);
+                obj_cad_messages.open();
+            }
+        }
+        edit_init(false);
+        initGeraetegruppenEdit();
+</script>

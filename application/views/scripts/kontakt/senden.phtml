@@ -1,0 +1,25 @@
+<?php
+	if(isset($this->json_string))
+	{
+		echo $this->json_string;
+	}
+	else if(isset($this->a_messages))
+	{
+?>
+		<div class="container_messages<?php 
+			if(isset($this->b_fehler) && true === $this->b_fehler)
+			{
+				echo ' error';
+			}
+			else if(isset($this->b_fehler) && false === $this->b_fehler)
+			{
+				echo ' success';
+			}?>">
+			<?php echo $this->htmlList($this->a_messages);?>
+		</div>
+<?php
+		if(isset($this->kontaktformular))
+		{
+			echo $this->kontaktformular; 
+		}
+	}

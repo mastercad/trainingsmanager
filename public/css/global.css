@@ -1,0 +1,937 @@
+/* <![CDATA[ */
+@charset "UTF-8";
+
+*  {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-family: courier new;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body	{
+}
+
+ul li
+{
+    margin-top: 5px;
+	margin-left: 20px;
+	list-style-position: inside;
+}
+
+input,
+textarea	{
+	padding: 2px;
+}
+
+input[type=submit],
+input[type=button],
+input[type=img],
+input[type=reset]	{
+}
+
+input[type=submit]:active,
+input[type=button]:active,
+input[type=img]:active,
+input[type=reset]:active	{
+}
+
+header	{
+	position: relative; 
+	width: 980px; 
+	height: 259px;
+}
+
+header h1   {
+	font-family: courier;
+	padding-top: 50px;
+	margin-left: 4%;
+}
+
+footer	{
+    padding: 20px;
+    clear: both;
+    position: relative;
+    background-color: transparent;
+}
+
+footer p	{	
+	font-size: 12px;
+    margin: 10px 0;
+}
+
+footer h3   {
+}
+
+footer #social_media_container  {
+	position: relative;
+	overflow: hidden;
+	height: 35px;
+	margin-top: 10px;
+}
+
+footer #social_media_container #quicklink_facebook  {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+footer #social_media_container #quicklink_github  {
+    position: absolute;
+    top: 0;
+    left: 40px;
+}
+
+footer #social_media_container #quicklink_xing  {
+    position: absolute;
+    top: 0;
+    left: 80px;
+}
+
+footer #social_media_container #quicklink_googleplus  {
+    position: absolute;
+    top: 0;
+    left: 120px;
+}
+
+footer #social_media_container #quicklink_feeds  {
+    position: absolute;
+    top: 0;
+    left: 160px;
+}
+
+footer #second_navi {
+	position: absolute;
+	top: 20px;
+	right: 4%;
+}
+
+code    {
+	white-space: pre-wrap;
+	font-family: courier-new;
+}
+
+pre {
+	white-space: pre-wrap;
+	font-family: courier-new;
+}
+
+label   {
+    clear: left;
+	float: left;
+	display: inline;
+	margin-right: 15px;
+}
+
+input[type=checkbox],
+input[type=radio]{
+	float: left;
+	display: inline;
+}
+
+.voll	{
+	width: 100%;
+}
+
+.drittel	{
+	width: 25%;	
+}
+
+.halb	{
+	width: 45%;
+}
+
+#beta-banner    {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 162px;
+    height: 140px;
+    background-image: url('/images/content/statisch/grafiken/beta.png');
+    background-position: top left;
+    background-repeat: no-repeat;
+}
+
+#wrapper	{
+	position: relative;
+	width: 980px;
+        margin: 15px auto;
+        background-color: transparent;
+}
+
+/****************************************************************/
+/******************          Navigation         *****************/
+/****************************************************************/
+
+#navi   {
+    float: left;
+    display: inline;
+    width: 200px;
+    z-index: 4;
+    /*background-color: #234DA1;*/
+}
+
+#navi li    {
+    padding: 5px;
+    padding-left: 20px;
+    width: 170px;
+    background-color: #234DA1;
+    list-style-type: none;
+    margin: 0;
+}
+
+#navi li ul li   {
+    width: 150px;
+}
+
+#navi li a  {
+    color: #FFFFFF;
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+/*#navi li:hover ul li a,*/
+#navi li.active ul li a, 
+/*#navi li ul li:hover a,*/
+#navi li.active .active a{
+    color: #FFFFFF;
+}
+
+#navi li:hover,
+#navi li.active,
+#navi li.active ul li {
+    background-color: #FFC130;
+}
+
+#navi li ul li:hover    {
+    background-color: #FFC130;
+}
+
+#navi li.active .active{
+    background-color: #234DA1;
+    /*color: #FFFFFF;*/
+}
+
+#navi li ul li:hover a,
+#navi li.active a{
+    color: #234DA1;
+    /*color: #FFFFFF;*/
+}
+
+#navi li ul li:hover a,
+#navi li ul li.active a{
+    /*color: #234DA1;*/
+}
+
+.vorschaubild   {
+	float: left;
+	display: inline;
+	width: 60%;
+	margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.ueberschrift   {
+    font-weight: bold;
+    font-size: 16px;
+	
+}
+
+.name   {
+	font-weight: bold;
+	margin-top: 15px;
+    font-size: 16px;
+	
+}
+
+.status-name ,
+.sprache-name   {
+    margin-top: 5px;
+	font-size: 14px;
+}
+
+.beschreibung-ueberschrift   {
+    margin-top: 15px;
+    font-size: 14px;
+	
+}
+
+.beschreibung   {
+    margin-top: 5px;
+    font-size: 12px;
+    text-align: justify;
+	
+}
+
+.kurzbeschreibung-ueberschrift{
+    margin-top: 15px;
+    font-size: 14px;
+	
+}
+
+.kurzbeschreibung   {
+    margin-top: 15px;
+    font-size: 12px;
+    text-align: justify;
+	
+}
+
+.kurzbeschreibung .vorschaubild {
+	width: 50%;
+}
+
+.miniaturbild-delete   {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 2px;
+    right: 2px; 
+    background-image: url('/images/content/statisch/grafiken/delete.png');
+    background-repeat: no-repeat;
+}
+
+.miniaturbild {
+     position: relative;
+     margin: 5px;
+     float: left;
+     display: inline;
+}
+
+.fix-bild-200   {
+    float: left;
+    display: inline;
+    margin-right: 15px;
+    margin-bottom: 15px;
+    width: 200px;	
+}
+
+#content	{
+    padding: 20px;
+    float: left; 
+    display: inline;
+    width: 740px;
+}
+
+.container    {
+    background-color: #FFFFFF;
+}
+
+.clearfix	{
+	clear: both;
+	height: 0;
+	visibility: hidden;
+	line-height: 0;
+        display: block;
+}
+
+.container_box	{
+	margin: 10px 4%;
+}
+
+.trennlinie {
+    margin: 20px 0;
+    height: 0;
+}
+
+#schnipsel_edit_container.main_kategorie .vorschaubild,
+#projekte_edit_container.main_kategorie .vorschaubild {
+	margin-top: 15px;
+	float: left;
+	display: inline;
+	width: 50%;
+	margin-right: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    overflow: hidden;
+}
+
+#projekt_edit_vorschau_bilder .miniaturbild    {
+	position: relative;
+	margin: 5px;
+	float: left;
+	display: inline;
+}
+
+.fixed_bar  {
+	position: relative;
+    padding-bottom: 0px;
+}
+
+.fixed  {
+	position: fixed;
+	top: 0;
+	z-index: 5;
+	margin: 0 -29px;
+	padding: 20px 28px 25px;
+}
+
+.ignore_overflow {
+	overflow: visible !important;
+}
+
+#sperre	{
+	position: fixed;
+	text-align: left;
+	font-size: 12px;
+	top: 0;
+	left: 0;
+	display: none;
+	height: 100%;
+	width: 100%;
+	z-index: 1000;
+}
+
+#dummy_container	{
+	position: fixed;
+	text-align: left;
+	top: -5000px;
+	left: -5000px;
+	display: none;
+}
+
+.message 	{
+    padding: 10px;
+    padding: 10px;
+/*     position: absolute; */
+    display: none;
+    top: 0;
+    left: 0;
+    z-index: 1002;
+	width: auto;
+/* 	max-width: 33%; */
+	position: fixed;
+	top: 0;
+	left: 0;
+	padding: 20px;
+	padding-right: 30px;
+	font-size: 12px;
+}
+
+.message p	{
+	text-align: left;
+	font-weight: bold;
+	font-size: 12px;
+}
+
+.message img	{
+	clear: both;
+	float: left;
+	display: inline;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+.message .container {
+	float: left;
+	display: inline;
+}
+
+.button {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.input {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.input *    {
+    font-size: 12px;
+    font-weight: bold;
+    margin: 5px;
+}
+
+.button_close 	{
+	position: absolute;
+	top: 1px;
+	right: 1px;
+	width: 30px;
+	height: 30px;
+	background-image: url(/images/content/statisch/grafiken/close_button.png);
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+
+.confirm_container 	{
+	clear: both;
+	display: inline-block;
+	width: 100%;
+	margin: 15px auto;
+	text-align: center;
+}
+
+.ok_container 	{
+	clear: both;
+	display: inline;
+	display: table;
+	width: 100%;
+	margin: 15px auto;
+	text-align: center;
+}
+
+.button_ok 	{
+	display: inline-block;
+	padding: 5px 20px;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: bold;
+	margin: 0px auto;
+}
+
+.button_cancel 	{
+	display: inline-block;
+	padding: 5px 20px;
+	margin-left: 10px;
+	padding: 5px 20px;
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: bold;
+	width: auto;
+}
+
+/****************************************************************/
+/******************			 SITEMAP			*****************/
+/****************************************************************/
+#sitemap	{
+	margin: 20px 4%;
+}
+
+#sitemap li {
+	margin-top: 15px;
+}
+
+#sitemap li ul li	{
+	margin-top: 5px;
+}
+/****************************************************************/
+/******************			Kontaktformular		*****************/
+/****************************************************************/
+
+#dummy_container	{
+	padding: 10px;
+}
+
+#kontakt_container input,
+#kontakt_container textarea	{
+	padding: 2px;
+	margin: 5px;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+#dummy_container h3	{
+	margin-right: 30px;
+}
+
+#kontakt_container input.pflichtfeld,
+#kontakt_container textarea.pflichtfeld	{
+	font-weight: bold;
+}
+
+#kontakt_container .button	{
+	margin: 5px;
+	padding: 2px;
+	font-size: 12px;
+	cursor: pointer;
+}
+
+#kontakt_container textarea	{
+	width: 295px;
+	height: 175px;
+}
+
+/*******************************************************************************
+***************             PROGRESS                            ****************
+*******************************************************************************/
+
+#progress,
+#work_progress,
+#message    {
+                padding: 10px;
+/*                 zoom: 1; */
+                padding: 10px;
+                position: absolute;
+                display: none;
+                top: 0;
+                left: 0;
+                z-index: 1002;
+            }
+
+#progress #progressbarWrapper   {
+                                    position: relative;
+                                }
+
+#progress #progressbar  {
+                            margin-top: 10px;
+                            height: 20px;
+                            background-image: url(/images/content/statisch/grafiken/progressbar_bg.jpg);
+                            background-repeat: repeat-x;
+                        }
+
+#progress #progress_percent {
+                                position: absolute;
+                                top: 0;
+                                left: 0;
+                                text-align: center;
+                                width: 100%;
+                                height: 10px;
+                                font-size: 11px;
+                                font-weight: bold;
+                                padding: 5px 0;
+                            }
+
+#ladebalken     {
+                    position: fixed;
+                    top: 0px;
+                    left: 0px;
+                    height: 106px;
+                    width: 106px;
+                    background-image: url('/images/content/statisch/grafiken/ajax-loader.gif');
+                    display: none;
+                    background-repeat: no-repeat;
+                    z-index: 1001;
+                }
+
+#loader {
+	position: absolute;
+	top: -5000px;
+	left: -5000px;
+	width: 31px;
+	height: 31px;
+	display: none;
+}
+
+.container_messages {
+	margin: 20px 0;
+}
+/******************************************************************************/
+/****************       Drag & Drop Upload Target       ***********************/
+/******************************************************************************/
+
+
+/******************************************************************************/
+/****************               CAD CMS                 ***********************/
+/******************************************************************************/
+
+.cad-cms-edit-image {
+	position: absolute;
+	top: 2px;
+	right: 2px;
+	display: none;
+}
+
+#cad-cms-editor {
+    position: absolute;
+    width: 499px;
+    top: -5000px;
+    left: -5000px;
+}
+
+#cad-cms-editor #cad-cms-textfeld    {
+	padding: 5px;
+	width: 489px;
+	height: 200px;
+}
+
+#cad-cms-editor .cad-cms-leiste {
+	position: relative;
+	height: 38px;
+	width: 499px;
+	background-image: url('/images/content/statisch/cms/editor_bg.png');
+	background-repeat: no-repeat;
+	cursor: move;
+}
+
+#cad-cms-editor .cad-cms-button {
+/* 	position: absolute; */
+	width: 42px;
+	height: 30px;
+    margin-top: 4px;
+    margin-left: 2px;
+	float: left;
+	display: inline;
+	background-position: left -60px;
+	border: 0 none;
+    background-repeat: no-repeat;
+}
+
+#cad-cms-editor .cad-cms-button-hover   {
+    background-position: left -90px !important;
+}
+
+#cad-cms-editor .cad-cms-button-active   {
+    background-position: left -30px !important;
+}
+
+#cad-cms-editor #cad-cms-button-save   {
+    margin-left: 10px;
+    background-image: url('/images/content/statisch/cms/icons_save.png');
+}
+
+#cad-cms-editor #cad-cms-button-bold   {
+	margin-left: 10px;
+    background-image: url('/images/content/statisch/cms/icons_bold.png');
+}
+
+#cad-cms-editor #cad-cms-button-italic   {
+    background-image: url('/images/content/statisch/cms/icons_italic.png');
+}
+
+#cad-cms-editor #cad-cms-button-underline   {
+    background-image: url('/images/content/statisch/cms/icons_underline.png');
+}
+
+#cad-cms-editor #cad-cms-button-left   {
+    background-image: url('/images/content/statisch/cms/icons_left.png');
+}
+
+#cad-cms-editor #cad-cms-button-center   {
+    background-image: url('/images/content/statisch/cms/icons_center.png');
+}
+
+#cad-cms-editor #cad-cms-button-right   {
+    background-image: url('/images/content/statisch/cms/icons_right.png');
+}
+
+#cad-cms-editor #cad-cms-button-block   {
+    background-image: url('/images/content/statisch/cms/icons_block.png');
+}
+
+#cad-cms-editor #cad-cms-button-help   {
+	float: right;
+    background-image: url('/images/content/statisch/cms/icons_help.png');
+    cursor: help;
+}
+
+#cad-cms-editor #cad-cms-button-close   {
+    float: right;
+    margin-right: 10px;
+    background-image: url('/images/content/statisch/cms/icons_close.png');
+}
+
+#cad-cms-editor #cad-cms-button-font-size   {
+    margin-left: 10px;
+    background-image: url('/images/content/statisch/cms/icons_font_size.png');
+}
+
+#cad-cms-editor #cad-cms-button-font-color   {
+    background-image: url('/images/content/statisch/cms/icons_font_color.png');
+}
+
+#cad-cms-editor #cad-cms-button-background-color   {
+    background-image: url('/images/content/statisch/cms/icons_background_color.png');
+}
+
+#cad-cms-editor #cad-cms-button-ordered-list   {
+    background-image: url('/images/content/statisch/cms/icons_ordered_list.png');
+}
+
+#cad-cms-editor #cad-cms-button-unordered-list   {
+    background-image: url('/images/content/statisch/cms/icons_unordered_list.png');
+}
+
+#cad-cms-editor #cad-cms-button-image   {
+    background-image: url('/images/content/statisch/cms/icons_image.png');
+}
+
+#cad-cms-editor #cad-cms-button-url   {
+    background-image: url('/images/content/statisch/cms/icons_url.png');
+}
+
+#cad-cms-editor #cad-cms-button-insert-tab   {
+    background-image: url('/images/content/statisch/cms/icons_insert_tab.png');
+}
+
+#cad-cms-editor #cad-cms-button-delete-tab   {
+    background-image: url('/images/content/statisch/cms/icons_delete_tab.png');
+}
+
+/* klasse zum aufblähen leerer edit felder, um sie auch klickbar zu machen */
+.cad-cms-dummy-blaeher  {
+	padding: 20px;
+}
+
+#upload_target  {
+	height: 0;
+	width: 0;
+	display: none;
+	margin: 0;
+	padding: 0;
+}
+
+.cad-cms-image-dialog-marked    {
+	outline: 2px solid green;
+}
+
+.ui-draggable-dragging  {
+    cursor: move;
+}
+/******************************************************************************/
+/****************              Kommentare               ***********************/
+/******************************************************************************/
+#kommentar-box input,
+#kommentar-box textarea {
+    padding: 2px;
+    margin: 5px;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+#kommentar-box input    {
+	
+}
+
+#kommentar-box textarea {
+    width: 100%;
+    height: 150px;
+	
+}
+
+.kommentare-quicklink   {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.kommentar-text {
+	margin-top: 15px;
+}
+
+/******************************************************************************/
+/****************             Social Media              ***********************/
+/******************************************************************************/
+#social-media-shares    {
+	display: inline-block;
+}
+#social-media-shares li
+{
+	list-style-type: none;
+}
+
+#social-media-shares #count-container   {
+	position: relative;
+	display: inline-block;
+}
+
+#social-media-shares #count-container ul {
+    width: 200px;
+	display: none;
+    position: absolute;
+    z-index: 5;
+}
+
+#social-media-shares #count-container a, 
+#social-media-shares #count-container span  {
+	display: inline-block;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#social-media-shares #count-container a {
+    text-decoration: none;
+}
+
+#social-media-shares #count-container span
+{
+	width: 55px;
+	text-align: right;
+    display: inline-block;
+}
+
+#social-media-shares #summe-count {
+    padding-left: 40px !important;
+    display: inline-block;
+    height: 30px;
+}
+
+#social-media-shares #count-container ul li
+{
+    margin-left: 0;
+}
+
+#social-media-shares #count-container ul li a
+{
+    width: 100px;
+    margin-left: 0;
+}
+
+/******************************************************************************/
+/****************                  Blog                 ***********************/
+/******************************************************************************/
+.tag-cloud  {
+	text-align: justify;
+	vertical-align: baseline;
+}
+
+.tag-cloud a    {
+    text-decoration: none;
+}
+.tag-cloud a:hover    {
+    text-decoration: underline;
+}
+
+/******************************************************************************/
+/****************                  Feed                 ***********************/
+/******************************************************************************/
+.image-feed {
+	width: 200px;
+	float: left;
+	display: inline;
+	margin-right: 5px;
+	margin-bottom: 5px;
+}
+#login-container    {
+    position: absolute;
+    right: 4%;
+    top: 20px;
+	
+}
+
+#login-container a,
+#login-container span,
+#login-container #logout-button {
+/* 	float: left; */
+/* 	display: inline; */
+	margin-left: 10px;
+    font-size: 1em;
+    font-family: "courier new";
+    font-weight: bold;
+}
+
+#login-container a  {
+    text-decoration: none;
+}
+
+
+.edit-button {
+	position: absolute;
+	top: 5px;
+	right: 55px;
+    font-size: 0;
+    font-color: transparent;
+    width: 19px;
+    height: 19px;
+    background-image: url('/images/content/statisch/grafiken/edit.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+}
+.delete-button {
+    position: absolute;
+    top: 5px;
+    right: 30px;
+    font-size: 0;
+    font-color: transparent;
+    width: 19px;
+    height: 19px;
+    background-image: url('/images/content/statisch/grafiken/delete.png');
+    background-repeat: no-repeat;
+    background-position: top left;
+}
+
+
+/* ]]> */

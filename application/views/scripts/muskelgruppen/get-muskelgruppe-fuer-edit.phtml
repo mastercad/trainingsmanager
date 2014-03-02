@@ -1,0 +1,25 @@
+<?php
+    if(isset($this->json_string))
+    {
+        echo $this->json_string;
+    }
+    else if(is_array($this->a_uebung_muskelgruppen) &&
+            count($this->a_uebung_muskelgruppen) > 0)
+    {
+        foreach($this->a_uebung_muskelgruppen as $a_uebung_muskelgruppe)
+        {
+            $this->assign($a_uebung_muskelgruppe);
+            echo $this->render('muskelgruppen/muskelgruppe-loop.phtml');
+        }
+    }
+    
+    $this->assign('uebung_muskelgruppe_beanspruchung', '');
+    $this->assign('muskelgruppe_name', '');
+    $this->assign('muskelgruppe_id', '');
+    $this->assign('uebung_muskelgruppe_id', '');
+    echo $this->render('muskelgruppen/muskelgruppe-edit-loop.phtml');
+?>
+
+<script type="text/javascript">
+    initMuskelgruppenEdit();
+</script>

@@ -1,0 +1,64 @@
+<?php
+    if(is_array($this->a_geraete))
+    {
+        foreach($this->a_geraete as $a_geraet)
+        {
+            $this->assign($a_geraet);
+            echo $this->render('geraete/geraet-loop.phtml');
+        }
+    }
+?>
+
+<script type="text/javascript">
+    jQuery('document').ready(function()
+    {
+        jQuery('.geraet-delete').unbind('click');
+        jQuery('.geraet-delete').bind('click', function()
+        {
+            if(confirm('Diesen Geraet wirklich löschen?\n\nAchtung:\n' +
+                       'Wenn Sie diesen Geraet löschen, werden auch alle ' +
+                       'mit Ihm verknüpften Geraetgruppen und Übungen gelöscht!'))
+            {
+                jQuery(this).loescheGeraet();
+            }
+        });
+        
+        jQuery.fn.loescheGeraet = function()
+        {
+            var i_geraet_id = jQuery(this).data('geraet-id');
+            var that = this;
+            
+            if(isNumber(i_geraet_id) &&
+               0 < i_geraet_id)
+            {
+                var url = "/geraete/loesche-geraet/";
+                var obj_params = {'id': i_geraet_id, 'ajax': true};
+                
+                jQuery.post(url, obj_params, function(response)
+                {
+                    try
+                    {
+                        response = JSON.parse(response);
+                        var cad_obj_messages = new CAD.Message();
+                        cad_obj_messages.init(response);
+                        
+                        if(cad_obj_messages.open())
+                        {
+                            jQuery(that).parent().fadeOut();
+                        }
+                    }
+                    catch(e)
+                    {
+                        alert(response);
+                    }
+                });
+            }
+            else
+            {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init([{'type': 'fehler', 'message': 'Fehler bei der Übergabe!<br /><br />Ich kann diesen Geraet leider nicht löschen!'}]);
+                obj_cad_messages.open();
+            }
+        };
+    });
+</script>

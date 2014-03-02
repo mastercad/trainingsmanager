@@ -1,0 +1,22 @@
+<div style="clear: both; margin-top: 15px; position: relative; width: 300px;">
+    <a href="/geraetegruppen/edit/id/<?php echo $this->geraetegruppe_id;?>" 
+       style="text-decoration: none;">
+        <?php echo $this->geraetegruppe_name;?>
+    </a>
+    <br class="clearfix" />
+<?php
+    if(is_array($this->a_geraetegruppe_geraete))
+    {
+        foreach($this->a_geraetegruppe_geraete as $a_geraetegruppe_geraet)
+        {
+            $this->assign($a_geraetegruppe_geraet);
+            echo $this->render('geraetegruppen/geraetegruppe-geraet-loop.phtml');
+        }
+    }
+?>
+    <img src="/images/content/statisch/grafiken/delete.png"
+         class="geraetegruppe-delete"
+         data-geraetegruppe-id="<?php echo $this->geraetegruppe_id;?>"
+         style="position: absolute; top: 0; right: 0;" />
+    <br class="clearfix" />
+</div>

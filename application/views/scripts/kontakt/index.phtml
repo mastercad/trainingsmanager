@@ -1,0 +1,38 @@
+<?php
+	if(isset($this->b_ajax))
+	{
+?>
+	<h3>
+		Ihre Nachricht an mich:
+	</h3>
+	<form id="kontakt_container">
+		<input type="text" data-default="Ihr Name" name="kontaktformular_name" id="name" />
+		<br />
+		<input type="text" data-default="Ihre E-Mail" name="kontaktformular_email" id="email" />
+		<br />
+		<textarea data-default="Ihre Nachricht" name="nachricht" id="nachricht"></textarea>
+		<br />
+		<span class="button" onclick="senden();">
+			Senden
+		</span>
+	</form>
+<?php 
+	}
+	else
+	{
+?>
+	<h3>
+		Ihre Nachricht an mich:
+	</h3>
+	<form id="kontakt_container" method="post" action="/kontakt/senden">
+		<input type="text" data-default="Ihr Name" name="kontaktformular_name" id="name" value="<?php if(isset($this->kontaktformular_name)){echo $this->kontaktformular_name;}?>" />
+		<br />
+		<input type="text" data-default="Ihre E-Mail" name="kontaktformular_email" id="email" value="<?php if(isset($this->kontaktformular_email)){echo $this->kontaktformular_email;}?>" />
+		<br />
+		<textarea data-default="Ihre Nachricht" name="kontaktformular_nachricht" id="nachricht"><?php if(isset($this->kontaktformular_nachricht)){echo $this->kontaktformular_nachricht;}?></textarea>
+		<br />
+		<input type="submit" class="button" name="kontaktformular_senden" value=" Senden " />
+	</form>
+<?php 
+	}
+?>

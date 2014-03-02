@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+ <html>
+
+ <head>
+
+ <title>Seitentitel </title>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.css">
+ <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js"> </script>
+ <script type="text/javascript" src="http://code.jquery.com/mobile/1.0b2/jquery.mobile-1.0b2.min.js"> </script>
+
+ </head>
+	 <body>
+	 <div data-role="page" id="seite1" data-theme="a">
+	         <div data-role="header"> <h1>test </h1> </div>
+	         <div data-role="content"> <h3>TEST </h3>
+	             <p>
+	             	<a href="#dialog" data-rel="dialog" data-transition="pop" data-role="button">
+	             		Dialogbox 
+	             	</a>
+	              </p>
+	         </div>
+	         <div data-role="footer"> <div data-role="navbar">
+	         <ul>
+	                 <li> <a href="#seite1" data-iconpos="top" data-icon="home">Seite1 </a> </li>
+	                 <li> <a href="#seite2" data-iconpos="top" data-icon="home">Seite2 </a> </li>
+	         </ul>
+	         </div> </div>
+	 </div>
+	 <div data-role="page" id="seite2" data-theme="a">
+	         <div data-role="header"> <h1>test2 </h1> </div>
+	         <div data-role="content"> <h3>TEST </h3> </div>
+	         <div data-role="footer">
+	         <div data-role="navbar">
+	         <ul>
+	                 <li> <a href="#seite1" data-iconpos="top" data-icon="home">Seite1 </a> </li>
+	                 <li> <a href="#seite2" data-iconpos="top" data-icon="home">Seite2 </a> </li>
+	         </ul>
+	         </div>
+	         </div>
+	 </div>
+	     <div data-role="page" id="dialog" data-theme="a">
+	         <div data-role="header"> <h2>Dialogbox </h2> </div>
+	         <div data-role="content"> <p>Inhalt des Dialoges </p>
+	             <a href="#seite1" data-rel="back" data-role="button">Schliessen </a>
+	         </div>
+	     </div>
+	 </body>
+ </html>

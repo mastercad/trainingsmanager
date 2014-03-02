@@ -1,0 +1,64 @@
+<?php
+    if(is_array($this->a_muskelgruppen))
+    {
+        foreach($this->a_muskelgruppen as $a_muskelgruppe)
+        {
+            $this->assign($a_muskelgruppe);
+            echo $this->render('muskelgruppen/muskelgruppe-loop.phtml');
+        }
+    }
+?>
+
+<script type="text/javascript">
+    jQuery('document').ready(function()
+    {
+        jQuery('.muskelgruppe-delete').unbind('click');
+        jQuery('.muskelgruppe-delete').bind('click', function()
+        {
+            if(confirm('Diese Muskelgruppe wirklich löschen?\n\nAchtung:\n' +
+                       'Wenn Sie diese Muskelgruppe löschen, werden auch alle ' +
+                       'mit Ihr verknüpften Übungen gelöscht!'))
+            {
+                jQuery(this).loescheMuskelgruppe();
+            }
+        });
+        
+        jQuery.fn.loescheMuskelgruppe = function()
+        {
+            var i_muskelgruppe_id = jQuery(this).data('muskelgruppe-id');
+            var that = this;
+            
+            if(isNumber(i_muskelgruppe_id) &&
+               0 < i_muskelgruppe_id)
+            {
+                var url = "/muskelgruppen/loesche-muskelgruppe/";
+                var obj_params = {'id': i_muskelgruppe_id, 'ajax': true};
+                
+                jQuery.post(url, obj_params, function(response)
+                {
+                    try
+                    {
+                        response = JSON.parse(response);
+                        var cad_obj_messages = new CAD.Message();
+                        cad_obj_messages.init(response);
+                        
+                        if(cad_obj_messages.open())
+                        {
+                            jQuery(that).parent().fadeOut();
+                        }
+                    }
+                    catch(e)
+                    {
+                        alert(response);
+                    }
+                });
+            }
+            else
+            {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init([{'type': 'fehler', 'message': 'Fehler bei der Übergabe!<br /><br />Ich kann diese Muskelgruppe leider nicht löschen!'}]);
+                obj_cad_messages.open();
+            }
+        };
+    });
+</script>

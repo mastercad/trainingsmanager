@@ -1,0 +1,31 @@
+@CHARSET "UTF-8";
+
+header  {
+/*     background-image: -o-linear-gradient(top, #666666 25%, #333333 75%); */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#666666', endColorstr='#333333', GradientType=0)";
+    
+}
+
+footer  {
+/*     background-image: -o-linear-gradient(top, #555555 0%, #444444 25%, #333333 75%); */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#555555', endColorstr='#333333', GradientType=1)";
+    
+}
+
+#sperre {
+    -ms-filter:progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+}
+
+#message    {
+    opacity: 0.9;
+    -moz-opacity:0.9;
+    filter:alpha(opacity=90);
+}
+
+#progress,
+#work_progress,
+#message    {
+                box-shadow:0px 0px 10px #FFFFFF;
+                -moz-box-shadow: 0 0 10px #FFFFFF;
+                -webkit-box-shadow: 0 0 10px #FFFFFF;
+            }

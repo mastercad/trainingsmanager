@@ -1,0 +1,289 @@
+<?php
+    $obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace(); 
+    $bild_pfad = '/images/content/dynamisch/uebungen/' . $this->uebung_id . '/';
+    $bild_temp_pfad = '/tmp/uebungen/';
+    $obj_cad_filter_ubb_replace->setBilderPfad($bild_pfad);
+    $obj_cad_filter_ubb_replace->setTempBilderPfad($bild_temp_pfad);
+    $vorschaubild = '/images/content/statisch/grafiken/kein_bild.png';
+    
+    if(strlen(trim($this->uebung_vorschaubild)) > 0 &&
+       file_exists(getcwd() . $bild_pfad . $this->uebung_vorschaubild) &&
+       is_file(getcwd() . $bild_pfad . $this->uebung_vorschaubild) &&
+       is_readable(getcwd() . $bild_pfad . $this->uebung_vorschaubild))
+    {
+        $vorschaubild = $bild_pfad . $this->uebung_vorschaubild;
+    }
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+?>
+<div>
+    <h3>
+        Übung Name:<span 
+            class="editable" 
+            style="margin-left: 20px; border-bottom: 1px dotted gray;"
+            id="uebung_name" data-cad-cms-content-orig="<?php echo base64_encode($this->uebung_name);?>" 
+		><?php echo $obj_cad_filter_ubb_replace->filter($this->uebung_name);?></span>
+    </h3>
+    <img src="<?php echo $vorschaubild?>"
+        class="editable vorschaubild" 
+        alt="Vorschaubild"
+        style="margin-top: 15px;"
+        title="klicken Sie hier, um ein Bild hochzuladen" 
+        id="uebung_vorschaubild" />
+    
+    <br class="clearfix" />
+    
+    <h3 class=""
+        style="margin-top: 15px;">
+        Beschreibung:
+    </h3>
+    
+    <br class="clearfix" />
+    
+    <div class="editable beschreibung" 
+         id="uebung_beschreibung"
+         style="margin-top: 5px; border-bottom: 1px dotted gray;" 
+         data-cad-cms-content-orig="<?php echo base64_encode($this->uebung_beschreibung);?>" ><?php echo $obj_cad_filter_ubb_replace->filter($this->uebung_beschreibung);?></div>
+    
+    <br class="clearfix" />
+    
+    <h3 class="besonderheit-ueberschrift"
+        style="margin-top: 15px;">
+        Besonderheiten:
+    </h3>
+    
+    <br class="clearfix" />
+    
+    <div class="editable beschreibung" 
+        id="uebung_besonderheiten" 
+        style="margin-top: 5px; border-bottom: 1px dotted gray;"
+        data-cad-cms-content-orig="<?php echo base64_encode($this->uebung_besonderheiten);?>" ><?php echo $obj_cad_filter_ubb_replace->filter($this->uebung_besonderheiten);?></div>
+    
+    <br class="clearfix" />
+
+    <h3 style="float: left; display: inline; margin-top: 15px;">
+        Gerät:
+    </h3>
+
+    <br class="clearfix" />
+
+    <input type="text" class="uebung_geraet_name"
+           style="float: left;"
+           id="uebung_geraet_name"
+           name="uebung_geraet_name"
+           value="<?php echo $this->geraet_name;?>"
+           data-geraet-name="<?php echo base64_encode($this->geraet_name);?>"
+           data-geraet-id="<?php echo $this->geraet_id;?>" />
+
+    <br class="clearfix" />
+
+    <h4 style="float: left; display: inline; margin-top: 15px; margin-left: 15px; font-size: 13px;">
+        Einstellung:
+    </h4>
+
+    <br class="clearfix" />
+    
+    <input type="text" class=""
+           style="float: left; margin-left: 15px;"
+           id="uebung_geraet_einstellung_name"
+           name="uebung_geraet_einstellung_name"
+           value="<?php echo $this->uebung_geraet_einstellung;?>"
+           data-geraet-einstellung-name="<?php echo $this->geraet_einstellung_name;?>"
+           data-geraet-einstellung-id="<?php echo $this->geraet_einstellung_id;?>" />
+
+    <div id="uebung_geraet_moegliche_einstellungen_container">
+<?php
+        echo $this->render('geraete/optionen-moegliche-einstellungen.phtml');
+?>
+        <br class="clearfix" />
+    </div>
+
+    <br class="clearfix" />
+
+    <h4 style="float: left; display: inline; margin-top: 15px; margin-left: 15px; font-size: 13px;">
+        Sitzposition:
+    </h4>
+
+    <br class="clearfix" />
+
+    <input type="text" class=""
+           style="float: left; margin-left: 15px;"
+           id="uebung_geraet_sitzposition_name"
+           name="uebung_geraet_sitzposition_name"
+           value="<?php echo $this->uebung_geraet_sitzposition;?>"
+           data-geraet-sitzposition-name="<?php echo $this->geraet_sitzposition_name;?>"
+           data-geraet-sitzposition-id="<?php echo $this->geraet_sitzposition_id;?>" />
+
+    <div id="uebung_geraet_moegliche_sitzpositionen_container">
+<?php
+        echo $this->render('geraete/optionen-moegliche-sitzpositionen.phtml');
+?>
+        <br class="clearfix" />
+    </div>
+
+    <br class="clearfix" />
+
+    <h4 style="float: left; display: inline; margin-top: 15px; margin-left: 15px; font-size: 13px;">
+        Gewicht:
+    </h4>
+
+    <br class="clearfix" />
+
+    <input type="text" class=""
+           style="float: left; margin-left: 15px;"
+           id="uebung_geraet_gewicht_name"
+           name="uebung_geraet_gewicht_name"
+           value="<?php echo $this->uebung_geraet_gewicht;?>"
+           data-geraet-gewicht-name="<?php echo $this->geraet_gewicht_name;?>"
+           data-geraet-gewicht-id="<?php echo $this->geraet_gewicht_id;?>" />
+
+    <div id="uebung_geraet_moegliche_gewichte_container">
+<?php
+        echo $this->render('geraete/optionen-moegliche-gewichte.phtml');
+?>
+        <br class="clearfix" />
+    </div>
+
+    <br class="clearfix" />
+
+    <h3 style="float: left; display: inline; margin-top: 15px;">
+        Muskelgruppen:
+    </h3>
+    
+    <img class="muskelgruppe-add" src="/images/content/statisch/grafiken/add_normal.png" 
+         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>
+    
+    <br class="clearfix" />
+    
+    <div class="uebung_muskelgruppen"
+         style="margin-top: 5px;">
+        
+    </div>
+    
+    <br class="clearfix" />
+    
+    <h3 style="margin-top: 15px;">
+        Übungsbilder:
+    </h3>
+    
+    <div class="vorschau_bilder"
+         style="margin-top: 5px;">
+        
+    </div>
+    
+    <br class="clearfix" />
+    
+    <h3 style="margin-top: 15px;">
+        Übungsvideo:
+    </h3>
+    
+    <div id="uebung_video"
+         style="margin-top: 5px;">
+        
+    </div>
+    <input type="hidden" class="id" name="uebung_id" id="uebung_id" value="<?php echo $this->uebung_id;?>" />
+</div>
+
+<br class="clearfix" />
+
+<input type="hidden" id="bild_pfad" value="<?php echo base64_encode($bild_pfad);?>" />
+<input type="hidden" id="bild_temp_pfad" value="<?php echo base64_encode($bild_temp_pfad);?>" />
+
+<div class="muskelgruppen_vorschlaege" 
+     style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
+            background-color: #FFFFFF; opacity: 0.9; box-shadow: 5px 5px 5px #111111;" ></div>
+
+<button onclick="save();" 
+        style="margin-top: 15px;"
+        class="button">
+    Speichern
+</button>
+
+<script type="text/javascript">
+	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+	function save()
+	{
+            var b_fehler = false;
+            var a_messages = new Array();
+            
+            if(!trim(jQuery('#uebung_name').html()).length)
+            {
+                b_fehler = true;
+                a_messages.push({'type': 'fehler', 'message': 'Die Übung braucht einen Namen!'});
+            }
+            if(!trim(jQuery('#uebung_beschreibung').html()).length)
+            {
+                b_fehler = true;
+                a_messages.push({'type': 'fehler', 'message': 'Die Beschreibung der Übung fehlt!'});
+            }
+            
+            var elemente_muskelgruppen = jQuery('.uebung_muskelgruppen').find('.muskelgruppe');
+            var muskelgruppen = [];
+
+            for(var i = 0, len = elemente_muskelgruppen.length; i < len; i++)
+            {
+//                var muskelgruppe_name            = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-name');
+                var muskelgruppe_id              = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-id');
+                var muskelgruppe_beanspruchung   = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_beanspruchung').data('muskelgruppe-beanspruchung');
+                var b_fail = false;
+                /*
+                if(isNumber(muskelgruppe_id) && 
+                   muskelgruppe_id > 0 &&
+                   muskelgruppe_name.length > 0)
+                {
+                }
+                else
+                {
+                    jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').css('outline', '2px solid red');
+                    b_fail = true;
+                }
+
+                if(
+                   isNumber(muskelgruppe_beanspruchung) &&
+                   muskelgruppe_beanspruchung > 0)
+                {
+                }
+                else
+                {
+                    jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_beanspruchung').css('outline', '2px solid red');
+                    b_fail = true;
+                }
+                */
+                if(muskelgruppe_id)
+                {
+                    muskelgruppen.push({'id': muskelgruppe_id, 'beanspruchung': muskelgruppe_beanspruchung});
+                }
+            }
+            
+            if(!muskelgruppen.length)
+            {
+                b_fehler = true;
+                a_messages.push({'type': 'fehler', 'message': 'Es muss mindestens eine Muskelgruppe für diese Übung vollständig ausgefüllt sein!'});
+            }
+            
+            if(!b_fehler)
+            {
+    //            jQuery().setEditedElements('projekt_flag_oeffentlich', 	jQuery('#projekt_flag_oeffentlich').is(':checked'));
+                jQuery().setEditedElements('uebung_muskelgruppen',              muskelgruppen);
+                jQuery().setEditedElements('uebung_vorschaubild',               jQuery('#uebung_vorschaubild').data('file'));
+                jQuery().setEditedElements('uebung_id',                         jQuery('#uebung_id').val());
+                jQuery().setEditedElements('uebung_geraet_einstellung_name',    Base64.encode(jQuery('#uebung_geraet_einstellung_name').val()));
+                jQuery().setEditedElements('uebung_geraet_sitzposition_name',   Base64.encode(jQuery('#uebung_geraet_sitzposition_name').val()));
+                jQuery().setEditedElements('uebung_geraet_gewicht_name',        Base64.encode(jQuery('#uebung_geraet_gewicht_name').val()));
+                jQuery().setEditedElements('uebung_geraet_fk',                  jQuery('#uebung_geraet_name').data('geraet-id'));
+                jQuery().setAjax(true);
+
+                CADEditSave();
+            }
+            else
+            {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init(a_messages);
+                obj_cad_messages.open();
+            }
+        }
+        edit_init();
+</script>

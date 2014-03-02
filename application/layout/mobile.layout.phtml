@@ -1,0 +1,195 @@
+<html lang="de" <?php if($this->obj_social_media){ echo $this->obj_social_media->getHtmlAttributes();}?> >
+    <head <?php if($this->obj_social_media){ echo $this->obj_social_media->getHeadAttributes();}?> >
+    	<?php echo $this->headMeta();?>
+    	
+        <?php echo $this->headTitle()->setSeparator(' | ')->setAutoEscape(false) ?>
+
+		<?php echo $this->headLink();?>
+		
+		<?php echo $this->headScript();?>
+    </head>
+   <body itemscope itemtype="http://schema.org/Article" <?php if($this->obj_social_media){ echo $this->obj_social_media->getBodyAttributes();}?> >
+    <div id="wrapper" data-role="page">
+        <header>
+	      <h1 class="swipe">
+		  	byte-artist
+	      </h1>
+	      <div id="login-container">
+<?php
+	$obj_user_identity = Zend_Auth::getInstance()->getIdentity();
+
+	$obj_checkRecht = new Application_Plugin_CheckeRecht();
+	
+	if($obj_user_identity)
+	{
+?>
+			<form method="post" action="" id="login_form">
+				<span>Willkommen, <?php echo ucfirst($obj_user_identity->user_vorname);?> <?php echo ucfirst($obj_user_identity->user_nachname);?></span>
+				<input type="hidden" name="user_logout" id="user_logout" value="1" />
+				<input type="submit" id="logout-button" value=" Logout " />
+			</form>
+<?php
+	}
+	else
+	{
+?>
+	      	<a href="/auth/login" id="login-button" >Login</a>
+<?php
+	} 
+?>
+	      </div>
+	    </header>
+	      <ul id="navi" >
+			<li class="<?php echo $this->home_aktiv;?>" data-tooltip="home">
+			  <a class="tooltip_target" href="/index" data-tooltip="home">
+			    home
+			  </a>
+			</li>
+			<li class="<?php echo $this->stuff_aktiv;?>" data-tooltip="stuff">
+			  <a class="tooltip_target" href="/stuff" data-tooltip="stuff">
+			    stuff
+			  </a>
+			</li>
+			<li class="<?php echo $this->blog_aktiv;?>" data-tooltip="blog">
+			  <a class="tooltip_target" href="/blog" data-tooltip="blog">
+			    blog
+			  </a>
+			</li>
+			<li class="<?php echo $this->portfolio_aktiv;?>" data-tooltip="portfolio">
+			  <a class="tooltip_target" href="/portfolio" data-tooltip="portfolio">
+			    portfolio
+			  </a>
+			</li>
+	      </ul>
+        <div class="container" >
+         
+         <?php  echo $this->layout()->content;?>
+            
+        	<hr class="clearfix" />	         
+        </div> <!-- /container -->
+
+            <footer>
+            	<h3 style="color: #CCCCCC;">
+            		Social Media
+            	</h3>
+            <!-- 
+            	<div id="social_media_container">
+            		<a href="https://www.facebook.com/andreas.kempe.3" target="_blank" >
+            			<img class="social_media_icon" style="position: absolute; top: 0; left: 0;" src="/images/content/statisch/icons/social_media/facebook.png" alt="Facebook" title="Klicken Sie hier, um auf mein Facebook Profil zu gelangen!" />
+            		</a>
+            		<a href="https://github.com/mastercad" target="_blank" >
+            			<img class="social_media_icon" style="position: absolute; top: 0; left: 40px;" src="/images/content/statisch/icons/social_media/github.png" alt="Github" title="Klicken Sie hier, um zu meinen Github Account zu gelangen!" />
+            		</a>
+            		<a href="https://www.xing.com/profile/Andreas_Kempe9" target="_blank" >
+            			<img class="social_media_icon" style="position: absolute; top: 0; left: 80px;" src="/images/content/statisch/icons/social_media/xing.png" alt="Xing" title="Klicken Sie hier, um auf mein Xing Profil zu gelangen!" />
+            		</a>
+            		<a href="https://plus.google.com/u/0/100952657106943880213" target="_blank" >
+            			<img class="social_media_icon" style="position: absolute; top: 0; left: 120px;" src="/images/content/statisch/icons/social_media/googleplus.png" alt="Google+" title="Klicken Sie hier, um auf mein Google+ Profil zu gelangen!" />
+            		</a>
+            	</div>
+                 -->
+                <p>
+                	&copy; 2006 - 2013 by byte-artist. <?php echo $this->translate('All rights reserved.'); ?>
+                </p>
+                <div id="second_navi">
+                	<a href="/sitemap" style="color: #CCCCCC;">Sitemap</a>
+                	|
+                	<a id="link_kontaktanfrage" href="/kontakt" style="color: #CCCCCC;">Kontakt</a> 
+                </div>
+            </footer>
+		</div>
+	
+	<div id="sperre"></div>
+
+	<div id="dummy_container"></div>
+	
+	<div id="message">
+		<div class="button_close" onclick="hideMessage(true);"></div>
+		<div id="message_text"></div>
+		<br class="clearfix" />
+	</div>
+		
+	<div id="loader"></div>
+	
+    <script type="text/javascript">
+//    	init();
+/*
+		var nextpage = null;
+		var prevpage = null;
+
+		$('.swipe').swiperight(function()
+		{
+		     $('#navi').fadeIn();
+		});
+		
+		$('.swipe').swipeleft(function()
+		{
+		     $('#navi').fadeOut();
+		});
+
+		$('body').swipeleft(function()
+		{
+			var next_page = $('#navi li.aktiv').next('li').find('a').attr("href");
+			console.log($('#navi li.aktive').next('li'));
+
+			if(undefined != next_page &&
+			   next_page.length)
+			{
+				$.mobile.loadPage(next_page,
+				{
+//					'pageContainer': $('html'),
+					 'type': "post",
+//					 data: $("form#search").serialize()
+				}).done(function()
+				{
+					$('#wrapper').replaceWith(arguments[2]);
+				});
+			}
+		});
+
+		$('body').swiperight(function()
+		{
+			var prev_page = $('#navi li.aktiv').prev('li').find('a').attr("href");
+
+			if(undefined != prev_page &&
+			   prev_page.length)
+			{
+				$.mobile.loadPage(prev_page,
+				{
+//					'pageContainer': $('html'),
+					 'type': "post",
+//					 data: $("form#search").serialize()
+				}).done(function()
+				{
+					$('#wrapper').replaceWith(arguments[2]);
+				});
+			}
+		});
+
+		$(document).ready(function()
+		{
+			$('a').unbind('click');
+//			$('#navi .tooltip_target').unbind('click');
+			$('a').bind('click', function()
+			{
+				var url = $(this).attr('href');
+				location.href = url;
+				
+//				$.mobile.loadPage($(this).attr('href'),
+//				{
+////					'pageContainer': $('html'),
+//					 'type': "post",
+////					 data: $("form#search").serialize()
+//				}).done(function()
+//				{
+//					console.log(arguments);
+//					$('#wrapper').replaceWith(arguments[2]);
+//				});
+//			});
+			
+		});
+*/		
+    </script>
+        <?php echo $this->inlineScript(); ?>
+    </body>
+</html>
