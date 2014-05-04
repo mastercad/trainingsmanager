@@ -138,7 +138,12 @@ class Application_Model_DbTable_Users extends Zend_Db_Table_Abstract
 		}
 		return false;
 	}
-	
+
+    public function getActiveUsers()
+    {
+        return $this->fetchAll('user_status_fk = 2', 'user_vorname');
+    }
+
 	public function getDummy($script_id)
 	{
 		$row = null;

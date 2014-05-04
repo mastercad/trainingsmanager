@@ -10,10 +10,6 @@ class IndexController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        // action body
-//        $this->_helper->sidebar();
-//        echo "Controller:";
-//        var_dump($this->view->sidebarData);
     }
 
 

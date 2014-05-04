@@ -1,0 +1,44 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 01.05.14
+ * Time: 19:22
+ */ 
+?>
+
+<form method="post" target="#upload_frame" action="">
+    <label for="user_id">
+        Mitglied:
+    </label>
+    <select name="user_id" id="user_id">
+        <option value="0" >Bitte wählen...</option>
+<?php
+    if (is_array($this->aUsers)) {
+        foreach ($this->aUsers as $aUser) {
+?>
+        <option value="<?php echo $aUser['user_id'];?>">
+            <?php echo $aUser['user_vorname'] . ' | ' . $aUser['user_email'];?>
+        </option>
+<?php
+        }
+    }
+?>
+    </select>
+
+    <label for="trainingsplan_einfach">
+        Einfacher Trainingsplan
+    </label>
+    <input type="radio" value="1" name="layout" id="trainingsplan_einfach" />
+    <label for="trainingsplan_split">
+        Split Trainingsplan
+    </label>
+    <input type="radio" value="2" name="layout" id="trainingsplan_split" />
+    <input type="submit" value="erstellen" name="erstellen" />
+</form>
+
+<script type="text/javascript" language="JavaScript">
+    jQuery('document').ready(function(){
+
+    });
+</script>

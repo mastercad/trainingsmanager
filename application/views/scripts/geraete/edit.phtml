@@ -61,6 +61,34 @@
         ><?php echo $this->geraet_moegliche_sitzpositionen;?></textarea>
 
     <br class="clearfix" />
+
+    <h3 style="margin-top: 15px; font-size: 12px;">
+        Mögliche Rückenpolsterpositionen:
+    </h3>
+
+    <br class="clearfix" />
+
+    <textarea
+        class=""
+        style="margin-left: 20px; margin-top: 5px; border-bottom: 1px dotted gray; font-size: 12px; width: 600px; height: 50px;"
+        id="geraet_moegliche_rueckenpolster" data-cad-cms-content-orig="<?php echo base64_encode($this->geraet_moegliche_rueckenpolster);?>"
+        ><?php echo $this->geraet_moegliche_rueckenpolster;?></textarea>
+
+    <br class="clearfix" />
+
+    <h3 style="margin-top: 15px; font-size: 12px;">
+        Mögliche Beinpolsterpositionen:
+    </h3>
+
+    <br class="clearfix" />
+
+    <textarea
+        class=""
+        style="margin-left: 20px; margin-top: 5px; border-bottom: 1px dotted gray; font-size: 12px; width: 600px; height: 50px;"
+        id="geraet_moegliche_beinpolster" data-cad-cms-content-orig="<?php echo base64_encode($this->geraet_moegliche_beinpolster);?>"
+        ><?php echo $this->geraet_moegliche_beinpolster;?></textarea>
+
+    <br class="clearfix" />
     
     <h3 style="margin-top: 15px; font-size: 12px;">
         Mögliche Gewichte:
@@ -118,6 +146,8 @@
                 jQuery().setEditedElements('geraet_moegliche_einstellungen',    Base64.encode(jQuery('#geraet_moegliche_einstellungen').val()));
                 jQuery().setEditedElements('geraet_moegliche_sitzpositionen',   Base64.encode(jQuery('#geraet_moegliche_sitzpositionen').val()));
                 jQuery().setEditedElements('geraet_moegliche_gewichte',         Base64.encode(jQuery('#geraet_moegliche_gewichte').val()));
+                jQuery().setEditedElements('geraet_moegliche_rueckenpolster',   Base64.encode(jQuery('#geraet_moegliche_rueckenpolster').val()));
+                jQuery().setEditedElements('geraet_moegliche_beinpolster',      Base64.encode(jQuery('#geraet_moegliche_beinpolster').val()));
                 jQuery().setEditedElements('geraet_id',                         jQuery('#geraet_id').val());
                 jQuery().setEditedElements('geraet_id',                         jQuery('#geraet_id').val());
                 jQuery().setEditedElements('geraet_vorschaubild',               jQuery('#geraet_vorschaubild').data('file'));

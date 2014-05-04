@@ -184,9 +184,12 @@ class GeraeteController extends Zend_Controller_Action
     {
         $a_params = $this->getRequest()->getParams();
         $a_messages = array();
+        $iUserId = 1;
 
         $obj_user = Zend_Auth::getInstance()->getIdentity();
-
+        if (TRUE === is_object($obj_user )) {
+            $iUserId = $obj_user->user_id;
+        }
         if(isset($a_params['edited_elements'])) {
             $obj_db_geraete = new Application_Model_DbTable_Geraete();
 
@@ -210,11 +213,23 @@ class GeraeteController extends Zend_Controller_Action
             {
                 $geraet_moegliche_einstellungen = base64_decode($a_params['edited_elements']['geraet_moegliche_einstellungen']);
             }
-            
+
             if(isset($a_params['edited_elements']['geraet_moegliche_sitzpositionen']) &&
                 0 < strlen(trim($a_params['edited_elements']['geraet_moegliche_sitzpositionen'])))
             {
                 $geraet_moegliche_sitzpositionen = base64_decode($a_params['edited_elements']['geraet_moegliche_sitzpositionen']);
+            }
+
+            if(isset($a_params['edited_elements']['geraet_moegliche_rueckenpolster']) &&
+                0 < strlen(trim($a_params['edited_elements']['geraet_moegliche_rueckenpolster'])))
+            {
+                $geraet_moegliche_rueckenpolster = base64_decode($a_params['edited_elements']['geraet_moegliche_rueckenpolster']);
+            }
+
+            if(isset($a_params['edited_elements']['geraet_moegliche_beinpolster']) &&
+                0 < strlen(trim($a_params['edited_elements']['geraet_moegliche_beinpolster'])))
+            {
+                $geraet_moegliche_beinpolster = base64_decode($a_params['edited_elements']['geraet_moegliche_beinpolster']);
             }
             
             if(isset($a_params['edited_elements']['geraet_moegliche_gewichte']) &&
@@ -253,6 +268,16 @@ class GeraeteController extends Zend_Controller_Action
             if(0 < strlen(trim($geraet_moegliche_sitzpositionen)))
             {
                 $a_data['geraet_moegliche_sitzpositionen'] = $geraet_moegliche_sitzpositionen;
+            }
+
+            if(0 < strlen(trim($geraet_moegliche_rueckenpolster)))
+            {
+                $a_data['geraet_moegliche_rueckenpolster'] = $geraet_moegliche_rueckenpolster;
+            }
+
+            if(0 < strlen(trim($geraet_moegliche_beinpolster)))
+            {
+                $a_data['geraet_moegliche_beinpolster'] = $geraet_moegliche_beinpolster;
             }
 
             if(0 < strlen(trim($geraet_moegliche_gewichte)))
@@ -320,7 +345,7 @@ class GeraeteController extends Zend_Controller_Action
                         $a_data['geraet_seo_link'] = $obj_cad_seo->getSeoName();
                     }
                     $a_data['geraet_aenderung_datum'] = date("Y-m-d H:i:s");
-                    $a_data['geraet_aenderung_user_fk'] = $obj_user->user_id;
+                    $a_data['geraet_aenderung_user_fk'] = $iUserId;
 
                     $obj_db_geraete->updateGeraet($a_data, $i_geraet_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Dieses Gerät wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_geraet_id));
@@ -336,7 +361,7 @@ class GeraeteController extends Zend_Controller_Action
                     $obj_cad_seo->createSeoLink();
 
                     $a_data['geraet_seo_link'] = $obj_cad_seo->getSeoName();
-                    $a_data['geraet_eintrag_user_fk'] = $obj_user->user_id;
+                    $a_data['geraet_eintrag_user_fk'] = $iUserId;
                     $a_data['geraet_eintrag_datum'] = date("Y-m-d H:i:s");
 
                     $i_geraet_id = $obj_db_geraete->setGeraet($a_data);
@@ -461,13 +486,13 @@ class GeraeteController extends Zend_Controller_Action
             }
         }
     }
-    
+
     public function optionenMoeglicheSitzpositionenAction()
     {
         $a_params = $this->getRequest()->getParams();
         if(isset($a_params['id']) &&
-           is_numeric($a_params['id']) &&
-           $a_params['id'] > 0)
+            is_numeric($a_params['id']) &&
+            $a_params['id'] > 0)
         {
             $i_geraet_id = (int)$a_params['id'];
             $obj_db_geraete = new Application_Model_DbTable_Geraete();
@@ -482,6 +507,56 @@ class GeraeteController extends Zend_Controller_Action
                 else if(strlen(trim($a_geraet['geraet_moegliche_sitzpositionen'])) > 0)
                 {
                     $this->view->assign('a_geraet_moegliche_sitzpositionen', array(trim($a_geraet['geraet_moegliche_sitzpositionen'])));
+                }
+            }
+        }
+    }
+
+    public function optionenMoeglicheBeinpolsterAction()
+    {
+        $a_params = $this->getRequest()->getParams();
+        if(isset($a_params['id']) &&
+            is_numeric($a_params['id']) &&
+            $a_params['id'] > 0)
+        {
+            $i_geraet_id = (int)$a_params['id'];
+            $obj_db_geraete = new Application_Model_DbTable_Geraete();
+            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+
+            if(isset($a_geraet['geraet_moegliche_beinpolster']))
+            {
+                if(preg_match('/\|/', $a_geraet['geraet_moegliche_beinpolster']))
+                {
+                    $this->view->assign('a_geraet_moegliche_beinpolster', explode('|', $a_geraet['geraet_moegliche_beinpolster']));
+                }
+                else if(strlen(trim($a_geraet['geraet_moegliche_beinpolster'])) > 0)
+                {
+                    $this->view->assign('a_geraet_moegliche_beinpolster', array(trim($a_geraet['geraet_moegliche_beinpolster'])));
+                }
+            }
+        }
+    }
+
+    public function optionenMoeglicheRueckenpolsterAction()
+    {
+        $a_params = $this->getRequest()->getParams();
+        if(isset($a_params['id']) &&
+            is_numeric($a_params['id']) &&
+            $a_params['id'] > 0)
+        {
+            $i_geraet_id = (int)$a_params['id'];
+            $obj_db_geraete = new Application_Model_DbTable_Geraete();
+            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+
+            if(isset($a_geraet['geraet_moegliche_rueckenpolster']))
+            {
+                if(preg_match('/\|/', $a_geraet['geraet_moegliche_rueckenpolster']))
+                {
+                    $this->view->assign('a_geraet_moegliche_rueckenpolster', explode('|', $a_geraet['geraet_moegliche_rueckenpolster']));
+                }
+                else if(strlen(trim($a_geraet['geraet_moegliche_rueckenpolster'])) > 0)
+                {
+                    $this->view->assign('a_geraet_moegliche_rueckenpolster', array(trim($a_geraet['geraet_moegliche_rueckenpolster'])));
                 }
             }
         }

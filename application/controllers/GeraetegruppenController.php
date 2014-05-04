@@ -197,8 +197,12 @@ class GeraetegruppenController extends Zend_Controller_Action
     public function speichernAction()
     {
         $a_params = $this->getRequest()->getParams();
-
+        $iUserId = 1;
         $obj_user = Zend_Auth::getInstance()->getIdentity();
+
+        if (TRUE == is_object($obj_user)) {
+            $iUserId = $obj_user->user_id;
+        }
 
         if(isset($a_params['edited_elements']))
         {
@@ -352,7 +356,7 @@ class GeraetegruppenController extends Zend_Controller_Action
                     }
 
                     $a_data['geraetegruppe_aenderung_datum'] = date("Y-m-d H:i:s");
-                    $a_data['geraetegruppe_aenderung_user_fk'] = $obj_user->user_id;
+                    $a_data['geraetegruppe_aenderung_user_fk'] = $iUserId;
 
                     $obj_db_geraetegruppen->updateGeraetegruppe($a_data, $i_geraetegruppe_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_geraetegruppe_id));
@@ -369,7 +373,7 @@ class GeraetegruppenController extends Zend_Controller_Action
 
                     $a_data['geraetegruppe_seo_link'] = $obj_cad_seo->getSeoName();
                     $a_data['geraetegruppe_eintrag_datum'] = date("Y-m-d H:i:s");
-                    $a_data['geraetegruppe_eintrag_user_fk'] = $obj_user->user_id;
+                    $a_data['geraetegruppe_eintrag_user_fk'] = $iUserId;
 
                     $i_geraetegruppe_id = $obj_db_geraetegruppen->setGeraetegruppe($a_data);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde erfolgreich angelegt!', 'result' => true, 'id' => $i_geraetegruppe_id));
@@ -416,7 +420,7 @@ class GeraetegruppenController extends Zend_Controller_Action
                         $a_data['geraetegruppe_geraet_geraet_fk']            = $a_geraetegruppe_geraet['geraet_id'];
                         $a_data['geraetegruppe_geraet_geraetegruppe_fk']      = $i_geraetegruppe_id;
                         $a_data['geraetegruppe_geraet_eintrag_datum']        = date("Y-m-d H:i:s");
-                        $a_data['geraetegruppe_geraet_eintrag_user_fk']      = $obj_user->user_id;
+                        $a_data['geraetegruppe_geraet_eintrag_user_fk']      = $iUserId;
 
                         $obj_db_geraetegruppe_geraete->setGeraetegruppeGeraet($a_data);
                     }
@@ -426,7 +430,7 @@ class GeraetegruppenController extends Zend_Controller_Action
                         $a_data = array();
                         $a_data['geraetegruppe_geraet_geraetegruppe_fk']   = $i_geraetegruppe_id;
                         $a_data['geraetegruppe_geraet_eintrag_datum']     = date("Y-m-d H:i:s");
-                        $a_data['geraetegruppe_geraet_eintrag_user_fk']   = $obj_user->user_id;
+                        $a_data['geraetegruppe_geraet_eintrag_user_fk']   = $iUserId;
 
                         $obj_db_geraetegruppe_geraete->updateGeraetegruppeGeraet($a_data, $a_geraetegruppe_geraet['geraetegruppe_geraet_id']);
                     }

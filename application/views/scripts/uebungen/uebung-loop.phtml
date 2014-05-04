@@ -1,6 +1,5 @@
 <?php
     $vorschaubild = '/images/content/statisch/grafiken/blank.gif';
-    
     if(strlen(trim($this->uebung_vorschaubild)) > 0)
     {
         $vorschaubild_pfad = '/images/content/dynamisch/uebungen/' . $this->uebung_id . '/' . $this->uebung_vorschaubild;
@@ -11,9 +10,10 @@
             $vorschaubild = $vorschaubild_pfad;
         }
     }
+echo '/butler/create-thumb/file/' . base64_encode(getcwd() . $vorschaubild) . '/width/200/';
 ?>
 <div style="position: relative;">
-    <img src="<?php echo '/butler/create-thumb/file/' . base64_encode(getcwd() . $vorschaubild_pfad) . '/width/200/';?>" style="width: 200px; float: left; display: inline;" />
+    <img src="<?php echo '/butler/create-thumb/file/' . base64_encode(getcwd() . $vorschaubild) . '/width/200/';?>" style="width: 200px; float: left; display: inline;" />
     <div style="float: left; display: inline;">
         <a href="/uebungen/edit/id/<?php echo $this->uebung_id;?>"
            style="text-decoration: none;">

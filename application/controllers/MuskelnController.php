@@ -99,7 +99,12 @@ class MuskelnController extends Zend_Controller_Action
         $a_params = $this->getRequest()->getParams();
         $a_messages = array();
 
+        $iUserId = 1;
         $obj_user = Zend_Auth::getInstance()->getIdentity();
+
+        if (TRUE == is_object($obj_user)) {
+            $iUserId = $obj_user->user_id;
+        }
 
         if(isset($a_params['edited_elements'])) {
             $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
@@ -187,7 +192,7 @@ class MuskelnController extends Zend_Controller_Action
                     }
 
                     $a_data['muskel_aenderung_datum'] = date("Y-m-d H:i:s");
-                    $a_data['muskel_aenderung_user_fk'] = $obj_user->user_id;
+                    $a_data['muskel_aenderung_user_fk'] = $iUserId;
 
                     $obj_db_muskeln->updateMuskel($a_data, $i_muskel_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Dieser Muskel wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_muskel_id));
@@ -204,7 +209,7 @@ class MuskelnController extends Zend_Controller_Action
                     
                     $a_data['muskel_seo_link'] = $obj_cad_seo->getSeoName();
                     $a_data['muskel_eintrag_datum'] = date("Y-m-d H:i:s");
-                    $a_data['muskel_eintrag_user_fk'] = $obj_user->user_id;
+                    $a_data['muskel_eintrag_user_fk'] = $iUserId;
 
                     $i_muskel_id = $obj_db_muskeln->setMuskel($a_data);
 

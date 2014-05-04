@@ -60,55 +60,81 @@ class UebungenController extends Zend_Controller_Action
            is_numeric($a_params['id']) &&
            $a_params['id'] > 0)
         {
-            $i_uebung_id = $a_params['id'];
+            $iUebungId = $a_params['id'];
             $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
             /*
             $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
             $uebung_muskelgruppen_content = '';
-            $a_uebung_muskelgruppen = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
+            $oUebung_muskelgruppen = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
             */
-            $a_uebung = $obj_db_uebungen->getUebung($i_uebung_id);
+            $oUebung = $obj_db_uebungen->getUebung($iUebungId);
             
-            if(is_array($a_uebung))
+            if($oUebung instanceof Zend_Db_Table_Row)
             {
-                $this->view->assign($a_uebung);
-                $a_treffer = null;
+                $this->view->assign($oUebung->toArray());
+                $aMatches = null;
                 
-                if(isset($a_uebung['geraet_moegliche_einstellungen']))
+                if(isset($oUebung->geraet_moegliche_einstellungen))
                 {
-                    if(preg_match('/\|/', $a_uebung['geraet_moegliche_einstellungen']))
+                    if(preg_match('/\|/', $oUebung->geraet_moegliche_einstellungen))
                     {
-                        $this->view->assign('a_geraet_moegliche_einstellungen', explode('|', $a_uebung['geraet_moegliche_einstellungen']));
+                        $this->view->assign('a_geraet_moegliche_einstellungen', explode('|', $oUebung->geraet_moegliche_einstellungen));
                     }
-                    else if(strlen(trim($a_uebung['geraet_moegliche_einstellungen'])) > 0)
+                    else if(strlen(trim($oUebung->geraet_moegliche_einstellungen)) > 0)
                     {
-                        $this->view->assign('a_geraet_moegliche_einstellungen', array(trim($a_uebung['geraet_moegliche_einstellungen'])));
+                        $this->view->assign('a_geraet_moegliche_einstellungen', array(trim($oUebung->geraet_moegliche_einstellungen)));
+                    }
+                }
+
+                if(isset($oUebung->geraet_moegliche_sitzpositionen))
+                {
+                    if(preg_match('/\|/', $oUebung->geraet_moegliche_sitzpositionen))
+                    {
+                        $this->view->assign('a_geraet_moegliche_sitzpositionen', explode('|', $oUebung->geraet_moegliche_sitzpositionen));
+                    }
+                    else if(strlen(trim($oUebung->geraet_moegliche_sitzpositionen)) > 0)
+                    {
+                        $this->view->assign('a_geraet_moegliche_sitzpositionen', array(trim($oUebung->geraet_moegliche_sitzpositionen)));
+                    }
+                }
+
+                if(isset($oUebung->geraet_moegliche_rueckenpolster))
+                {
+                    if(preg_match('/\|/', $oUebung->geraet_moegliche_rueckenpolster))
+                    {
+                        $this->view->assign('a_geraet_moegliche_rueckenpolster', explode('|', $oUebung->geraet_moegliche_rueckenpolster));
+                    }
+                    else if(strlen(trim($oUebung->geraet_moegliche_rueckenpolster)) > 0)
+                    {
+                        $this->view->assign('a_geraet_moegliche_rueckenpolster', array(trim($oUebung->geraet_moegliche_rueckenpolster)));
+                    }
+                }
+
+                if(isset($oUebung->geraet_moegliche_beinpolster))
+                {
+                    if(preg_match('/\|/', $oUebung->geraet_moegliche_beinpolster))
+                    {
+                        $this->view->assign('a_geraet_moegliche_beinpolster', explode('|', $oUebung->geraet_moegliche_beinpolster));
+                    }
+                    else if(strlen(trim($oUebung->geraet_moegliche_beinpolster)) > 0)
+                    {
+                        $this->view->assign('a_geraet_moegliche_beinpolster', array(trim($oUebung->geraet_moegliche_beinpolster)));
                     }
                 }
                 
-                if(isset($a_uebung['geraet_moegliche_sitzpositionen']))
+                if(isset($oUebung->geraet_moegliche_gewichte))
                 {
-                    if(preg_match('/\|/', $a_uebung['geraet_moegliche_sitzpositionen']))
+                    if(preg_match('/\|/', $oUebung->geraet_moegliche_gewichte))
                     {
-                        $this->view->assign('a_geraet_moegliche_sitzpositionen', explode('|', $a_uebung['geraet_moegliche_sitzpositionen']));
+                        $this->view->assign('a_geraet_moegliche_gewichte', explode('|', $oUebung->geraet_moegliche_gewichte));
                     }
-                    else if(strlen(trim($a_uebung['geraet_moegliche_sitzpositionen'])) > 0)
+                    else if(strlen(trim($oUebung->geraet_moegliche_gewichte)) > 0)
                     {
-                        $this->view->assign('a_geraet_moegliche_sitzpositionen', array(trim($a_uebung['geraet_moegliche_sitzpositionen'])));
+                        $this->view->assign('a_geraet_moegliche_gewichte', array(trim($oUebung->geraet_moegliche_gewichte)));
                     }
                 }
-                
-                if(isset($a_uebung['geraet_moegliche_gewichte']))
-                {
-                    if(preg_match('/\|/', $a_uebung['geraet_moegliche_gewichte']))
-                    {
-                        $this->view->assign('a_geraet_moegliche_gewichte', explode('|', $a_uebung['geraet_moegliche_gewichte']));
-                    }
-                    else if(strlen(trim($a_uebung['geraet_moegliche_gewichte'])) > 0)
-                    {
-                        $this->view->assign('a_geraet_moegliche_gewichte', array(trim($a_uebung['geraet_moegliche_gewichte'])));
-                    }
-                }
+            } else {
+                echo "Probleme beim Laden der Übung!";
             }
         }
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
@@ -292,12 +318,17 @@ class UebungenController extends Zend_Controller_Action
     {
         $a_params = $this->getRequest()->getParams();
 
+        $iUserId = 1;
         $obj_user = Zend_Auth::getInstance()->getIdentity();
-        
+
+        if (TRUE == is_object($obj_user)) {
+            $iUserId = $obj_user->user_id;
+        }
+
         if(isset($a_params['edited_elements']))
         {
             $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
-            
+
             $uebung_name = '';
             $a_uebung_muskelgruppen = array();
             $a_uebung_muskelgruppen_loeschen = array();
@@ -310,6 +341,8 @@ class UebungenController extends Zend_Controller_Action
             $uebung_geraet_gewicht = '';
             $uebung_geraet_einstellung = '';
             $uebung_geraet_sitzposition = '';
+            $uebung_geraet_rueckenpolster = '';
+            $uebung_geraet_beinpolster = '';
             $i_uebung_geraet_id = '';
             $i_uebung_id = 0;
             $b_fehler = false;
@@ -333,11 +366,23 @@ class UebungenController extends Zend_Controller_Action
             {
                 $uebung_geraet_einstellung = base64_decode($a_params['edited_elements']['uebung_geraet_einstellung_name']);
             }
-            
+
             if(isset($a_params['edited_elements']['uebung_geraet_sitzposition_name']) &&
-               0 < strlen(trim($a_params['edited_elements']['uebung_geraet_sitzposition_name'])))
+                0 < strlen(trim($a_params['edited_elements']['uebung_geraet_sitzposition_name'])))
             {
                 $uebung_geraet_sitzposition = base64_decode($a_params['edited_elements']['uebung_geraet_sitzposition_name']);
+            }
+
+            if(isset($a_params['edited_elements']['uebung_geraet_rueckenpolster_name']) &&
+                0 < strlen(trim($a_params['edited_elements']['uebung_geraet_rueckenpolster_name'])))
+            {
+                $uebung_geraet_rueckenpolster = base64_decode($a_params['edited_elements']['uebung_geraet_rueckenpolster_name']);
+            }
+
+            if(isset($a_params['edited_elements']['uebung_geraet_beinpolster_name']) &&
+                0 < strlen(trim($a_params['edited_elements']['uebung_geraet_beinpolster_name'])))
+            {
+                $uebung_geraet_beinpolster = base64_decode($a_params['edited_elements']['uebung_geraet_beinpolster_name']);
             }
 
             if(isset($a_params['edited_elements']['uebung_beschreibung']) &&
@@ -456,10 +501,20 @@ class UebungenController extends Zend_Controller_Action
             {
                 $a_data['uebung_geraet_gewicht'] = $uebung_geraet_gewicht;
             }
-            
+
             if(0 < strlen(trim($uebung_geraet_sitzposition)))
             {
                 $a_data['uebung_geraet_sitzposition'] = $uebung_geraet_sitzposition;
+            }
+
+            if(0 < strlen(trim($uebung_geraet_rueckenpolster)))
+            {
+                $a_data['uebung_geraet_rueckenpolster'] = $uebung_geraet_rueckenpolster;
+            }
+
+            if(0 < strlen(trim($uebung_geraet_beinpolster)))
+            {
+                $a_data['uebung_geraet_beinpolster'] = $uebung_geraet_beinpolster;
             }
             
             if(0 < strlen(trim($uebung_vorschaubild)))
@@ -559,7 +614,7 @@ class UebungenController extends Zend_Controller_Action
                         $a_data['uebung_seo_link'] = $obj_cad_seo->getSeoName();
                     }
                     $a_data['uebung_aenderung_datum'] = date("Y-m-d H:i:s");
-                    $a_data['uebung_aenderung_user_fk'] = $obj_user->user_id;
+                    $a_data['uebung_aenderung_user_fk'] = $iUserId;
 
                     $obj_db_uebungen->updateUebung($a_data, $i_uebung_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_uebung_id));
@@ -577,7 +632,7 @@ class UebungenController extends Zend_Controller_Action
                     
                     $a_data['uebung_seo_link'] = $obj_cad_seo->getSeoName();
                     $a_data['uebung_eintrag_datum'] = date("Y-m-d H:i:s");
-                    $a_data['uebung_eintrag_user_fk'] = $obj_user->user_id;
+                    $a_data['uebung_eintrag_user_fk'] = $iUserId;
 
                     $i_uebung_id = $obj_db_uebungen->setUebung($a_data);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde erfolgreich angelegt!', 'result' => true, 'id' => $i_uebung_id));
@@ -618,7 +673,7 @@ class UebungenController extends Zend_Controller_Action
                         $a_data['uebung_muskelgruppe_beanspruchung']     = $a_uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung'];
                         $a_data['uebung_muskelgruppe_uebung_fk']         = $i_uebung_id;
                         $a_data['uebung_muskelgruppe_eintrag_datum']     = date("Y-m-d H:i:s");
-                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $obj_user->user_id;
+                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $iUserId;
 
                         $obj_db_uebung_muskelgruppen->setUebungMuskelgruppen($a_data);
                     }
@@ -628,7 +683,7 @@ class UebungenController extends Zend_Controller_Action
                         $a_data = array();
                         $a_data['uebung_muskelgruppe_beanspruchung']     = $a_uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung'];
                         $a_data['uebung_muskelgruppe_eintrag_datum']     = date("Y-m-d H:i:s");
-                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $obj_user->user_id;
+                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $iUserId;
 
                         $obj_db_uebung_muskelgruppen->updateUebungMuskelgruppen($a_data, $a_uebung_muskelgruppe['uebung_muskelgruppe_muskelgruppe_fk']);
                     }

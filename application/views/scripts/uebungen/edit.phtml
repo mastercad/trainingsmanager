@@ -126,6 +126,52 @@
     <br class="clearfix" />
 
     <h4 style="float: left; display: inline; margin-top: 15px; margin-left: 15px; font-size: 13px;">
+        Rückenpolster:
+    </h4>
+
+    <br class="clearfix" />
+
+    <input type="text" class=""
+           style="float: left; margin-left: 15px;"
+           id="uebung_geraet_rueckenpolster_name"
+           name="uebung_geraet_rueckenpolster_name"
+           value="<?php echo $this->uebung_geraet_rueckenpolster;?>"
+           data-geraet-rueckenpolster-name="<?php echo $this->geraet_rueckenpolster_name;?>"
+           data-geraet-rueckenpolster-id="<?php echo $this->geraet_rueckenpolster_id;?>" />
+
+    <div id="uebung_geraet_moegliche_rueckenpolster_container">
+        <?php
+        echo $this->render('geraete/optionen-moegliche-rueckenpolster.phtml');
+        ?>
+        <br class="clearfix" />
+    </div>
+
+    <br class="clearfix" />
+
+    <h4 style="float: left; display: inline; margin-top: 15px; margin-left: 15px; font-size: 13px;">
+        Beinpolster:
+    </h4>
+
+    <br class="clearfix" />
+
+    <input type="text" class=""
+           style="float: left; margin-left: 15px;"
+           id="uebung_geraet_beinpolster_name"
+           name="uebung_geraet_beinpolster_name"
+           value="<?php echo $this->uebung_geraet_beinpolster;?>"
+           data-geraet-beinpolster-name="<?php echo $this->geraet_beinpolster_name;?>"
+           data-geraet-beinpolster-id="<?php echo $this->geraet_beinpolster_id;?>" />
+
+    <div id="uebung_geraet_moegliche_beinpolster_container">
+        <?php
+        echo $this->render('geraete/optionen-moegliche-beinpolster.phtml');
+        ?>
+        <br class="clearfix" />
+    </div>
+
+    <br class="clearfix" />
+
+    <h4 style="float: left; display: inline; margin-top: 15px; margin-left: 15px; font-size: 13px;">
         Gewicht:
     </h4>
 
@@ -272,6 +318,8 @@
                 jQuery().setEditedElements('uebung_id',                         jQuery('#uebung_id').val());
                 jQuery().setEditedElements('uebung_geraet_einstellung_name',    Base64.encode(jQuery('#uebung_geraet_einstellung_name').val()));
                 jQuery().setEditedElements('uebung_geraet_sitzposition_name',   Base64.encode(jQuery('#uebung_geraet_sitzposition_name').val()));
+                jQuery().setEditedElements('uebung_geraet_rueckenpolster_name', Base64.encode(jQuery('#uebung_geraet_rueckenpolster_name').val()));
+                jQuery().setEditedElements('uebung_geraet_beinpolster_name',    Base64.encode(jQuery('#uebung_geraet_beinpolster_name').val()));
                 jQuery().setEditedElements('uebung_geraet_gewicht_name',        Base64.encode(jQuery('#uebung_geraet_gewicht_name').val()));
                 jQuery().setEditedElements('uebung_geraet_fk',                  jQuery('#uebung_geraet_name').data('geraet-id'));
                 jQuery().setAjax(true);

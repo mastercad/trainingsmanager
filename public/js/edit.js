@@ -871,6 +871,8 @@
                         {
                             aktualisiereGeraetMoeglicheEinstellungen(jQuery(this).data('vorschlag-id'));
                             aktualisiereGeraetMoeglicheSitzpositionen(jQuery(this).data('vorschlag-id'));
+                            aktualisiereGeraetMoeglicheRueckenpolster(jQuery(this).data('vorschlag-id'));
+                            aktualisiereGeraetMoeglicheBeinpolster(jQuery(this).data('vorschlag-id'));
                             aktualisiereGeraetMoeglicheGewichte(jQuery(this).data('vorschlag-id'));
                         }
                         
@@ -902,13 +904,39 @@
             function aktualisiereGeraetMoeglicheSitzpositionen(i_geraet_id)
             {
                 jQuery('#uebung_geraet_sitzposition_name').val('');
-                
+
                 var url = '/geraete/optionen-moegliche-sitzpositionen';
                 var obj_params = {'id': i_geraet_id, 'ajax': true};
 
                 jQuery.post(url, obj_params, function(response)
                 {
                     jQuery('#uebung_geraet_moegliche_sitzpositionen_container').html(response);
+                });
+            }
+
+            function aktualisiereGeraetMoeglicheRueckenpolster(i_geraet_id)
+            {
+                jQuery('#uebung_geraet_rueckenpolster_name').val('');
+
+                var url = '/geraete/optionen-moegliche-rueckenpolster';
+                var obj_params = {'id': i_geraet_id, 'ajax': true};
+
+                jQuery.post(url, obj_params, function(response)
+                {
+                    jQuery('#uebung_geraet_moegliche_rueckenpolster_container').html(response);
+                });
+            }
+
+            function aktualisiereGeraetMoeglicheBeinpolster(i_geraet_id)
+            {
+                jQuery('#uebung_geraet_beinpolster_name').val('');
+
+                var url = '/geraete/optionen-moegliche-beinpolster';
+                var obj_params = {'id': i_geraet_id, 'ajax': true};
+
+                jQuery.post(url, obj_params, function(response)
+                {
+                    jQuery('#uebung_geraet_moegliche_beinpolster_container').html(response);
                 });
             }
 

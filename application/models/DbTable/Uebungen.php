@@ -51,11 +51,12 @@ class Application_Model_DbTable_Uebungen extends Zend_Db_Table_Abstract
             $row = $this->fetchRow($select);
 //            $row = $this->fetchRow("uebung_id = '" . $uebung_id . "'");
 
-            if($row)
-            {
-                return $row->toArray();
-            }
-            return false;
+//            if($row)
+//            {
+//                return $row->toArray();
+//            }
+//            return false;
+            return $row;
 		}
 		catch( Exception $e)
 		{
