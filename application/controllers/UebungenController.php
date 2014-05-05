@@ -564,12 +564,13 @@ class UebungenController extends Zend_Controller_Action
             if(!$i_uebung_id &&
                strlen(trim($uebung_name)))
             {
-                $a_uebung_aktuell = $obj_db_uebungen->getUebungenByName($uebung_name);
-                if(is_array($a_uebung_aktuell) &&
-                   count($a_uebung_aktuell) > 0)
+                $oUebungenRows = $obj_db_uebungen->getUebungenByName($uebung_name);
+                if( FALSE === $oUebungenRows)
                 {
                     array_push($a_messages, array('type' => 'fehler', 'message' => 'Übung "' . $uebung_name . '" existiert bereits!', 'result' => false));
                     $b_fehler = true;
+                } else {
+                    $a_uebung_aktuell = $oUebungenRows->toArray();
                 }
             }
 

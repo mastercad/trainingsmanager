@@ -24,25 +24,17 @@ class Application_Model_DbTable_Trainingsplaene extends Zend_Db_Table_Abstract
     }
 
     public function getTrainingsplan($iTrainingsplanId) {
-        $oSelect = $this->select(FALSE);
-        $oSelect->from(array('parent' => $this->_name));
-        $oSelect->joinLeft(
-            $this->_name . ' as child',
-//            array('child', $this->_name),
-            'child.trainingsplan_parent_fk = parent.trainingsplan_id'
-//            , array('child' => $this->_name)
-        );
-//        $oSelect->joinLeft('trainingsplan_layouts', 'trainingsplan_layout_id = parent.trainingsplan_layout_fk');
-        $oSelect->where('parent.trainingsplan_id = ?', $iTrainingsplanId);
-        $oSelect->order(array('parent.trainingsplan_id', 'child.trainingsplan_id'));
-
-        echo $oSelect->__toString();
-
-        return $this->fetchAll($oSelect);
+        return $this->fetchRow('trainingsplan_id = ' . $iTrainingsplanId);
     }
 
-    public function getChildTrainingsplaene($iParentTrainingsplanId)
-    {
+    public function getChildTrainingsplaene($iParentTrainingsplanId) {
+        return $this->fetchAll('trainingsplan_parent_fk = ' . $iParentTrainingsplanId);
+    }
 
+    public function getChildTrainingsplaeneInclUebungen($iParentTrainingsplanId) {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(FALSE);
+
+//        $oSelect->join
     }
 }

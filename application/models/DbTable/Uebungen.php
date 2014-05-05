@@ -30,13 +30,7 @@ class Application_Model_DbTable_Uebungen extends Zend_Db_Table_Abstract
 
         public function getUebungenByName($str_suche)
         {
-            $rows = $this->fetchAll("uebung_name LIKE('" . $str_suche . "')", 'uebung_name');
-            
-            if($rows)
-            {
-                return $rows->toArray();
-            }
-            return false;
+            return $this->fetchAll("uebung_name LIKE('" . $str_suche . "')", 'uebung_name');
         }
         
 	public function getUebung($uebung_id)
@@ -48,15 +42,7 @@ class Application_Model_DbTable_Uebungen extends Zend_Db_Table_Abstract
             $select->join('geraete', 'geraet_id = uebung_geraet_fk');
             $select->where('uebung_id = ?', $uebung_id);
 
-            $row = $this->fetchRow($select);
-//            $row = $this->fetchRow("uebung_id = '" . $uebung_id . "'");
-
-//            if($row)
-//            {
-//                return $row->toArray();
-//            }
-//            return false;
-            return $row;
+            return $this->fetchRow($select);
 		}
 		catch( Exception $e)
 		{

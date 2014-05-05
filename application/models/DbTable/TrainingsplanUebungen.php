@@ -29,10 +29,35 @@ class Application_Model_DbTable_TrainingsplanUebungen extends Zend_Db_Table_Abst
             ->setIntegrityCheck(false);
 
         $oSelect->join('uebungen', 'uebung_id = trainingsplan_uebung_fk')
-            ->where('trainingsplan_id = ?', $iTrainingsplanUebungId);
+            ->where('trainingsplan_uebung_id = ?', $iTrainingsplanUebungId);
 
-        $oRow = $this->fetchRow($oSelect);
-        return $oRow;
+        return $this->fetchRow($oSelect);
+    }
+
+    public function getUebungenFuerTrainingsplan($iTrainingsplanId)
+    {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(FALSE);
+
+        $oSelect->join('uebungen', 'uebung_id = trainingsplan_uebung_fk')
+            ->join('trainingsplaene', 'trainingsplan_id = trainingsplan_uebung_trainingsplan_fk')
+            ->where('trainingsplan_uebung_trainingsplan_fk = ' . $iTrainingsplanId);
+
+        return $this->fetchAll($oSelect);
+    }
+
+    public function getUebungenFuerParentTrainingsplan($iParentTrainingsplanId)
+    {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(FALSE);
+
+        $oSelect->join('uebungen', 'uebung_id = trainingsplan_uebung_fk')
+            ->join('trainingsplaene', 'trainingsplan_id = trainingsplan_uebung_trainingsplan_fk')
+            ->join('geraete', 'geraet_id = uebung_geraet_fk')
+            ->where('trainingsplan_parent_fk = ' . $iParentTrainingsplanId)
+            ->order(array('trainingsplan_order', 'trainingsplan_eintrag_datum', 'trainingsplan_uebung_order'));
+
+        return $this->fetchAll($oSelect);
     }
 
     public function setTrainingsplanUebung($aData)

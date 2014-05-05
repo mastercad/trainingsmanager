@@ -46,10 +46,25 @@
                 && is_numeric($aParams['id'])
                 && 0 < $aParams['id']
             ) {
+                $sContent = '';
                 $iTrainingsplanId = $aParams['id'];
                 $oTrainingsplaeneStorage = new Application_Model_DbTable_Trainingsplaene();
-                $oTrainingsplanRows = $oTrainingsplaeneStorage->getTrainingsplan($iTrainingsplanId);
-                var_dump($oTrainingsplanRows);
+                $oTrainingsplanUebungen = new Application_Model_DbTable_TrainingsplanUebungen();
+                $oTrainingsplanRow = $oTrainingsplaeneStorage->getTrainingsplan($iTrainingsplanId);
+//                $oTrainingsplaeneChildRows = $oTrainingsplaeneStorage->getChildTrainingsplaene(
+//                    $iTrainingsplanId);
+                $oUebungen = $oTrainingsplanUebungen->getUebungenFuerParentTrainingsplan($iTrainingsplanId);
+
+                foreach ($oUebungen as $oUebungRow) {
+                    $this->view->assign($oUebungRow->toArray());
+                    $this->generateMoeglicheGewichte($oUebungRow);
+                    $this->generateMoeglicheSitzpositionen($oUebungRow);
+                    $this->generateMoeglicheRueckenpolster($oUebungRow);
+                    $this->generateMoeglicheBeinpolster($oUebungRow);
+//                    $sContent .= $this->renderScript('trainingsplan/partials/trainingsplan_partial.phtml');
+                    $sContent .= $this->renderScript('trainingsplan/get-uebung.phtml');
+                }
+                $this->view->assign('sContent', $sContent);
             } else {
 
             }
@@ -281,11 +296,22 @@
         }
 
 
-        public function getUebungsVorschlaegeAction()
+        public function getUebungenVorschlaegeAction()
         {
-            if ($oUebungRow instanceof Application_Model_DbTable_Uebungen) {
+            $aParams = $this->getAllParams();
 
+            if (array_key_exists('suche', $aParams)) {
+                $sSearch = base64_decode($aParams['suche']);
+                $oUebungenStorage = new Application_Model_DbTable_Uebungen();
+                $oUebungenRows = $oUebungenStorage->getUebungenByName('%' . $sSearch . '%');
+                $sContent = '';
+                if ($oUebungenRows instanceof Zend_Db_Table_Rowset) {
+                    foreach ($oUebungenRows as $oUebungRow) {
+                        $this->view->assign($oUebungRow->toArray());
+                        $sContent .= $this->renderScript('trainingsplan/partials/uebung-vorschlag.phtml');
+                    }
+                }
+                echo $sContent;
             }
-            return $this;
         }
     }

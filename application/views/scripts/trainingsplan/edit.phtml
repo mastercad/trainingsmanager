@@ -1,1 +1,69 @@
+<div id="trainingsplan_edit">
 <?php
+    echo $this->sContent;
+?>
+</div>
+<input type="text" name="neue_uebung" id="neue_uebung" />
+<script language="JavaScript">
+    jQuery('document').ready(function(){
+        jQuery('#neue_uebung').bind('keyup', function(e){
+
+            var post_request = null;
+
+            var url = '/trainingsplan/get-uebungen-vorschlaege/';
+            var suche = Base64.encode(jQuery(this).val());
+            var self = jQuery(this);
+
+            jQuery(self).css('background-color', 'red');
+            jQuery(self).data('uebung-name', '');
+            jQuery(self).data('uebung-id', '');
+
+            if(null !== post_request)
+            {
+                post_request.abort();
+            }
+
+            post_request = jQuery.ajax({
+                type: "POST",
+                url: url,
+                data: "suche=" + suche + "&ajax=true",
+                success: function(response){
+                    var offset = jQuery(self).offset();
+                    jQuery('body').append(jQuery('#uebungen-vorschlaege'));
+                    jQuery('#uebungen-vorschlaege').html(response);
+                    jQuery('#uebungen-vorschlaege').css('left', offset.left + "px");
+                    jQuery('#uebungen-vorschlaege').css('top', offset.top + 10 + "px");
+
+                    jQuery('#uebungen-vorschlaege').find('.vorschlag').unbind('click');
+                    jQuery('#uebungen-vorschlaege').find('.vorschlag').bind('click', function()
+                    {
+                        // check ob diese geraetegruppe bereits gesetzt wurde
+                        var vorhandene_uebungen = jQuery('.trainingsplan-edit').find('.uebung');
+                        for(var i = 0, len = vorhandene_uebungen.length; i < len; i++)
+                        {
+                            if(jQuery(vorhandene_uebungen[i]).find('.uebung-name').data('uebung-id') ==
+                                jQuery(this).data('vorschlag-id'))
+                            {
+                                var a_messages = new Array({'type': 'fehler', 'message': 'Dieses Geraet ist bereits gesetzt!'});
+                                var obj_cad_message = new CAD.Message();
+                                obj_cad_message.init(a_messages);
+                                obj_cad_message.open();
+
+                                return false;
+                            }
+                        }
+                        jQuery(self).css('background-color', 'green');
+                        jQuery(self).val(Base64.decode(jQuery(this).data('vorschlag-text')));
+                        jQuery(self).data('uebung-name', Base64.decode(jQuery(this).data('vorschlag-text')));
+                        jQuery(self).data('uebung-id', jQuery(this).data('vorschlag-id'));
+                        jQuery('#uebungen-vorschlaege').fadeOut();
+                        return false;
+                    });
+                    jQuery('#uebungen-vorschlaege').fadeIn();
+                }
+            });
+        });
+    });
+</script>
+
+<div id="uebungen-vorschlaege"></div>

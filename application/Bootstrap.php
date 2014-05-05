@@ -32,15 +32,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         return $autoloader;
     }
-     
+
     public function _initActionHelper()
     {
         Zend_Controller_Action_HelperBroker::addPath(
                 APPLICATION_PATH . '/controllers/helpers', 'Helper');
-        
+
 //        Zend_Controller_Action_HelperBroker::getStaticHelper('sidebar');
     }
-    
+
     public function _initMVC()
     {
         Zend_Layout::startMvc();
@@ -244,7 +244,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
             if(10 <= $version)
             {
-                $view->headLink()->appendStylesheet($view->baseUrl() . '/css/chrome_ab_10.css', 'screen', true);	
+                $view->headLink()->appendStylesheet($view->baseUrl() . '/css/chrome_ab_10.css', 'screen', true);
             }
             else
             {
@@ -313,10 +313,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $transport = new Zend_Mail_Transport_Smtp($server, $emailConfig);
         Zend_Mail::setDefaultTransport($transport);
         */
-        $transport = new Zend_Mail_Transport_Sendmail('webservice@byte-artist.de'); 
+        $transport = new Zend_Mail_Transport_Sendmail('webservice@byte-artist.de');
         Zend_Mail::setDefaultTransport($transport);
     }
-	
+
     protected function _initRouter()
     {
         $frontController = Zend_Controller_Front::getInstance();
@@ -332,7 +332,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 1 => 'sitemap'
             )
         );
-		
+
         $router->addRoute('sitemap.xml', $route);
 
         $route = new Zend_Controller_Router_Route_Regex(

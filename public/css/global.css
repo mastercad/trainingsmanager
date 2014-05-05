@@ -933,5 +933,17 @@ input[type=radio]{
     background-position: top left;
 }
 
+#uebungen-vorschlaege {
+    position: absolute;
+    top: -5000px;
+    left: -5000px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px 5px 5px;
+    border: 1px solid black;
+    -webkit-box-shadow: 5px black;
+    -moz-box-shadow: 5px black;
+    box-shadow: 5px black;
+}
 
 /* ]]> */
