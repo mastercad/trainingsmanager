@@ -391,11 +391,11 @@
 
         function initMuskelgruppenEdit()
         {
-            jQuery('.muskelgruppe').find('.muskelgruppe_beanspruchung').unbind('mouseover');
-            jQuery('.muskelgruppe').find('.muskelgruppe_beanspruchung').unbind('mouseout');
-            jQuery('.muskelgruppe').find('.muskelgruppe_beanspruchung').unbind('click');
+            jQuery('.muskelgruppe').find('.muskel-beanspruchung').unbind('mouseover');
+            jQuery('.muskelgruppe').find('.muskel-beanspruchung').unbind('mouseout');
+            jQuery('.muskelgruppe').find('.muskel-beanspruchung').unbind('click');
             
-            jQuery('.muskelgruppe').find('.muskelgruppe_beanspruchung').hover(
+            jQuery('.muskelgruppe').find('.muskel-beanspruchung').hover(
                 function()
                 {
                     var x = null;

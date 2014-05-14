@@ -7,19 +7,19 @@
 		<?php echo $this->headLink();?>
 		
 		<?php echo $this->headScript();?>
+
+        <link rel="stylesheet" href="/css/jquery-mobile-slide-menu.css" type="text/css" />
+        <script type="text/javascript" src="/js/jquery-mobile-slide-menu.js"></script>
     </head>
    <body itemscope itemtype="http://schema.org/Article" <?php if($this->obj_social_media){ echo $this->obj_social_media->getBodyAttributes();}?> >
     <div id="wrapper" data-role="page">
         <header>
-	      <h1 class="swipe">
-		  	byte-artist
-	      </h1>
 	      <div id="login-container">
 <?php
 	$obj_user_identity = Zend_Auth::getInstance()->getIdentity();
 
 	$obj_checkRecht = new Application_Plugin_CheckeRecht();
-	
+
 	if($obj_user_identity)
 	{
 ?>
@@ -35,80 +35,216 @@
 ?>
 	      	<a href="/auth/login" id="login-button" >Login</a>
 <?php
-	} 
+	}
 ?>
 	      </div>
 	    </header>
-	      <ul id="navi" >
-			<li class="<?php echo $this->home_aktiv;?>" data-tooltip="home">
-			  <a class="tooltip_target" href="/index" data-tooltip="home">
-			    home
-			  </a>
-			</li>
-			<li class="<?php echo $this->stuff_aktiv;?>" data-tooltip="stuff">
-			  <a class="tooltip_target" href="/stuff" data-tooltip="stuff">
-			    stuff
-			  </a>
-			</li>
-			<li class="<?php echo $this->blog_aktiv;?>" data-tooltip="blog">
-			  <a class="tooltip_target" href="/blog" data-tooltip="blog">
-			    blog
-			  </a>
-			</li>
-			<li class="<?php echo $this->portfolio_aktiv;?>" data-tooltip="portfolio">
-			  <a class="tooltip_target" href="/portfolio" data-tooltip="portfolio">
-			    portfolio
-			  </a>
-			</li>
-	      </ul>
         <div class="container" >
-         
-         <?php  echo $this->layout()->content;?>
-            
-        	<hr class="clearfix" />	         
-        </div> <!-- /container -->
+            <div id="side-menu">
+                <ul id="navi">
+                    <li class="<?php if($this->controller == "handbuch"){ echo 'active';}?>">
+                        <a href="/downloads/Rundumfit.pdf" target="_blank">
+                            <span class="icon">Handbuch</span>
+                        </a>
+                    </li>
+                    <li class="<?php if($this->controller == "muskeln"){ echo 'active';}?>">
+                        <a href="/muskeln/">
+                            <span class="icon">Muskeln</span>
+                        </a>
+                        <ul>
+                            <li class="<?php if($this->controller == "muskeln" && $this->action == "index"){ echo 'active';}?>">
+                                <a href="/muskeln/">
+                                    Übersicht
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "muskeln" && $this->action == "edit"){ echo 'active';}?>">
+                                <a href="/muskeln/edit/">
+                                    Neu anlegen
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "muskelgruppen"){ echo 'active';}?>">
+                        <a href="/muskelgruppen/">
+                            Muskelgruppen
+                        </a>
+                        <ul>
+                            <li class="<?php if($this->controller == "muskelgruppen" && $this->action == "index"){ echo 'active';}?>">
+                                <a href="/muskelgruppen/">
+                                    Übersicht
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "muskelgruppen" && $this->action == "edit"){ echo 'active';}?>">
+                                <a href="/muskelgruppen/edit/">
+                                    Neu anlegen
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "geraete"){ echo 'active';}?>">
+                        <a href="/geraete/">
+                            Geräte
+                        </a>
+                        <ul>
+                            <li class="<?php if($this->controller == "geraete" && $this->action == "index"){ echo 'active';}?>">
+                                <a href="/geraete/">
+                                    Übersicht
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "geraete" && $this->action == "edit"){ echo 'active';}?>">
+                                <a href="/geraete/edit/">
+                                    Neu anlegen
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "geraetegruppen"){ echo 'active';}?>">
+                        <a href="/geraetegruppen/">
+                            Gerätegruppen
+                        </a>
+                        <ul>
+                            <li class="<?php if($this->controller == "geraetegruppen" && $this->action == "index"){ echo 'active';}?>">
+                                <a href="/geraetegruppen/">
+                                    Übersicht
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "geraetegruppen" && $this->action == "edit"){ echo 'active';}?>">
+                                <a href="/geraetegruppen/edit/">
+                                    Neu anlegen
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "uebungen"){ echo 'active';}?>">
+                        <a href="/uebungen/">
+                            <span class="icon">Übungen</span>
+                        </a>
+                        <ul>
+                            <li class="<?php if($this->controller == "uebungen" && $this->action == "index"){ echo 'active';}?>">
+                                <a href="/uebungen">
+                                    <span class="icon">Übersicht</span>
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "uebungen" && $this->action == "edit"){ echo 'active';}?>">
+                                <a href="/uebungen/edit/">
+                                    Neu anlegen
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "trainingsplan"){ echo 'active';}?>">
+                        <a href="/trainingsplan/">
+                            Trainingsplan
+                        </a>
+                        <ul>
+                            <li class="<?php if($this->controller == "trainingsplan" && $this->action == "index"){
+                                echo 'active';}?>">
+                                <a href="/trainingsplan">
+                                    Übersicht
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "trainingsplan" && $this->action == "select-layout"){
+                                echo 'active';}?>">
+                                <a href="/trainingsplan/select-layout/">
+                                    Neu anlegen
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "trainingsplan" && $this->action == "archiv"){
+                                echo 'active';}?>">
+                                <a href="/trainingsplan/archiv/">
+                                    Archiv
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "trainingstagebuch"){ echo 'active';}?>">
+                        <a href="/trainingstagebuch/">
+                            Trainingstagebuch
+                        </a>
+                        <ul>
+                            <li class="<?php if($this->controller == "trainingstagebuch" && $this->action == "index"){
+                                echo 'active';}?>">
+                                <a href="/trainingstagebuch">
+                                    Übersicht
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "trainingstagebuch" && $this->action == "edit"){
+                                echo 'active';}?>">
+                                <a href="/trainingstagebuch/edit/">
+                                    Neu anlegen
+                                </a>
+                            </li>
+                            <li class="<?php if($this->controller == "trainingstagebuch" && $this->action == "archiv"){
+                                echo 'active';}?>">
+                                <a href="/trainingstagebuch/archiv/">
+                                    Archiv
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <br class="clearfix" />
+                </ul>
+            </div>
 
-            <footer>
-            	<h3 style="color: #CCCCCC;">
-            		Social Media
-            	</h3>
-            <!-- 
-            	<div id="social_media_container">
-            		<a href="https://www.facebook.com/andreas.kempe.3" target="_blank" >
-            			<img class="social_media_icon" style="position: absolute; top: 0; left: 0;" src="/images/content/statisch/icons/social_media/facebook.png" alt="Facebook" title="Klicken Sie hier, um auf mein Facebook Profil zu gelangen!" />
-            		</a>
-            		<a href="https://github.com/mastercad" target="_blank" >
-            			<img class="social_media_icon" style="position: absolute; top: 0; left: 40px;" src="/images/content/statisch/icons/social_media/github.png" alt="Github" title="Klicken Sie hier, um zu meinen Github Account zu gelangen!" />
-            		</a>
-            		<a href="https://www.xing.com/profile/Andreas_Kempe9" target="_blank" >
-            			<img class="social_media_icon" style="position: absolute; top: 0; left: 80px;" src="/images/content/statisch/icons/social_media/xing.png" alt="Xing" title="Klicken Sie hier, um auf mein Xing Profil zu gelangen!" />
-            		</a>
-            		<a href="https://plus.google.com/u/0/100952657106943880213" target="_blank" >
-            			<img class="social_media_icon" style="position: absolute; top: 0; left: 120px;" src="/images/content/statisch/icons/social_media/googleplus.png" alt="Google+" title="Klicken Sie hier, um auf mein Google+ Profil zu gelangen!" />
-            		</a>
-            	</div>
-                 -->
-                <p>
-                	&copy; 2006 - 2013 by byte-artist. <?php echo $this->translate('All rights reserved.'); ?>
-                </p>
-                <div id="second_navi">
-                	<a href="/sitemap" style="color: #CCCCCC;">Sitemap</a>
-                	|
-                	<a id="link_kontaktanfrage" href="/kontakt" style="color: #CCCCCC;">Kontakt</a> 
-                </div>
-            </footer>
-		</div>
-	
+            <div data-url="demo-page" data-role="page" id="demo-page" data-theme="d">
+                <div data-role="header" data-theme="b">
+                    <h1>Swipe left or right</h1>
+                    <a href="#left-panel" data-theme="d" data-icon="arrow-r" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Open left panel</a>
+                    <a href="#right-panel" data-theme="d" data-icon="arrow-l" data-iconpos="notext" data-shadow="false" data-iconshadow="false" class="ui-icon-nodisc">Open right panel</a>
+                </div><!-- /header -->
+                <div data-role="content">
+                    <dl>
+                        <dt>Swipe <span>verb</span></dt>
+                        <dd><b>1.</b> to strike or move with a sweeping motion</dd>
+                    </dl>
+                    <a href="#demo-intro" data-rel="back" class="back-btn" data-role="button" data-mini="true" data-inline="true" data-icon="back" data-iconpos="right">Back to demo intro</a>
+                </div><!-- /content -->
+                <div data-role="panel" id="left-panel" data-theme="b">
+                    <p>Left reveal panel.</p>
+                    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="right">Close</a>
+                </div><!-- /panel -->
+                <div data-role="panel" id="right-panel" data-display="push" data-position="right" data-theme="c">
+                    <p>Right push panel.</p>
+                    <a href="#" data-rel="close" data-role="button" data-mini="true" data-inline="true" data-icon="delete" data-iconpos="right">Close</a>
+                </div><!-- /panel -->
+            </div>
+
+<!--            <div data-role="page" id="about-the-band" data-title="Page Title" data-theme="b" class="pages">-->
+<!--                <div data-role="header" data-theme="b">-->
+<!--                    <a href="#" class="showMenu" data-role="button" data-icon="grid" data-iconpos="notext">Menu</a>-->
+<!--                    <h1>Header</h1>-->
+<!--                </div>-->
+<!---->
+<!--                <div data-role="content">-->
+<!--                    <p>Content Goes Here</p>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div id="content">
+
+                <?php  echo $this->layout()->content;?>
+
+                <br class="clearfix" />
+            </div> <!-- /container -->
+            <br class="clearfix" />
+        </div>
+
+        <footer>
+
+        </footer>
+    </div>
+
+
 	<div id="sperre"></div>
 
 	<div id="dummy_container"></div>
-	
+
 	<div id="message">
 		<div class="button_close" onclick="hideMessage(true);"></div>
 		<div id="message_text"></div>
 		<br class="clearfix" />
 	</div>
-		
+
 	<div id="loader"></div>
 	
     <script type="text/javascript">
@@ -121,7 +257,7 @@
 		{
 		     $('#navi').fadeIn();
 		});
-		
+
 		$('.swipe').swipeleft(function()
 		{
 		     $('#navi').fadeOut();
@@ -174,7 +310,7 @@
 			{
 				var url = $(this).attr('href');
 				location.href = url;
-				
+
 //				$.mobile.loadPage($(this).attr('href'),
 //				{
 ////					'pageContainer': $('html'),
@@ -186,9 +322,28 @@
 //					$('#wrapper').replaceWith(arguments[2]);
 //				});
 //			});
-			
+
 		});
-*/		
+*/
+    $(function(){
+        $('#side-menu').slideMenu();
+    });
+
+    $( document ).on( "pageinit", "#demo-page", function() {
+        $( document ).on( "swipeleft swiperight", "#demo-page", function( e ) {
+            // We check if there is no open panel on the page because otherwise
+            // a swipe to close the left panel would also open the right panel (and v.v.).
+            // We do this by checking the data that the framework stores on the page element (panel: open).
+            if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
+                if ( e.type === "swipeleft"  ) {
+                    $( "#right-panel" ).panel( "open" );
+                } else if ( e.type === "swiperight" ) {
+                    $( "#left-panel" ).panel( "open" );
+                }
+            }
+        });
+    });
+
     </script>
         <?php echo $this->inlineScript(); ?>
     </body>

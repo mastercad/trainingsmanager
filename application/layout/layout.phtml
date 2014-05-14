@@ -8,7 +8,6 @@
 		<?php echo $this->headLink();?>
 
 		<?php echo $this->headScript();?>
-
     </head>
     <body itemscope itemtype="http://schema.org/Article" <?php if($this->obj_social_media){ echo $this->obj_social_media->getBodyAttributes();}?> >
     <div id="wrapper">
@@ -37,7 +36,7 @@
 	}
 ?>
 	      </div>
-            </header>
+        </header>
         <div class="container">
             <ul id="navi">
                 <li class="<?php if($this->controller == "handbuch"){ echo 'active';}?>">
@@ -147,6 +146,12 @@
                                 Neu anlegen
                             </a>
                         </li>
+                        <li class="<?php if($this->controller == "trainingsplan" && $this->action == "archiv"){
+                            echo 'active';}?>">
+                            <a href="/trainingsplan/archiv/">
+                                Archiv
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li class="<?php if($this->controller == "trainingstagebuch"){ echo 'active';}?>">
@@ -164,6 +169,12 @@
                             echo 'active';}?>">
                             <a href="/trainingstagebuch/edit/">
                                 Neu anlegen
+                            </a>
+                        </li>
+                        <li class="<?php if($this->controller == "trainingstagebuch" && $this->action == "archiv"){
+                            echo 'active';}?>">
+                            <a href="/trainingstagebuch/archiv/">
+                                Archiv
                             </a>
                         </li>
                     </ul>

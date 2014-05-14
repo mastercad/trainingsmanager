@@ -39,8 +39,8 @@ class ErrorController extends Zend_Controller_Action
         if ($this->getInvokeArg('displayExceptions') == true) {
             $this->view->exception = $errors->exception;
         }
-        
-        $this->view->request   = $errors->request;
+
+        $this->view->request = $errors->request;
     }
 
     public function loginFailAction()

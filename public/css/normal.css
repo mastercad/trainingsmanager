@@ -360,3 +360,26 @@ pre {
 .link:hover {
 	text-decoration: underline;
 }
+
+.ui-state-hover {
+    border: 1px solid black;
+    opacity: 0.7;
+}
+
+.ui-state-default {
+    /*background-color: green;*/
+}
+
+.ui-sortable-helper {
+    background-color: deepskyblue;
+    opacity: 0.7;
+}
+
+ol.trainingsplan {
+    list-style: none;
+}
+
+.ui-state-active,
+.ui-draggable-dragging {
+    background-color: lightblue;
+}

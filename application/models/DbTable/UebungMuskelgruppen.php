@@ -24,6 +24,8 @@ class Application_Model_DbTable_UebungMuskelgruppen extends Zend_Db_Table_Abstra
             try
             {
                 $select->join('muskelgruppen', 'muskelgruppe_id = uebung_muskelgruppe_muskelgruppe_fk');
+                $select->join('muskelgruppe_muskeln', 'muskelgruppe_muskel_muskelgruppe_fk = muskelgruppe_id');
+                $select->join('muskeln', 'muskel_id = muskelgruppe_muskel_muskel_fk');
                 $select->where('uebung_muskelgruppe_uebung_fk = ?', $i_uebung_id);
                 $obj_rows = $this->fetchAll($select);
 

@@ -156,10 +156,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initHeadScripts()
     {
         $view = $this->getResource('view');
+        $user_agent = NULL;
+        $obj_device = NULL;
 
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $obj_user_agent = $view->userAgent();
-        $obj_device = $obj_user_agent->getDevice();
+        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $obj_user_agent = $view->userAgent();
+            $obj_device = $obj_user_agent->getDevice();
+        }
 
         $view->headScript()->prependFile($view->baseUrl() . '/js/jquery.min.js', 'text/javascript');
 //      $view->headScript()->prependFile($view->baseUrl() . '/js/jquery.js', 'text/javascript');
@@ -172,8 +176,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen_jquery.min.js', 'text/javascript');
         $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen_jquery.js', 'text/javascript');
 
-        if($obj_device->getType() == "desktop")
-        {
+        if(TRUE === is_object($obj_device)
+            && $obj_device->getType() == "desktop"
+        ) {
             $view->headScript()->appendFile($view->baseUrl() . '/js/blur.js', 'text/javascript');
         }
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.snippet.min.js', 'text/javascript');
@@ -194,25 +199,32 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $view = Zend_Registry::get('view');
 
-        $user_agent = $_SERVER['HTTP_USER_AGENT'];
-        $obj_user_agent = $view->userAgent();
-        $obj_device = $obj_user_agent->getDevice();
+        $user_agent = NULL;
+        $obj_device = NULL;
+
+        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+            $obj_user_agent = $view->userAgent();
+            $obj_device = $obj_user_agent->getDevice();
+        }
 
         $view->headLink()->appendAlternate($view->baseUrl() . 'http://gmpg.org/xfn/11', 'text/html', true, array('rel' => 'profile', 'title' => 'XFN Profile Version for Meta Markup'));
 //      $view->headLink()->appendAlternate($view->baseUrl() . 'https://plus.google.com/100952657106943880213', 'text/html', true, array( 'rel' => 'publisher', 'title' => 'Herausgeber dieser Webseite'));
         $view->headLink()->appendAlternate($view->baseUrl() . '/feed-rss', 'application/rss+xml', 'News-Feed im RSS Format');
         $view->headLink()->appendAlternate($view->baseUrl() . '/feed-atom', 'application/atom+xml', 'News-Feed im Atom Format');
 
-        if($obj_device->getType() == "desktop")
-        {
+        if(TRUE === is_object($obj_device)
+            && $obj_device->getType() == "desktop"
+        ) {
             $view->headLink()->prependStylesheet($view->baseUrl() . '/css/global.css', 'screen', true);
         }
-        else if($obj_device->getType() == "mobile")
-        {
+        else if(TRUE === is_object($obj_device)
+            && $obj_device->getType() == "mobile"
+        ) {
             $view->headLink()->prependStylesheet($view->baseUrl() . '/css/mobile.global.css', 'screen', true);
         }
         $view->headLink()->appendStylesheet($view->baseUrl() . '/css/normal.css', 'screen', true, array('title' => 'normal'));
-        $view->headLink()->appendStylesheet($view->baseUrl() . '/css/grau.css', 'screen', true, array('title' => 'grau', 'rel' => 'alternate stylesheet'));
+//        $view->headLink()->appendStylesheet($view->baseUrl() . '/css/grau.css', 'screen', true, array('title' => 'grau', 'rel' => 'alternate stylesheet'));
 
         // wenn eine extension wie firephp installiert ist, rutscht der browser
         // name eins weiter

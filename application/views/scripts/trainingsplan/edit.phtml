@@ -1,12 +1,36 @@
-<div id="trainingsplan_edit">
+<form method="post" action="/trainingsplan/speichern" target="upload_target" id="trainingsplan_edit">
+    <input type="checkbox" id="trainingsplan_flag_active" name="trainingsplan_flag_active"
+           value="1"
 <?php
-    echo $this->sContent;
+
+    if (TRUE == $this->trainingsplan_active) {
+        echo 'checked="checked" ';
+    }
 ?>
-</div>
+    />
+    <div id="uebungen">
+<?php
+        echo $this->sContent;
+?>
+    </div>
+    <input type="hidden" name="trainingsplan_id" id="trainingsplan_id"
+           value="<?php echo $this->iTrainingsplanId;?>" />
+    <input type="submit" name="trainingsplan_speichern" id="trainingsplan_speichern"
+           value="speichern" />
+</form>
 <input type="text" name="neue_uebung" id="neue_uebung" />
+<?php
+    if (2 == $this->trainingsplan_layout_fk) {
+?>
+    <button id="new-split-plan">Neuer Splitplan</button>
+<?php
+    }
+?>
 <script language="JavaScript">
     jQuery('document').ready(function(){
-        jQuery('#neue_uebung').bind('keyup', function(e){
+        init();
+
+        jQuery('#neue_uebung').bind('keyup', function(e) {
 
             var post_request = null;
 
@@ -14,9 +38,9 @@
             var suche = Base64.encode(jQuery(this).val());
             var self = jQuery(this);
 
-            jQuery(self).css('background-color', 'red');
-            jQuery(self).data('uebung-name', '');
-            jQuery(self).data('uebung-id', '');
+            //            jQuery(self).css('background-color', 'red');
+            //            jQuery(self).data('uebung-name', '');
+            //            jQuery(self).data('uebung-id', '');
 
             if(null !== post_request)
             {
@@ -32,7 +56,7 @@
                     jQuery('body').append(jQuery('#uebungen-vorschlaege'));
                     jQuery('#uebungen-vorschlaege').html(response);
                     jQuery('#uebungen-vorschlaege').css('left', offset.left + "px");
-                    jQuery('#uebungen-vorschlaege').css('top', offset.top + 10 + "px");
+                    jQuery('#uebungen-vorschlaege').css('top', offset.top + 15 + "px");
 
                     jQuery('#uebungen-vorschlaege').find('.vorschlag').unbind('click');
                     jQuery('#uebungen-vorschlaege').find('.vorschlag').bind('click', function()
@@ -52,10 +76,9 @@
                                 return false;
                             }
                         }
-                        jQuery(self).css('background-color', 'green');
-                        jQuery(self).val(Base64.decode(jQuery(this).data('vorschlag-text')));
-                        jQuery(self).data('uebung-name', Base64.decode(jQuery(this).data('vorschlag-text')));
-                        jQuery(self).data('uebung-id', jQuery(this).data('vorschlag-id'));
+                        jQuery(self).val('');
+                        iCounter = countUebungen();
+                        addUebung(jQuery(this).data('vorschlag-id'), iCounter);
                         jQuery('#uebungen-vorschlaege').fadeOut();
                         return false;
                     });
@@ -63,7 +86,128 @@
                 }
             });
         });
+
+        $('#new-split-plan').unbind('click');
+        $('#new-split-plan').bind('click', function() {
+            var sUrl = '/trainingsplan/get-trainingsplan-fuer-split';
+            var oParams =
+            {
+                'user_id': <?php echo $this->trainingsplan_user_fk;?>,
+                'trainingsplan_id': <?php echo $this->trainingsplan_id;?>,
+                'ajax': 1
+            };
+            $.post(sUrl, oParams, function(response) {
+                $('#uebungen').append(response);
+            });
+        });
     });
+
+    function init()
+    {
+        $(function() {
+            $(".droppable").sortable({
+                revert: true,
+                connectWith: '.droppable',
+                items: "li:not(.placeholder)",
+                sort: function() {
+                    $( this ).removeClass( "ui-state-default" );
+                },
+                stop: function(event, ui) {
+                    connectPracticesToParentTrainPlan(ui.item);
+                }
+            });
+            $(".droppable li").hover(
+                function() {
+                    $(this).css({'background-color': 'lightblue', 'border': '1px solid skyblue', 'border-radius': '5px', 'cursor': 'pointer'});
+                },
+                function() {
+                    $(this).css({'background-color': 'gainsboro', 'border': '0px none', 'cursor': 'normal'});
+                }
+            );
+        });
+
+        $('.edit').each(function(){
+            var iTrainingsplanId = $(this).parent().attr('id');
+            $(this).unbind('click');
+            $(this).bind('click', function(){
+                location.href = '/trainingsplan/edit/id/' + iTrainingsplanId;
+            });
+        });
+    }
+
+    function connectPracticesToParentTrainPlan(oElement)
+    {
+        var oParent = oElement.parent();
+        var iTrainPlanId = oParent.attr('id');
+        var aInputsInPractice = oElement.find(':input');
+        console.log(aInputsInPractice);
+        for (var i = 0; i < aInputsInPractice.length; i++) {
+            correctNameOfElement($(aInputsInPractice[i]), iTrainPlanId);
+        }
+    }
+
+    function correctNameOfElement(oElement, iId)
+    {
+        var name = oElement.attr('name');
+//            name = name.replace(/\[([0-9]+?)\]\[[0-9]+?\]/g, iTrainPlanId);
+        var iFirstPosStartOfIndex = name.indexOf('[');
+        var iFirstPosEndOfIndex = name.indexOf(']');
+        if (0 < iFirstPosStartOfIndex
+            && 0 < iFirstPosEndOfIndex
+            ) {
+            iFirstPosStartOfIndex = parseInt(iFirstPosStartOfIndex) + 1;
+            var iLengthFirstIndex = iFirstPosEndOfIndex - iFirstPosStartOfIndex;
+            var sSubStringWithIndexes = name.substr(iFirstPosStartOfIndex, iLengthFirstIndex);
+            name = name.substr(0, iFirstPosStartOfIndex) + iId + name.substr(iFirstPosEndOfIndex, name.length);
+            oElement.attr('name', name);
+        }
+    }
+
+    function correctIdOfElement(oELement, iId)
+    {
+//        var sId = oElement.attr('id');
+////            name = name.replace(/\[([0-9]+?)\]\[[0-9]+?\]/g, iTrainPlanId);
+//        var iPosOfFirstIndex = sId.indexOf('_');
+//        var iFirstPosEndOfIndex = name.indexOf(']');
+//        if (0 < iFirstPosStartOfIndex
+//            && 0 < iFirstPosEndOfIndex
+//            ) {
+//            iFirstPosStartOfIndex = parseInt(iFirstPosStartOfIndex) + 1;
+//            var iLengthFirstIndex = iFirstPosEndOfIndex - iFirstPosStartOfIndex;
+//            var sSubStringWithIndexes = name.substr(iFirstPosStartOfIndex, iLengthFirstIndex);
+//            name = name.substr(0, iFirstPosStartOfIndex) + iId + name.substr(iFirstPosEndOfIndex, name.length);
+//            oElement.attr('name', name);
+//        }
+    }
+
+    function addUebung(iUebungId, iCounter)
+    {
+        var sUrl = '/trainingsplan/get-uebung';
+        var oData = {'id': iUebungId, 'ajax': true, 'counter': iCounter};
+        jQuery.post(sUrl, oData, function(response) {
+//            jQuery('#trainingsplan_edit #uebungen').append(response);
+//            jQuery('ol.droppable:last').append(response);
+//            console.log(jQuery('ol.droppable:last .uebung:last-child'));
+//            connectPracticesToParentTrainPlan(jQuery('ol.droppable:last .uebung:last-child'));
+            jQuery('#uebungen ol:last').append(response);
+            console.log(jQuery('#uebungen ol:last .uebung:last-child'));
+            connectPracticesToParentTrainPlan(jQuery('#uebungen ol:last .uebung:last-child'));
+            init();
+        });
+    }
+
+    function countUebungen()
+    {
+        var iCount = 0;
+        jQuery('#trainingsplan_edit .uebung').each(function(){
+            if (iCount < $(this).attr('id')) {
+               iCount = $(this).attr('id');
+            }
+        });
+        return parseInt(iCount) + 1;
+    }
+
 </script>
 
 <div id="uebungen-vorschlaege"></div>
+<iframe id="upload_target" name="upload_target" style="position: absolute; top: -1000px; left: -1000px; width: 0; height: 0; padding: 0;"></iframe>

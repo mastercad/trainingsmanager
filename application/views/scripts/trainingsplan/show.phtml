@@ -1,2 +1,44 @@
+<a href="/trainingsplan/edit/id/<?php echo $this->trainingsplan_id;?>">
+    <button >Diesen Trainingsplan bearbeiten</button>
+</a>
 <?php
+    echo $this->sTrainingsplanLayout;
 
+?>
+<script type="text/javascript" language="JavaScript">
+
+
+    function init()
+    {
+//        $(function() {
+//            $(".droppable").sortable({
+//                revert: true,
+//                connectWith: '.droppable',
+//                items: "li:not(.placeholder)",
+//                sort: function() {
+//                    $( this ).removeClass( "ui-state-default" );
+//                },
+//                stop: function(event, ui) {
+//                    connectPracticesToParentTrainPlan(ui.item);
+//                }
+//            });
+//            $(".droppable li").hover(
+//                function() {
+//                    $(this).css({'background-color': 'lightblue', 'border': '1px solid skyblue', 'border-radius': '5px', 'cursor': 'pointer'});
+//                },
+//                function() {
+//                    $(this).css({'background-color': 'gainsboro', 'border': '0px none', 'cursor': 'normal'});
+//                }
+//            );
+//        });
+
+        $('.edit').each(function(){
+            var iTrainingsplanId = $(this).parent().attr('id');
+            $(this).unbind('click');
+            $(this).bind('click', function(){
+                location.href = '/trainingsplan/edit/id/' + iTrainingsplanId;
+            });
+        });
+    }
+    init();
+</script>

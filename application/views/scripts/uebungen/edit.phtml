@@ -275,29 +275,6 @@
                 var muskelgruppe_id              = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-id');
                 var muskelgruppe_beanspruchung   = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_beanspruchung').data('muskelgruppe-beanspruchung');
                 var b_fail = false;
-                /*
-                if(isNumber(muskelgruppe_id) && 
-                   muskelgruppe_id > 0 &&
-                   muskelgruppe_name.length > 0)
-                {
-                }
-                else
-                {
-                    jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').css('outline', '2px solid red');
-                    b_fail = true;
-                }
-
-                if(
-                   isNumber(muskelgruppe_beanspruchung) &&
-                   muskelgruppe_beanspruchung > 0)
-                {
-                }
-                else
-                {
-                    jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_beanspruchung').css('outline', '2px solid red');
-                    b_fail = true;
-                }
-                */
                 if(muskelgruppe_id)
                 {
                     muskelgruppen.push({'id': muskelgruppe_id, 'beanspruchung': muskelgruppe_beanspruchung});

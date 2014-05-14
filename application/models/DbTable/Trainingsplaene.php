@@ -28,7 +28,7 @@ class Application_Model_DbTable_Trainingsplaene extends Zend_Db_Table_Abstract
     }
 
     public function getChildTrainingsplaene($iParentTrainingsplanId) {
-        return $this->fetchAll('trainingsplan_parent_fk = ' . $iParentTrainingsplanId);
+        return $this->fetchAll('trainingsplan_parent_fk = ' . $iParentTrainingsplanId, 'trainingsplan_order');
     }
 
     public function getChildTrainingsplaeneInclUebungen($iParentTrainingsplanId) {
@@ -36,5 +36,31 @@ class Application_Model_DbTable_Trainingsplaene extends Zend_Db_Table_Abstract
             ->setIntegrityCheck(FALSE);
 
 //        $oSelect->join
+    }
+
+    public function getTrainingsplaeneAllActive()
+    {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(FALSE);
+
+        $oSelect->join('users', 'user_id = trainingsplan_user_fk')
+            ->where('trainingsplan_active = 1')
+            ->where('trainingsplan_parent_fk = 0')
+            ->order('user_vorname');
+
+        return $this->fetchAll($oSelect);
+    }
+
+    public function getTrainingsplaeneAllInActive()
+    {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(FALSE);
+
+        $oSelect->join('users', 'user_id = trainingsplan_user_fk')
+            ->where('trainingsplan_active = 0')
+            ->where('trainingsplan_parent_fk = 0')
+            ->order('user_vorname');
+
+        return $this->fetchAll($oSelect);
     }
 }

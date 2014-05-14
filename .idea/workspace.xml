@@ -2,25 +2,48 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="25404030-811d-40ea-896a-252c495195ea" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/get-uebungen-vorschlaege.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/nbproject/private/private.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/nbproject/project.properties" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/nbproject/project.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_edit_partial.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/uebung-vorschlag.phtml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/services/Trainingsplan.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/Trainingstagebuecher.php" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/archiv.phtml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/deployment.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/get-trainingsplan-fuer-split.phtml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/css/jquery.mobile.min.css" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/js/jquery.mobile.min.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/tests/mockTest.php5" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/uebungen/muskel-edit-loop.phtml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/php.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/speichern.phtml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/public/swipe_menu.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan-uebung-partial.phtml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_edit_partial.phtml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/IMG_3433.jpg" afterPath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/IMG_3433.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/28/IMG_3520.jpg" afterPath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/28/IMG_3520.jpg" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/IMG_3526.jpg" afterPath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/IMG_3526.jpg" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/Bootstrap.php" afterPath="$PROJECT_DIR$/application/Bootstrap.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/ButlerController.php" afterPath="$PROJECT_DIR$/application/controllers/ButlerController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/ErrorController.php" afterPath="$PROJECT_DIR$/application/controllers/ErrorController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/application/controllers/IndexControllerTest.php" afterPath="$PROJECT_DIR$/tests/application/controllers/IndexControllerTest.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.php" afterPath="$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/TrainingsplanController.php" afterPath="$PROJECT_DIR$/application/controllers/TrainingsplanController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingsplanUebungen.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingsplanUebungen.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/Uebungen.php" afterPath="$PROJECT_DIR$/application/models/DbTable/Uebungen.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/UebungenController.php" afterPath="$PROJECT_DIR$/application/controllers/UebungenController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dataSources.xml" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/UebungMuskelgruppen.php" afterPath="$PROJECT_DIR$/application/models/DbTable/UebungMuskelgruppen.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/configs/application.ini" afterPath="$PROJECT_DIR$/application/configs/application.ini" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tests/bootstrap.php" afterPath="$PROJECT_DIR$/tests/bootstrap.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/edit.js" afterPath="$PROJECT_DIR$/public/js/edit.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/edit.phtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/global.css" afterPath="$PROJECT_DIR$/public/css/global.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/get-muskelgruppen-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/uebungen/get-muskelgruppen-fuer-edit.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/index.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/layout/layout.phtml" afterPath="$PROJECT_DIR$/application/layout/layout.phtml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/data/mod_rewrite.log" afterPath="$PROJECT_DIR$/data/mod_rewrite.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/mobile.global.css" afterPath="$PROJECT_DIR$/public/css/mobile.global.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/layout/mobile.layout.phtml" afterPath="$PROJECT_DIR$/application/layout/mobile.layout.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-loop.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/normal.css" afterPath="$PROJECT_DIR$/public/css/normal.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/rundumfit.iml" afterPath="$PROJECT_DIR$/.idea/rundumfit.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/show.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/uebung-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/uebungen/uebung-loop.phtml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="rundumfit.iws" />
@@ -53,82 +76,75 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="TrainingsplanController.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/controllers/TrainingsplanController.php">
+      <file leaf-file-name="get-muskelgruppe-fuer-edit.phtml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskelgruppe-fuer-edit.phtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="306" column="31" selection-start="12491" selection-end="12491" vertical-scroll-proportion="-12.666667" vertical-offset="4286" max-vertical-offset="4845">
+            <state line="9" column="0" selection-start="273" selection-end="273" vertical-scroll-proportion="-5.625" vertical-offset="0" max-vertical-offset="465">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="uebung-vorschlag.phtml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/uebung-vorschlag.phtml">
+      <file leaf-file-name="muskelgruppe-muskel-loop.phtml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-muskel-loop.phtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="70" selection-start="245" selection-end="245" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="240">
+            <state line="18" column="48" selection-start="424" selection-end="861" vertical-scroll-proportion="-8.125" vertical-offset="0" max-vertical-offset="315">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Uebungen.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/models/DbTable/Uebungen.php">
+      <file leaf-file-name="edit.phtml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="31" column="9" selection-start="656" selection-end="656" vertical-scroll-proportion="-7.2916665" vertical-offset="290" max-vertical-offset="2430">
+            <state line="206" column="16" selection-start="7350" selection-end="7350" vertical-scroll-proportion="-4.2916665" vertical-offset="2987" max-vertical-offset="4785">
+              <folding>
+                <element signature="n#style#0;n#div#7;n#div#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/js/edit.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="471" column="114" selection-start="20092" selection-end="20104" vertical-scroll-proportion="0.0" vertical-offset="6788" max-vertical-offset="14430">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="UebungenController.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/controllers/UebungenController.php">
+      <file leaf-file-name="get-muskelgruppen-vorschlaege.phtml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskelgruppen-vorschlaege.phtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="572" column="66" selection-start="23898" selection-end="23898" vertical-scroll-proportion="-82.041664" vertical-offset="6566" max-vertical-offset="10680">
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="390">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="get-uebungen-vorschlaege.phtml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/get-uebungen-vorschlaege.phtml">
+      <file leaf-file-name="get-muskelgruppen-fuer-edit.phtml" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/get-muskelgruppen-fuer-edit.phtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="195">
+            <state line="18" column="81" selection-start="642" selection-end="642" vertical-scroll-proportion="0.36935705" vertical-offset="0" max-vertical-offset="1020">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="edit.phtml" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/edit.phtml">
+      <file leaf-file-name="muskel-edit-loop.phtml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/muskel-edit-loop.phtml">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="43" column="57" selection-start="1845" selection-end="1845" vertical-scroll-proportion="0.41577825" vertical-offset="450" max-vertical-offset="1125">
+            <state line="8" column="109" selection-start="272" selection-end="272" vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="390">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="global.css" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/css/global.css">
+      <file leaf-file-name="UebungMuskelgruppen.php" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/models/DbTable/UebungMuskelgruppen.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="940" column="18" selection-start="18112" selection-end="18112" vertical-scroll-proportion="0.0" vertical-offset="13804" max-vertical-offset="14325">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TrainingsplanUebungen.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsplanUebungen.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="48" column="20" selection-start="1408" selection-end="1408" vertical-scroll-proportion="-11.625" vertical-offset="366" max-vertical-offset="1095">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Trainingsplaene.php" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="37" column="24" selection-start="1013" selection-end="1013" vertical-scroll-proportion="0.0" vertical-offset="555" max-vertical-offset="690">
+            <state line="30" column="0" selection-start="1055" selection-end="1055" vertical-scroll-proportion="0.0" vertical-offset="16" max-vertical-offset="2205">
               <folding />
             </state>
           </provider>
@@ -152,55 +168,72 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/application/models/DbTable/GeraetegruppeGeraete.php" />
-        <option value="$PROJECT_DIR$/application/controllers/ErrorController.php" />
-        <option value="$PROJECT_DIR$/application/views/scripts/muskeln/get-muskel-vorschlaege.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/muskeln/get-muskeln-fuer-edit.phtml" />
-        <option value="$PROJECT_DIR$/application/plugins/Auth/AccessControl.php" />
-        <option value="$PROJECT_DIR$/library/CAD/Auth/Adapter/DbTable.php" />
-        <option value="$PROJECT_DIR$/application/plugins/Auth/AuthAdapter.php" />
-        <option value="$PROJECT_DIR$/application/controllers/MuskelgruppenController.php" />
-        <option value="$PROJECT_DIR$/library/CAD/Filter/UbbReplace.php" />
-        <option value="$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-beinpolster.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-rueckenpolster.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/geraete/edit.phtml" />
-        <option value="$PROJECT_DIR$/application/controllers/GeraeteController.php" />
-        <option value="$PROJECT_DIR$/public/js/edit.js" />
-        <option value="$PROJECT_DIR$/application/controllers/GeraetegruppenController.php" />
-        <option value="$PROJECT_DIR$/application/controllers/MuskelnController.php" />
-        <option value="$PROJECT_DIR$/application/controllers/TrainingstagebuchController.phtml" />
         <option value="$PROJECT_DIR$/application/controllers/TrainingstagebuchController.php" />
         <option value="$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.phtml" />
         <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsplanUebungen.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/get-uebung.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/uebungen/uebung-loop.phtml" />
         <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsplanLayout.phtml" />
         <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsplanLayouts.php" />
         <option value="$PROJECT_DIR$/application/models/DbTable/Users.php" />
         <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/select-layout.phtml" />
-        <option value="$PROJECT_DIR$/application/layout/layout.phtml" />
-        <option value="$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.php" />
-        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_edit_partial.phtml" />
-        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsplanUebungen.php" />
-        <option value="$PROJECT_DIR$/application/Bootstrap.php" />
         <option value="$PROJECT_DIR$/application/controllers/UebungenController.php" />
         <option value="$PROJECT_DIR$/application/models/DbTable/Uebungen.php" />
         <option value="$PROJECT_DIR$/public/css/global.css" />
-        <option value="$PROJECT_DIR$/application/controllers/TrainingsplanController.php" />
         <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/uebung-vorschlag.phtml" />
+        <option value="$PROJECT_DIR$/tests/application/controllers/IndexControllerTest.php" />
+        <option value="$PROJECT_DIR$/tests/bootstrap.php" />
+        <option value="$PROJECT_DIR$/application/configs/application.ini" />
+        <option value="$PROJECT_DIR$/application/Bootstrap.php" />
+        <option value="$PROJECT_DIR$/application/services/Trainingsplan.php" />
+        <option value="$PROJECT_DIR$/tests/mockTest.php5" />
+        <option value="$PROJECT_DIR$/application/controllers/ErrorController.php" />
+        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/index.phtml" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsplanUebungen.php" />
+        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/get-trainingsplan-fuer-split.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/uebungen/uebung-loop.phtml" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.php" />
+        <option value="$PROJECT_DIR$/public/css/normal.css" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/Trainingstagebuecher.phtml" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/Trainingstagebuecher.php" />
+        <option value="$PROJECT_DIR$/application/layout/layout.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan-uebung-partial.phtml" />
+        <option value="$PROJECT_DIR$/application/controllers/ButlerController.php" />
+        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_edit_partial.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/get-uebung.phtml" />
         <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/edit.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/trainingsplan/show.phtml" />
+        <option value="$PROJECT_DIR$/application/controllers/TrainingsplanController.php" />
+        <option value="$PROJECT_DIR$/public/js/jquery-mobile-slide-menu.js" />
+        <option value="$PROJECT_DIR$/public/css/jquery-mobile-slide-menu.css" />
+        <option value="$PROJECT_DIR$/public/css/mobile.global.css" />
+        <option value="$PROJECT_DIR$/application/layout/mobile.layout.phtml" />
+        <option value="$PROJECT_DIR$/public/js/jquery.mobile.min.js" />
+        <option value="$PROJECT_DIR$/public/css/jquery.mobile.min.css" />
+        <option value="$PROJECT_DIR$/public/swipe_menu.html" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/UebungMuskelgruppen.php" />
+        <option value="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-edit-loop.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/muskeln/muskel-edit-loop.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskelgruppe-fuer-edit.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-loop.phtml" />
+        <option value="$PROJECT_DIR$/public/js/edit.js" />
+        <option value="$PROJECT_DIR$/application/views/scripts/uebungen/get-muskelgruppen-fuer-edit.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/uebungen/muskel-edit-loop.phtml" />
+        <option value="$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml" />
       </list>
     </option>
   </component>
   <component name="PhpTemplates">
     <option name="NEW_PHP_FILE_LAST_EXTENSION" value="phtml" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
+  <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" interpreter_name="Xdebug">
+    <include_path>
+      <path value="/usr/share/php/PHPUnit" />
+    </include_path>
+  </component>
   <component name="ProjectFrameBounds">
-    <option name="width" value="1440" />
-    <option name="height" value="875" />
+    <option name="x" value="-2" />
+    <option name="width" value="1444" />
+    <option name="height" value="877" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <OptionsSetting value="true" id="Add" />
@@ -228,7 +261,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ColorIdeProjectViewPane">
         <subPane>
           <PATH>
@@ -257,7 +289,61 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tests" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="js" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -337,6 +423,32 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="uebungen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="trainingsplan" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -388,9 +500,124 @@
               <option name="myItemId" value="views" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="muskeln" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="muskelgruppen" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="geraete" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layout" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rundumfit" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controllers" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -828,26 +1055,37 @@
   <component name="PropertiesComponent">
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="options.lastSelected" value="Template Data Languages" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="options.lastSelected" value="web.server" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../byte-artist-v2" />
     <property name="dynamic.classpath" value="false" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
     <property name="FullScreen" value="false" />
-    <property name="SearchEverywhereHistory" value="?php" />
+    <property name="SearchEverywhereHistory" value="&#10;?php" />
+    <property name="recentsLimit" value="5" />
+    <property name="DefaultHtmlFileTemplate" value="Html5" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/application/views/scripts/uebungen" />
+      <recent name="$PROJECT_DIR$/application/views/scripts/trainingsplan" />
       <recent name="$PROJECT_DIR$/application/views/scripts/geraete" />
       <recent name="$PROJECT_DIR$/application/views/scripts/geraetegruppen" />
       <recent name="$PROJECT_DIR$/application/models/DbTable" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/public/images" />
       <recent name="$PROJECT_DIR$/application/views/scripts" />
       <recent name="$PROJECT_DIR$/application/controllers" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="PHPUnit.MockTest">
+    <configuration default="false" name="MockTest" type="PHPUnitRunConfigurationType" factoryName="PHPUnit" singleton="true" temporary="true">
+      <TestRunner class="MockTest" configuration_file="$PROJECT_DIR$/tests/phpunit.xml" file="$PROJECT_DIR$/tests/mockTest.php5" scope="Class" use_alternative_configuration_file="true" />
+      <RunnerSettings RunnerId="PhpRunner" />
+      <ConfigurationWrapper RunnerId="PhpRunner" />
+      <method />
+    </configuration>
     <configuration default="true" type="PHPUnitRunConfigurationType" factoryName="PHPUnit">
       <TestRunner />
       <method />
@@ -874,7 +1112,14 @@
       <option name="CONTEXT_PROVIDER" />
       <method />
     </configuration>
-    <list size="0" />
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="PHPUnit.MockTest" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="PHPUnit.MockTest" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
   <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
@@ -904,38 +1149,44 @@
       <created>1399215961805</created>
       <updated>1399215961805</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="- es können trainingspläne entsprechend ihrer layouts angelegt werden&#10;- es können übungen für trainingspläne vorschlagen werden">
+      <created>1399321959091</created>
+      <updated>1399321959091</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1440" height="875" extended-state="0" />
+    <frame x="-2" y="0" width="1444" height="877" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3275862" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32998565" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32152587" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32152587" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Plugins" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21757323" sideWeight="0.67711174" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Code Outline" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22663878" sideWeight="0.67166215" order="1" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16550764" sideWeight="0.67166215" order="1" side_tool="false" content_ui="combo" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.37583002" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Get Gist" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
-      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24964131" sideWeight="0.5" order="5" side_tool="false" content_ui="combo" />
-      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32804233" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3275862" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Command Line Tools Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32936507" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -951,319 +1202,282 @@
       <TodoPanelSettings />
     </option>
     <MESSAGE value="- es wurden diverse änderungen vorgenommen&#10;- es gibt jetzt trainingspläne und tagebucheinträge" />
-    <option name="LAST_COMMIT_MESSAGE" value="- es wurden diverse änderungen vorgenommen&#10;- es gibt jetzt trainingspläne und tagebucheinträge" />
+    <MESSAGE value="- es können trainingspläne entsprechend ihrer layouts angelegt werden&#10;- es können übungen für trainingspläne vorschlagen werden" />
+    <option name="LAST_COMMIT_MESSAGE" value="- es können trainingspläne entsprechend ihrer layouts angelegt werden&#10;- es können übungen für trainingspläne vorschlagen werden" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/application/plugins/Auth/AccessControl.php">
+    <entry file="file://$PROJECT_DIR$/tests/application/controllers/IndexControllerTest.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="133" column="51" selection-start="3688" selection-end="3688" vertical-scroll-proportion="13.333333" vertical-offset="0" max-vertical-offset="0" />
+        <state line="12" column="0" selection-start="262" selection-end="262" vertical-scroll-proportion="-7.5" vertical-offset="0" max-vertical-offset="270" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/MuskelgruppenController.php">
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Uebungen.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="456" column="94" selection-start="21371" selection-end="21371" vertical-scroll-proportion="-16.875" vertical-offset="0" max-vertical-offset="0" />
+        <state line="35" column="20" selection-start="786" selection-end="786" vertical-scroll-proportion="0.0" vertical-offset="525" max-vertical-offset="2430" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/library/CAD/Filter/UbbReplace.php">
+    <entry file="file://$PROJECT_DIR$/tests/bootstrap.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="4" column="6" selection-start="77" selection-end="77" vertical-scroll-proportion="0.083798885" vertical-offset="0" max-vertical-offset="11910" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/geshi/geshi.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="4234" column="58" selection-start="180089" selection-end="180089" vertical-scroll-proportion="-0.6703911" vertical-offset="63510" max-vertical-offset="71235" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Geraete.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="20" selection-start="2639" selection-end="2639" vertical-scroll-proportion="-10.458333" vertical-offset="1204" max-vertical-offset="2025" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/MuskelnController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="101" column="8" selection-start="2775" selection-end="2775" vertical-scroll-proportion="0.3326226" vertical-offset="1314" max-vertical-offset="4860" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/GeraetegruppenController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="204" column="9" selection-start="7403" selection-end="7584" vertical-scroll-proportion="0.36460555" vertical-offset="2799" max-vertical-offset="6825" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/geraete/edit.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="149" column="80" selection-start="5685" selection-end="5685" vertical-scroll-proportion="0.8086592" vertical-offset="1656" max-vertical-offset="2595" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-sitzpositionen.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-rueckenpolster.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="41" column="53" selection-start="1193" selection-end="1193" vertical-scroll-proportion="0.781893" vertical-offset="0" max-vertical-offset="735" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-beinpolster.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="29" column="0" selection-start="736" selection-end="736" vertical-scroll-proportion="0.5349794" vertical-offset="0" max-vertical-offset="735" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingstagebuch/edit.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingstagebuch/show.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingstagebuch/get-split-trainingsplan-layout.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingstagebuch/get-base-trainingsplan-layout.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="195" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingstagebuch/partials/trainingsplan-entry.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingstagebuch/speichern.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/TrainingstagebuchController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="5" selection-start="533" selection-end="533" vertical-scroll-proportion="-25.375" vertical-offset="36" max-vertical-offset="765" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-gewichte.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingstagebuch/index.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/show.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="321" column="128" selection-start="12168" selection-end="12168" vertical-scroll-proportion="0.0" vertical-offset="4815" max-vertical-offset="5130" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/uebung-loop.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="91" selection-start="584" selection-end="584" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="510" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsplanLayouts.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="98" selection-start="851" selection-end="851" vertical-scroll-proportion="-19.375" vertical-offset="0" max-vertical-offset="600">
-          <folding>
-            <element signature="e#6#89#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/create-layout.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/cad.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.9721116" vertical-offset="732" max-vertical-offset="1485" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/cad_cms.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="740">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/default.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-4.6573706" vertical-offset="3507" max-vertical-offset="4260" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Users.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="143" column="62" selection-start="2924" selection-end="2924" vertical-scroll-proportion="-6.0833335" vertical-offset="1804" max-vertical-offset="2910" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/select-layout.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="12" selection-start="205" selection-end="205" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="675" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/layout/layout.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="143" column="115" selection-start="6471" selection-end="6471" vertical-scroll-proportion="0.25139666" vertical-offset="1965" max-vertical-offset="2925" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/GeraeteController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="186" column="20" selection-start="5298" selection-end="5298" vertical-scroll-proportion="99.375" vertical-offset="5085" max-vertical-offset="8835" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="37" column="24" selection-start="1013" selection-end="1013" vertical-scroll-proportion="0.0" vertical-offset="555" max-vertical-offset="690">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="4" selection-start="148" selection-end="148" vertical-scroll-proportion="0.0" vertical-offset="180" max-vertical-offset="645">
-          <folding />
-        </state>
+        <state line="25" column="0" selection-start="723" selection-end="723" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="465" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/configs/application.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="26" selection-start="1201" selection-end="1201" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="855" />
+        <state line="42" column="0" selection-start="1389" selection-end="1389" vertical-scroll-proportion="0.0" vertical-offset="447" max-vertical-offset="915" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/index.php">
+    <entry file="file://$PROJECT_DIR$/tests/mockTest.php5">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="753">
-          <folding />
-        </state>
+        <state line="24" column="100" selection-start="804" selection-end="862" vertical-scroll-proportion="0.0" vertical-offset="360" max-vertical-offset="660" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Bootstrap.php">
+    <entry file="file://$PROJECT_DIR$/application/controllers/ErrorController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="380" column="47" selection-start="15031" selection-end="15031" vertical-scroll-proportion="0.49720672" vertical-offset="5344" max-vertical-offset="6060">
-          <folding />
-        </state>
+        <state line="41" column="0" selection-start="1556" selection-end="1556" vertical-scroll-proportion="0.0" vertical-offset="615" max-vertical-offset="1035" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_edit_partial.phtml">
+    <entry file="file://$PROJECT_DIR$/application/services/Trainingsplan.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="0" selection-start="512" selection-end="512" vertical-scroll-proportion="-10.0" vertical-offset="0" max-vertical-offset="390">
-          <folding />
-        </state>
+        <state line="25" column="74" selection-start="633" selection-end="633" vertical-scroll-proportion="0.4409938" vertical-offset="87" max-vertical-offset="570" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsplanUebungen.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="48" column="20" selection-start="1408" selection-end="1408" vertical-scroll-proportion="-11.625" vertical-offset="366" max-vertical-offset="1095">
-          <folding />
-        </state>
+        <state line="29" column="0" selection-start="693" selection-end="693" vertical-scroll-proportion="0.0" vertical-offset="435" max-vertical-offset="1245" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/index.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="32" selection-end="32" vertical-scroll-proportion="0.0" vertical-offset="30" max-vertical-offset="120" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/get-trainingsplan-fuer-split.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="21" selection-start="113" selection-end="113" vertical-scroll-proportion="0.061559506" vertical-offset="0" max-vertical-offset="150" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/index.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="-0.0027855153" vertical-offset="2" max-vertical-offset="990" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/normal.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="361" column="1" selection-start="7262" selection-end="7262" vertical-scroll-proportion="0.40397352" vertical-offset="5110" max-vertical-offset="5865" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/archiv.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="2" column="0" selection-start="32" selection-end="32" vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="120" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/uebung-loop.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="1169" vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="495" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Zend/Db/Table/Abstract.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1417" column="63" selection-start="47279" selection-end="47279" vertical-scroll-proportion="-10.291667" vertical-offset="20723" max-vertical-offset="24015" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Trainingstagebuecher.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="9" column="0" selection-start="149" selection-end="149" vertical-scroll-proportion="-5.625" vertical-offset="0" max-vertical-offset="675" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Trainingsplaene.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="7" column="0" selection-start="90" selection-end="149" vertical-scroll-proportion="-1.25" vertical-offset="0" max-vertical-offset="1005" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/Zend/Cache/Frontend/Output.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="1" column="0" selection-start="6" selection-end="6" vertical-scroll-proportion="0.031120332" vertical-offset="0" max-vertical-offset="1380" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/ButlerController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="219" column="21" selection-start="7647" selection-end="7647" vertical-scroll-proportion="0.76759064" vertical-offset="2925" max-vertical-offset="6315" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/layout/layout.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="132" column="17" selection-start="5915" selection-end="5915" vertical-scroll-proportion="-82.5" vertical-offset="0" max-vertical-offset="3090" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan-uebung-partial.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="35" column="2" selection-start="1076" selection-end="1076" vertical-scroll-proportion="-7.6666665" vertical-offset="266" max-vertical-offset="1590" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/get-uebung.phtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="103" column="26" selection-start="3492" selection-end="3492" vertical-scroll-proportion="22.75" vertical-offset="2091" max-vertical-offset="2820">
+        <state line="188" column="17" selection-start="7842" selection-end="7842" vertical-scroll-proportion="-1.7916666" vertical-offset="2777" max-vertical-offset="3495" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/edit.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="135" column="5" selection-start="4135" selection-end="5315" vertical-scroll-proportion="-22.5" vertical-offset="1485" max-vertical-offset="3285" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="22" column="0" selection-start="916" selection-end="916" vertical-scroll-proportion="-10.625" vertical-offset="0" max-vertical-offset="345" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/show.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="6" selection-start="563" selection-end="563" vertical-scroll-proportion="0.0" vertical-offset="285" max-vertical-offset="750" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Bootstrap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="206" column="40" selection-start="8264" selection-end="8264" vertical-scroll-proportion="0.0" vertical-offset="3090" max-vertical-offset="6240" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/images/menu/menuIconsSprite.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/jquery-mobile-slide-menu.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="41" column="34" selection-start="909" selection-end="909" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="795" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/mobile.global.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="508" column="48" selection-start="9705" selection-end="9705" vertical-scroll-proportion="0.0" vertical-offset="6895" max-vertical-offset="7725" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/jquery-mobile-slide-menu.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="74" column="0" selection-start="2600" selection-end="2600" vertical-scroll-proportion="0.0" vertical-offset="398" max-vertical-offset="1200" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/layout/mobile.layout.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="134" column="0" selection-start="6475" selection-end="6475" vertical-scroll-proportion="0.0" vertical-offset="2010" max-vertical-offset="5340" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/js/jquery.mobile.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="3" selection-start="145406" selection-end="145406" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="225" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/css/jquery.mobile.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="11" column="94247" selection-start="94670" selection-end="94670" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/swipe_menu.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="29" selection-start="701" selection-end="701" vertical-scroll-proportion="-0.0" vertical-offset="285" max-vertical-offset="1215" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/TrainingsplanController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="87" column="48" selection-start="3755" selection-end="3755" vertical-scroll-proportion="-0.0" vertical-offset="1305" max-vertical-offset="8370" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/geraete/get-geraet-vorschlaege.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="755" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/UebungenController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="51" selection-start="559" selection-end="559" vertical-scroll-proportion="0.0" vertical-offset="375" max-vertical-offset="10725" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-vorschlag-loop.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="755" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/MuskelgruppenController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="165" column="78" selection-start="6106" selection-end="6106" vertical-scroll-proportion="-9.375" vertical-offset="2205" max-vertical-offset="7230" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-edit-loop.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="2" selection-start="835" selection-end="835" vertical-scroll-proportion="-8.125" vertical-offset="0" max-vertical-offset="405" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskeln/muskel-edit-loop.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="742" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskeln/get-muskeln-fuer-edit.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="755" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-loop.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="731" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/muskel-edit-loop.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="8" column="109" selection-start="272" selection-end="272" vertical-scroll-proportion="0.0" vertical-offset="120" max-vertical-offset="390">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/cad_cms.js">
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/UebungMuskelgruppen.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="416" column="29" selection-start="16703" selection-end="16703" vertical-scroll-proportion="0.3326572" vertical-offset="6076" max-vertical-offset="14985">
+        <state line="30" column="0" selection-start="1055" selection-end="1055" vertical-scroll-proportion="0.0" vertical-offset="16" max-vertical-offset="2205">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="206" column="16" selection-start="7350" selection-end="7350" vertical-scroll-proportion="-4.2916665" vertical-offset="2987" max-vertical-offset="4785">
           <folding>
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
-            <marker date="1365080196000" expanded="false" signature="-1:-1" placeholder="..." />
+            <element signature="n#style#0;n#div#7;n#div#0;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/js/auth.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="26" selection-start="296" selection-end="471" vertical-scroll-proportion="0.44466403" vertical-offset="0" max-vertical-offset="1215">
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/edit.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="124" column="77" selection-start="3928" selection-end="3964" vertical-scroll-proportion="0.42190668" vertical-offset="1652" max-vertical-offset="14430">
+        <state line="471" column="114" selection-start="20092" selection-end="20104" vertical-scroll-proportion="0.0" vertical-offset="6788" max-vertical-offset="14430">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/UebungenController.php">
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskelgruppen-vorschlaege.phtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="572" column="66" selection-start="23898" selection-end="23898" vertical-scroll-proportion="-82.041664" vertical-offset="6566" max-vertical-offset="10680">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="755">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/normal.css">
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-muskel-loop.phtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="5520">
+        <state line="18" column="48" selection-start="424" selection-end="861" vertical-scroll-proportion="-8.125" vertical-offset="0" max-vertical-offset="315">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Uebungen.php">
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskelgruppe-fuer-edit.phtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="31" column="9" selection-start="656" selection-end="656" vertical-scroll-proportion="-7.2916665" vertical-offset="290" max-vertical-offset="2430">
+        <state line="9" column="0" selection-start="273" selection-end="273" vertical-scroll-proportion="-5.625" vertical-offset="0" max-vertical-offset="465">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/css/global.css">
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/uebungen/get-muskelgruppen-fuer-edit.phtml">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="940" column="18" selection-start="18112" selection-end="18112" vertical-scroll-proportion="0.0" vertical-offset="13804" max-vertical-offset="14325">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/get-uebungen-vorschlaege.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="91" selection-end="91" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="195">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/TrainingsplanController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="306" column="31" selection-start="12491" selection-end="12491" vertical-scroll-proportion="-12.666667" vertical-offset="4286" max-vertical-offset="4845">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/uebung-vorschlag.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="70" selection-start="245" selection-end="245" vertical-scroll-proportion="-4.375" vertical-offset="0" max-vertical-offset="240">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/trainingsplan/edit.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="43" column="57" selection-start="1845" selection-end="1845" vertical-scroll-proportion="0.41577825" vertical-offset="450" max-vertical-offset="1125">
+        <state line="18" column="81" selection-start="642" selection-end="642" vertical-scroll-proportion="0.36935705" vertical-offset="0" max-vertical-offset="1020">
           <folding />
         </state>
       </provider>
