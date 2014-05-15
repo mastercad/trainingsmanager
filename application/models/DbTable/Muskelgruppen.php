@@ -28,19 +28,16 @@ class Application_Model_DbTable_Muskelgruppen extends Zend_Db_Table_Abstract
             return false;
         }
         
-	public function getMuskelgruppe($muskelgruppe_id)
+	public function getMuskelgruppe($iMuskelgruppeId)
 	{
-            $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+            $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
                                        ->setIntegrityCheck(false);
             try
             {
-                $row = $this->fetchRow("muskelgruppe_id = '" . $muskelgruppe_id . "'");
-
-                if($row)
-                {
-                    return $row->toArray();
-                }
-                return false;
+                $oSelect->join('muskelgruppe_muskeln', 'muskelgruppe_muskel_muskelgruppe_fk = muskelgruppe_id');
+                $oSelect->join('muskeln', 'muskel_id = muskelgruppe_muskel_muskel_fk');
+                $oSelect->where("muskelgruppe_id = '" . $iMuskelgruppeId . "'");
+                return $this->fetchAll($oSelect);
             }
             catch( Exception $e)
             {

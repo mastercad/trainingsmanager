@@ -66,7 +66,7 @@ class MuskelgruppenController extends Zend_Controller_Action
             $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
             
             $a_muskelgruppe = $obj_db_muskelgruppen->getMuskelgruppe($i_muskelgruppe_id);
-            $this->view->assign($a_muskelgruppe);
+            $this->view->assign($a_muskelgruppe->toArray());
         }
     }
     
@@ -156,21 +156,26 @@ class MuskelgruppenController extends Zend_Controller_Action
     
     public function getMuskelgruppeFuerEditAction()
     {
-        $a_params = $this->getRequest()->getParams();
-        $a_messages = array();
-        
-        if(isset($a_params['id']))
+        $aParams = $this->getAllParams();
+        $aMessages = array();
+
+        if(isset($aParams['id']))
         {
-           $i_uebung_id = $a_params['id'];
-           $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
-           $a_uebung_muskelgruppen = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
-           
-           $this->view->assign('a_muskelgruppen', $a_uebung_muskelgruppen);
+            $iMuskelGruppeId = $aParams['id'];
+            $oMuskelGruppenStorage = new Application_Model_DbTable_Muskelgruppen();
+            $aMuskelGruppeInclMuskeln = $oMuskelGruppenStorage->getMuskelgruppe($iMuskelGruppeId);
+            $aMuskelGruppe = array();
+            foreach ($aMuskelGruppeInclMuskeln as $aMuskel) {
+                $aMuskelGruppe['muskelgruppe_name'] = $aMuskel->muskelgruppe_name;
+                $aMuskelGruppe['muskelgruppe_id'] = $aMuskel->muskelgruppe_id;
+                $aMuskelGruppe['muskeln'][] = $aMuskel->toArray();
+            }
+            $this->view->assign('aMuskelGruppe', $aMuskelGruppe);
         }
-        
-        if(count($a_messages) > 0)
+
+        if(count($aMessages) > 0)
         {
-            $this->view->assign('json_string', json_encode($a_messages));
+            $this->view->assign('json_string', json_encode($aMessages));
         }
     }
     /*

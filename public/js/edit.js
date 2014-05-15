@@ -398,6 +398,8 @@
             jQuery('.muskelgruppe').find('.muskel-beanspruchung').hover(
                 function()
                 {
+                    jQuery(this).data('muskel-beanspruchung'), jQuery(this).data('muskel-beanspruchung');
+                    jQuery(this).data('background-position'), jQuery(this).data('background-position');
                     var x = null;
                     jQuery(this).unbind('mousemove');
                     jQuery(this).mousemove(function(e)
@@ -412,7 +414,7 @@
                     jQuery(this).click(function()
                     {
                         jQuery(this).data('background_position', x + "px " + x + "px");
-                        jQuery(this).data('muskelgruppe-beanspruchung', Math.round(5 + (x / 20)));
+                        jQuery(this).data('muskel-beanspruchung', Math.round(5 + (x / 20)));
                         jQuery(this).css('background-position',  jQuery(this).data('background_position'));
                         jQuery(this).attr('title', Math.round(5 + (x / 20)));
                     });
@@ -458,18 +460,15 @@
                             var offset = jQuery(self).offset();
                             jQuery('body').append(jQuery('.muskelgruppen_vorschlaege'));
                             jQuery('.muskelgruppen_vorschlaege').html(response);
-//                            jQuery('.muskelgruppen_vorschlaege').css('left', e.currentTarget.offsetLeft + "px");
-//                            jQuery('.muskelgruppen_vorschlaege').css('top', e.currentTarget.offsetTop + 20 + "px");
-//                            jQuery('.muskelgruppen_vorschlaege').css('left', "5px");
-//                            jQuery('.muskelgruppen_vorschlaege').css('top', "20px");
                             jQuery('.muskelgruppen_vorschlaege').css('left', offset.left + "px");
-                            jQuery('.muskelgruppen_vorschlaege').css('top', offset.top + 10 + "px");
+                            jQuery('.muskelgruppen_vorschlaege').css('top', offset.top + 20 + "px");
                             
                             jQuery('.muskelgruppen_vorschlaege').find('.vorschlag').unbind('click');
                             jQuery('.muskelgruppen_vorschlaege').find('.vorschlag').bind('click', function()
                             {
                                 // check ob diese muskelgruppe bereits gesetzt wurde
                                 var vorhandene_muskelgruppen = jQuery('.uebung_muskelgruppen').find('.muskelgruppe');
+
                                 for(var i = 0, len = vorhandene_muskelgruppen.length; i < len; i++)
                                 {
                                     if(jQuery(vorhandene_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-id') ==
@@ -483,10 +482,13 @@
                                         return false;
                                     }
                                 }
-                                jQuery(self).css('background-color', 'green');
-                                jQuery(self).val(Base64.decode(jQuery(this).data('vorschlag-text')));
-                                jQuery(self).data('muskelgruppe-name', Base64.decode(jQuery(this).data('vorschlag-text')));
-                                jQuery(self).data('muskelgruppe-id', jQuery(this).data('vorschlag-id'));
+
+                                addMuskelGruppe(jQuery(this).data('vorschlag-id'));
+                                jQuery(self).parent().remove();
+//                                jQuery(self).css('background-color', 'green');
+//                                jQuery(self).val(Base64.decode(jQuery(this).data('vorschlag-text')));
+//                                jQuery(self).data('muskelgruppe-name', Base64.decode(jQuery(this).data('vorschlag-text')));
+//                                jQuery(self).data('muskelgruppe-id', jQuery(this).data('vorschlag-id'));
                                 jQuery('.muskelgruppen_vorschlaege').fadeOut();
                                 return false;
                             });
@@ -495,7 +497,23 @@
                     });
                 });
             });
-            
+
+            function addMuskelGruppe(iMuskelGruppeId)
+            {
+                var obj_cad_loader = new CAD.Loader();
+                obj_cad_loader.open();
+
+                var url = '/muskelgruppen/get-muskelgruppe-fuer-edit/';
+                var obj_params = {'ajax': true, 'id': iMuskelGruppeId};
+
+                jQuery.post(url, obj_params, function(response)
+                {
+                    jQuery('.uebung_muskelgruppen').append(response);
+                    obj_cad_loader.close(true);
+                    initMuskelgruppenEdit();
+                });
+            }
+
             jQuery('.muskelgruppe-add').unbind('click');
             jQuery('.muskelgruppe-add').bind('click', function()
             {
@@ -541,8 +559,7 @@
             jQuery('.muskelgruppe-muskeln').find('.muskel-beanspruchung').unbind('click');
             
             jQuery('.muskelgruppe-muskeln').find('.muskel-beanspruchung').hover(
-                function()
-                {
+                function() {
                     var x = null;
                     jQuery(this).unbind('mousemove');
                     jQuery(this).mousemove(function(e)
@@ -562,8 +579,7 @@
                         jQuery(this).attr('title', Math.round(5 + (x / 20)));
                     });
                 },
-                function()
-                {
+                function() {
                     if(undefined !== jQuery(this).data('background-position'))
                     {
                         jQuery(this).css('background-position', jQuery(this).data('background-position'));

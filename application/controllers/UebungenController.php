@@ -279,21 +279,29 @@ class UebungenController extends Zend_Controller_Action
      */
     public function getMuskelgruppenFuerEditAction()
     {
-        $a_params = $this->getRequest()->getParams();
-        $a_messages = array();
+        $aParams = $this->getAllParams();
+        $aMessages = array();
         
-        if(isset($a_params['id']))
+        if(isset($aParams['id']))
         {
-           $i_uebung_id = $a_params['id'];
-           $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
-           $a_uebung_muskelgruppen = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
-           
-           $this->view->assign('a_uebung_muskelgruppen', $a_uebung_muskelgruppen);
+            $iUebungId = $aParams['id'];
+            $oUebungMuskelnStorage = new Application_Model_DbTable_UebungMuskeln();
+            $aUebungMuskeln = $oUebungMuskelnStorage->getMuskelnFuerUebung($iUebungId);
+            $aMuskelGruppen = array();
+            foreach ($aUebungMuskeln as $aUebungMuskel) {
+                if (FALSE === array_key_exists($aUebungMuskel['muskelgruppe_name'], $aMuskelGruppen)) {
+                    $aMuskelGruppen[$aUebungMuskel['muskelgruppe_name']] = array();
+                }
+                $aMuskelGruppen[$aUebungMuskel['muskelgruppe_name']]['muskelgruppe_name'] = $aUebungMuskel['muskelgruppe_name'];
+                $aMuskelGruppen[$aUebungMuskel['muskelgruppe_name']]['muskelgruppe_id'] = $aUebungMuskel['muskelgruppe_id'];
+                $aMuskelGruppen[$aUebungMuskel['muskelgruppe_name']]['muskeln'][] = $aUebungMuskel->toArray();
+            }
+            $this->view->assign('aMuskelGruppen', $aMuskelGruppen);
         }
         
-        if(count($a_messages) > 0)
+        if(count($aMessages) > 0)
         {
-            $this->view->assign('json_string', json_encode($a_messages));
+            $this->view->assign('json_string', json_encode($aMessages));
         }
     }
 
@@ -334,6 +342,9 @@ class UebungenController extends Zend_Controller_Action
             $a_uebung_muskelgruppen_loeschen = array();
             $a_uebung_muskelgruppen_updaten = array();
             $a_uebung_muskelgruppen_hinzufuegen = array();
+            $a_uebung_muskeln_loeschen = array();
+            $a_uebung_muskeln_updaten = array();
+            $a_uebung_muskeln_hinzufuegen = array();
             $i_count_uebung_muskelgruppen = 0;
             $uebung_vorschaubild = '';
             $uebung_beschreibung = '';
@@ -348,7 +359,7 @@ class UebungenController extends Zend_Controller_Action
             $b_fehler = false;
             $a_messages = array();
             $a_data = array();
-            
+
             if(isset($a_params['edited_elements']['uebung_name']) &&
                0 < strlen(trim($a_params['edited_elements']['uebung_name'])))
             {
@@ -414,72 +425,73 @@ class UebungenController extends Zend_Controller_Action
                 $i_uebung_id = $a_params['edited_elements']['uebung_id'];
             }
             
-            if(isset($a_params['edited_elements']['uebung_muskelgruppen']))
-            {
-                foreach($a_params['edited_elements']['uebung_muskelgruppen'] as $a_muskelgruppe)
-                {
-                    array_push($a_uebung_muskelgruppen, $a_muskelgruppe);
-                }
-            }
-            if(isset($a_params['edited_elements']['uebung_muskelgruppen']))
-            {
-                $a_uebung_muskelgruppen_aktuell = array();
-                
-                $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
-                $a_uebung_muskelgruppen_aktuell_roh = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
-                
-                $i_count_uebung_muskelgruppen = count($a_uebung_muskelgruppen_aktuell_roh);
-                
-                if(is_array($a_uebung_muskelgruppen_aktuell_roh))
-                {
-                    foreach($a_uebung_muskelgruppen_aktuell_roh as $uebung_muskelgruppe)
-                    {
-                        // an die stelle der tag id wird der projekt tag id eintrag gesetzt
-                        $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['uebung_muskelgruppe_muskelgruppe_fk']] = array(
-                            'uebung_muskelgruppe_id'                => $uebung_muskelgruppe['uebung_muskelgruppe_id'],
-                            'uebung_muskelgruppe_muskelgruppe_fk'   => $uebung_muskelgruppe['uebung_muskelgruppe_muskelgruppe_fk'],
-                            'uebung_muskelgruppe_beanspruchung'     => $uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung']
-                        );
-                    }
-                }
-                foreach($a_params['edited_elements']['uebung_muskelgruppen'] as $uebung_muskelgruppe)
-                {
-                    // es wurde eine id übergeben und diese id bestand bereits
-                    if(isset($uebung_muskelgruppe['id']) &&
-                       $uebung_muskelgruppe['id'] > 0 &&
-                       isset($a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]))
-                    {
-                        if(isset($uebung_muskelgruppe['beanspruchung']) &&
-                           $uebung_muskelgruppe['beanspruchung'] > 0 &&
-                           $uebung_muskelgruppe['beanspruchung'] != $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]['uebung_muskelgruppe_beanspruchung'])
-                        {
-                            array_push($a_uebung_muskelgruppen_updaten, array(
-                                'uebung_muskelgruppe_muskelgruppe_fk'    => $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]['uebung_muskelgruppe_id'],
-                                'uebung_muskelgruppe_id'                 => $uebung_muskelgruppe['id'],
-                                'uebung_muskelgruppe_beanspruchung'      => $uebung_muskelgruppe['beanspruchung'])
-                            );
-                        }
-                        else if(!isset($uebung_muskelgruppe['beanspruchung']) ||
-                                !$uebung_muskelgruppe['beanspruchung'])
-                        {
-//                            array_push($a_muskelgruppe_muskeln_loeschen, $a_muskelgruppe_muskeln_aktuell[$a_muskel['id']]);
-                            array_push($a_uebung_muskelgruppen_loeschen, $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]['uebung_muskelgruppe_id']);
-                            $i_count_uebung_muskelgruppen--;
-                        }
-                    }
-                    else if(isset($uebung_muskelgruppe['id']) &&
-                            $uebung_muskelgruppe['id'] > 0 &&
-                            isset($uebung_muskelgruppe['beanspruchung']) &&
-                            $uebung_muskelgruppe['beanspruchung'] > 0)
-                    {
-                        array_push($a_uebung_muskelgruppen_hinzufuegen, array(
-                            'uebung_muskelgruppe_id'                 => $uebung_muskelgruppe['id'],
-                            'uebung_muskelgruppe_beanspruchung'      => $uebung_muskelgruppe['beanspruchung'])
-                        );
-                        $i_count_uebung_muskelgruppen++;
-                    }
-                }
-            }
+//            if(isset($a_params['edited_elements']['uebung_muskelgruppen']))
+//            {
+//                foreach($a_params['edited_elements']['uebung_muskelgruppen'] as $a_muskelgruppe)
+//                {
+//                    array_push($a_uebung_muskelgruppen, $a_muskelgruppe);
+//                }
+//            }
+//            die();
+//            if(isset($a_params['edited_elements']['uebung_muskelgruppen']))
+//            {
+//                $a_uebung_muskelgruppen_aktuell = array();
+//
+//                $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
+//                $a_uebung_muskelgruppen_aktuell_roh = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
+//
+//                $i_count_uebung_muskelgruppen = count($a_uebung_muskelgruppen_aktuell_roh);
+//
+//                if(is_array($a_uebung_muskelgruppen_aktuell_roh))
+//                {
+//                    foreach($a_uebung_muskelgruppen_aktuell_roh as $uebung_muskelgruppe)
+//                    {
+//                        $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['uebung_muskelgruppe_muskelgruppe_fk']] =
+//                            array(
+//                                'uebung_muskelgruppe_id'                => $uebung_muskelgruppe['uebung_muskelgruppe_id'],
+//                                'uebung_muskelgruppe_muskelgruppe_fk'   => $uebung_muskelgruppe['uebung_muskelgruppe_muskelgruppe_fk'],
+////                                'uebung_muskelgruppe_beanspruchung'     => $uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung']
+//                        );
+//                    }
+//                }
+//                foreach($a_params['edited_elements']['uebung_muskelgruppen'] as $uebung_muskelgruppe)
+//                {
+//                    // es wurde eine id übergeben und diese id bestand bereits
+//                    if(isset($uebung_muskelgruppe['id']) &&
+//                       $uebung_muskelgruppe['id'] > 0 &&
+//                       isset($a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]))
+//                    {
+//                        if(isset($uebung_muskelgruppe['beanspruchung']) &&
+//                           $uebung_muskelgruppe['beanspruchung'] > 0 &&
+//                           $uebung_muskelgruppe['beanspruchung'] != $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]['uebung_muskelgruppe_beanspruchung'])
+//                        {
+//                            array_push($a_uebung_muskelgruppen_updaten, array(
+//                                'uebung_muskelgruppe_muskelgruppe_fk'    => $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]['uebung_muskelgruppe_id'],
+//                                'uebung_muskelgruppe_id'                 => $uebung_muskelgruppe['id'],
+//                                'uebung_muskelgruppe_beanspruchung'      => $uebung_muskelgruppe['beanspruchung'])
+//                            );
+//                        }
+//                        else if(!isset($uebung_muskelgruppe['beanspruchung']) ||
+//                                !$uebung_muskelgruppe['beanspruchung'])
+//                        {
+////                            array_push($a_muskelgruppe_muskeln_loeschen, $a_muskelgruppe_muskeln_aktuell[$a_muskel['id']]);
+//                            array_push($a_uebung_muskelgruppen_loeschen, $a_uebung_muskelgruppen_aktuell[$uebung_muskelgruppe['id']]['uebung_muskelgruppe_id']);
+//                            $i_count_uebung_muskelgruppen--;
+//                        }
+//                    }
+//                    else if(isset($uebung_muskelgruppe['id']) &&
+//                            $uebung_muskelgruppe['id'] > 0 &&
+//                            isset($uebung_muskelgruppe['beanspruchung']) &&
+//                            $uebung_muskelgruppe['beanspruchung'] > 0)
+//                    {
+//                        array_push($a_uebung_muskelgruppen_hinzufuegen, array(
+//                            'uebung_muskelgruppe_id'                 => $uebung_muskelgruppe['id'],
+//                            'uebung_muskelgruppe_beanspruchung'      => $uebung_muskelgruppe['beanspruchung'])
+//                        );
+//                        $i_count_uebung_muskelgruppen++;
+//                    }
+//                }
+//            }
             
             if(0 == strlen(trim($uebung_name)) &&
                !$i_uebung_id)
@@ -553,11 +565,11 @@ class UebungenController extends Zend_Controller_Action
                 $a_data['uebung_beschreibung'] = $uebung_beschreibung;
             }
             
-            if($i_count_uebung_muskelgruppen <= 0)
-            {
-                array_push($a_messages, array('type' => 'fehler', 'message' => 'Diese Übung benötigt mindestens eine vollständig ausgefüllte beanspruchte Muskelgruppe'));
-                $b_fehler = true;
-            }
+//            if($i_count_uebung_muskelgruppen <= 0)
+//            {
+//                array_push($a_messages, array('type' => 'fehler', 'message' => 'Diese Übung benötigt mindestens eine vollständig ausgefüllte beanspruchte Muskelgruppe'));
+//                $b_fehler = true;
+//            }
             
             $obj_cad_seo = new CAD_Seo();
             
@@ -667,31 +679,121 @@ class UebungenController extends Zend_Controller_Action
                         $obj_files->verschiebeFiles();
                     }
                     
-                    foreach($a_uebung_muskelgruppen_hinzufuegen as $a_uebung_muskelgruppe)
-                    {
-                        $a_data = array();
-                        $a_data['uebung_muskelgruppe_muskelgruppe_fk']   = $a_uebung_muskelgruppe['uebung_muskelgruppe_id'];
-                        $a_data['uebung_muskelgruppe_beanspruchung']     = $a_uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung'];
-                        $a_data['uebung_muskelgruppe_uebung_fk']         = $i_uebung_id;
-                        $a_data['uebung_muskelgruppe_eintrag_datum']     = date("Y-m-d H:i:s");
-                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $iUserId;
+//                    foreach($a_uebung_muskelgruppen_hinzufuegen as $a_uebung_muskelgruppe)
+//                    {
+//                        $a_data = array();
+//                        $a_data['uebung_muskelgruppe_muskelgruppe_fk']   = $a_uebung_muskelgruppe['uebung_muskelgruppe_id'];
+//                        $a_data['uebung_muskelgruppe_beanspruchung']     = $a_uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung'];
+//                        $a_data['uebung_muskelgruppe_uebung_fk']         = $i_uebung_id;
+//                        $a_data['uebung_muskelgruppe_eintrag_datum']     = date("Y-m-d H:i:s");
+//                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $iUserId;
+//
+//                        $obj_db_uebung_muskelgruppen->setUebungMuskelgruppen($a_data);
+//                    }
+//
+//                    foreach($a_uebung_muskelgruppen_updaten as $a_uebung_muskelgruppe)
+//                    {
+//                        $a_data = array();
+//                        $a_data['uebung_muskelgruppe_beanspruchung']     = $a_uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung'];
+//                        $a_data['uebung_muskelgruppe_eintrag_datum']     = date("Y-m-d H:i:s");
+//                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $iUserId;
+//
+//                        $obj_db_uebung_muskelgruppen->updateUebungMuskelgruppen($a_data, $a_uebung_muskelgruppe['uebung_muskelgruppe_muskelgruppe_fk']);
+//                    }
+//
+//                    foreach($a_uebung_muskelgruppen_loeschen as $i_uebung_muskelgruppe_id)
+//                    {
+//                        $obj_db_uebung_muskelgruppen->loescheUebungMuskelgruppe($i_uebung_muskelgruppe_id);
+//                    }
+//                    ($a_params['edited_elements']['uebung_muskelgruppen']
+                    if (array_key_exists('uebung_muskelgruppen', $a_params['edited_elements'])
+                        && is_array($a_params['edited_elements']['uebung_muskelgruppen'])
+                    ) {
+                        $oUebungMuskelGruppen = new Application_Model_DbTable_UebungMuskelgruppen();
+                        $oUebungMuskeln = new Application_Model_DbTable_UebungMuskeln();
+                        $oMuskelnAktuellRowSet = $oUebungMuskeln->getMuskelnFuerUebung($i_uebung_id);
+                        $aMuskelnAktuell = array();
+                        foreach ($oMuskelnAktuellRowSet as $oMuskelAktuellRow) {
+                            if (FALSE === array_key_exists($oMuskelAktuellRow->uebung_muskel_muskelgruppe_fk, $aMuskelnAktuell)) {
+                                $aMuskelnAktuell[$oMuskelAktuellRow->uebung_muskel_muskelgruppe_fk] = array();
+                            }
+                            $aMuskelnAktuell[$oMuskelAktuellRow->uebung_muskel_muskelgruppe_fk][$oMuskelAktuellRow->uebung_muskel_muskel_fk] = $oMuskelAktuellRow;
+                        }
 
-                        $obj_db_uebung_muskelgruppen->setUebungMuskelgruppen($a_data);
-                    }
-                    
-                    foreach($a_uebung_muskelgruppen_updaten as $a_uebung_muskelgruppe)
-                    {
-                        $a_data = array();
-                        $a_data['uebung_muskelgruppe_beanspruchung']     = $a_uebung_muskelgruppe['uebung_muskelgruppe_beanspruchung'];
-                        $a_data['uebung_muskelgruppe_eintrag_datum']     = date("Y-m-d H:i:s");
-                        $a_data['uebung_muskelgruppe_eintrag_user_fk']   = $iUserId;
-
-                        $obj_db_uebung_muskelgruppen->updateUebungMuskelgruppen($a_data, $a_uebung_muskelgruppe['uebung_muskelgruppe_muskelgruppe_fk']);
-                    }
-                    
-                    foreach($a_uebung_muskelgruppen_loeschen as $i_uebung_muskelgruppe_id)
-                    {
-                        $obj_db_uebung_muskelgruppen->loescheUebungMuskelgruppe($i_uebung_muskelgruppe_id);
+                        foreach ($a_params['edited_elements']['uebung_muskelgruppen'] as $aUebungMuskelGruppe) {
+                            if (is_array($aUebungMuskelGruppe)
+                                && array_key_exists('muskeln', $aUebungMuskelGruppe)
+                                && is_array($aUebungMuskelGruppe['muskeln'])
+                            ) {
+                                $iMuskelGruppeId = $aUebungMuskelGruppe['id'];
+//                                echo "MuskelGruppe : " . $iMuskelGruppeId . PHP_EOL;
+                                foreach ($aUebungMuskelGruppe['muskeln'] as $aMuskel) {
+                                    // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
+                                    if (array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)
+                                        && is_array($aMuskelnAktuell[$iMuskelGruppeId])
+                                        && array_key_exists($aMuskel['id'], $aMuskelnAktuell[$iMuskelGruppeId])
+                                    ) {
+                                        // checken ob der aktuelle muskel keine beanspruchung, dann löschen
+                                        if (TRUE === empty($aMuskel['beanspruchung'])) {
+//                                            echo "Lösche!" . PHP_EOL;
+                                            $bResult =
+                                                $oUebungMuskeln->loescheUebungMuskel($aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_id);
+                                        // wenn beanspruchung und != eingetragener, dann updaten
+                                        } elseif ($aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_beanspruchung != $aMuskel['beanspruchung']) {
+//                                            echo "Update!" . PHP_EOL;
+                                            $aData = array(
+                                                'uebung_muskel_aenderung_datum' => date('Y-m-d H:i:s'),
+                                                'uebung_muskel_aenderung_user_fk' => $iUserId,
+                                                'uebung_muskel_beanspruchung' => $aMuskel['beanspruchung']
+                                            );
+                                            $bResult =
+                                                $oUebungMuskeln->updateUebungMuskel($aData, $aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_id);
+                                        }
+                                    }
+                                    // wenn es die muskelgruppe schon gibt, aber nicht den muskel
+                                    elseif (array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)
+                                            && is_array($aMuskelnAktuell[$iMuskelGruppeId])
+                                            && FALSE == array_key_exists($aMuskel['id'], $aMuskelnAktuell[$iMuskelGruppeId])
+                                            && FALSE == empty($aMuskel['id']['beanspruchung'])
+                                    ) {
+//                                        echo "Trage ein!" . PHP_EOL;
+                                        $aData = array(
+                                            'uebung_muskel_muskelgruppe_fk' => $iMuskelGruppeId,
+                                            'uebung_muskel_muskel_fk' => $aMuskel['id'],
+                                            'uebung_muskel_uebung_fk' => $i_uebung_id,
+                                            'uebung_muskel_eintrag_datum' => date('Y-m-d H:i:s'),
+                                            'uebung_muskel_eintrag_user_fk' => $iUserId,
+                                            'uebung_muskel_beanspruchung' => $aMuskel['beanspruchung']
+                                        );
+                                        $iUebungMuskelId = $oUebungMuskeln->setUebungMuskel($aData);
+                                    }
+                                    // wenn es die muskelgruppe noch nicht gibt
+                                    elseif (FALSE === array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)) {
+//                                        echo "Lege Muskelgruppe und Muskel neu an !" . PHP_EOL;
+                                        $aData = array(
+                                            'uebung_muskel_muskelgruppe_fk' => $iMuskelGruppeId,
+                                            'uebung_muskel_muskel_fk' => $aMuskel['id'],
+                                            'uebung_muskel_uebung_fk' => $i_uebung_id,
+                                            'uebung_muskel_eintrag_datum' => date('Y-m-d H:i:s'),
+                                            'uebung_muskel_eintrag_user_fk' => $iUserId,
+                                            'uebung_muskel_beanspruchung' => $aMuskel['beanspruchung']
+                                        );
+                                        $iUebungMuskelId = $oUebungMuskeln->setUebungMuskel($aData);
+                                    }
+                                }
+                                // wenn es die muskelgruppe noch nicht gibt
+                                if (FALSE === array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)) {
+//                                    echo "Lege Muskelgruppe und Muskel neu an !" . PHP_EOL;
+                                    $aData = array(
+                                        'uebung_muskelgruppe_muskelgruppe_fk' => $iMuskelGruppeId,
+                                        'uebung_muskelgruppe_uebung_fk' => $i_uebung_id,
+                                        'uebung_muskelgruppe_eintrag_datum' => date('Y-m-d H:i:s'),
+                                        'uebung_muskelgruppe_eintrag_user_fk' => $iUserId
+                                    );
+                                    $iUebungMuselGruppeId = $oUebungMuskelGruppen->setUebungMuskelgruppen($aData);
+                                }
+                            }
+                        }
                     }
                 }
             }

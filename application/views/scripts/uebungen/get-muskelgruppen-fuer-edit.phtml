@@ -3,49 +3,35 @@ if(isset($this->json_string))
 {
     echo $this->json_string;
 }
-else if(is_array($this->a_uebung_muskelgruppen)
-    && 0 < count($this->a_uebung_muskelgruppen)
+else if(is_array($this->aMuskelGruppen)
+    && 0 < count($this->aMuskelGruppen)
 ) {
-    $sMuskelGruppeNameTemp = NULL;
-    $bNeueMuskelgruppe = FALSE;
-    foreach($this->a_uebung_muskelgruppen as $a_uebung_muskelgruppe)
+    foreach($this->aMuskelGruppen as $aMuskelGruppe)
     {
-        if (NULL === $sMuskelGruppeNameTemp
-            || $sMuskelGruppeNameTemp !== $a_uebung_muskelgruppe['muskelgruppe_name']
-        ) {
-            if (NULL !== $sMuskelGruppeNameTemp) {
-                $bNeueMuskelgruppe = TRUE;
-            }
-            $sMuskelGruppeNameTemp = $a_uebung_muskelgruppe['muskelgruppe_name'];
 ?>
         <div class="muskelgruppe"
              style="clear: both; margin-top: 15px; position: relative; width: 300px;">
-            <strong>
-                <?php echo $sMuskelGruppeNameTemp;?>
+            <strong class="muskelgruppe_name"
+                    data-muskelgruppe-id="<?php echo $aMuskelGruppe['muskelgruppe_id'];?>">
+                <?php echo $aMuskelGruppe['muskelgruppe_name'];?>
             </strong>
             <img src="/images/content/statisch/grafiken/delete.png"
                  class="muskelgruppe-delete"
-                 data-muskelgruppe-id="<?php echo $this->muskelgruppe_id;?>"
+                 data-muskelgruppe-id="<?php echo $aMuskelGruppe['muskelgruppe_id'];?>"
                  style="position: absolute; top: 0; right: 0;" />
             <br class="clearfix" />
 <?php
+        foreach ($aMuskelGruppe['muskeln'] as $aMuskel) {
+            $this->assign($aMuskel);
+            echo $this->render('uebungen/muskel-edit-loop.phtml');
         }
-?>
-        <?php
-        $this->assign($a_uebung_muskelgruppe);
-        echo $this->render('uebungen/muskel-edit-loop.phtml');
-
-        if (TRUE === $bNeueMuskelgruppe) {
-            $bNeueMuskelgruppe = FALSE;
 ?>
             <br class="clearfix" />
         </div>
 <?php
-        }
     }
 }
 ?>
-<br class="clearfix" />
 <?php
 $this->assign('uebung_muskelgruppe_beanspruchung', '');
 $this->assign('muskelgruppe_name', '');

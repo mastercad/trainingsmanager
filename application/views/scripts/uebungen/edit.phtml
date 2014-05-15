@@ -252,63 +252,80 @@
 
 	function save()
 	{
-            var b_fehler = false;
-            var a_messages = new Array();
-            
-            if(!trim(jQuery('#uebung_name').html()).length)
-            {
-                b_fehler = true;
-                a_messages.push({'type': 'fehler', 'message': 'Die Übung braucht einen Namen!'});
-            }
-            if(!trim(jQuery('#uebung_beschreibung').html()).length)
-            {
-                b_fehler = true;
-                a_messages.push({'type': 'fehler', 'message': 'Die Beschreibung der Übung fehlt!'});
-            }
-            
-            var elemente_muskelgruppen = jQuery('.uebung_muskelgruppen').find('.muskelgruppe');
-            var muskelgruppen = [];
+        var b_fehler = false;
+        var a_messages = new Array();
 
-            for(var i = 0, len = elemente_muskelgruppen.length; i < len; i++)
-            {
-//                var muskelgruppe_name            = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-name');
-                var muskelgruppe_id              = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-id');
-                var muskelgruppe_beanspruchung   = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_beanspruchung').data('muskelgruppe-beanspruchung');
-                var b_fail = false;
-                if(muskelgruppe_id)
+        if(!trim(jQuery('#uebung_name').html()).length)
+        {
+            b_fehler = true;
+            a_messages.push({'type': 'fehler', 'message': 'Die Übung braucht einen Namen!'});
+        }
+        if(!trim(jQuery('#uebung_beschreibung').html()).length)
+        {
+            b_fehler = true;
+            a_messages.push({'type': 'fehler', 'message': 'Die Beschreibung der Übung fehlt!'});
+        }
+
+        var elemente_muskelgruppen = jQuery('.uebung_muskelgruppen').find('.muskelgruppe');
+        var muskelgruppen = [];
+
+        console.log(elemente_muskelgruppen);
+
+        // alle muskelgruppen durchlaufen
+        for(var i = 0, len = elemente_muskelgruppen.length; i < len; i++)
+        {
+            var muskeln = [];
+            var muskelgruppe_id              = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-id');
+            var muskelgruppe_beanspruchung   = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_beanspruchung').data('muskelgruppe-beanspruchung');
+            var elemente_muskeln = jQuery(elemente_muskelgruppen[i]).find('.muskel');
+            console.log(elemente_muskeln);
+            for (var k = 0; k < elemente_muskeln.length; k++) {
+                var muskel_id              = jQuery(elemente_muskeln[k]).data('muskel-id');
+                var muskel_beanspruchung   = jQuery(elemente_muskeln[k]).find('.muskel-beanspruchung').data('muskel-beanspruchung');
+                console.log(muskel_id);
+                console.log(muskel_beanspruchung);
+                if(muskel_id)
                 {
-                    muskelgruppen.push({'id': muskelgruppe_id, 'beanspruchung': muskelgruppe_beanspruchung});
+                    muskeln.push({'id': muskel_id, 'beanspruchung': muskel_beanspruchung});
                 }
             }
-            
-            if(!muskelgruppen.length)
+//                var muskelgruppe_name            = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-name');
+            var b_fail = false;
+            if(muskelgruppe_id)
             {
-                b_fehler = true;
-                a_messages.push({'type': 'fehler', 'message': 'Es muss mindestens eine Muskelgruppe für diese Übung vollständig ausgefüllt sein!'});
-            }
-            
-            if(!b_fehler)
-            {
-    //            jQuery().setEditedElements('projekt_flag_oeffentlich', 	jQuery('#projekt_flag_oeffentlich').is(':checked'));
-                jQuery().setEditedElements('uebung_muskelgruppen',              muskelgruppen);
-                jQuery().setEditedElements('uebung_vorschaubild',               jQuery('#uebung_vorschaubild').data('file'));
-                jQuery().setEditedElements('uebung_id',                         jQuery('#uebung_id').val());
-                jQuery().setEditedElements('uebung_geraet_einstellung_name',    Base64.encode(jQuery('#uebung_geraet_einstellung_name').val()));
-                jQuery().setEditedElements('uebung_geraet_sitzposition_name',   Base64.encode(jQuery('#uebung_geraet_sitzposition_name').val()));
-                jQuery().setEditedElements('uebung_geraet_rueckenpolster_name', Base64.encode(jQuery('#uebung_geraet_rueckenpolster_name').val()));
-                jQuery().setEditedElements('uebung_geraet_beinpolster_name',    Base64.encode(jQuery('#uebung_geraet_beinpolster_name').val()));
-                jQuery().setEditedElements('uebung_geraet_gewicht_name',        Base64.encode(jQuery('#uebung_geraet_gewicht_name').val()));
-                jQuery().setEditedElements('uebung_geraet_fk',                  jQuery('#uebung_geraet_name').data('geraet-id'));
-                jQuery().setAjax(true);
-
-                CADEditSave();
-            }
-            else
-            {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init(a_messages);
-                obj_cad_messages.open();
+                muskelgruppen.push({'id': muskelgruppe_id, 'beanspruchung': muskelgruppe_beanspruchung, 'muskeln': muskeln});
             }
         }
-        edit_init();
+
+        if(!muskelgruppen.length)
+        {
+            b_fehler = true;
+            a_messages.push({'type': 'fehler', 'message': 'Es muss mindestens eine Muskelgruppe für diese Übung vollständig ausgefüllt sein!'});
+        }
+
+        console.log(muskelgruppen);
+        if(!b_fehler)
+        {
+//            jQuery().setEditedElements('projekt_flag_oeffentlich', 	jQuery('#projekt_flag_oeffentlich').is(':checked'));
+            jQuery().setEditedElements('uebung_muskelgruppen',              muskelgruppen);
+            jQuery().setEditedElements('uebung_vorschaubild',               jQuery('#uebung_vorschaubild').data('file'));
+            jQuery().setEditedElements('uebung_id',                         jQuery('#uebung_id').val());
+            jQuery().setEditedElements('uebung_geraet_einstellung_name',    Base64.encode(jQuery('#uebung_geraet_einstellung_name').val()));
+            jQuery().setEditedElements('uebung_geraet_sitzposition_name',   Base64.encode(jQuery('#uebung_geraet_sitzposition_name').val()));
+            jQuery().setEditedElements('uebung_geraet_rueckenpolster_name', Base64.encode(jQuery('#uebung_geraet_rueckenpolster_name').val()));
+            jQuery().setEditedElements('uebung_geraet_beinpolster_name',    Base64.encode(jQuery('#uebung_geraet_beinpolster_name').val()));
+            jQuery().setEditedElements('uebung_geraet_gewicht_name',        Base64.encode(jQuery('#uebung_geraet_gewicht_name').val()));
+            jQuery().setEditedElements('uebung_geraet_fk',                  jQuery('#uebung_geraet_name').data('geraet-id'));
+            jQuery().setAjax(true);
+
+            CADEditSave();
+        }
+        else
+        {
+            var obj_cad_messages = new CAD.Message();
+            obj_cad_messages.init(a_messages);
+            obj_cad_messages.open();
+        }
+    }
+    edit_init();
 </script>
