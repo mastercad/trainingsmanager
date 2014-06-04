@@ -1,0 +1,56 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 20.05.14
+ * Time: 21:32
+ */ 
+
+?>
+
+<div class="uebung" style="margin-bottom: 15px;">
+    <strong><?php echo $this->uebung_name;?></strong> <?php echo $this->uebung_id;?> / <?php echo $this->trainingsplan_uebung_fk;?> / <?php echo $this->trainingstagebuch_uebung_trainingsplan_uebung_fk;?>
+    <br class="clearfix" />
+    <label>
+        Wiederholungen:
+    </label>
+    <span>
+        <?php echo $this->trainingsplan_uebung_wiederholungen;?> / <?php echo $this->trainingstagebuch_uebung_wiederholungen;?> / <?php echo $this->trainingstagebuch_uebung_wiederholungen_perspektivisch;?>
+    </span>
+    <br class="cleafix" />
+    <label>
+        Sätze:
+    </label>
+    <span>
+        <?php echo $this->trainingsplan_uebung_saetze;?> / <?php echo $this->trainingstagebuch_uebung_saetze;?> / <?php echo $this->trainingstagebuch_uebung_saetze_perspektivisch;?>
+    </span>
+    <br class="cleafix" />
+    <label>
+        Gewicht:
+    </label>
+    <span>
+        <?php echo $this->trainingsplan_uebung_gewicht;?> / <?php echo $this->trainingstagebuch_uebung_gewicht;?> / <?php echo $this->trainingstagebuch_uebung_gewicht_perspektivisch;?>
+    </span>
+    <br class="cleafix" />
+    <label>
+        Sitzposition:
+    </label>
+    <span>
+        <?php echo $this->trainingsplan_uebung_sitzposition;?> / <?php echo $this->trainingstagebuch_uebung_sitzposition;?> / <?php echo $this->trainingstagebuch_uebung_sitzposition_perspektivisch;?>
+    </span>
+    <br class="cleafix" />
+    <label>
+        Rückenpolster:
+    </label>
+    <span>
+        <?php echo $this->trainingsplan_uebung_rueckenpolster;?> / <?php echo $this->trainingstagebuch_uebung_rueckenpolster;?> / <?php echo $this->trainingstagebuch_uebung_rueckenpolster_perspektivisch;?>
+    </span>
+    <br class="cleafix" />
+    <label>
+        Beinpolster:
+    </label>
+    <span>
+        <?php echo $this->trainingsplan_uebung_beinpolster;?> / <?php echo $this->trainingstagebuch_uebung_beinpolster;?> / <?php echo $this->trainingstagebuch_uebung_beinpolster_perspektivisch;?>
+    </span>
+    <br class="cleafix" />
+</div>
