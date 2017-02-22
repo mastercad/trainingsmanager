@@ -34,14 +34,14 @@ class GeraetegruppenController extends Zend_Controller_Action
 
     public function indexAction()
     {
-        $obj_db_geraetegruppen = new Application_Model_DbTable_Geraetegruppen();
-        $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
+        $obj_db_geraetegruppen = new Application_Model_DbTable_DeviceGroups();
+        $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_DeviceGroupDevices();
 
         $a_geraetegruppen = $obj_db_geraetegruppen->getGeraetegruppen();
 
         foreach($a_geraetegruppen as &$a_geraetegruppe)
         {
-            $a_geraetegruppe_geraete = $obj_db_geraetegruppe_geraete->getGeraeteFuerGeraetegruppe($a_geraetegruppe['geraetegruppe_id']);
+            $a_geraetegruppe_geraete = $obj_db_geraetegruppe_geraete->findDevicesByDeviceGroupId($a_geraetegruppe['geraetegruppe_id']);
             $a_geraetegruppe['a_geraetegruppe_geraete'] = $a_geraetegruppe_geraete;
         }
         $this->view->assign('a_geraetegruppen', $a_geraetegruppen);
@@ -64,8 +64,8 @@ class GeraetegruppenController extends Zend_Controller_Action
         {
             $i_geraetegruppe_id = $a_params['id'];
 
-            $obj_db_geraetegruppen = new Application_Model_DbTable_Geraetegruppen();
-//            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
+            $obj_db_geraetegruppen = new Application_Model_DbTable_DeviceGroups();
+//            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_DeviceGroupDevices();
 
             $a_geraetegruppe = $obj_db_geraetegruppen->getGeraetegruppe($i_geraetegruppe_id);
 //            $a_geraete = $obj_db_geraetegruppe_geraete->getGeraeteFuerGeraetegruppe($i_geraetegruppe_id);
@@ -91,12 +91,12 @@ class GeraetegruppenController extends Zend_Controller_Action
         {
             $i_geraetegruppe_id = $a_params['id'];
 
-            $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $obj_db_geraetegruppen = new Application_Model_DbTable_Geraetegruppen();
-            $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
-            $obj_db_geraetegruppen_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
-            $a_geraete = $obj_db_geraetegruppen_geraete->getGeraeteFuerGeraetegruppe($i_geraetegruppe_id);
+            $obj_db_uebungen = new Application_Model_DbTable_Exercises();
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $obj_db_geraetegruppen = new Application_Model_DbTable_DeviceGroups();
+            $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_ExerciseMuscleGroups();
+            $obj_db_geraetegruppen_geraete = new Application_Model_DbTable_DeviceGroupDevices();
+            $a_geraete = $obj_db_geraetegruppen_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
 
             if($obj_db_geraetegruppen->loescheGeraetegruppe($i_geraetegruppe_id))
             {
@@ -105,21 +105,21 @@ class GeraetegruppenController extends Zend_Controller_Action
                 {
                     foreach($a_geraete as $a_geraet)
                     {
-                        $a_uebungen = $obj_db_uebungen->getUebungenFuerGeraet($a_geraet['geraet_id']);
+                        $a_uebungen = $obj_db_uebungen->findExerciseForDevice($a_geraet['geraet_id']);
                         if(is_array($a_uebungen) &&
                            count($a_uebungen) > 0)
                         {
                             foreach($a_uebungen as $a_uebung)
                             {
                                 $obj_db_uebung_muskelgruppen->loescheUebungMuskelgruppeFuerUebung($a_uebung['uebung_id']);
-                                $obj_db_uebungen->loescheUebung($a_uebung['uebung_id']);
+                                $obj_db_uebungen->deleteExercise($a_uebung['uebung_id']);
                             }
                         }
-                        $obj_db_geraete->loescheGeraet($a_geraet['geraet_id']);
+                        $obj_db_geraete->deleteDevice($a_geraet['geraet_id']);
                     }
                 }
 
-                $obj_db_geraetegruppen_geraete->loescheAlleGeraetegruppeGeraeteFuerGeraetegruppe($i_geraetegruppe_id);
+                $obj_db_geraetegruppen_geraete->deleteAllDeviceGroupDevicesByDeviceGroupId($i_geraetegruppe_id);
 
                 $i_count_message = count($a_messages);
                 $a_messages[$i_count_message]['type'] = "meldung";
@@ -159,8 +159,8 @@ class GeraetegruppenController extends Zend_Controller_Action
         if(isset($a_params['id']))
         {
             $i_geraetegruppe_id = $a_params['id'];
-            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
-            $a_geraetegruppe_geraete = $obj_db_geraetegruppe_geraete->getGeraeteFuerGeraetegruppe($i_geraetegruppe_id);
+            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_DeviceGroupDevices();
+            $a_geraetegruppe_geraete = $obj_db_geraetegruppe_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
 
             $this->view->assign('a_geraetegruppe_geraete', $a_geraetegruppe_geraete);
         }
@@ -173,7 +173,7 @@ class GeraetegruppenController extends Zend_Controller_Action
         if(isset($a_params['suche']))
         {
             $str_suche = base64_decode($a_params['suche']) . '%';
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
             
             $a_geraet_vorschlaege = $obj_db_geraete->getGeraetByName($str_suche);
             $this->view->assign('a_geraet_vorschlaege', $a_geraet_vorschlaege);
@@ -187,9 +187,9 @@ class GeraetegruppenController extends Zend_Controller_Action
         if(isset($a_params['suche']))
         {
             $str_suche = base64_decode($a_params['suche']) . '%';
-            $obj_db_geraetegruppen = new Application_Model_DbTable_Geraetegruppen();
+            $obj_db_geraetegruppen = new Application_Model_DbTable_DeviceGroups();
 
-            $a_geraetegruppen_vorschlaege = $obj_db_geraetegruppen->getGeraetegruppenByName($str_suche);
+            $a_geraetegruppen_vorschlaege = $obj_db_geraetegruppen->findDeviceGroupByName($str_suche);
             $this->view->assign('a_geraetegruppen_vorschlaege', $a_geraetegruppen_vorschlaege);
         }
     }
@@ -206,8 +206,8 @@ class GeraetegruppenController extends Zend_Controller_Action
 
         if(isset($a_params['edited_elements']))
         {
-            $obj_db_geraetegruppen = new Application_Model_DbTable_Geraetegruppen();
-            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
+            $obj_db_geraetegruppen = new Application_Model_DbTable_DeviceGroups();
+            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_DeviceGroupDevices();
 
             $geraetegruppe_name = '';
             $a_geraetegruppe_geraete = array();
@@ -240,8 +240,8 @@ class GeraetegruppenController extends Zend_Controller_Action
             {
                 $a_geraetegruppe_geraete_aktuell = array();
 
-                $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
-                $a_geraetegruppe_geraete_aktuell_roh = $obj_db_geraetegruppe_geraete->getGeraeteFuerGeraetegruppe($i_geraetegruppe_id);
+                $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_DeviceGroupDevices();
+                $a_geraetegruppe_geraete_aktuell_roh = $obj_db_geraetegruppe_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
                 $a_geraetegruppe_geraete_uebergeben = $a_geraetegruppe_geraete;
                 $i_count_geraetegruppen = count($a_geraetegruppe_geraete_aktuell_roh);
 
@@ -304,7 +304,7 @@ class GeraetegruppenController extends Zend_Controller_Action
             if(!$i_geraetegruppe_id &&
                 strlen(trim($geraetegruppe_name)))
             {
-                $a_geraetegruppe_aktuell = $obj_db_geraetegruppen->getGeraetegruppenByName($geraetegruppe_name);
+                $a_geraetegruppe_aktuell = $obj_db_geraetegruppen->findDeviceGroupByName($geraetegruppe_name);
                 if(is_array($a_geraetegruppe_aktuell) &&
                     count($a_geraetegruppe_aktuell) > 0)
                 {
@@ -320,7 +320,7 @@ class GeraetegruppenController extends Zend_Controller_Action
                     is_array($a_data) &&
                     count($a_data) > 0) {
 
-                    $a_geraetegruppe_aktuell = $obj_db_geraetegruppen->getGeraetegruppe($i_geraetegruppe_id);
+                    $a_geraetegruppe_aktuell = $obj_db_geraetegruppen->findDeviceGroup($i_geraetegruppe_id);
 
                     if(
                         (
@@ -358,7 +358,7 @@ class GeraetegruppenController extends Zend_Controller_Action
                     $a_data['geraetegruppe_aenderung_datum'] = date("Y-m-d H:i:s");
                     $a_data['geraetegruppe_aenderung_user_fk'] = $iUserId;
 
-                    $obj_db_geraetegruppen->updateGeraetegruppe($a_data, $i_geraetegruppe_id);
+                    $obj_db_geraetegruppen->updateDeviceGroup($a_data, $i_geraetegruppe_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_geraetegruppe_id));
                 }
                 // neu anlegen
@@ -375,7 +375,7 @@ class GeraetegruppenController extends Zend_Controller_Action
                     $a_data['geraetegruppe_eintrag_datum'] = date("Y-m-d H:i:s");
                     $a_data['geraetegruppe_eintrag_user_fk'] = $iUserId;
 
-                    $i_geraetegruppe_id = $obj_db_geraetegruppen->setGeraetegruppe($a_data);
+                    $i_geraetegruppe_id = $obj_db_geraetegruppen->saveDeviceGroup($a_data);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde erfolgreich angelegt!', 'result' => true, 'id' => $i_geraetegruppe_id));
                 }
                 if(count($a_geraetegruppe_geraete_hinzufuegen) == 0 &&
@@ -422,7 +422,7 @@ class GeraetegruppenController extends Zend_Controller_Action
                         $a_data['geraetegruppe_geraet_eintrag_datum']        = date("Y-m-d H:i:s");
                         $a_data['geraetegruppe_geraet_eintrag_user_fk']      = $iUserId;
 
-                        $obj_db_geraetegruppe_geraete->setGeraetegruppeGeraet($a_data);
+                        $obj_db_geraetegruppe_geraete->saveDeviceGroupDevice($a_data);
                     }
 
                     foreach($a_geraetegruppe_geraete_updaten as $a_geraetegruppe_geraet)
@@ -432,12 +432,12 @@ class GeraetegruppenController extends Zend_Controller_Action
                         $a_data['geraetegruppe_geraet_eintrag_datum']     = date("Y-m-d H:i:s");
                         $a_data['geraetegruppe_geraet_eintrag_user_fk']   = $iUserId;
 
-                        $obj_db_geraetegruppe_geraete->updateGeraetegruppeGeraet($a_data, $a_geraetegruppe_geraet['geraetegruppe_geraet_id']);
+                        $obj_db_geraetegruppe_geraete->updateDeviceGroupDevice($a_data, $a_geraetegruppe_geraet['geraetegruppe_geraet_id']);
                     }
 
                     foreach($a_geraetegruppe_geraete_loeschen as $a_geraet)
                     {
-                        $obj_db_geraetegruppe_geraete->loescheGeraetAusGeraetegruppe($a_geraet['geraetegruppe_geraet_id']);
+                        $obj_db_geraetegruppe_geraete->deleteDeviceFromDeviceGroupDevices($a_geraet['geraetegruppe_geraet_id']);
                     }
                 }
             }

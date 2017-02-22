@@ -59,6 +59,7 @@ header  {
     background-color: #FFC130;
     background-image: url('/images/content/statisch/layout/header.jpg');
     background-position: top left;
+    background-size: 100% auto;
     background-repeat: no-repeat;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;

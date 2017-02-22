@@ -32,8 +32,8 @@ class MuskelnController extends Zend_Controller_Action
     
     public function indexAction()
     {
-        $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
-        $a_muskeln = $obj_db_muskeln->getMuskeln();
+        $obj_db_muskeln = new Application_Model_DbTable_Muscles();
+        $a_muskeln = $obj_db_muskeln->findAllMuscles();
         
         $this->view->assign('a_muskeln', $a_muskeln);
     }
@@ -54,8 +54,8 @@ class MuskelnController extends Zend_Controller_Action
            $a_params['id'] > 0)
         {
             $i_muskel_id = $a_params['id'];
-            $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
-            $a_muskel = $obj_db_muskeln->getMuskel($i_muskel_id);
+            $obj_db_muskeln = new Application_Model_DbTable_Muscles();
+            $a_muskel = $obj_db_muskeln->findMuscle($i_muskel_id);
             
             $this->view->assign($a_muskel);
         }
@@ -73,8 +73,8 @@ class MuskelnController extends Zend_Controller_Action
         if(isset($a_params['id']))
         {
             $i_muskelgruppe_id = $a_params['id'];
-            $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
-            $a_muskeln = $obj_db_muskeln->getMuskelnFuerMuskelgruppe($i_muskelgruppe_id);
+            $obj_db_muskeln = new Application_Model_DbTable_MuscleGroupMuscles();
+            $a_muskeln = $obj_db_muskeln->findMusclesByMuscleGroupId($i_muskelgruppe_id);
             
             $this->view->assign('a_muskeln', $a_muskeln);
         }
@@ -87,8 +87,8 @@ class MuskelnController extends Zend_Controller_Action
         if(isset($a_params['suche']))
         {
             $str_suche = base64_decode($a_params['suche']) . '%';
-            $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
-            $a_muskeln = $obj_db_muskeln->getMuskelByName($str_suche);
+            $obj_db_muskeln = new Application_Model_DbTable_Muscles();
+            $a_muskeln = $obj_db_muskeln->findMuscleByName($str_suche);
             
             $this->view->assign('a_muskeln_vorschlaege', $a_muskeln);
         }
@@ -107,7 +107,7 @@ class MuskelnController extends Zend_Controller_Action
         }
 
         if(isset($a_params['edited_elements'])) {
-            $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
+            $obj_db_muskeln = new Application_Model_DbTable_Muscles();
             
             $muskel_name = '';
             $i_muskel_id = 0;
@@ -141,7 +141,7 @@ class MuskelnController extends Zend_Controller_Action
             if(!$i_muskel_id &&
                strlen(trim($muskel_name)))
             {
-                $a_muskel_aktuell = $obj_db_muskeln->getMuskelByName($muskel_name);
+                $a_muskel_aktuell = $obj_db_muskeln->findMuscleByName($muskel_name);
                 if(is_array($a_muskel_aktuell) &&
                    count($a_muskel_aktuell) > 0)
                 {
@@ -157,7 +157,7 @@ class MuskelnController extends Zend_Controller_Action
                    0 < $i_muskel_id &&
                    count($a_data) > 0)
                 {
-                    $a_muskel_aktuell = $obj_db_muskeln->getMuskel($i_muskel_id);
+                    $a_muskel_aktuell = $obj_db_muskeln->findMuscle($i_muskel_id);
                     if(
                         (
                             isset($a_data['muskel_name']) &&
@@ -194,7 +194,7 @@ class MuskelnController extends Zend_Controller_Action
                     $a_data['muskel_aenderung_datum'] = date("Y-m-d H:i:s");
                     $a_data['muskel_aenderung_user_fk'] = $iUserId;
 
-                    $obj_db_muskeln->updateMuskel($a_data, $i_muskel_id);
+                    $obj_db_muskeln->updateMuscle($a_data, $i_muskel_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Dieser Muskel wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_muskel_id));
                 }
                 // neu anlegen
@@ -211,7 +211,7 @@ class MuskelnController extends Zend_Controller_Action
                     $a_data['muskel_eintrag_datum'] = date("Y-m-d H:i:s");
                     $a_data['muskel_eintrag_user_fk'] = $iUserId;
 
-                    $i_muskel_id = $obj_db_muskeln->setMuskel($a_data);
+                    $i_muskel_id = $obj_db_muskeln->saveMuscle($a_data);
 
                     if($i_muskel_id)
                     {
@@ -269,13 +269,13 @@ class MuskelnController extends Zend_Controller_Action
             $i_muskel_id = $a_params['id'];
             $b_fehler = false;
             
-            $obj_db_muskeln = new Application_Model_DbTable_Muskeln();
-            $obj_db_muskelgruppen = new Application_Model_DbTable_Muskelgruppen();
-            $obj_db_muskelgruppen_muskeln = new Application_Model_DbTable_MuskelgruppeMuskeln();
-            $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
-            $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
+            $obj_db_muskeln = new Application_Model_DbTable_Muscles();
+            $obj_db_muskelgruppen = new Application_Model_DbTable_MuscleGroups();
+            $obj_db_muskelgruppen_muskeln = new Application_Model_DbTable_MuscleGroupMuscles();
+            $obj_db_uebungen = new Application_Model_DbTable_Exercises();
+            $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_ExerciseMuscleGroups();
             
-            if($obj_db_muskeln->loescheMuskel($i_muskel_id))
+            if($obj_db_muskeln->deleteMuscle($i_muskel_id))
             {
                 array_push($a_messages, array('type' => 'meldung', 'message' => 'Muskel erfolgreich gelöscht!', 'result' => true));
             }
@@ -286,7 +286,7 @@ class MuskelnController extends Zend_Controller_Action
             }
             
             // muskelgruppen für muskel holen
-            $a_muskelgruppen = $obj_db_muskelgruppen_muskeln->getMuskelgruppenFuerMuskel($i_muskel_id);
+            $a_muskelgruppen = $obj_db_muskelgruppen_muskeln->findMuscleGroupsByMuscleId($i_muskel_id);
             
             if(is_array($a_muskelgruppen) &&
                count($a_muskelgruppen) > 0 &&
@@ -302,15 +302,15 @@ class MuskelnController extends Zend_Controller_Action
                     {
                         foreach($a_uebungen as $a_uebung)
                         {
-                            $obj_db_uebungen->loescheUebung($a_uebung['uebung_muskelgruppe_uebung_fk']);
+                            $obj_db_uebungen->deleteExercise($a_uebung['uebung_muskelgruppe_uebung_fk']);
                         }
                     }
-                    $obj_db_muskelgruppen->loescheMuskelgruppe($a_muskelgruppe['muskelgruppe_muskel_muskelgruppe_fk']);
+                    $obj_db_muskelgruppen->deleteMuscleGroup($a_muskelgruppe['muskelgruppe_muskel_muskelgruppe_fk']);
                     // uebung_muskelgruppen löschen
                     $obj_db_uebung_muskelgruppen->loescheUebungMuskelgruppeVonMuskelgruppe($a_muskelgruppe['muskelgruppe_muskel_muskelgruppe_fk']);
                 }
             }
-            $obj_db_muskelgruppen_muskeln->loescheAlleMuskelgruppeMuskelnFuerMuskel($i_muskel_id);
+            $obj_db_muskelgruppen_muskeln->deleteAllMuscleGroupsMusclesByMuscleId($i_muskel_id);
         }
         else
         {

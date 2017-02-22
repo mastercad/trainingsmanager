@@ -28,7 +28,6 @@
 ?>
 <script language="JavaScript">
     jQuery('document').ready(function(){
-        init();
 
         jQuery('#neue_uebung').bind('keyup', function(e) {
 
@@ -68,7 +67,10 @@
                             if(jQuery(vorhandene_uebungen[i]).find('.uebung-name').data('uebung-id') ==
                                 jQuery(this).data('vorschlag-id'))
                             {
-                                var a_messages = new Array({'type': 'fehler', 'message': 'Dieses Geraet ist bereits gesetzt!'});
+                                var a_messages = new Array({
+                                    'type': 'fehler',
+                                    'message': 'Diese Uebung ist für diesen Trainingsplan bereits gesetzt!'
+                                });
                                 var obj_cad_message = new CAD.Message();
                                 obj_cad_message.init(a_messages);
                                 obj_cad_message.open();
@@ -89,6 +91,8 @@
 
         $('#new-split-plan').unbind('click');
         $('#new-split-plan').bind('click', function() {
+            var obj_cad_loader = new CAD.Loader();
+            obj_cad_loader.open();
             var sUrl = '/trainingsplan/get-trainingsplan-fuer-split';
             var oParams =
             {
@@ -97,12 +101,27 @@
                 'ajax': 1
             };
             $.post(sUrl, oParams, function(response) {
-                $('#uebungen').append(response);
+                obj_cad_loader.close();
+                try {
+                    var obj_json = JSON.parse(response);
+
+                    if(undefined != obj_json[0].type &&
+                        undefined != obj_json[0].message)
+                    {
+                        var obj_cad_messages = new CAD.Message();
+                        obj_cad_messages.init(obj_json);
+                        obj_cad_messages.open();
+                    }
+                } catch (e) {
+                    $('#uebungen').append(response);
+                    CAD.Sperre().close();
+                    trainingsplan_edit_init();
+                }
             });
         });
     });
 
-    function init()
+    function trainingsplan_edit_init()
     {
         $(function() {
             $(".droppable").sortable({
@@ -140,7 +159,6 @@
         var oParent = oElement.parent();
         var iTrainPlanId = oParent.attr('id');
         var aInputsInPractice = oElement.find(':input');
-        console.log(aInputsInPractice);
         for (var i = 0; i < aInputsInPractice.length; i++) {
             correctNameOfElement($(aInputsInPractice[i]), iTrainPlanId);
         }
@@ -149,7 +167,6 @@
     function correctNameOfElement(oElement, iId)
     {
         var name = oElement.attr('name');
-//            name = name.replace(/\[([0-9]+?)\]\[[0-9]+?\]/g, iTrainPlanId);
         var iFirstPosStartOfIndex = name.indexOf('[');
         var iFirstPosEndOfIndex = name.indexOf(']');
         if (0 < iFirstPosStartOfIndex
@@ -185,14 +202,21 @@
         var sUrl = '/trainingsplan/get-uebung';
         var oData = {'id': iUebungId, 'ajax': true, 'counter': iCounter};
         jQuery.post(sUrl, oData, function(response) {
-//            jQuery('#trainingsplan_edit #uebungen').append(response);
-//            jQuery('ol.droppable:last').append(response);
-//            console.log(jQuery('ol.droppable:last .uebung:last-child'));
-//            connectPracticesToParentTrainPlan(jQuery('ol.droppable:last .uebung:last-child'));
-            jQuery('#uebungen ol:last').append(response);
-            console.log(jQuery('#uebungen ol:last .uebung:last-child'));
-            connectPracticesToParentTrainPlan(jQuery('#uebungen ol:last .uebung:last-child'));
-            init();
+            try {
+                var obj_json = JSON.parse(response);
+
+                if(undefined != obj_json[0].type &&
+                    undefined != obj_json[0].message)
+                {
+                    var obj_cad_messages = new CAD.Message();
+                    obj_cad_messages.init(obj_json);
+                    obj_cad_messages.open();
+                }
+            } catch (e) {
+                jQuery('#uebungen ol:last').append(response);
+                connectPracticesToParentTrainPlan(jQuery('#uebungen ol:last .uebung:last-child'));
+                trainingsplan_edit_init();
+            }
         });
     }
 
@@ -206,6 +230,7 @@
         });
         return parseInt(iCount) + 1;
     }
+    trainingsplan_edit_init();
 
 </script>
 

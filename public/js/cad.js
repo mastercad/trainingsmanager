@@ -13,7 +13,7 @@ var CAD = {
   /* 
    * @TODO Sperre noch als singleton ausarbeiten
    * 
-   * instance für sperre, da sie nur einmal aufgerufen könne
+   * instance für sperre, da sie nur einmal aufgerufen können
    * werden soll und ich es nicht hinbekomme, sie von Wrapper 
    * erben zu lassen, auf ihr eigenes parent zugreifen zu 
    * lassen und sie als singleton zu erstellen, aber so 

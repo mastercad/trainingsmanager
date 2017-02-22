@@ -269,8 +269,6 @@
         var elemente_muskelgruppen = jQuery('.uebung_muskelgruppen').find('.muskelgruppe');
         var muskelgruppen = [];
 
-        console.log(elemente_muskelgruppen);
-
         // alle muskelgruppen durchlaufen
         for(var i = 0, len = elemente_muskelgruppen.length; i < len; i++)
         {
@@ -278,7 +276,7 @@
             var muskelgruppe_id              = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_name').data('muskelgruppe-id');
             var muskelgruppe_beanspruchung   = jQuery(elemente_muskelgruppen[i]).find('.muskelgruppe_beanspruchung').data('muskelgruppe-beanspruchung');
             var elemente_muskeln = jQuery(elemente_muskelgruppen[i]).find('.muskel');
-            console.log(elemente_muskeln);
+//            console.log(elemente_muskeln);
             for (var k = 0; k < elemente_muskeln.length; k++) {
                 var muskel_id              = jQuery(elemente_muskeln[k]).data('muskel-id');
                 var muskel_beanspruchung   = jQuery(elemente_muskeln[k]).find('.muskel-beanspruchung').data('muskel-beanspruchung');
@@ -303,7 +301,7 @@
             a_messages.push({'type': 'fehler', 'message': 'Es muss mindestens eine Muskelgruppe für diese Übung vollständig ausgefüllt sein!'});
         }
 
-        console.log(muskelgruppen);
+//        console.log(muskelgruppen);
         if(!b_fehler)
         {
 //            jQuery().setEditedElements('projekt_flag_oeffentlich', 	jQuery('#projekt_flag_oeffentlich').is(':checked'));

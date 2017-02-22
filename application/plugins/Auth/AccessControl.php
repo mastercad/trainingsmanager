@@ -1,289 +1,322 @@
 <?php
 
-	class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstract
+/**
+ * Class Application_Plugin_Auth_AccessControl
+ */
+class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstract
 	{
-		protected $_auth = null;
-		protected $_acl = null;
-		protected $b_logged_in = false;
-		protected $b_logged_out = false;
-		protected $b_session_timed_out = false;
-		protected $a_messages = null;
-		protected $error_code = 1;
-		
-		public function __construct(CAD_Auth $auth, Zend_Acl $acl)
-		{
-			$this->_auth = $auth;
-			$this->_acl  = $acl;
-		}
+    /**
+     * @var CAD_Auth|null
+     */
+    protected $_auth = null;
+    /**
+     * @var null|Zend_Acl
+     */
+    protected $_acl = null;
+    /**
+     * @var bool
+     */
+    protected $b_logged_in = false;
+    /**
+     * @var bool
+     */
+    protected $b_logged_out = false;
+    /**
+     * @var bool
+     */
+    protected $b_session_timed_out = false;
+    /**
+     * @var null
+     */
+    protected $a_messages = null;
+    /**
+     * @var int
+     */
+    protected $error_code = 1;
 
-		public function	routeStartup(Zend_Controller_Request_Abstract $request)
-		{
-			$obj_user = null;
-			$username = '';
-			$password = '';
-			$result = '';
-			
-			$logger = Zend_Registry::get(ZEND_LOGGER);
-			
-			$zend_auth_namespace = new Zend_Session_Namespace('Zend_Auth');
+    /**
+     * @param CAD_Auth $auth
+     * @param Zend_Acl $acl
+     */
+    public function __construct(CAD_Auth $auth, Zend_Acl $acl)
+    {
+        $this->_auth = $auth;
+        $this->_acl  = $acl;
+    }
 
-			if($request->isPost() &&
-			   null !== $request->getPost('user_logout'))
-			{
-// 				$logger->info("Lösche Session!");
-				
-				unset($_SESSION['user_login']);
-				unset($_SESSION['user_passwort']);
-				
-				$this->_auth->getStorage()->write(null);
-			
-				$this->_auth->clearIdentity();
-				$_SESSION['__ZF']['Zend_Auth'] = null;
-				
-				$this->b_logged_in = false;
-				$this->b_logged_out = true;
-				
-				Zend_Session::namespaceUnset('Zend_Auth_Ghost');
-			}
-			else if ($request->isPost() &&
-					null !== $request->getPost('enc_user_login_name') &&
-					null !== $request->getPost('enc_user_login_passwort'))
-			{
-// 				$logger->info("Habe Post ENC Login Daten!");
-				
-				if($this->_auth->hasIdentity())
-				{
-					$this->_auth->clearIdentity();
-				}
-			
-				// POST-Daten bereinigen
-				$filter = new Zend_Filter_StripTags();
-			
-				$username = $filter->filter(base64_decode($request->getPost('enc_user_login_name')));
-				$password = $filter->filter(base64_decode($request->getPost('enc_user_login_passwort')));
-			
-				$this->b_logged_in = true;
-			}
-			else if ($request->isPost() &&
-					 null !== $request->getPost('user_login_name') &&
-					 null !== $request->getPost('user_login_passwort'))
-			{
-// 				$logger->info("Habe Post Login Daten!");
-				
-				if($this->_auth->hasIdentity())
-				{
-					$this->_auth->clearIdentity();
-				}
-				
-				// POST-Daten bereinigen
-				$filter = new Zend_Filter_StripTags();
-				
-				$username = $filter->filter($request->getPost('user_login_name'));
-				$password = $filter->filter($request->getPost('user_login_passwort'));
-				
-				$this->b_logged_in = true;
-			}
-			else if(is_array($_SESSION) &&
-                isset($_SESSION['user_login']) &&
-                isset($_SESSION['user_password'])
-			)
-			{
-// 				$logger->info("Habe login Daten in der Session! Lade sie!");
-				
-				$username = $_SESSION['user_login'];
-				$password = $_SESSION['user_passwort'];
-			}
+    /**
+     * @param Zend_Controller_Request_Abstract $request
+     * @throws Zend_Exception
+     * @throws Zend_Session_Exception
+     */
+    public function	routeStartup(Zend_Controller_Request_Abstract $request)
+    {
+        $obj_user = null;
+        $username = '';
+        $password = '';
+        $result = '';
 
-			// wenn username gesetzt und unterschiedlich zur session,
-			// session löschen
-			if($this->_auth->hasIdentity() &&
-			   $username &&
-                array_key_exists('user_login', $_SESSION) &&
-			   $_SESSION['user_login'] != $username)
-			{
-				unset($_SESSION['user_login']);
-				unset($_SESSION['user_passwort']);
-				
-				$this->_auth->clearIdentity();
-			}
-			
-			if ($this->b_logged_in &&
-				empty($username))
-			{
-                array_push($this->a_messages, 'Bitte Benutzernamen angeben.');
-				$this->error_code = -3;
-			}
-			if ($this->b_logged_in &&
-				empty($password))
-			{
-				array_push($this->a_messages, 'Bitte Passwort angeben.');
-				$this->error_code = -3;
-			}
-			
-			if(!$this->_auth->hasIdentity() &&
-				$username &&
-				$password)
-			{
-// 				$logger->info("Habe keine Auth, aber Login und Passwort!");
+        $logger = Zend_Registry::get(ZEND_LOGGER);
 
-				$authAdapter = new Application_Plugin_Auth_AuthAdapter();
-				
-				$authAdapter->setIdentity($username);
-				$authAdapter->setCredential($password);
-				
-				$result_auth = $authAdapter->authenticate();
-				$this->error_code = $result_auth->getCode();
-				
-				$result = $authAdapter->getResultRowObject();
-				
-				if ($this->error_code == -3)
-				{
-					$this->a_messages[] = "Benutzer/Passwortkombination leider nicht bekannt!";
-				
-					$registry = Zend_Registry::getInstance();
-					$view = $registry->view;
-					$view->user_login = $username;
-					$view->user_passwort = $password;
-					$view->a_messages = $this->a_messages;
-				}
-				else if($this->error_code == -4)
-				{
-					$this->a_messages[] = 'Sie sind bereits angemeldet!';
-					
-					$registry = Zend_Registry::getInstance();
-					$view = $registry->view;
-					$view->user_login = $username;
-					$view->user_passwort = $password;
-					$view->user_email = $result->user_email;
-					$view->user_id = $result->user_id;
-					$view->user_validierungshash = $result->user_validierungshash;
-					
-					$view->a_messages = $this->a_messages;
-					
-				}
-				else if($this->error_code == -1)
-				{
-					unset($_SESSION['user_login']);
-					unset($_SESSION['user_passwort']);
-				}
-				else if(!$this->error_code)
-				{
-					$this->a_messages[] = "Ihr Login ist nicht aktiv!";
-					
-					$registry = Zend_Registry::getInstance();
-					$view = $registry->view;
-					$view->user_login = $username;
-					$view->user_passwort = $password;
-					$view->a_messages = $this->a_messages;
-				}
-				else if (!$result)
-				{
-					$this->a_messages[] = $result;
-					
-					unset($_SESSION['user_login']);
-					unset($_SESSION['user_passwort']);
-					
-					$this->_auth->clearIdentity();
-				}
-				else
-				{
-					$this->_auth->getStorage()->write($result);
-				}
-			}
-			
-			if($this->_auth->hasIdentity() &&
-			   $this->b_logged_in)
-			{
-				$timeout = false;
-				$obj_user = $this->_auth->getIdentity();
-				
-				if($obj_user instanceof stdClass)
-				{
-// 					echo "Eben eingeloggt ! ";
-					$timeout = $obj_user->user_session_timeout ? $obj_user->user_session_timeout : $obj_user->user_rechte_gruppe_session_timeout;
-				}
-				
-				if(!$timeout)
-				{
-// 					echo "Habe kein eigenes Timeout, setze Globales Timeout! ";
-					$timeout = SESSION_TIMEOUT;
-				}
-// 				echo "Timeout : " . $timeout . "<br />";
-				
-				if(!Zend_Session::namespaceIsset('Zend_Auth_Ghost'))
-				{
-					$zend_auth_ghost_namespace = new Zend_Session_Namespace('Zend_Auth_Ghost');
-					$zend_auth_ghost_namespace->create_date = date("Y-m-d H:i:s");
-					$zend_auth_ghost_namespace->accept_answer = true;
-					$zend_auth_ghost_namespace->hash = $_COOKIE['PHPSESSID'];
-				}
-				
-				$zend_auth_namespace->setExpirationSeconds($timeout, 'accept_answer');
-				$zend_auth_namespace->accept_answer = true;
-				
-				if( !$obj_user->user_last_login ||
-					substr( $obj_user->user_last_login, 0, 10) == "0000-00-00")
-				{
-					$obj_user->user_last_login = date("Y-m-d H:i:s");
-				}
-				
-				$this->_auth->getStorage()->write($obj_user);
-			}
-			
-			// wenn authentifiziert und session noch existiert
-			if($this->_auth->hasIdentity() &&
-			   $zend_auth_namespace->accept_answer === true)
-			{
-				$session_timeout = $_SESSION['__ZF']['Zend_Auth']['ENVT']['accept_answer'] - time();
-				
-				$obj_user = $this->_auth->getIdentity();
-				
-				if($obj_user instanceof stdClass &&
-				   $session_timeout &&
-				   $session_timeout < SESSION_TIMEOUT)
-				{
-					$zend_auth_namespace->setExpirationSeconds(SESSION_TIMEOUT, 'accept_answer');
-					
-					$a_data = array();
-					$time = date("Y-m-d H:i:s");
-					
-					$a_data['user_last_login'] = $time;
-					$a_data['user_aenderung_datum'] = $time;
-					$a_data['user_aenderung_user_fk'] = $obj_user->user_id;
-					
-					$obj_user->user_last_login = $time;
-					
-					$obj_db_users = new Application_Model_DbTable_Users();
-					$obj_db_users->updateUser($a_data, $obj_user->user_id);
-					
-					$this->_auth->getStorage()->write($obj_user);
-				}
-			}
-			// wenn authentifiziert und session abgelaufen, dann abmelden erzwingen
-			else if($this->_auth->hasIdentity() &&
-					$zend_auth_namespace->accept_answer !== true)
-			{
-				$this->_auth->clearIdentity();
-			}
-			
-			if(Zend_Session::namespaceIsset('Zend_Auth_Ghost'))
-			{
-				$zend_auth_ghost_namespace = new Zend_Session_Namespace('Zend_Auth_Ghost');
-				
-				if( $zend_auth_ghost_namespace->accept_answer === true &&
-					$zend_auth_namespace->accept_answer !== true)
-				{
-					$this->b_session_timed_out = true;
-				}
-			}
-		}
+        $zend_auth_namespace = new Zend_Session_Namespace('Zend_Auth');
 
-        public function dispatchLoopShutdown()
+        if($request->isPost() &&
+           null !== $request->getPost('user_logout'))
         {
-            parent::dispatchLoopShutdown(); // TODO: Change the autogenerated stub
+// 				$logger->info("Lösche Session!");
+
+            unset($_SESSION['user_login']);
+            unset($_SESSION['user_passwort']);
+
+            $this->_auth->getStorage()->write(null);
+
+            $this->_auth->clearIdentity();
+            $_SESSION['__ZF']['Zend_Auth'] = null;
+
+            $this->b_logged_in = false;
+            $this->b_logged_out = true;
+
+            Zend_Session::namespaceUnset('Zend_Auth_Ghost');
+        }
+        else if ($request->isPost() &&
+                null !== $request->getPost('enc_user_login_name') &&
+                null !== $request->getPost('enc_user_login_passwort'))
+        {
+// 				$logger->info("Habe Post ENC Login Daten!");
+
+            if($this->_auth->hasIdentity())
+            {
+                $this->_auth->clearIdentity();
+            }
+
+            // POST-Daten bereinigen
+            $filter = new Zend_Filter_StripTags();
+
+            $username = $filter->filter(base64_decode($request->getPost('enc_user_login_name')));
+            $password = $filter->filter(base64_decode($request->getPost('enc_user_login_passwort')));
+
+            $this->b_logged_in = true;
+        }
+        else if ($request->isPost() &&
+                 null !== $request->getPost('user_login_name') &&
+                 null !== $request->getPost('user_login_passwort'))
+        {
+// 				$logger->info("Habe Post Login Daten!");
+
+            if($this->_auth->hasIdentity())
+            {
+                $this->_auth->clearIdentity();
+            }
+
+            // POST-Daten bereinigen
+            $filter = new Zend_Filter_StripTags();
+
+            $username = $filter->filter($request->getPost('user_login_name'));
+            $password = $filter->filter($request->getPost('user_login_passwort'));
+
+            $this->b_logged_in = true;
+        }
+        else if(is_array($_SESSION) &&
+            isset($_SESSION['user_login']) &&
+            isset($_SESSION['user_password'])
+        )
+        {
+// 				$logger->info("Habe login Daten in der Session! Lade sie!");
+
+            $username = $_SESSION['user_login'];
+            $password = $_SESSION['user_passwort'];
         }
 
-        public function preDispatch(Zend_Controller_Request_Abstract $request)
+        // wenn username gesetzt und unterschiedlich zur session,
+        // session löschen
+        if($this->_auth->hasIdentity() &&
+           $username &&
+            array_key_exists('user_login', $_SESSION) &&
+           $_SESSION['user_login'] != $username)
+        {
+            unset($_SESSION['user_login']);
+            unset($_SESSION['user_passwort']);
+
+            $this->_auth->clearIdentity();
+        }
+
+        if ($this->b_logged_in &&
+            empty($username))
+        {
+            array_push($this->a_messages, 'Bitte Benutzernamen angeben.');
+            $this->error_code = -3;
+        }
+        if ($this->b_logged_in &&
+            empty($password))
+        {
+            array_push($this->a_messages, 'Bitte Passwort angeben.');
+            $this->error_code = -3;
+        }
+
+        if(!$this->_auth->hasIdentity() &&
+            $username &&
+            $password)
+        {
+// 				$logger->info("Habe keine Auth, aber Login und Passwort!");
+
+            $authAdapter = new Application_Plugin_Auth_AuthAdapter();
+
+            $authAdapter->setIdentity($username);
+            $authAdapter->setCredential($password);
+
+            $result_auth = $authAdapter->authenticate();
+            $this->error_code = $result_auth->getCode();
+
+            $result = $authAdapter->getResultRowObject();
+
+            if ($this->error_code == -3)
+            {
+                $this->a_messages[] = "Benutzer/Passwortkombination leider nicht bekannt!";
+
+                $registry = Zend_Registry::getInstance();
+                $view = $registry->view;
+                $view->user_login = $username;
+                $view->user_passwort = $password;
+                $view->a_messages = $this->a_messages;
+            }
+            else if($this->error_code == -4)
+            {
+                $this->a_messages[] = 'Sie sind bereits angemeldet!';
+
+                $registry = Zend_Registry::getInstance();
+                $view = $registry->view;
+                $view->user_login = $username;
+                $view->user_passwort = $password;
+                $view->user_email = $result->user_email;
+                $view->user_id = $result->user_id;
+                $view->user_validierungshash = $result->user_validierungshash;
+
+                $view->a_messages = $this->a_messages;
+
+            }
+            else if($this->error_code == -1)
+            {
+                unset($_SESSION['user_login']);
+                unset($_SESSION['user_passwort']);
+            }
+            else if(!$this->error_code)
+            {
+                $this->a_messages[] = "Ihr Login ist nicht aktiv!";
+
+                $registry = Zend_Registry::getInstance();
+                $view = $registry->view;
+                $view->user_login = $username;
+                $view->user_passwort = $password;
+                $view->a_messages = $this->a_messages;
+            }
+            else if (!$result)
+            {
+                $this->a_messages[] = $result;
+
+                unset($_SESSION['user_login']);
+                unset($_SESSION['user_passwort']);
+
+                $this->_auth->clearIdentity();
+            }
+            else
+            {
+                $this->_auth->getStorage()->write($result);
+            }
+        }
+
+        if($this->_auth->hasIdentity() &&
+           $this->b_logged_in)
+        {
+            $timeout = false;
+            $obj_user = $this->_auth->getIdentity();
+
+            if($obj_user instanceof stdClass)
+            {
+// 					echo "Eben eingeloggt ! ";
+                $timeout = $obj_user->user_session_timeout ? $obj_user->user_session_timeout : $obj_user->user_rechte_gruppe_session_timeout;
+            }
+
+            if(!$timeout)
+            {
+// 					echo "Habe kein eigenes Timeout, setze Globales Timeout! ";
+                $timeout = SESSION_TIMEOUT;
+            }
+// 				echo "Timeout : " . $timeout . "<br />";
+
+            if(!Zend_Session::namespaceIsset('Zend_Auth_Ghost'))
+            {
+                $zend_auth_ghost_namespace = new Zend_Session_Namespace('Zend_Auth_Ghost');
+                $zend_auth_ghost_namespace->create_date = date("Y-m-d H:i:s");
+                $zend_auth_ghost_namespace->accept_answer = true;
+                $zend_auth_ghost_namespace->hash = $_COOKIE['PHPSESSID'];
+            }
+
+            $zend_auth_namespace->setExpirationSeconds($timeout, 'accept_answer');
+            $zend_auth_namespace->accept_answer = true;
+
+            if( !$obj_user->user_last_login ||
+                substr( $obj_user->user_last_login, 0, 10) == "0000-00-00")
+            {
+                $obj_user->user_last_login = date("Y-m-d H:i:s");
+            }
+
+            $this->_auth->getStorage()->write($obj_user);
+        }
+
+        // wenn authentifiziert und session noch existiert
+        if($this->_auth->hasIdentity() &&
+           $zend_auth_namespace->accept_answer === true)
+        {
+            $session_timeout = $_SESSION['__ZF']['Zend_Auth']['ENVT']['accept_answer'] - time();
+
+            $obj_user = $this->_auth->getIdentity();
+
+            if($obj_user instanceof stdClass &&
+               $session_timeout &&
+               $session_timeout < SESSION_TIMEOUT)
+            {
+                $zend_auth_namespace->setExpirationSeconds(SESSION_TIMEOUT, 'accept_answer');
+
+                $a_data = array();
+                $time = date("Y-m-d H:i:s");
+
+                $a_data['user_last_login'] = $time;
+                $a_data['user_aenderung_datum'] = $time;
+                $a_data['user_aenderung_user_fk'] = $obj_user->user_id;
+
+                $obj_user->user_last_login = $time;
+
+                $obj_db_users = new Application_Model_DbTable_Users();
+                $obj_db_users->updateUser($a_data, $obj_user->user_id);
+
+                $this->_auth->getStorage()->write($obj_user);
+            }
+        }
+        // wenn authentifiziert und session abgelaufen, dann abmelden erzwingen
+        else if($this->_auth->hasIdentity() &&
+                $zend_auth_namespace->accept_answer !== true)
+        {
+            $this->_auth->clearIdentity();
+        }
+
+        if(Zend_Session::namespaceIsset('Zend_Auth_Ghost'))
+        {
+            $zend_auth_ghost_namespace = new Zend_Session_Namespace('Zend_Auth_Ghost');
+
+            if( $zend_auth_ghost_namespace->accept_answer === true &&
+                $zend_auth_namespace->accept_answer !== true)
+            {
+                $this->b_session_timed_out = true;
+            }
+        }
+    }
+
+    /**
+     * @param Zend_Controller_Request_Abstract $request
+     * @return bool
+     * @throws Zend_Exception
+     */
+    public function preDispatch(Zend_Controller_Request_Abstract $request)
 		{
 			$b_call_forward = false;
 			$role = "gast";

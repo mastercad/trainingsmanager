@@ -57,18 +57,30 @@
 </div>
 <script type="text/javascript" language="JavaScript">
     $( document ).on( "pageinit", "#demo-page", function() {
-        $( document ).on( "swipeleft swiperight", "#demo-page", function( e ) {
+        $( document ).on( "swipeleft swiperight swipeup swipedown", "#demo-page", function( e ) {
             // We check if there is no open panel on the page because otherwise
             // a swipe to close the left panel would also open the right panel (and v.v.).
             // We do this by checking the data that the framework stores on the page element (panel: open).
             if ( $.mobile.activePage.jqmData( "panel" ) !== "open" ) {
                 if ( e.type === "swipeleft"  ) {
+                    console.log('Links!');
                     $( "#right-panel" ).panel( "open" );
                 } else if ( e.type === "swiperight" ) {
+                    console.log('Rechts!');
                     $( "#left-panel" ).panel( "open" );
+                } else if (e.type === "swipeup") {
+                    console.log('UP!');
+                    alert("UP!");
+                } else if (e.type === "swipedown") {
+                    alert("DOWN!");
+                    console.log('DOWN!');
                 }
             }
         });
+    });
+
+    $('#demo-page').on('swipedown', function(){
+       console.log("extra function down!");
     });
 </script>
 </body>

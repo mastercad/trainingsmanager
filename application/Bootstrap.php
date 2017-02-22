@@ -217,13 +217,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             && $obj_device->getType() == "desktop"
         ) {
             $view->headLink()->prependStylesheet($view->baseUrl() . '/css/global.css', 'screen', true);
+            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/normal.css', 'screen', true, array('title' => 'normal'));
         }
         else if(TRUE === is_object($obj_device)
             && $obj_device->getType() == "mobile"
         ) {
             $view->headLink()->prependStylesheet($view->baseUrl() . '/css/mobile.global.css', 'screen', true);
         }
-        $view->headLink()->appendStylesheet($view->baseUrl() . '/css/normal.css', 'screen', true, array('title' => 'normal'));
 //        $view->headLink()->appendStylesheet($view->baseUrl() . '/css/grau.css', 'screen', true, array('title' => 'grau', 'rel' => 'alternate stylesheet'));
 
         // wenn eine extension wie firephp installiert ist, rutscht der browser
@@ -277,8 +277,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
             $view->headLink()->appendStylesheet($view->baseUrl() . '/css/opera.css', 'screen', true);
         }
-        else
-        {
+        elseif (true === is_object($obj_device)
+            && $obj_device->getType() !== 'mobile'
+        ) {
             $view->headLink()->appendStylesheet($view->baseUrl() . '/css/effekte.css', 'screen', true);
         }
     }

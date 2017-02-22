@@ -8,7 +8,7 @@
 
 // http://www.admin-wissen.de/tutorials/php_tutorial/fortgeschrittene/testgetriebene_entwicklung/mocks.html
 
-require_once __DIR__ . '/../application/services/Trainingsplan.php';
+require_once __DIR__ . '/../application/services/TrainingPlan.php';
 
 class MockTest extends PHPUnit_Framework_TestCase
 {

@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="DataSourceManagerImpl" format="xml" hash="2129285445">
+  <component name="DataSourceManagerImpl" format="xml" hash="3422799583">
     <data-source source="LOCAL" name="Data Source" uuid="b55d0410-a2d4-403f-b89e-80f9562d7e31">
       <driver-ref>mysql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
       <jdbc-url>jdbc:mysql://localhost</jdbc-url>
-      <user-name>root</user-name>
-      <user-password>dfcedfdddfc0df92dff3dfdcdffcdfe2dfcedfe6dffcdffa</user-password>
       <default-dialect>MySQL</default-dialect>
       <libraries>
         <library>
@@ -20,4 +18,3 @@
     </data-source>
   </component>
 </project>
-

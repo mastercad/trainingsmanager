@@ -42,7 +42,7 @@
             {
                 var obj_json = JSON.parse(response);
 
-                jQuery().setEditedElements(jQuery('.vorschaubild').attr("id"), 		obj_json.html_pfad);
+                jQuery().setEditedElements(jQuery('.vorschaubild').attr("id"), obj_json.html_pfad);
 
                 if(jQuery('.vorschaubild').has('.cad-cms-dummy-blaeher'))
                 {

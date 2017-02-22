@@ -1,28 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData">
-    <serverData>
-      <paths name="byte-artist">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="rundumfit">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/" local="$PROJECT_DIR$" web="/" />
-          </mappings>
-          <excludedPaths>
-            <excludedPath local="true" path="$PROJECT_DIR$/werkstatt" />
-            <excludedPath local="true" path="$PROJECT_DIR$/nbproject" />
-            <excludedPath local="true" path="$PROJECT_DIR$/library/Zend" />
-            <excludedPath local="true" path="$PROJECT_DIR$/library/ZendX" />
-          </excludedPaths>
-        </serverdata>
-      </paths>
-    </serverData>
-  </component>
+  <component name="PublishConfigData" serverName="rundumfit" stopOnFirstError="true" />
 </project>
-

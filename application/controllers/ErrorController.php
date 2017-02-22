@@ -1,13 +1,13 @@
 <?php
 
-class ErrorController extends Zend_Controller_Action
-{
+class ErrorController extends Zend_Controller_Action {
 
-    public function errorAction()
-    {
+    public function errorAction() {
         $errors = $this->_getParam('error_handler');
         
-        if (!$errors || !$errors instanceof ArrayObject) {
+        if (!$errors
+            || !$errors instanceof ArrayObject
+        ) {
             $this->view->message = 'You have reached the error page';
             return;
         }
@@ -36,22 +36,20 @@ class ErrorController extends Zend_Controller_Action
         }
         
         // conditionally display exceptions
-        if ($this->getInvokeArg('displayExceptions') == true) {
+        if (true === $this->getInvokeArg('displayExceptions')) {
             $this->view->exception = $errors->exception;
         }
 
         $this->view->request = $errors->request;
     }
 
-    public function loginFailAction()
-    {
+    public function loginFailAction() {
         echo "Login fehlgeschlagen!";
     }
 
-    public function getLog()
-    {
+    public function getLog() {
         $bootstrap = $this->getInvokeArg('bootstrap');
-        if (!$bootstrap->hasResource('Log')) {
+        if (false === $bootstrap->hasResource('Log')) {
             return false;
         }
         $log = $bootstrap->getResource('Log');

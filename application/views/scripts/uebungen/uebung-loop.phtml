@@ -12,7 +12,7 @@
     }
 ?>
 <div style="position: relative;">
-    <img src="<?php echo '/butler/create-thumb/file/' . base64_encode(getcwd() . $vorschaubild) . '/width/200/';?>" style="width: 200px; float: left; display: inline;" />
+    <img src="<?php echo $vorschaubild;?>" style="width: 200px; float: left; display: inline;" />
     <div style="float: left; display: inline;">
         <a href="/uebungen/edit/id/<?php echo $this->uebung_id;?>"
            style="text-decoration: none;">

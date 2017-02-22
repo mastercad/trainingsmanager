@@ -4,9 +4,8 @@ class XmlController extends Zend_Controller_Action
 {
     public function init()
     {
-    	$action = $this->_getParam('action');
     	$this->_helper->getHelper('contextSwitch')
-    		->addActionContext($action, 'xml')
+    		->addActionContext($this->_getParam('action'), 'xml')
     		->initContext();
     	
     	$req = $this->getRequest();

@@ -32,14 +32,15 @@ class UebungenController extends Zend_Controller_Action
     
     public function indexAction()
     {
-        $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
-        $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
+        $obj_db_uebungen = new Application_Model_DbTable_Exercises();
+        $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_ExerciseMuscleGroups();
         
-        $a_uebungen = $obj_db_uebungen->getUebungen();
+        $a_uebungen = $obj_db_uebungen->findExercises();
         
         foreach($a_uebungen as &$a_uebung)
         {
-            $a_uebung_muskelgruppen = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($a_uebung['uebung_id']);
+            $a_uebung_muskelgruppen =
+                $obj_db_uebung_muskelgruppen->findExerciseMuscleGroupByExerciseId($a_uebung['uebung_id']);
             $a_uebung['uebung_muskelgruppen'] = $a_uebung_muskelgruppen;
         }
         
@@ -54,83 +55,66 @@ class UebungenController extends Zend_Controller_Action
     public function editAction()
     {
         $a_params = $this->getRequest()->getParams();
-        $vorschaubild_pfad = '/images/content/statisch/grafiken/kein_bild.png';
         
-        if(isset($a_params['id']) &&
-           is_numeric($a_params['id']) &&
-           $a_params['id'] > 0)
-        {
+        if (true === isset($a_params['id'])
+            && true === is_numeric($a_params['id'])
+            && 0 < $a_params['id']
+        ) {
             $iUebungId = $a_params['id'];
-            $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
-            /*
-            $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
-            $uebung_muskelgruppen_content = '';
-            $oUebung_muskelgruppen = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
-            */
-            $oUebung = $obj_db_uebungen->getUebung($iUebungId);
+            $obj_db_uebungen = new Application_Model_DbTable_Exercises();
+            $oUebung = $obj_db_uebungen->findExerciseById($iUebungId);
             
-            if($oUebung instanceof Zend_Db_Table_Row)
-            {
+            if ($oUebung instanceof Zend_Db_Table_Row) {
                 $this->view->assign($oUebung->toArray());
                 $aMatches = null;
                 
-                if(isset($oUebung->geraet_moegliche_einstellungen))
-                {
-                    if(preg_match('/\|/', $oUebung->geraet_moegliche_einstellungen))
-                    {
-                        $this->view->assign('a_geraet_moegliche_einstellungen', explode('|', $oUebung->geraet_moegliche_einstellungen));
-                    }
-                    else if(strlen(trim($oUebung->geraet_moegliche_einstellungen)) > 0)
-                    {
-                        $this->view->assign('a_geraet_moegliche_einstellungen', array(trim($oUebung->geraet_moegliche_einstellungen)));
+                if (true === isset($oUebung->geraet_moegliche_einstellungen)) {
+                    if (0 < preg_match('/\|/', $oUebung->geraet_moegliche_einstellungen)) {
+                        $this->view->assign('a_geraet_moegliche_einstellungen',
+                            explode('|', $oUebung->geraet_moegliche_einstellungen));
+                    } else if (0 < strlen(trim($oUebung->geraet_moegliche_einstellungen))) {
+                        $this->view->assign('a_geraet_moegliche_einstellungen',
+                            array(trim($oUebung->geraet_moegliche_einstellungen)));
                     }
                 }
 
-                if(isset($oUebung->geraet_moegliche_sitzpositionen))
-                {
-                    if(preg_match('/\|/', $oUebung->geraet_moegliche_sitzpositionen))
-                    {
-                        $this->view->assign('a_geraet_moegliche_sitzpositionen', explode('|', $oUebung->geraet_moegliche_sitzpositionen));
-                    }
-                    else if(strlen(trim($oUebung->geraet_moegliche_sitzpositionen)) > 0)
-                    {
-                        $this->view->assign('a_geraet_moegliche_sitzpositionen', array(trim($oUebung->geraet_moegliche_sitzpositionen)));
+                if (true === isset($oUebung->geraet_moegliche_sitzpositionen)) {
+                    if (0 < preg_match('/\|/', $oUebung->geraet_moegliche_sitzpositionen)) {
+                        $this->view->assign('a_geraet_moegliche_sitzpositionen',
+                            explode('|', $oUebung->geraet_moegliche_sitzpositionen));
+                    } else if (0 < strlen(trim($oUebung->geraet_moegliche_sitzpositionen))) {
+                        $this->view->assign('a_geraet_moegliche_sitzpositionen',
+                            array(trim($oUebung->geraet_moegliche_sitzpositionen)));
                     }
                 }
 
-                if(isset($oUebung->geraet_moegliche_rueckenpolster))
-                {
-                    if(preg_match('/\|/', $oUebung->geraet_moegliche_rueckenpolster))
-                    {
-                        $this->view->assign('a_geraet_moegliche_rueckenpolster', explode('|', $oUebung->geraet_moegliche_rueckenpolster));
-                    }
-                    else if(strlen(trim($oUebung->geraet_moegliche_rueckenpolster)) > 0)
-                    {
-                        $this->view->assign('a_geraet_moegliche_rueckenpolster', array(trim($oUebung->geraet_moegliche_rueckenpolster)));
+                if (true === isset($oUebung->geraet_moegliche_rueckenpolster)) {
+                    if (0 < preg_match('/\|/', $oUebung->geraet_moegliche_rueckenpolster)) {
+                        $this->view->assign('a_geraet_moegliche_rueckenpolster',
+                            explode('|', $oUebung->geraet_moegliche_rueckenpolster));
+                    } else if (0 < strlen(trim($oUebung->geraet_moegliche_rueckenpolster))) {
+                        $this->view->assign('a_geraet_moegliche_rueckenpolster',
+                            array(trim($oUebung->geraet_moegliche_rueckenpolster)));
                     }
                 }
 
-                if(isset($oUebung->geraet_moegliche_beinpolster))
-                {
-                    if(preg_match('/\|/', $oUebung->geraet_moegliche_beinpolster))
-                    {
-                        $this->view->assign('a_geraet_moegliche_beinpolster', explode('|', $oUebung->geraet_moegliche_beinpolster));
-                    }
-                    else if(strlen(trim($oUebung->geraet_moegliche_beinpolster)) > 0)
-                    {
-                        $this->view->assign('a_geraet_moegliche_beinpolster', array(trim($oUebung->geraet_moegliche_beinpolster)));
+                if (true === isset($oUebung->geraet_moegliche_beinpolster)) {
+                    if (0 < preg_match('/\|/', $oUebung->geraet_moegliche_beinpolster)) {
+                        $this->view->assign('a_geraet_moegliche_beinpolster',
+                            explode('|', $oUebung->geraet_moegliche_beinpolster));
+                    } else if (0 < strlen(trim($oUebung->geraet_moegliche_beinpolster))) {
+                        $this->view->assign('a_geraet_moegliche_beinpolster',
+                            array(trim($oUebung->geraet_moegliche_beinpolster)));
                     }
                 }
                 
-                if(isset($oUebung->geraet_moegliche_gewichte))
-                {
-                    if(preg_match('/\|/', $oUebung->geraet_moegliche_gewichte))
-                    {
-                        $this->view->assign('a_geraet_moegliche_gewichte', explode('|', $oUebung->geraet_moegliche_gewichte));
-                    }
-                    else if(strlen(trim($oUebung->geraet_moegliche_gewichte)) > 0)
-                    {
-                        $this->view->assign('a_geraet_moegliche_gewichte', array(trim($oUebung->geraet_moegliche_gewichte)));
+                if (true === isset($oUebung->geraet_moegliche_gewichte)) {
+                    if (0 < preg_match('/\|/', $oUebung->geraet_moegliche_gewichte)) {
+                        $this->view->assign('a_geraet_moegliche_gewichte',
+                            explode('|', $oUebung->geraet_moegliche_gewichte));
+                    } else if (0 < strlen(trim($oUebung->geraet_moegliche_gewichte))) {
+                        $this->view->assign('a_geraet_moegliche_gewichte',
+                            array(trim($oUebung->geraet_moegliche_gewichte)));
                     }
                 }
             } else {
@@ -138,21 +122,13 @@ class UebungenController extends Zend_Controller_Action
             }
         }
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-	    	
     }
     
-    public function uebersichtAction()
-    {
-        
+    public function uebersichtAction() {
     }
     
-    public function uploadBildAction()
-    {
-        $req = $this->getRequest();
-        $a_params = $req->getParams();
-
-        if(isset($_FILES['cad-cms-image-file']))
-        {
+    public function uploadBildAction() {
+        if (true === isset($_FILES['cad-cms-image-file'])) {
             $temp_bild_pfad = getcwd() . '/tmp/uebungen/';
 
             $obj_file = new CAD_File();
@@ -165,8 +141,7 @@ class UebungenController extends Zend_Controller_Action
 
 // 	    $this->view->assign('a_files', $a_files);
 
-            if(isset($a_files[0][CAD_FILE::HTML_PFAD]))
-            {
+            if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
                 $a_bild_pfad = array();
                 $a_bild_pfad['html_pfad'] = $a_files[0][CAD_FILE::HTML_PFAD];
                 $a_bild_pfad['sys_pfad'] = $a_files[0][CAD_FILE::SYS_PFAD];
@@ -181,8 +156,7 @@ class UebungenController extends Zend_Controller_Action
      * function um eine übersicht aller bilder des jeweiligen editierten
      * projektes zurück zu erhalten und es formatiert auszugeben
      */
-    public function holeBilderFuerEditAction()
-    {
+    public function holeBilderFuerEditAction() {
         $req = $this->getRequest();
         $a_params = $req->getParams();
 
@@ -195,8 +169,7 @@ class UebungenController extends Zend_Controller_Action
          * wenn es eine ID des projektes gibt, bilder aus dem projektordner
          * holen und temp checken
          */
-        if(isset($a_params['id']))
-        {
+        if (true === isset($a_params['id'])) {
                 $obj_files->addSourcePath(getcwd() . "/images/content/dynamisch/uebungen/" . $a_params['id']);
         }
         $obj_files->holeBilderAusPfad();
@@ -205,44 +178,37 @@ class UebungenController extends Zend_Controller_Action
         $this->view->assign('a_bilder', $a_bilder);
     }
 
-    public function loescheBildAction()
-    {
+    public function loescheBildAction() {
         $req = $this->getRequest();
         $a_params = $req->getParams();
 
-        if(isset($a_params['bild']))
-        {
+        if (true === isset($a_params['bild'])) {
             $bild_pfad = getcwd() . base64_decode($a_params['bild']);
 
-            if(file_exists($bild_pfad) &&
-               is_file($bild_pfad) &&
-               is_readable($bild_pfad))
-            {
-                if(true === @unlink($bild_pfad))
-                {
+            if (true === file_exists($bild_pfad)
+                && true === is_file($bild_pfad)
+                && true === is_readable($bild_pfad)
+            ) {
+                if (true === @unlink($bild_pfad)) {
                     echo "Bild erfolgreich gelöscht!<br />";
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "Es wurde kein Bild übergeben!<br />";
         }
     }
 
-    public function loescheUebungAction()
-    {
+    public function loescheUebungAction() {
         $a_params = $this->getRequest()->getParams();
         $a_messages = array();
 
-        if(isset($a_params['id']) &&
-           is_numeric($a_params['id']) &&
-           $a_params['id'] > 0)
-        {
+        if (true === isset($a_params['id'])
+            && true === is_numeric($a_params['id'])
+            && 0 < $a_params['id']
+        ) {
             $i_uebung_id = $a_params['id'];
-            $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
-            if($obj_db_uebungen->loescheUebung($i_uebung_id))
-            {
+            $obj_db_uebungen = new Application_Model_DbTable_Exercises();
+            if ($obj_db_uebungen->deleteExercise($i_uebung_id)) {
                 $i_count_message = count($a_messages);
                 $a_messages[$i_count_message]['type'] = "meldung";
                 $a_messages[$i_count_message]['message'] = "Übung erfolgreich gelöscht!";
@@ -252,17 +218,13 @@ class UebungenController extends Zend_Controller_Action
                 
                 $obj_file = new CAD_File();
                 $obj_file->cleanDirRek($bilder_pfad, 2);
-            }
-            else
-            {
+            } else {
                 $i_count_message = count($a_messages);
                 $a_messages[$i_count_message]['type'] = "fehler";
                 $a_messages[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
                 $a_messages[$i_count_message]['result'] = false;
             }
-        }
-        else
-        {
+        } else {
             $i_count_message = count($a_messages);
             $a_messages[$i_count_message]['type'] = "fehler";
             $a_messages[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
@@ -277,17 +239,16 @@ class UebungenController extends Zend_Controller_Action
      * @access public
      * @
      */
-    public function getMuskelgruppenFuerEditAction()
-    {
+    public function getMuskelgruppenFuerEditAction() {
         $aParams = $this->getAllParams();
         $aMessages = array();
         
-        if(isset($aParams['id']))
-        {
+        if (true === isset($aParams['id'])) {
             $iUebungId = $aParams['id'];
-            $oUebungMuskelnStorage = new Application_Model_DbTable_UebungMuskeln();
-            $aUebungMuskeln = $oUebungMuskelnStorage->getMuskelnFuerUebung($iUebungId);
+            $oUebungMuskelnStorage = new Application_Model_DbTable_ExerciseMuscles();
+            $aUebungMuskeln = $oUebungMuskelnStorage->findMusclesForExercise($iUebungId);
             $aMuskelGruppen = array();
+
             foreach ($aUebungMuskeln as $aUebungMuskel) {
                 if (FALSE === array_key_exists($aUebungMuskel['muskelgruppe_name'], $aMuskelGruppen)) {
                     $aMuskelGruppen[$aUebungMuskel['muskelgruppe_name']] = array();
@@ -299,8 +260,7 @@ class UebungenController extends Zend_Controller_Action
             $this->view->assign('aMuskelGruppen', $aMuskelGruppen);
         }
         
-        if(count($aMessages) > 0)
-        {
+        if (0 < count($aMessages)) {
             $this->view->assign('json_string', json_encode($aMessages));
         }
     }
@@ -308,22 +268,19 @@ class UebungenController extends Zend_Controller_Action
     /**
      * eine geraetegruppe als edit feld zurück geben
      */
-    public function getGeraeteFuerEditAction()
-    {
+    public function getGeraeteFuerEditAction() {
         $a_params = $this->getRequest()->getParams();
 
-        if(isset($a_params['id']))
-        {
+        if (true ===isset($a_params['id'])) {
             $i_geraetegruppe_id = $a_params['id'];
-            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
-            $a_geraetegruppe_geraete = $obj_db_geraetegruppe_geraete->getGeraeteFuerGeraetegruppe($i_geraetegruppe_id);
+            $obj_db_geraetegruppe_geraete = new Application_Model_DbTable_DeviceGroupDevices();
+            $a_geraetegruppe_geraete = $obj_db_geraetegruppe_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
 
             $this->view->assign('a_geraetegruppe_geraete', $a_geraetegruppe_geraete);
         }
     }
     
-    public function speichernAction()
-    {
+    public function speichernAction() {
         $a_params = $this->getRequest()->getParams();
 
         $iUserId = 1;
@@ -333,19 +290,13 @@ class UebungenController extends Zend_Controller_Action
             $iUserId = $obj_user->user_id;
         }
 
-        if(isset($a_params['edited_elements']))
-        {
-            $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
+        if (true === isset($a_params['edited_elements'])) {
+            $obj_db_uebungen = new Application_Model_DbTable_Exercises();
 
             $uebung_name = '';
-            $a_uebung_muskelgruppen = array();
             $a_uebung_muskelgruppen_loeschen = array();
             $a_uebung_muskelgruppen_updaten = array();
             $a_uebung_muskelgruppen_hinzufuegen = array();
-            $a_uebung_muskeln_loeschen = array();
-            $a_uebung_muskeln_updaten = array();
-            $a_uebung_muskeln_hinzufuegen = array();
-            $i_count_uebung_muskelgruppen = 0;
             $uebung_vorschaubild = '';
             $uebung_beschreibung = '';
             $uebung_besonderheiten = '';
@@ -360,68 +311,67 @@ class UebungenController extends Zend_Controller_Action
             $a_messages = array();
             $a_data = array();
 
-            if(isset($a_params['edited_elements']['uebung_name']) &&
-               0 < strlen(trim($a_params['edited_elements']['uebung_name'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_name'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_name']))
+            ) {
                 $uebung_name = base64_decode($a_params['edited_elements']['uebung_name']);
             }
             
-            if(isset($a_params['edited_elements']['uebung_geraet_gewicht_name']) &&
-               0 < strlen(trim($a_params['edited_elements']['uebung_geraet_gewicht_name'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_geraet_gewicht_name'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_geraet_gewicht_name']))
+            ) {
                 $uebung_geraet_gewicht = base64_decode($a_params['edited_elements']['uebung_geraet_gewicht_name']);
             }
             
-            if(isset($a_params['edited_elements']['uebung_geraet_einstellung_name']) &&
-               0 < strlen(trim($a_params['edited_elements']['uebung_geraet_einstellung_name'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_geraet_einstellung_name'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_geraet_einstellung_name']))
+            ) {
                 $uebung_geraet_einstellung = base64_decode($a_params['edited_elements']['uebung_geraet_einstellung_name']);
             }
 
-            if(isset($a_params['edited_elements']['uebung_geraet_sitzposition_name']) &&
-                0 < strlen(trim($a_params['edited_elements']['uebung_geraet_sitzposition_name'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_geraet_sitzposition_name'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_geraet_sitzposition_name']))
+            ) {
                 $uebung_geraet_sitzposition = base64_decode($a_params['edited_elements']['uebung_geraet_sitzposition_name']);
             }
 
-            if(isset($a_params['edited_elements']['uebung_geraet_rueckenpolster_name']) &&
-                0 < strlen(trim($a_params['edited_elements']['uebung_geraet_rueckenpolster_name'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_geraet_rueckenpolster_name'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_geraet_rueckenpolster_name']))
+            ) {
                 $uebung_geraet_rueckenpolster = base64_decode($a_params['edited_elements']['uebung_geraet_rueckenpolster_name']);
             }
 
-            if(isset($a_params['edited_elements']['uebung_geraet_beinpolster_name']) &&
-                0 < strlen(trim($a_params['edited_elements']['uebung_geraet_beinpolster_name'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_geraet_beinpolster_name'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_geraet_beinpolster_name']))
+            ) {
                 $uebung_geraet_beinpolster = base64_decode($a_params['edited_elements']['uebung_geraet_beinpolster_name']);
             }
 
-            if(isset($a_params['edited_elements']['uebung_beschreibung']) &&
-                0 < strlen(trim($a_params['edited_elements']['uebung_beschreibung'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_beschreibung'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_beschreibung']))
+            ) {
                 $uebung_beschreibung = base64_decode($a_params['edited_elements']['uebung_beschreibung']);
             }
 
-            if(isset($a_params['edited_elements']['uebung_geraet_fk']) &&
-                0 < strlen(trim($a_params['edited_elements']['uebung_geraet_fk'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_geraet_fk'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_geraet_fk']))
+            ) {
                 $i_uebung_geraet_id = $a_params['edited_elements']['uebung_geraet_fk'];
             }
             
-            if(isset($a_params['edited_elements']['uebung_besonderheiten']) &&
-               0 < strlen(trim($a_params['edited_elements']['uebung_besonderheiten'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_besonderheiten'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_besonderheiten']))
+            ) {
                 $uebung_besonderheiten = base64_decode($a_params['edited_elements']['uebung_besonderheiten']);
             }
             
-            if(isset($a_params['edited_elements']['uebung_vorschaubild']) &&
-               0 < strlen(trim($a_params['edited_elements']['uebung_vorschaubild'])))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_vorschaubild'])
+                && 0 < strlen(trim($a_params['edited_elements']['uebung_vorschaubild']))
+            ) {
                 $uebung_vorschaubild = base64_decode($a_params['edited_elements']['uebung_vorschaubild']);
             }
             
-            if(isset($a_params['edited_elements']['uebung_id']))
-            {
+            if (true === isset($a_params['edited_elements']['uebung_id'])){
                 $i_uebung_id = $a_params['edited_elements']['uebung_id'];
             }
             
@@ -437,7 +387,7 @@ class UebungenController extends Zend_Controller_Action
 //            {
 //                $a_uebung_muskelgruppen_aktuell = array();
 //
-//                $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_UebungMuskelgruppen();
+//                $obj_db_uebung_muskelgruppen = new Application_Model_DbTable_ExerciseMuscleGroups();
 //                $a_uebung_muskelgruppen_aktuell_roh = $obj_db_uebung_muskelgruppen->getMuskelgruppenFuerUebung($i_uebung_id);
 //
 //                $i_count_uebung_muskelgruppen = count($a_uebung_muskelgruppen_aktuell_roh);
@@ -493,75 +443,62 @@ class UebungenController extends Zend_Controller_Action
 //                }
 //            }
             
-            if(0 == strlen(trim($uebung_name)) &&
-               !$i_uebung_id)
-            {
+            if (0 == strlen(trim($uebung_name))
+                && true === empty($i_uebung_id)
+            ) {
                 array_push($a_messages, array('type' => 'fehler', 'message' => 'Diese Übung benötigt einen Namen'));
                 $b_fehler = true;
-            }
-            else if(0 < strlen(trim($uebung_name)))
-            {
+            } else if (0 < strlen(trim($uebung_name))) {
                 $a_data['uebung_name'] = $uebung_name;
             }
             
-            if(0 < strlen(trim($uebung_geraet_einstellung)))
-            {
+            if (0 < strlen(trim($uebung_geraet_einstellung))) {
                 $a_data['uebung_geraet_einstellung'] = $uebung_geraet_einstellung;
             }
             
-            if(0 < strlen(trim($uebung_geraet_gewicht)))
-            {
+            if (0 < strlen(trim($uebung_geraet_gewicht))) {
                 $a_data['uebung_geraet_gewicht'] = $uebung_geraet_gewicht;
             }
 
-            if(0 < strlen(trim($uebung_geraet_sitzposition)))
-            {
+            if (0 < strlen(trim($uebung_geraet_sitzposition))) {
                 $a_data['uebung_geraet_sitzposition'] = $uebung_geraet_sitzposition;
             }
 
-            if(0 < strlen(trim($uebung_geraet_rueckenpolster)))
-            {
+            if (0 < strlen(trim($uebung_geraet_rueckenpolster))) {
                 $a_data['uebung_geraet_rueckenpolster'] = $uebung_geraet_rueckenpolster;
             }
 
-            if(0 < strlen(trim($uebung_geraet_beinpolster)))
-            {
+            if (0 < strlen(trim($uebung_geraet_beinpolster))) {
                 $a_data['uebung_geraet_beinpolster'] = $uebung_geraet_beinpolster;
             }
             
-            if(0 < strlen(trim($uebung_vorschaubild)))
-            {
+            if (0 < strlen(trim($uebung_vorschaubild))) {
                 $a_data['uebung_vorschaubild'] = $uebung_vorschaubild;
             }
 
-            if(0 < strlen(trim($uebung_besonderheiten)))
-            {
+            if(0 < strlen(trim($uebung_besonderheiten))) {
                 $a_data['uebung_besonderheiten'] = $uebung_besonderheiten;
             }
 
-            if(0 >= $i_uebung_geraet_id &&
-                !$i_uebung_id)
-            {
+            if (0 >= $i_uebung_geraet_id
+                && true === empty($i_uebung_id)
+            ) {
                 array_push($a_messages, array('type' => 'fehler', 'message' => 'Diese Übung benötigt ein Gerät'));
                 $b_fehler = true;
-            }
-            else if(0 <= $i_uebung_geraet_id)
-            {
+            } else if (0 <= $i_uebung_geraet_id) {
                 $a_data['uebung_geraet_fk'] = $i_uebung_geraet_id;
             }
-            if(0 < strlen(trim($uebung_besonderheiten)))
-            {
+
+            if (0 < strlen(trim($uebung_besonderheiten))) {
                 $a_data['uebung_besonderheiten'] = $uebung_besonderheiten;
             }
 
-            if(0 == strlen(trim($uebung_beschreibung)) &&
-                !$i_uebung_id)
-            {
+            if (0 == strlen(trim($uebung_beschreibung))
+                && true === empty($i_uebung_id)
+            ) {
                 array_push($a_messages, array('type' => 'fehler', 'message' => 'Diese Übung benötigt eine Beschreibung'));
                 $b_fehler = true;
-            }
-            else if(0 < strlen(trim($uebung_beschreibung)))
-            {
+            } else if (0 < strlen(trim($uebung_beschreibung))) {
                 $a_data['uebung_beschreibung'] = $uebung_beschreibung;
             }
             
@@ -573,12 +510,11 @@ class UebungenController extends Zend_Controller_Action
             
             $obj_cad_seo = new CAD_Seo();
             
-            if(!$i_uebung_id &&
-               strlen(trim($uebung_name)))
-            {
-                $oUebungenRows = $obj_db_uebungen->getUebungenByName($uebung_name);
-                if( FALSE === $oUebungenRows)
-                {
+            if (true === empty($i_uebung_id)
+                && 0 == strlen(trim($uebung_name))
+            ) {
+                $oUebungenRows = $obj_db_uebungen->findExercisesByName($uebung_name);
+                if (FALSE === $oUebungenRows) {
                     array_push($a_messages, array('type' => 'fehler', 'message' => 'Übung "' . $uebung_name . '" existiert bereits!', 'result' => false));
                     $b_fehler = true;
                 } else {
@@ -586,14 +522,14 @@ class UebungenController extends Zend_Controller_Action
                 }
             }
 
-            if(!$b_fehler) {
+            if (false === $b_fehler) {
                 // updaten?
                 if(is_numeric($i_uebung_id) &&
                    0 < $i_uebung_id &&
                    is_array($a_data) &&
                    count($a_data) > 0)
                 {
-                    $a_uebung_aktuell = $obj_db_uebungen->getUebung($i_uebung_id);
+                    $a_uebung_aktuell = $obj_db_uebungen->findExerciseById($i_uebung_id);
                     if(
                         (
                             isset($a_data['uebung_name']) &&
@@ -608,12 +544,12 @@ class UebungenController extends Zend_Controller_Action
                         )
                     )
                     {
-                        if(isset($a_data['uebung_name']) &&
+                        if (isset($a_data['uebung_name']) &&
                            strlen(trim($a_data['uebung_name'])) > 0)
                         {
                             $uebung_name = $a_data['uebung_name'];
                         }
-                        else if(isset($a_uebung_aktuell['uebung_name']) &&
+                        else if (isset($a_uebung_aktuell['uebung_name']) &&
                                 strlen(trim($a_uebung_aktuell['uebung_name'])) > 0)
                         {
                             $uebung_name = $a_uebung_aktuell['uebung_name'];
@@ -629,11 +565,11 @@ class UebungenController extends Zend_Controller_Action
                     $a_data['uebung_aenderung_datum'] = date("Y-m-d H:i:s");
                     $a_data['uebung_aenderung_user_fk'] = $iUserId;
 
-                    $obj_db_uebungen->updateUebung($a_data, $i_uebung_id);
+                    $obj_db_uebungen->updateExercise($a_data, $i_uebung_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_uebung_id));
                 }
                 // neu anlegen
-                else if(is_array($a_data) &&
+                else if (is_array($a_data) &&
                         count($a_data) > 0)
                 {
                     $obj_cad_seo->setLinkName($a_data['uebung_name']);
@@ -647,24 +583,23 @@ class UebungenController extends Zend_Controller_Action
                     $a_data['uebung_eintrag_datum'] = date("Y-m-d H:i:s");
                     $a_data['uebung_eintrag_user_fk'] = $iUserId;
 
-                    $i_uebung_id = $obj_db_uebungen->setUebung($a_data);
+                    $i_uebung_id = $obj_db_uebungen->saveExercise($a_data);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde erfolgreich angelegt!', 'result' => true, 'id' => $i_uebung_id));
                 }
                 else if(count($a_uebung_muskelgruppen_hinzufuegen) == 0 &&
-                        count($a_uebung_muskelgruppen_updaten) == 0 &&
-                        count($a_uebung_muskelgruppen_loeschen) == 0)
+                    count($a_uebung_muskelgruppen_updaten) == 0 &&
+                    count($a_uebung_muskelgruppen_loeschen) == 0)
                 {
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde nicht geändert!', 'result' => true, 'id' => $i_uebung_id));
                 }
                 if(count($a_uebung_muskelgruppen_hinzufuegen) > 0 ||
-                        count($a_uebung_muskelgruppen_updaten) > 0 ||
-                        count($a_uebung_muskelgruppen_loeschen) > 0)
+                    count($a_uebung_muskelgruppen_updaten) > 0 ||
+                    count($a_uebung_muskelgruppen_loeschen) > 0)
                 {
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Die Muskelgruppen der Übung wurden erfolgreich geändert!', 'result' => true, 'id' => $i_uebung_id));
                 }
                 
-                if($i_uebung_id)
-                {
+                if ($i_uebung_id) {
                     /* bilder verschieben */
                     $obj_files = new CAD_File();
                     
@@ -709,10 +644,11 @@ class UebungenController extends Zend_Controller_Action
                     if (array_key_exists('uebung_muskelgruppen', $a_params['edited_elements'])
                         && is_array($a_params['edited_elements']['uebung_muskelgruppen'])
                     ) {
-                        $oUebungMuskelGruppen = new Application_Model_DbTable_UebungMuskelgruppen();
-                        $oUebungMuskeln = new Application_Model_DbTable_UebungMuskeln();
-                        $oMuskelnAktuellRowSet = $oUebungMuskeln->getMuskelnFuerUebung($i_uebung_id);
+                        $oUebungMuskelGruppen = new Application_Model_DbTable_ExerciseMuscleGroups();
+                        $oUebungMuskeln = new Application_Model_DbTable_ExerciseMuscles();
+                        $oMuskelnAktuellRowSet = $oUebungMuskeln->findMusclesForExercise($i_uebung_id);
                         $aMuskelnAktuell = array();
+
                         foreach ($oMuskelnAktuellRowSet as $oMuskelAktuellRow) {
                             if (FALSE === array_key_exists($oMuskelAktuellRow->uebung_muskel_muskelgruppe_fk, $aMuskelnAktuell)) {
                                 $aMuskelnAktuell[$oMuskelAktuellRow->uebung_muskel_muskelgruppe_fk] = array();
@@ -726,37 +662,38 @@ class UebungenController extends Zend_Controller_Action
                                 && is_array($aUebungMuskelGruppe['muskeln'])
                             ) {
                                 $iMuskelGruppeId = $aUebungMuskelGruppe['id'];
-//                                echo "MuskelGruppe : " . $iMuskelGruppeId . PHP_EOL;
+
                                 foreach ($aUebungMuskelGruppe['muskeln'] as $aMuskel) {
                                     // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
-                                    if (array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)
-                                        && is_array($aMuskelnAktuell[$iMuskelGruppeId])
-                                        && array_key_exists($aMuskel['id'], $aMuskelnAktuell[$iMuskelGruppeId])
+                                    if (true === array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)
+                                        && true === is_array($aMuskelnAktuell[$iMuskelGruppeId])
+                                        && true === array_key_exists($aMuskel['id'], $aMuskelnAktuell[$iMuskelGruppeId])
                                     ) {
                                         // checken ob der aktuelle muskel keine beanspruchung, dann löschen
                                         if (TRUE === empty($aMuskel['beanspruchung'])) {
 //                                            echo "Lösche!" . PHP_EOL;
                                             $bResult =
-                                                $oUebungMuskeln->loescheUebungMuskel($aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_id);
+                                                $oUebungMuskeln->deleteExerciseMuscle($aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_id);
                                         // wenn beanspruchung und != eingetragener, dann updaten
-                                        } elseif ($aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_beanspruchung != $aMuskel['beanspruchung']) {
+                                        } else if ($aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_beanspruchung != $aMuskel['beanspruchung']) {
 //                                            echo "Update!" . PHP_EOL;
                                             $aData = array(
                                                 'uebung_muskel_aenderung_datum' => date('Y-m-d H:i:s'),
                                                 'uebung_muskel_aenderung_user_fk' => $iUserId,
                                                 'uebung_muskel_beanspruchung' => $aMuskel['beanspruchung']
                                             );
-                                            $bResult =
-                                                $oUebungMuskeln->updateUebungMuskel($aData, $aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_id);
+                                            $bResult = $oUebungMuskeln->updateExerciseMuscle(
+                                                $aData,
+                                                $aMuskelnAktuell[$iMuskelGruppeId][$aMuskel['id']]->uebung_muskel_id
+                                            );
                                         }
                                     }
                                     // wenn es die muskelgruppe schon gibt, aber nicht den muskel
-                                    elseif (array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)
-                                            && is_array($aMuskelnAktuell[$iMuskelGruppeId])
-                                            && FALSE == array_key_exists($aMuskel['id'], $aMuskelnAktuell[$iMuskelGruppeId])
-                                            && FALSE == empty($aMuskel['id']['beanspruchung'])
+                                    else if (true === array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)
+                                        && true === is_array($aMuskelnAktuell[$iMuskelGruppeId])
+                                        && false == array_key_exists($aMuskel['id'], $aMuskelnAktuell[$iMuskelGruppeId])
+                                        && false == empty($aMuskel['id']['beanspruchung'])
                                     ) {
-//                                        echo "Trage ein!" . PHP_EOL;
                                         $aData = array(
                                             'uebung_muskel_muskelgruppe_fk' => $iMuskelGruppeId,
                                             'uebung_muskel_muskel_fk' => $aMuskel['id'],
@@ -765,11 +702,10 @@ class UebungenController extends Zend_Controller_Action
                                             'uebung_muskel_eintrag_user_fk' => $iUserId,
                                             'uebung_muskel_beanspruchung' => $aMuskel['beanspruchung']
                                         );
-                                        $iUebungMuskelId = $oUebungMuskeln->setUebungMuskel($aData);
+                                        $iUebungMuskelId = $oUebungMuskeln->saveExerciseMuscle($aData);
                                     }
                                     // wenn es die muskelgruppe noch nicht gibt
-                                    elseif (FALSE === array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)) {
-//                                        echo "Lege Muskelgruppe und Muskel neu an !" . PHP_EOL;
+                                    elseif (false === array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)) {
                                         $aData = array(
                                             'uebung_muskel_muskelgruppe_fk' => $iMuskelGruppeId,
                                             'uebung_muskel_muskel_fk' => $aMuskel['id'],
@@ -778,32 +714,27 @@ class UebungenController extends Zend_Controller_Action
                                             'uebung_muskel_eintrag_user_fk' => $iUserId,
                                             'uebung_muskel_beanspruchung' => $aMuskel['beanspruchung']
                                         );
-                                        $iUebungMuskelId = $oUebungMuskeln->setUebungMuskel($aData);
+                                        $iUebungMuskelId = $oUebungMuskeln->saveExerciseMuscle($aData);
                                     }
                                 }
                                 // wenn es die muskelgruppe noch nicht gibt
                                 if (FALSE === array_key_exists($iMuskelGruppeId, $aMuskelnAktuell)) {
-//                                    echo "Lege Muskelgruppe und Muskel neu an !" . PHP_EOL;
                                     $aData = array(
                                         'uebung_muskelgruppe_muskelgruppe_fk' => $iMuskelGruppeId,
                                         'uebung_muskelgruppe_uebung_fk' => $i_uebung_id,
                                         'uebung_muskelgruppe_eintrag_datum' => date('Y-m-d H:i:s'),
                                         'uebung_muskelgruppe_eintrag_user_fk' => $iUserId
                                     );
-                                    $iUebungMuselGruppeId = $oUebungMuskelGruppen->setUebungMuskelgruppen($aData);
+                                    $iUebungMuselGruppeId = $oUebungMuskelGruppen->saveExerciseMuscleGroup($aData);
                                 }
                             }
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 array_push($a_messages, array('type' => 'fehler', 'message' => 'Es gabe einen Fehler beim speichern der Übung!', 'result' => false));
             }
-        }
-        else
-        {
+        } else {
             array_push($a_messages, array('type' => 'fehler', 'message' => 'Falscher Aufruf von Übung speichern!', 'result' => false));
         }
         $this->view->assign('json_string', json_encode($a_messages));

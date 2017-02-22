@@ -14,188 +14,95 @@
  * 
  */
 
-require_once(getcwd() . '/../library/Zend/Db/Table.php');
-
-class Application_Model_DbTable_Users extends Zend_Db_Table_Abstract
+class Application_Model_DbTable_Users extends Application_Model_DbTable_Abstract
 {
-	protected $_name 	= 'users';
-	protected $_primary = 'user_id';
-	
-	protected static $obj_meta;
-	
-	public function init()
-	{
-		if(!self::$obj_meta)
-		{
-			self::$obj_meta = $this->info();
+    /**
+     * @var string
+     */
+    protected $_name 	= 'users';
+    /**
+     * @var string
+     */
+    protected $_primary = 'user_id';
+
+    /**
+     * @param $iUserId
+     * @return bool|null|Zend_Db_Table_Row_Abstract
+     */
+    public function findUser($iUserId) {
+		try {
+			return $this->fetchRow( "`user_id` LIKE( '" . $iUserId . "')");
+		} catch (Exception $oException) {
+			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+			echo "Meldung : " . $oException->getMessage() . "<br />";
 		}
-	}
-	
-	public function getInfo()
-	{
-		return self::$obj_meta;
+        return false;
 	}
 
-	public function getUser($user_id)
-	{
-		try
-		{
-			$row = $this->fetchRow( "`user_id` LIKE( '" . $user_id . "')");
-	
-			if( !$row)
-			{
-				throw new Exception( "Konnte User " . $user_id . " nicht finden !");
-			}
-		}
-		catch( Exception $e)
-		{
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $e->getMessage() . "<br />";
-			return false;
-		}
-		return $row->toArray();
+    /**
+     * @param $sUserEmail
+     * @return bool|null|Zend_Db_Table_Row_Abstract
+     */
+    public function findUserByEmail($sUserEmail) {
+		try {
+			return $this->fetchRow( "user_email LIKE( '" . $sUserEmail . "')");
+		} catch (Exception $oException) {
+            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+            echo "Meldung : " . $oException->getMessage() . "<br />";
+        }
+        return false;
 	}
 
-	public function getUserByEmail($str_user_email)
-	{
-		try
-		{
-			$row = $this->fetchRow( "user_email LIKE( '" . $str_user_email . "')");
-	
-			if( $row)
-			{
-				return $row->toArray();
-			}
-			return false;
-// 				throw new Exception( "Konnte User mit der E-Mail " . $str_user_email . " nicht finden !");
-		}
-		catch( Exception $e)
-		{
+    /**
+     * @param $aData
+     * @param $iUserId
+     * @return bool|int
+     */
+    public function updateUser($aData, $iUserId) {
+		try {
+			return $this->update($aData, "user_id = '" . $iUserId . "'");
+		} catch (Exception $oException) {
 			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $e->getMessage() . "<br />";
-			return false;
+			echo "Meldung : " . $oException->getMessage() . "<br />";
 		}
-	}
-	
-	public function updateUser( $a_data, $user_id)
-	{
-		try
-		{
-			$result = $this->update( $a_data, "user_id = '" . $user_id . "'");
-			
-			return $result;
-		}
-		catch( Exception $e)
-		{
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $e->getMessage() . "<br />";
-			return false;
-		}
-	}
-	
-	public function setUser( $a_data)
-	{
-		try
-		{
-			$ergebnis = $this->insert( $a_data);
-	
-			if(!$ergebnis)
-			{
-				throw new Exception("Fehler beim Anlegen des Users?");
-			}
-			return $ergebnis;
-		}
-		catch( Exception $e)
-		{
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $e->getMessage() . "<br />";
-			echo "<pre>";
-			print_r($a_data);
-			echo "</pre>";
-			echo "<br />" . $db_select->__toString();
-			return false;
-		}
-	}
-	
-	public function loescheUser( $user_id)
-	{
-		$result = $this->delete("`user_id` = '" . $user_id . "'");
-	
-		if($result)
-		{
-			return $result;
-		}
-		return false;
-	}
-	
-	public function checkEmailExists($str_email)
-	{
-		$result = $this->fetchRow("user_email = '" . $str_email . "' OR user_login = '" . $str_email . "'");
-	
-		if($result)
-		{
-			return true;
-		}
-		return false;
+        return false;
 	}
 
-    public function getActiveUsers()
-    {
+    /**
+     * @param $aData
+     * @return bool|mixed
+     */
+    public function saveUser($aData) {
+		try {
+			return $this->insert($aData);
+		} catch (Exception $oException) {
+            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+            echo "Meldung : " . $oException->getMessage() . "<br />";
+        }
+        return false;
+	}
+
+    /**
+     * @param $iUseId
+     * @return int
+     */
+    public function deleteUser($iUseId) {
+		return $this->delete("`user_id` = '" . $iUseId . "'");
+	}
+
+    /**
+     * @param $str_email
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
+    public function checkEmailExists($str_email) {
+		return $this->fetchRow("user_email = '" . $str_email . "' OR user_login = '" . $str_email . "'");
+	}
+
+    /**
+     * @return Zend_Db_Table_Rowset_Abstract
+     */
+    public function findActiveUsers() {
         return $this->fetchAll('user_status_fk = 2', 'user_vorname');
     }
-
-	public function getDummy($script_id)
-	{
-		$row = null;
-		$select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-					   ->setIntegrityCheck(false);
-
-		$select->joinLeft('firmen_status', 'firma_status_id = firma_status_fk');
-
-		if(is_array($a_options) &&
-		   key_exists('where_fields', $a_options))
-		{
-			foreach( $a_options['where_fields'] as $key => $option)
-			{
-				$select->where($key . " = ?", $option);
-			}
-		}
-		else if(is_array($a_options) &&
-				key_exists('firma_ftp_name', $a_options))
-		{
-			$select->where("firma_ftp_name = '" . $a_options['firma_ftp_name'] . "' AND firma_flag_aktiv LIKE('1')");
-		}
-		else if(is_numeric($a_options))
-		{
-			$select->where("firma_id = ?", $a_options);
-		}
-		else
-		{
-			return false;
-		}
-
-		$select->joinLeft('users', 'user_id = firma_aussendienst_user_fk');
-		
-		try
-		{
-			$row = $this->fetchRow($select);
-		}
-		catch( Exception $e)
-		{
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $e->getMessage() . "<br />";
-			echo "<pre>";
-			print_r($a_options);
-			echo "</pre>";
-			echo "<br />" . $db_select->__toString();
-			return false;
-		}
-		if(!$row)
-		{
-			return false;
-		}
-		return $row->toArray();
-	}
-	
 }
 

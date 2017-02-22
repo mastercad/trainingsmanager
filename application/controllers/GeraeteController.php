@@ -7,24 +7,20 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class GeraeteController extends Zend_Controller_Action
-{
+class GeraeteController extends Zend_Controller_Action {
     protected $breadcrumb;
     protected $schlagwoerter;
     protected $beschreibung;
 
-    public function init()
-    {
+    public function init() {
     }
 
-    public function postDispatch()
-    {
+    public function postDispatch() {
         $this->view->assign('breadcrumb', $this->breadcrumb);
 
         $a_params = $this->getRequest()->getParams();
 
-        if(isset($a_params['ajax']))
-        {
+        if (isset($a_params['ajax'])) {
             $this->view->layout()->disableLayout();
         }
 
@@ -32,49 +28,41 @@ class GeraeteController extends Zend_Controller_Action
         $this->view->headMeta()->appendName('description', $this->beschreibung);
     }
 
-    public function indexAction()
-    {
-        $obj_db_geraete = new Application_Model_DbTable_Geraete();
-        $a_geraete = $obj_db_geraete->getGeraete();
+    public function indexAction() {
+        $obj_db_geraete = new Application_Model_DbTable_Devices();
+        $a_geraete = $obj_db_geraete->findAllDevices();
 
         $this->view->assign('a_geraete', $a_geraete);
     }
 
-    public function showAction()
-    {
-
+    public function showAction() {
     }
 
-    public function editAction()
-    {
+    public function editAction() {
         $a_params = $this->getRequest()->getParams();
 
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
 
-        if(isset($a_params['id']) &&
-            is_numeric($a_params['id']) &&
-            $a_params['id'] > 0)
-        {
+        if (true === isset($a_params['id'])
+            && true === is_numeric($a_params['id'])
+            && 0 < $a_params['id']
+        ) {
             $i_geraet_id = $a_params['id'];
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $a_geraet = $obj_db_geraete->findDeviceById($i_geraet_id);
 
             $this->view->assign($a_geraet);
         }
     }
 
-    public function uebersichtAction()
-    {
-
+    public function uebersichtAction() {
     }
 
-    public function uploadBildAction()
-    {
+    public function uploadBildAction() {
         $req = $this->getRequest();
         $a_params = $req->getParams();
 
-        if(isset($_FILES['cad-cms-image-file']))
-        {
+        if (true === isset($_FILES['cad-cms-image-file'])) {
             $temp_bild_pfad = getcwd() . '/tmp/geraete/';
 
             $obj_file = new CAD_File();
@@ -87,8 +75,7 @@ class GeraeteController extends Zend_Controller_Action
 
 // 	    $this->view->assign('a_files', $a_files);
 
-            if(isset($a_files[0][CAD_FILE::HTML_PFAD]))
-            {
+            if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
                 $a_bild_pfad = array();
                 $a_bild_pfad['html_pfad'] = $a_files[0][CAD_FILE::HTML_PFAD];
                 $a_bild_pfad['sys_pfad'] = $a_files[0][CAD_FILE::SYS_PFAD];
@@ -103,8 +90,7 @@ class GeraeteController extends Zend_Controller_Action
      * function um eine übersicht aller bilder des jeweiligen editierten
      * projektes zurück zu erhalten und es formatiert auszugeben
      */
-    public function holeBilderFuerEditAction()
-    {
+    public function holeBilderFuerEditAction() {
         $req = $this->getRequest();
         $a_params = $req->getParams();
 
@@ -117,8 +103,7 @@ class GeraeteController extends Zend_Controller_Action
          * wenn es eine ID des projektes gibt, bilder aus dem projektordner
          * holen und temp checken
          */
-        if(isset($a_params['id']))
-        {
+        if (true === isset($a_params['id'])) {
             $obj_files->addSourcePath(getcwd() . "/images/content/dynamisch/geraete/" . $a_params['id']);
         }
         $obj_files->holeBilderAusPfad();
@@ -127,40 +112,34 @@ class GeraeteController extends Zend_Controller_Action
         $this->view->assign('a_bilder', $a_bilder);
     }
 
-    public function loescheBildAction()
-    {
+    public function loescheBildAction() {
         $req = $this->getRequest();
         $a_params = $req->getParams();
 
-        if(isset($a_params['bild']))
-        {
+        if (true ===isset($a_params['bild'])) {
             $bild_pfad = getcwd() . base64_decode($a_params['bild']);
 
-            if(file_exists($bild_pfad) &&
-                is_file($bild_pfad) &&
-                is_readable($bild_pfad))
-            {
-                if(true === @unlink($bild_pfad))
-                {
+            if (true === file_exists($bild_pfad)
+                && true === is_file($bild_pfad)
+                && true === is_readable($bild_pfad)
+            ) {
+                if (true === @unlink($bild_pfad)) {
                     echo "Bild erfolgreich gelöscht!<br />";
                 }
             }
-        }
-        else
-        {
+        } else {
             echo "Es wurde kein Bild übergeben!<br />";
         }
     }
 
-    public function getGeraeteFuerEditAction()
-    {
+    public function getGeraeteFuerEditAction() {
         $a_params = $this->getRequest()->getParams();
 
         if(isset($a_params['id']))
         {
             $i_geraetegruppe_id = $a_params['id'];
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraete = $obj_db_geraete->getGeraeteFuerGeraetegruppe($i_geraetegruppe_id);
+            $obj_db_geraete = new Application_Model_DbTable_DeviceGroupDevices();
+            $a_geraete = $obj_db_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
 
             $this->view->assign('a_geraete', $a_geraete);
         }
@@ -173,8 +152,8 @@ class GeraeteController extends Zend_Controller_Action
         if(isset($a_params['suche']))
         {
             $str_suche = base64_decode($a_params['suche']) . '%';
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraete = $obj_db_geraete->getGeraeteByName($str_suche);
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $a_geraete = $obj_db_geraete->findDeviceByName($str_suche);
 
             $this->view->assign('a_geraete_vorschlaege', $a_geraete);
         }
@@ -191,12 +170,14 @@ class GeraeteController extends Zend_Controller_Action
             $iUserId = $obj_user->user_id;
         }
         if(isset($a_params['edited_elements'])) {
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
 
             $geraet_name = '';
             $geraet_vorschaubild = '';
             $geraet_moegliche_einstellungen = '';
             $geraet_moegliche_sitzpositionen = '';
+            $geraet_moegliche_rueckenpolster = '';
+            $geraet_moegliche_beinpolster = '';
             $geraet_moegliche_gewichte = '';
             $i_geraet_id = 0;
             $b_fehler = false;
@@ -295,7 +276,7 @@ class GeraeteController extends Zend_Controller_Action
             if(!$i_geraet_id &&
                 strlen(trim($geraet_name)))
             {
-                $a_geraet_aktuell = $obj_db_geraete->getGeraeteByName($geraet_name);
+                $a_geraet_aktuell = $obj_db_geraete->findDeviceByName($geraet_name);
                 if(is_array($a_geraet_aktuell) &&
                     count($a_geraet_aktuell) > 0)
                 {
@@ -311,7 +292,7 @@ class GeraeteController extends Zend_Controller_Action
                     0 < $i_geraet_id &&
                     count($a_data) > 0)
                 {
-                    $a_geraet_aktuell = $obj_db_geraete->getGeraet($i_geraet_id);
+                    $a_geraet_aktuell = $obj_db_geraete->findDeviceById($i_geraet_id);
                     if(
                         (
                             isset($a_data['geraet_name']) &&
@@ -347,7 +328,7 @@ class GeraeteController extends Zend_Controller_Action
                     $a_data['geraet_aenderung_datum'] = date("Y-m-d H:i:s");
                     $a_data['geraet_aenderung_user_fk'] = $iUserId;
 
-                    $obj_db_geraete->updateGeraet($a_data, $i_geraet_id);
+                    $obj_db_geraete->updateDevice($a_data, $i_geraet_id);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Dieses Gerät wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $i_geraet_id));
                 }
                 // neu anlegen
@@ -364,7 +345,7 @@ class GeraeteController extends Zend_Controller_Action
                     $a_data['geraet_eintrag_user_fk'] = $iUserId;
                     $a_data['geraet_eintrag_datum'] = date("Y-m-d H:i:s");
 
-                    $i_geraet_id = $obj_db_geraete->setGeraet($a_data);
+                    $i_geraet_id = $obj_db_geraete->saveDevice($a_data);
                     array_push($a_messages, array('type' => 'meldung', 'message' => 'Dieses Gerät wurde erfolgreich angelegt!', 'result' => true, 'id' => $i_geraet_id));
                 }
                 else
@@ -412,13 +393,13 @@ class GeraeteController extends Zend_Controller_Action
             $i_geraet_id = $a_params['id'];
             $b_fehler = false;
 
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $obj_db_geraetegruppen = new Application_Model_DbTable_Geraetegruppen();
-            $obj_db_geraetegruppen_geraete = new Application_Model_DbTable_GeraetegruppeGeraete();
-            $obj_db_uebungen = new Application_Model_DbTable_Uebungen();
-            $obj_db_uebung_geraetegruppen = new Application_Model_DbTable_UebungGeraetegruppen();
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $obj_db_geraetegruppen = new Application_Model_DbTable_DeviceGroups();
+            $obj_db_geraetegruppen_geraete = new Application_Model_DbTable_DeviceGroupDevices();
+            $obj_db_uebungen = new Application_Model_DbTable_Exercises();
+//            $obj_db_uebung_geraetegruppen = new Application_Model_DbTable_UebungGeraetegruppen();
 
-            if($obj_db_geraete->loescheGeraet($i_geraet_id))
+            if($obj_db_geraete->deleteDevice($i_geraet_id))
             {
                 array_push($a_messages, array('type' => 'meldung', 'message' => 'Geraet erfolgreich gelöscht!', 'result' => true));
             }
@@ -429,7 +410,7 @@ class GeraeteController extends Zend_Controller_Action
             }
 
             // geraetegruppen für geraet holen
-            $a_geraetegruppen = $obj_db_geraetegruppen_geraete->getGeraetegruppenFuerGeraet($i_geraet_id);
+            $a_geraetegruppen = $obj_db_geraetegruppen_geraete->findDeviceGroupsForDevice($i_geraet_id);
 
             if(is_array($a_geraetegruppen) &&
                 count($a_geraetegruppen) > 0 &&
@@ -445,15 +426,15 @@ class GeraeteController extends Zend_Controller_Action
                     {
                         foreach($a_uebungen as $a_uebung)
                         {
-                            $obj_db_uebungen->loescheUebung($a_uebung['uebung_geraetegruppe_uebung_fk']);
+                            $obj_db_uebungen->deleteExercise($a_uebung['uebung_geraetegruppe_uebung_fk']);
                         }
                     }
-                    $obj_db_geraetegruppen->loescheGeraetegruppe($a_geraetegruppe['geraetegruppe_geraet_geraetegruppe_fk']);
+                    $obj_db_geraetegruppen->deleteDeviceGroup($a_geraetegruppe['geraetegruppe_geraet_geraetegruppe_fk']);
                     // uebung_geraetegruppen löschen
                     $obj_db_uebung_geraetegruppen->loescheUebungGeraetegruppeVonGeraetegruppe($a_geraetegruppe['geraetegruppe_geraet_geraetegruppe_fk']);
                 }
             }
-            $obj_db_geraetegruppen_geraete->loescheAlleGeraetegruppeGeraeteFuerGeraet($i_geraet_id);
+            $obj_db_geraetegruppen_geraete->deleteAllDeviceGroupDevicesByDeviceId($i_geraet_id);
         }
         else
         {
@@ -470,8 +451,8 @@ class GeraeteController extends Zend_Controller_Action
            $a_params['id'] > 0)
         {
             $i_geraet_id = (int)$a_params['id'];
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $a_geraet = $obj_db_geraete->findDeviceById($i_geraet_id);
             
             if(isset($a_geraet['geraet_moegliche_einstellungen']))
             {
@@ -495,8 +476,8 @@ class GeraeteController extends Zend_Controller_Action
             $a_params['id'] > 0)
         {
             $i_geraet_id = (int)$a_params['id'];
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $a_geraet = $obj_db_geraete->findDeviceById($i_geraet_id);
 
             if(isset($a_geraet['geraet_moegliche_sitzpositionen']))
             {
@@ -520,8 +501,8 @@ class GeraeteController extends Zend_Controller_Action
             $a_params['id'] > 0)
         {
             $i_geraet_id = (int)$a_params['id'];
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $a_geraet = $obj_db_geraete->findDeviceById($i_geraet_id);
 
             if(isset($a_geraet['geraet_moegliche_beinpolster']))
             {
@@ -545,8 +526,8 @@ class GeraeteController extends Zend_Controller_Action
             $a_params['id'] > 0)
         {
             $i_geraet_id = (int)$a_params['id'];
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $a_geraet = $obj_db_geraete->findDeviceById($i_geraet_id);
 
             if(isset($a_geraet['geraet_moegliche_rueckenpolster']))
             {
@@ -570,8 +551,8 @@ class GeraeteController extends Zend_Controller_Action
            $a_params['id'] > 0)
         {
             $i_geraet_id = (int)$a_params['id'];
-            $obj_db_geraete = new Application_Model_DbTable_Geraete();
-            $a_geraet = $obj_db_geraete->getGeraet($i_geraet_id);
+            $obj_db_geraete = new Application_Model_DbTable_Devices();
+            $a_geraet = $obj_db_geraete->findDeviceById($i_geraet_id);
 
             if(isset($a_geraet['geraet_moegliche_gewichte']))
             {

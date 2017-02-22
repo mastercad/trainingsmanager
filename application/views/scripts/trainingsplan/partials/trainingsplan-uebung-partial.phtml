@@ -34,7 +34,7 @@ if (2 == $this->trainingsplan_layout_fk) {
     $sUebungLink = '/trainingsplan/show/id/' . $this->trainingsplan_uebung_trainingsplan_fk;
 }
 ?>
-<div style="position: relative;">
+<div style="position: relative; margin-top: 20px;">
     <a href="<?php echo $sUebungLink;?>"
        style="text-decoration: none;">
         <h3 style="float: left; display: inline;">
@@ -47,7 +47,7 @@ if (2 == $this->trainingsplan_layout_fk) {
             <?php echo $this->geraet_name;?>
         </h5>
         <br class="clearfix" />
-        <img src="<?php echo '/butler/create-thumb/file/' . base64_encode(APPLICATION_PATH . '/../public' . $vorschaubild) . '/width/200/';?>"
+        <img src="<?php echo $vorschaubild;?>"
              style="margin: 10px 10px 10px 0; width: 200px; float: left; display: inline;" />
         <div style="float: left; display: inline;">
             <span style="margin-top: 10px; float: left; display: inline; width: 100px;">
@@ -100,6 +100,42 @@ if (2 == $this->trainingsplan_layout_fk) {
 <!--             class="uebung-delete"-->
 <!--             data-uebung-id="--><?php //echo $this->uebung_id;?><!--"-->
 <!--             style="position: absolute; top: 0; right: 0;" />-->
+        <br class="clearfix" />
+<?php
+
+$iFaktor = $this->iMaxBeanspruchterMuskel / 5; // 5 sind die maximale anzahl der sterne
+
+foreach ($this->aBeanspruchteMuskeln as $sMuskelName => $iBeanspruchung) {
+
+    $beanspruchung_pos_x = -100;
+    $iReelleBeanspruchung = $iBeanspruchung;
+
+    if($iBeanspruchung > 0)
+    {
+        $iReelleBeanspruchung = $iBeanspruchung / $iFaktor;
+        $beanspruchung_pos_x = -100 + ($iReelleBeanspruchung * 20);
+    }
+//    echo $sMuskelName . ' : ' . $iBeanspruchung . ' - ' . $iReelleBeanspruchung . ' - ' . $iFaktor . ' - ' . $this->iMaxBeanspruchterMuskel;
+?>
+    <div style="width: 200px; float: left; display: inline; position: relative; padding-right: 20px; height: 25px;">
+        <span>
+            <?php echo $sMuskelName;?>
+        </span>
+        <img src="/images/content/statisch/grafiken/beanspruchung.png"
+                 class="muskel-beanspruchung"
+                 style="background-image: url('/images/content/statisch/grafiken/beanspruchung_bg_neu.png');
+                        background-repeat: no-repeat;
+                        background-position: <?php echo $beanspruchung_pos_x;?>px <?php echo $beanspruchung_pos_x;?>px;
+                        width: 100px; height: 20px;
+                        background-color: #EEEEEE;
+                        position: absolute;
+                        right: 20px;"
+                data-muskel-beanspruchung="<?php echo $iBeanspruchung;?>"
+                data-background_position="<?php echo $beanspruchung_pos_x;?>px <?php echo $beanspruchung_pos_x;?>px">
+    </div>
+<?php
+}
+?>
         <br class="clearfix" />
     </a>
 </div>
