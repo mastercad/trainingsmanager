@@ -1,0 +1,26 @@
+<?php
+
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+    if (is_array($this->optionValue)
+        && 0 < count($this->optionValue)
+    ) {
+?>
+        <select id="device_option_id_<?php echo $this->device_option_id;?>"
+                style="margin-left: 15px;">
+            <option value="-1" >Bitte wählen</option>
+<?php
+        foreach($this->optionValue as $key => $value) {
+?>
+            <option value="<?=$key?>"><?=$value?></option>
+<?php
+        }
+?>
+        </select>
+<?php
+    } else if($this->optionValue) {
+        echo $this->optionValue . "<br />";
+    }
+?>

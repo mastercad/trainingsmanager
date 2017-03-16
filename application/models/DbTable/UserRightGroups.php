@@ -3,15 +3,15 @@
 /**
  * Class Application_Model_DbTable_UserRightGroups
  */
-class Application_Model_DbTable_UserRightGroups extends Application_Model_DbTable_Abstract {
+class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
     /**
      * @var string
      */
-    protected $_name 	= 'user_rechte_gruppen';
+    protected $_name 	= 'user_right_groups';
     /**
      * @var string
      */
-    protected $_primary = 'user_rechte_gruppe_id';
+    protected $_primary = 'user_right_group_id';
 
     /**
      * @return bool|Zend_Db_Table_Rowset_Abstract
@@ -33,15 +33,15 @@ class Application_Model_DbTable_UserRightGroups extends Application_Model_DbTabl
     public function findUserRightGroup($aOptions) {
         try {
             if (true === is_array($aOptions)
-                && true === array_key_exists('user_rechte_gruppe_name', $aOptions)
+                && true === array_key_exists('user_right_group_name', $aOptions)
             ) {
-                return $this->fetchRow("user_rechte_gruppe_name = '" . $aOptions['user_rechte_gruppe_name'] . "'");
+                return $this->fetchRow("user_right_group_name = '" . $aOptions['user_right_group_name'] . "'");
             } else if (true === is_array($aOptions)
-                && array_key_exists('user_rechte_gruppe_id', $aOptions)
+                && array_key_exists('user_right_group_id', $aOptions)
             ) {
-                return $this->fetchRow("user_rechte_gruppe_id = '" . $aOptions['user_rechte_gruppe_id'] . "'");
+                return $this->fetchRow("user_right_group_id = '" . $aOptions['user_right_group_id'] . "'");
             } else if(true === is_numeric($aOptions)) {
-                return $this->fetchRow("user_rechte_gruppe_id = '" . $aOptions . "'");
+                return $this->fetchRow("user_right_group_id = '" . $aOptions . "'");
             }
         } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
@@ -71,7 +71,7 @@ class Application_Model_DbTable_UserRightGroups extends Application_Model_DbTabl
      */
     public function updateUserRightGroup($aData, $iUserRightGroupId) {
 		try {
-			$this->update($aData, " `user_rechte_gruppe_id` LIKE ( '" . $iUserRightGroupId . "')");
+			$this->update($aData, "`user_right_group_id` = '" . $iUserRightGroupId . "'");
 		} catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -85,7 +85,7 @@ class Application_Model_DbTable_UserRightGroups extends Application_Model_DbTabl
      */
     public function deleteUserRightGroup($iUserRightGroupId) {
 		try {
-			return $this->delete($iUserRightGroupId);
+			return $this->delete("user_right_group_id = " . $iUserRightGroupId);
 		} catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";

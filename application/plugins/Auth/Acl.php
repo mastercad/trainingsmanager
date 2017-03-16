@@ -8,44 +8,46 @@
 	 * 
 	 */
 
-	class Application_Plugin_Auth_Acl extends Zend_Acl
+	class Plugin_Auth_Acl extends Zend_Acl
 	{
-		protected $obj_db_user_rechte_gruppen;
-		static $a_rechte;
+		protected $userRightGroupRightsDb;
+		static $rightsCollection;
 		
 		public function __construct()
 		{
-			$obj_db_user_rechte_gruppen_rechte = new Application_Model_DbTable_UserRightGroupsRight();
-			$obj_db_user_rechte_gruppen = new Application_Model_DbTable_UserRightGroups();
+			$userRightGroupRightsDb = new Model_DbTable_UserRightGroupRights();
+            $userRightGroupsDb = new Model_DbTable_UserRightGroups();
 
-			$a_user_rechte_gruppen_rechte = $obj_db_user_rechte_gruppen_rechte->findAllUserRightGroupRights();
-			$a_user_rechte_gruppen = $obj_db_user_rechte_gruppen->findAllUserRightGroups();
-			$a_user_rechte_gruppen_namen = array();
-			$a_user_rechte_gruppen_erbt_von = array();
+			$userRightGroupRightsCollection = $userRightGroupRightsDb->findAllUserRightGroupRights();
+			$userRightGroupsCollection = $userRightGroupsDb->findAllUserRightGroups();
+			$userRightGroupNamesCollection = array();
+			$userRightGroupParentsCollection = array();
 			
-			foreach($a_user_rechte_gruppen as $a_user_rechte_gruppe) {
-				$a_user_rechte_gruppen_namen[$a_user_rechte_gruppe['user_rechte_gruppe_id']] = $a_user_rechte_gruppe['user_rechte_gruppe_name'];
-				$a_user_rechte_gruppen_erbt_von[$a_user_rechte_gruppe['user_rechte_gruppe_id']] = $a_user_rechte_gruppe['user_rechte_gruppe_erbt_von'];
+			foreach($userRightGroupsCollection as $userRightGroup) {
+                $userRightGroupNamesCollection[$userRightGroup['user_right_group_id']] = $userRightGroup['user_right_group_name'];
+                $userRightGroupParentsCollection[$userRightGroup['user_right_group_id']] = $userRightGroup['user_right_group_parent_fk'];
 			}
 			
-			foreach($a_user_rechte_gruppen as $a_user_rechte_gruppe) {
-				if(!$this->hasRole($a_user_rechte_gruppen_namen[$a_user_rechte_gruppe['user_rechte_gruppe_id']])) {
-					if($a_user_rechte_gruppen_erbt_von[$a_user_rechte_gruppe['user_rechte_gruppe_id']]) {
-						$this->addRole(new Zend_Acl_Role($a_user_rechte_gruppen_namen[$a_user_rechte_gruppe['user_rechte_gruppe_id']]), $a_user_rechte_gruppen_namen[$a_user_rechte_gruppen_erbt_von[$a_user_rechte_gruppe['user_rechte_gruppe_id']]]);
+			foreach($userRightGroupsCollection as $userRightGroup) {
+				if(!$this->hasRole($userRightGroupNamesCollection[$userRightGroup['user_right_group_id']])) {
+					if($userRightGroupParentsCollection[$userRightGroup['user_right_group_id']]) {
+						$this->addRole(
+                            new Zend_Acl_Role($userRightGroupNamesCollection[$userRightGroup['user_right_group_id']]),
+                            $userRightGroupNamesCollection[$userRightGroupParentsCollection[$userRightGroup['user_right_group_id']]]);
 					} else {
-						$this->addRole(new Zend_Acl_Role($a_user_rechte_gruppen_namen[$a_user_rechte_gruppe['user_rechte_gruppe_id']]));
+						$this->addRole(new Zend_Acl_Role($userRightGroupNamesCollection[$userRightGroup['user_right_group_id']]));
 					}
 				}
 			}
-			foreach($a_user_rechte_gruppen_rechte as $a_user_rechte_gruppen_recht) {
-				list($module, $controller, $action) = explode(':', $a_user_rechte_gruppen_recht['user_rechte_gruppen_recht']);
+			foreach($userRightGroupRightsCollection as $userRightGroupRight) {
+				list($module, $controller, $action) = explode(':', $userRightGroupRight['user_right_group_right']);
 				$resource = $module . ':' . $controller;
 				
 				if(!$this->has($resource)) {
 					$this->addResource(new Zend_Acl_Resource($resource));
 				}
 				
-				$this->allow($a_user_rechte_gruppen_namen[$a_user_rechte_gruppen_recht['user_rechte_gruppe_fk']], $resource, $action);
+				$this->allow($userRightGroupNamesCollection[$userRightGroupRight['user_right_group_fk']], $resource, $action);
 			}
 		}
 	} 

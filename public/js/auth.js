@@ -1,17 +1,15 @@
 var auth_init = false;
 
-function init_auth()
-{
-	jQuery('#login_form').submit(function(e)
-	{
+function initAuth() {
+	jQuery('#login_form').submit(function(e) {
 		e.preventDefault();
 		
-		var user_login_name 	= jQuery('#login_form #user_login_name').val();
-		var user_login_passwort = jQuery('#login_form #user_login_passwort').val();
+		var userLoginName 	= jQuery('#login_form #user_login_name').val();
+		var userLoginPassword = jQuery('#login_form #user_login_password').val();
 		
 		var url = '/auth/login/';
-		var obj_params = {	'enc_user_login_name': Base64.encode(user_login_name),
-							'enc_user_login_passwort': Base64.encode(user_login_passwort),
+		var obj_params = {	'enc_user_login_name': Base64.encode(userLoginName),
+							'enc_user_login_password': Base64.encode(userLoginPassword),
 							'ajax': true
 						};
 
@@ -20,24 +18,21 @@ function init_auth()
 			var obj_cad_message = new CAD.Message();
 			obj_cad_message.init(response);
 			
-			if(obj_cad_message.open())
-			{
+			if(obj_cad_message.open()) {
 				location.href = location.href;
-			}
-			else
-			{
-//				jQuery('#login-form-fail-options').fadeIn();
-				jQuery('#login-form-fail-options #passwort-vergessen').fadeIn();
+			} else {
+//				jQuery('#login_form_fail_options').fadeIn();
+				jQuery('#login_form_fail_options #password_forgotten').fadeIn();
 			}
 			return false;
 		});
 	});
 
-	jQuery('#login-form-fail-options #passwort-vergessen').attr('href', 'Javascript: void(0);');
-	jQuery('#login-form-fail-options #passwort-vergessen').unbind('click');
-	jQuery('#login-form-fail-options #passwort-vergessen').bind('click', function()
+	jQuery('#login_form_fail_options #password_forgotten').attr('href', 'Javascript: void(0);');
+	jQuery('#login_form_fail_options #password_forgotten').unbind('click');
+	jQuery('#login_form_fail_options #password_forgotten').bind('click', function()
 	{
-		var url = '/auth/passwort-vergessen-form/';
+		var url = '/auth/password-forgotten-form/';
 		var obj_params = {'ajax': true};
 		
 		jQuery.post(url, obj_params, function(response){
@@ -51,9 +46,9 @@ function init_auth()
 		});
 	});
 	
-	jQuery('#login-form-fail-options #registrieren').attr('href', 'Javascript: void(0);');
-	jQuery('#login-form-fail-options #registrieren').unbind('click');
-	jQuery('#login-form-fail-options #registrieren').bind('click', function()
+	jQuery('#login_form_fail_options #register').attr('href', 'Javascript: void(0);');
+	jQuery('#login_form_fail_options #register').unbind('click');
+	jQuery('#login_form_fail_options #register').bind('click', function()
 	{
 		var url = '/auth/register-form/';
 		var obj_params = {'ajax': true};
@@ -73,4 +68,4 @@ function init_auth()
 	prepareInputs();
 }
 
-init_auth();
+initAuth();

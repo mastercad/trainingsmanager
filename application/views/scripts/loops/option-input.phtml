@@ -1,0 +1,18 @@
+<div style="float: left; display: inline">
+    <label style="clear: none; float: left; display: inline; margin-right: 15px;">
+        <?php echo $this->optionLabelText;?>
+    </label>
+    <input class="<?php echo $this->optionClassName;?> option-input" type="text" id="<?php echo $this->optionInputId;?>"
+           data-option-id="<?php echo $this->optionId;?>"
+            <?php echo $this->additionalDataInformation;?>
+           value="<?php echo $this->currentText;?>" style="float: left; display: inline; margin-right: 5px;" >
+
+<?php
+    if ($this->optionDeleteShow) {
+?>
+        <img class="option-delete" style="float: left; display: inline; margin-top: 10px; margin-right: 10px;" src="/images/content/statisch/grafiken/delete.gif" alt="Delete Option"/>
+<?php
+    }
+?>
+    <br class="clearfix" />
+</div>

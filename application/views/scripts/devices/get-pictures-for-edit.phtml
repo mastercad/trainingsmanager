@@ -1,0 +1,21 @@
+<?php
+	if(isset($this->previewPictures) &&
+	   is_array($this->previewPictures))
+	{
+		foreach($this->previewPictures as $picture)
+		{
+?>
+		<div class="thumb">
+			<div class="thumb-delete" ></div>
+			<img class="thumb-src" class=""
+				 src="<?php echo '/butler/create-thumb/file/' . base64_encode($picture[CAD_File::SYS_PFAD]) . '/height/50/width/67/prio_height/true';?>"
+				 data-src="<?php echo base64_encode($picture[CAD_FILE::HTML_PFAD]);?>"
+				 data-file="<?php echo base64_encode($picture[CAD_FILE::FILE]);?>" />
+		</div>
+<?php 
+		}
+	}
+?>
+		<div class="thumb">
+			<img class="thumb-add" src="/images/content/statisch/grafiken/add_normal.png" />
+		</div>

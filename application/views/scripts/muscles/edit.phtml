@@ -1,0 +1,49 @@
+<div>
+    <h3>
+        Muskel Name:<span 
+            class="editable" 
+            style="margin-left: 20px; border-bottom: 1px dotted gray;"
+            id="muscle_name" data-cad-cms-content-orig="<?php echo base64_encode($this->muscle_name);?>"
+		><?php echo $this->muscle_name;?></span>
+    </h3>
+    
+    <br class="clearfix" />
+    
+    <input type="hidden" class="id" name="muscle-id" id="muscle_id" value="<?php echo $this->muscle_id;?>" />
+</div>
+
+<br class="clearfix" />
+
+<button onclick="save();" 
+        class="button"
+        style="margin-top: 15px;">
+    Speichern
+</button>
+
+<script type="text/javascript">
+	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+	function save()
+	{
+            var b_fehler = false;
+            var a_messages = [];
+            
+            if(!trim(jQuery('#muscle_name').html()).length) {
+                b_fehler = true;
+                a_messages.push({'type': 'fehler', 'message': 'Der Muskel braucht einen Namen!'});
+            }
+            
+            if(!b_fehler) {
+                jQuery().setEditedElements('muscle_id',        jQuery('#muscle_id').val());
+                jQuery().setAjax(true);
+
+                CADEditSave();
+            } else {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init(a_messages);
+                obj_cad_messages.open();
+            }
+        }
+        edit_init(false);
+        initMusclesEdit();
+</script>

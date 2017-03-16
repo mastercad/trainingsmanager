@@ -1,0 +1,86 @@
+<div>
+    <h3>
+        Muskelgruppe Name:<span 
+            class="editable" 
+            style="margin-left: 20px; border-bottom: 1px dotted gray;"
+            id="muscle_group_name" data-cad-cms-content-orig="<?php echo base64_encode($this->muscle_group_name);?>"
+		><?php echo $this->muscle_group_name;?></span>
+    </h3>
+    
+    <br class="clearfix" />
+    
+    <h3 style="float: left; display: inline; margin-top: 15px;">
+        Muskeln:
+    </h3>
+    
+    <img class="muscle-add" src="/images/content/statisch/grafiken/add_normal.png"
+         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>
+    
+    <br class="clearfix" />
+    
+    <div class="muscles-in-muscle-group"
+         style="margin-top: 5px;">
+        <?php echo $this->muscle_collection_content;?>
+    </div>
+    
+    <br class="clearfix" />
+    
+    <input type="hidden" class="id" name="muscle-group-id" id="muscle_group_id" value="<?php echo $this->muscle_group_id;?>" />
+</div>
+
+<br class="clearfix" />
+
+<div class="muscle-proposals"
+     style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
+            background-color: #FFFFFF; opacity: 0.9; 
+            box-shadow: 5px 5px 5px #111111;" ></div>
+
+<button onclick="save();" 
+        style="margin-top: 15px;"
+        class="button">
+    Speichern
+</button>
+
+<script type="text/javascript">
+	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+	function save() {
+            var hasError = false;
+            var messages = [];
+            
+            if (!jQuery.trim(jQuery('#muscle_group_name').html()).length) {
+                hasError = true;
+                messages.push({'type': 'fehler', 'message': 'Die Muskelgruppe braucht einen Namen!'});
+            }
+            
+            var muscleList = jQuery('.muscles-in-muscle-group').find('.muscle');
+            var muscles = [];
+
+            for (var i = 0, len = muscleList.length; i < len; i++) {
+                var muscle_id = jQuery(muscleList[i]).find('.muscle-name').data('muscle-id');
+                
+                if (muscle_id) {
+                    muscles.push({'id': muscle_id});
+                }
+            }
+            
+            if (!muscles.length) {
+                hasError = true;
+                messages.push({'type': 'fehler', 'message': 'Es muss mindestens ein Muskel für diese Muskelgruppe vollständig ausgefüllt sein!'});
+            }
+            
+            if (!hasError) {
+                jQuery().setEditedElements('muscles_in_muscle_group', muscles);
+                jQuery().setEditedElements('muscle_group_id', jQuery('#muscle_group_id').val());
+                jQuery().setAjax(true);
+
+                CADEditSave();
+            } else {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init(messages);
+                obj_cad_messages.open();
+            }
+        }
+        edit_init(false);
+        initMusclesEdit();
+</script>

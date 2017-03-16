@@ -7,7 +7,7 @@
         obj_edited = {};
         obj_edited['edited_elements'] = {};
         array_elemente = undefined;
-        tagArray = new Array();
+        tagArray = [];
         controller = str_controller;
         obj_cad_message = null;
 
@@ -128,14 +128,13 @@
 
             if(!jQuery('.cad-cms-bild-upload-form').length)
             {
-                var image_dummy_form = jQuery('<form id="cad-cms-bild-upload-form" method="post" action="/' + controller + '/upload-bild"  target="upload_target" enctype="multipart/form-data">');
+                var image_dummy_form = jQuery('<form id="cad-cms-bild-upload-form" method="post" action="/' + controller + '/upload-picture"  target="upload_target" enctype="multipart/form-data">');
                 jQuery(image_dummy_form).append(jQuery('<input type="file" class="cad-cms-image-file" name="cad-cms-image-file[]" multiple style="position: absolute; top: -500px; left: -500px;" />'));
                 jQuery(image_dummy_form).append(jQuery('<input type="hidden" class="cad-cms-hidden" name="ajax" value="true" />'));
 
                 jQuery('body').append(image_dummy_form);
 
-                jQuery('.cad-cms-image-file').unbind('change');
-                jQuery('.cad-cms-image-file').bind('change', function()
+                jQuery('.cad-cms-image-file').unbind('change').bind('change', function()
                 {
                     jQuery(this).parent().submit();
                 });
@@ -282,7 +281,7 @@
         {
             var first_obj = this.searchFirstFloatingElement(jQuery(editable_object));
 
-            array_elemente = new Array();
+            array_elemente = [];
             this.addAllFloatingElements(jQuery(first_obj));
 
             var parent_obj = first_obj.parent();
@@ -297,7 +296,7 @@
         {
             if(typeof array_elemente == 'undefined')
             {
-                array_elemente = new Array();
+                array_elemente = [];
             }
 
             if(jQuery(obj).next().length &&
@@ -970,8 +969,8 @@
                     }
                     catch(e)
                     {
-                        var a_params_message = new Array();
-                        a_params_message[0] = new Array();
+                        var a_params_message = [];
+                        a_params_message[0] = [];
                         a_params_message[0]['type'] = 'fehler';
                         a_params_message[0]['message'] = 'Beim Holen des Beispielcodes ist ein fehler aufgetreten:<br /><br />' + e + '<br /><br />' + response;
 

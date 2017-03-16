@@ -30,7 +30,36 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $autoloader = Zend_Loader_Autoloader::getInstance();
         $autoloader->setFallbackAutoloader(true);
 
+//        $resourceLoader->addResourceTypes(array(
+//            'acl' => array(
+//                'path'      => 'acls/',
+//                'namespace' => 'Acl',
+//            ),
+//            'example' => array(
+//                'path'      => 'examples/',
+//                'namespace' => 'Example',
+//            ),
+//        ));
+
         return $autoloader;
+    }
+
+    protected function _initResourceloader() {
+
+//        $resourceloader = $this->getResourceLoader()->addResourceType('plugins', APPLICATION_PATH . '/plugins', 'Plugin');
+//        $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
+//            'basePath'  => APPLICATION_PATH . '/plugins',
+//            'namespace' => 'Plugin',
+//        ));
+        $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
+            'basePath'  => APPLICATION_PATH,
+            'namespace' => '',
+        ));
+        $resourceLoader->addResourceType('plugin', 'plugins', 'Plugin');
+        $resourceLoader->addResourceType('service', 'services', 'Service');
+        $resourceLoader->addResourceType('model', 'models', 'Model');
+
+        return $resourceLoader;
     }
 
     public function _initActionHelper()
@@ -58,7 +87,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $view = new Zend_View();
 
-        $view->headTitle( 'Übungsmanager Rundumfit');
+        $view->headTitle( 'Trainingsmanager');
         $view->headTitle()->setSeparator(' | ');
 
         $view->setEncoding('UTF-8');
@@ -81,12 +110,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $this->bootstrap('frontController');
         $auth = CAD_Auth::getInstance();
 
-        $authAdapter = new CAD_Auth_Adapter_DbTable(Zend_Registry::get('db'), 'users', 'user_login', 'user_passwort', 'MD5(?)');
+//        $authAdapter = new CAD_Auth_Adapter_DbTable(Zend_Registry::get('db'), 'users', 'user_login', 'user_password', 'MD5(?)');
 
-        $acl = new Application_Plugin_Auth_Acl();
+        $acl = new Plugin_Auth_Acl();
         Zend_Registry::set('acl', $acl);
 
-        $this->getResource('frontController')->registerPlugin(new Application_Plugin_Auth_AccessControl($auth, $acl))->setParam('auth', $auth);
+        $this->getResource('frontController')->registerPlugin(new Plugin_Auth_AccessControl($auth, $acl))->setParam('auth', $auth);
 
     }
 
@@ -107,9 +136,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Nur Einträge vom Level Warnung und höher schicken
         $writer_mail->addFilter(Zend_Log::WARN);
 
+        $writer_file = new Zend_Log_Writer_Stream('../data/application.log');
+
         $logger = new Zend_Log();
         $logger->addWriter($writer);
         $logger->addWriter($writer_mail);
+        $logger->addWriter($writer_file);
 
         Zend_Registry::set(ZEND_LOGGER, $logger);
     }

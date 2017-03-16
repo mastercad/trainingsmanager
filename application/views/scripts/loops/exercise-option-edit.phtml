@@ -1,0 +1,13 @@
+<h4 style="margin-top: 15px; font-size: 12px;">
+    <?php echo $this->exercise_option_name;?>
+</h4>
+
+<input
+    class="exercise-option"
+    style="margin-left: 20px; margin-top: 5px; border-bottom: 1px dotted gray; font-size: 12px; width: 300px; height: 20px;"
+    id="exercise_option_<?php echo $this->exercise_option_id;?>"
+    data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_option_value);?>"
+    data-exercise-option-id="<?php echo $this->exercise_option_id;?>"
+    value="<?php echo $this->exercise_option_value;?>" />
+
+<br class="clearfix" />

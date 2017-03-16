@@ -8,7 +8,7 @@
 
 require_once(__DIR__ . '/../../../library/Zend/Db/Table.php');
 
-class Application_Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
+class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 
     /** @var */
     protected static $aTableMetaData;

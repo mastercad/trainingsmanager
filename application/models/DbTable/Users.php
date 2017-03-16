@@ -14,7 +14,7 @@
  * 
  */
 
-class Application_Model_DbTable_Users extends Application_Model_DbTable_Abstract
+class Model_DbTable_Users extends Model_DbTable_Abstract
 {
     /**
      * @var string
@@ -102,7 +102,7 @@ class Application_Model_DbTable_Users extends Application_Model_DbTable_Abstract
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findActiveUsers() {
-        return $this->fetchAll('user_status_fk = 2', 'user_vorname');
+        return $this->fetchAll('user_state_fk = 2', 'user_first_name');
     }
 }
 

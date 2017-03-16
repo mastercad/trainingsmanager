@@ -1,0 +1,18 @@
+<?php
+    if(isset($this->json_string))
+    {
+        echo $this->json_string;
+    }
+    else if(is_array($this->musclesCollection) &&
+            count($this->musclesCollection) > 0)
+    {
+        foreach($this->musclesCollection as $muscle)
+        {
+            $this->assign($muscle);
+            echo $this->render('loops/muscle-edit.phtml');
+        }
+    }
+?>
+<script type="text/javascript">
+    initMuskelnEdit();
+</script>

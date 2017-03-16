@@ -1,0 +1,17 @@
+<div style="width: 200px; float: left; display: inline; position: relative; padding-right: 20px; height: 25px;">
+    <span>
+        <?php echo $this->muscleName;?>
+    </span>
+    <img src="/images/content/statisch/grafiken/beanspruchung.png"
+         class="muscle-usage"
+         style="background-image: url('/images/content/statisch/grafiken/beanspruchung_bg_neu.png');
+             background-repeat: no-repeat;
+             background-position: <?php echo $this->usagePosX;?>px <?php echo $this->usagePosX;?>px;
+             width: 100px; height: 20px;
+             background-color: #EEEEEE;
+             position: absolute;
+             right: 20px;"
+         data-muscle-use="<?php echo $this->muscleUse;?>"
+         data-background_position="<?php echo $this->usagePosX;?>px <?php echo $this->usagePosX;?>px"
+        title="Muskel Auslastung: <?php echo $this->muscleUsePercentage;?> %">
+</div>

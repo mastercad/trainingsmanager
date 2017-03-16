@@ -38,13 +38,13 @@ class Zend_View_Helper_ViewGenerator extends Zend_View_Helper_Abstract
     }
 
     /**
-     * @param $sType name des zu setzenden basis wertes, die werte werden dann aus geraete gezogen
+     * @param $sType name des zu setzenden basis wertes, die werte werden dann aus devices gezogen
      * @param $sReferenzColumn name der spalte, gegen die geprüft werden soll aus der datenbank und deren value gesetzt wird
-     * @param int $iCount counter der anzahl der select felder pro wert und trainingsplan um das abspeichern mehrerer werte zu gewährleisten
+     * @param int $iCount counter der anzahl der select felder pro wert und training-plans um das abspeichern mehrerer werte zu gewährleisten
      *
      * @return string
      */
-    public function generateOptionsForUebungColumn($sType, $sReferenzColumn = NULL, $iCount = 0)
+    public function generateOptionsForExerciseColumn($sType, $sReferenzColumn = NULL, $iCount = 0)
     {
         $sTrainingsplanUebungColumnName = 'trainingsplan_uebung_' . lcfirst($sType);
         $aMoeglichkeitenArray = $this->generateMoeglichkeitenArrayFuerColumn($sType);
@@ -55,13 +55,13 @@ class Zend_View_Helper_ViewGenerator extends Zend_View_Helper_Abstract
             $mReferenzValue = $this->extractReferenzValue($sType, $sReferenzColumn);
         }
 
-        if (TRUE === isset($this->view->iTrainingsplanId)) {
-            $iTrainingsplanId = $this->view->iTrainingsplanId;
+        if (TRUE === isset($this->view->trainingPlanId)) {
+            $trainingPlanId = $this->view->trainingPlanId;
         }
         $sContent = '';
         if (TRUE == is_array($aMoeglichkeitenArray)
         ) {
-            $sContent .= '<select class="uebung-option" name="' . $sReferenzColumn . '[' . $iTrainingsplanId . '][' . $iCount . ']" id="' . $sReferenzColumn . '_' . $iTrainingsplanId . '_' . $iCount . '" >';
+            $sContent .= '<select class="uebung-option" name="' . $sReferenzColumn . '[' . $trainingPlanId . '][' . $iCount . ']" id="' . $sReferenzColumn . '_' . $iTrainingsplanId . '_' . $iCount . '" >';
             $sContent .= '<option value="0">Bitte ' . ucfirst($sType) . ' wählen:</option>';
                 foreach ($aMoeglichkeitenArray as $iKey => $sValue) {
                     $sContent .= '<option value="' . $sValue . '"';
@@ -74,7 +74,7 @@ class Zend_View_Helper_ViewGenerator extends Zend_View_Helper_Abstract
                 }
             $sContent .= '</select>';
         } else {
-            $sContent .= '<input class="uebung-option" type="text" id="' . $sReferenzColumn . '_' . $iTrainingsplanId . '_' . $iCount . '" name="' . $sReferenzColumn . '[' . $iTrainingsplanId . '][' . $iCount . ']" value="' . $this->formatFloatValue($mReferenzValue) . '" />';
+            $sContent .= '<input class="uebung-option" type="text" id="' . $sReferenzColumn . '_' . $trainingPlanId . '_' . $iCount . '" name="' . $sReferenzColumn . '[' . $iTrainingsplanId . '][' . $iCount . ']" value="' . $this->formatFloatValue($mReferenzValue) . '" />';
         }
         return $sContent;
     }

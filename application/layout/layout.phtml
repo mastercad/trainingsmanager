@@ -16,7 +16,7 @@
 <?php
 	$obj_user_identity = Zend_Auth::getInstance()->getIdentity();
 
-	$obj_checkRecht = new Application_Plugin_CheckeRecht();
+	$obj_checkRecht = new Plugin_CheckeRecht();
 
 	if($obj_user_identity)
 	{
@@ -44,136 +44,136 @@
                         Handbuch
                     </a>
                 </li>
-                <li class="<?php if($this->controller == "muskeln"){ echo 'active';}?>">
-                    <a href="/muskeln/">
+                <li class="<?php if($this->controller == "muscles"){ echo 'active';}?>">
+                    <a href="/muscles/">
                         Muskeln
                     </a>
                     <ul>
-                        <li class="<?php if($this->controller == "muskeln" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/muskeln/">
+                        <li class="<?php if($this->controller == "muscles" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/muscles/">
                                 Übersicht
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "muskeln" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/muskeln/edit/">
+                        <li class="<?php if($this->controller == "muscles" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/muscles/edit/">
                                 Neu anlegen
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($this->controller == "muskelgruppen"){ echo 'active';}?>">
-                    <a href="/muskelgruppen/">
+                <li class="<?php if($this->controller == "muscle-groups"){ echo 'active';}?>">
+                    <a href="/muscle-groups/">
                         Muskelgruppen
                     </a>
                     <ul>
-                        <li class="<?php if($this->controller == "muskelgruppen" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/muskelgruppen/">
+                        <li class="<?php if($this->controller == "muscle-groups" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/muscle-groups/">
                                 Übersicht
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "muskelgruppen" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/muskelgruppen/edit/">
+                        <li class="<?php if($this->controller == "muscle-groups" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/muscle-groups/edit/">
                                 Neu anlegen
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($this->controller == "geraete"){ echo 'active';}?>">
-                    <a href="/geraete/">
+                <li class="<?php if($this->controller == "devices"){ echo 'active';}?>">
+                    <a href="/devices/">
                         Geräte
                     </a>
                     <ul>
-                        <li class="<?php if($this->controller == "geraete" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/geraete/">
+                        <li class="<?php if($this->controller == "devices" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/devices/">
                                 Übersicht
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "geraete" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/geraete/edit/">
+                        <li class="<?php if($this->controller == "devices" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/devices/edit/">
                                 Neu anlegen
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($this->controller == "geraetegruppen"){ echo 'active';}?>">
-                    <a href="/geraetegruppen/">
+                <li class="<?php if($this->controller == "device-groups"){ echo 'active';}?>">
+                    <a href="/device-groups/">
                         Gerätegruppen
                     </a>
                     <ul>
-                        <li class="<?php if($this->controller == "geraetegruppen" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/geraetegruppen/">
+                        <li class="<?php if($this->controller == "device-groups" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/device-groups/">
                                 Übersicht
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "geraetegruppen" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/geraetegruppen/edit/">
+                        <li class="<?php if($this->controller == "device-groups" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/device-groups/edit/">
                                 Neu anlegen
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($this->controller == "uebungen"){ echo 'active';}?>">
-                    <a href="/uebungen/">
+                <li class="<?php if($this->controller == "exercises"){ echo 'active';}?>">
+                    <a href="/exercises/">
                         Übungen
                     </a>
                     <ul>
-                        <li class="<?php if($this->controller == "uebungen" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/uebungen">
+                        <li class="<?php if($this->controller == "exercises" && $this->action == "index"){ echo 'active';}?>">
+                            <a href="/exercises">
                                 Übersicht
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "uebungen" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/uebungen/edit/">
+                        <li class="<?php if($this->controller == "exercises" && $this->action == "edit"){ echo 'active';}?>">
+                            <a href="/exercises/edit/">
                                 Neu anlegen
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($this->controller == "trainingsplan"){ echo 'active';}?>">
-                    <a href="/trainingsplan/">
+                <li class="<?php if($this->controller == "training-plans"){ echo 'active';}?>">
+                    <a href="/training-plans/">
                         Trainingsplan
                     </a>
                     <ul>
-                        <li class="<?php if($this->controller == "trainingsplan" && $this->action == "index"){
+                        <li class="<?php if($this->controller == "training-plans" && $this->action == "index"){
                             echo 'active';}?>">
-                            <a href="/trainingsplan">
+                            <a href="/training-plans">
                                 Übersicht
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "trainingsplan" && $this->action == "select-layout"){
+                        <li class="<?php if($this->controller == "training-plans" && $this->action == "select-layout"){
                             echo 'active';}?>">
-                            <a href="/trainingsplan/select-layout/">
+                            <a href="/training-plans/select-layout/">
                                 Neu anlegen
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "trainingsplan" && $this->action == "archiv"){
+                        <li class="<?php if($this->controller == "training-plans" && $this->action == "archiv"){
                             echo 'active';}?>">
-                            <a href="/trainingsplan/archiv/">
+                            <a href="/training-plans/archiv/">
                                 Archiv
                             </a>
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if($this->controller == "trainingstagebuch"){ echo 'active';}?>">
-                    <a href="/trainingstagebuch/">
+                <li class="<?php if($this->controller == "trainings"){ echo 'active';}?>">
+                    <a href="/trainings/">
                         Trainingstagebuch
                     </a>
                     <ul>
-                        <li class="<?php if($this->controller == "trainingstagebuch" && $this->action == "index"){
+                        <li class="<?php if($this->controller == "trainings" && $this->action == "index"){
                             echo 'active';}?>">
-                            <a href="/trainingstagebuch">
+                            <a href="/trainings">
                                 Übersicht
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "trainingstagebuch" && $this->action == "edit"){
+                        <li class="<?php if($this->controller == "trainings" && $this->action == "edit"){
                             echo 'active';}?>">
-                            <a href="/trainingstagebuch/edit/">
+                            <a href="/trainings/edit/">
                                 Neu anlegen
                             </a>
                         </li>
-                        <li class="<?php if($this->controller == "trainingstagebuch" && $this->action == "archiv"){
+                        <li class="<?php if($this->controller == "trainings" && $this->action == "archiv"){
                             echo 'active';}?>">
-                            <a href="/trainingstagebuch/archiv/">
+                            <a href="/trainings/archiv/">
                                 Archiv
                             </a>
                         </li>

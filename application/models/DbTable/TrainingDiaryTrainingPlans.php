@@ -6,7 +6,7 @@
  * Time: 16:15
  */
 
-class Application_Model_DbTable_TrainingDiaryTrainingPlans extends Application_Model_DbTable_Abstract
+class Model_DbTable_TrainingDiaryTrainingPlans extends Model_DbTable_Abstract
 {
     /**
      * @var string
@@ -48,7 +48,7 @@ class Application_Model_DbTable_TrainingDiaryTrainingPlans extends Application_M
             ->join('trainingsplaene', 'trainingsplan_id = trainingstagebuch_trainingsplan_trainingsplan_fk')
             ->joinLeft('trainingsplan_uebungen', 'trainingsplan_uebung_trainingsplan_fk = trainingstagebuch_trainingsplan_trainingsplan_fk')
             ->joinLeft('trainingstagebuch_uebungen', 'trainingstagebuch_uebung_trainingsplan_uebung_fk = trainingsplan_uebung_fk')
-            ->joinLeft('uebungen', 'uebung_id = trainingsplan_uebung_fk')
+            ->joinLeft('exercises', 'uebung_id = trainingsplan_uebung_fk')
             ->where('trainingstagebuch_trainingsplan_flag_abgeschlossen != 1')
             ->where('trainingstagebuch_trainingsplan_trainingsplan_fk = ' . $iTrainingDiaryTrainingPlanId)
             ->order('trainingsplan_uebung_order');

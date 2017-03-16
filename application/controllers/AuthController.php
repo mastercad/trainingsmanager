@@ -71,7 +71,7 @@ class AuthController extends Zend_Controller_Action {
     public function logoutAction() {
 /*
         unset($_SESSION['user_login']);
-        unset($_SESSION['user_passwort']);
+        unset($_SESSION['user_password']);
 
         $auth = CAD_Auth::getInstance();
         $auth->clearIdentity();
@@ -95,26 +95,26 @@ class AuthController extends Zend_Controller_Action {
         $a_messages = array();
 
         $str_register_email = null;
-        $str_register_vorname = null;
-        $str_register_passwort = null;
-        $str_register_nachname = null;
+        $str_register_first_name = null;
+        $str_register_password = null;
+        $str_register_name = null;
 
         if($this->getRequest()->isPost()) {
             $a_data = array();
-            $obj_db_users = new Application_Model_DbTable_Users();
+            $obj_db_users = new Model_DbTable_Users();
             $b_all_valid = true;
 
             if(isset($a_params['register_email'])) {
                 $str_register_email = base64_decode($a_params['register_email']);
             }
-            if(isset($a_params['register_vorname'])) {
-                $str_register_vorname = base64_decode($a_params['register_vorname']);
+            if(isset($a_params['register_first_name'])) {
+                $str_register_first_name = base64_decode($a_params['register_first_name']);
             }
-            if(isset($a_params['register_passwort'])) {
-                $str_register_passwort = base64_decode($a_params['register_passwort']);
+            if(isset($a_params['register_password'])) {
+                $str_register_password = base64_decode($a_params['register_password']);
             }
-            if(isset($a_params['register_nachname'])) {
-                $str_register_nachname = base64_decode($a_params['register_nachname']);
+            if(isset($a_params['register_name'])) {
+                $str_register_name = base64_decode($a_params['register_name']);
             }
 
             $obj_validate_email = new Zend_Validate_EmailAddress();
@@ -149,8 +149,8 @@ class AuthController extends Zend_Controller_Action {
                 $a_messages[$i_count_messages]['result'] = false;
             }
 
-            if (strlen(trim($str_register_passwort)) >= 8) {
-                $a_data['user_passwort'] = md5($str_register_passwort);
+            if (strlen(trim($str_register_password)) >= 8) {
+                $a_data['user_password'] = md5($str_register_password);
             } else {
                 $b_all_valid = false;
                 $i_count_messages = count($a_messages);
@@ -159,17 +159,17 @@ class AuthController extends Zend_Controller_Action {
                 $a_messages[$i_count_messages]['result'] = false;
             }
 
-            if (strlen(trim($str_register_vorname)) > 0) {
-                $a_data['user_vorname'] = $str_register_vorname;
+            if (strlen(trim($str_register_first_name)) > 0) {
+                $a_data['user_first_name'] = $str_register_first_name;
             }
 
-            if (strlen(trim($str_register_nachname)) > 0) {
-                $a_data['user_nachname'] = $str_register_nachname;
+            if (strlen(trim($str_register_name)) > 0) {
+                $a_data['user_name'] = $str_register_name;
             }
 
             if ( true === $b_all_valid) {
-                $a_data['user_status_fk'] = 2;
-                $a_data['user_rechte_gruppe_fk'] = 2;
+                $a_data['user_state_fk'] = 2;
+                $a_data['user_right_group_fk'] = 2;
 
                 $result = $obj_db_users->saveUser($a_data);
 
@@ -181,13 +181,13 @@ class AuthController extends Zend_Controller_Action {
                     $a_messages[$i_count_messages]['result'] = true;
 
                     $str_user_name = $str_register_email;
-                    if(strlen(trim($str_register_vorname)))
+                    if(strlen(trim($str_register_first_name)))
                     {
-                        $str_user_name = $str_register_vorname . " ";
+                        $str_user_name = $str_register_first_name . " ";
                     }
-                    if(strlen(trim($str_register_nachname)))
+                    if(strlen(trim($str_register_name)))
                     {
-                        $str_user_name .= $str_register_nachname;
+                        $str_user_name .= $str_register_name;
                     }
 
                     $str_message = "Hallo " . $str_user_name . ",<br /><br />";
@@ -220,7 +220,7 @@ class AuthController extends Zend_Controller_Action {
      * @return bool
      */
     public function checkEmailExists($str_email) {
-        $obj_db_users = new Application_Model_DbTable_Users();
+        $obj_db_users = new Model_DbTable_Users();
         $b_result = $obj_db_users->checkEmailExists($str_email);
 
         return $b_result;
@@ -229,19 +229,19 @@ class AuthController extends Zend_Controller_Action {
     /**
      * @throws Zend_Mail_Exception
      */
-    public function passwortVergessenAction() {
+    public function passwordForgottenAction() {
         $a_params = $this->getRequest()->getParams();
         $a_messages = array();
 
         if (true === $this->getRequest()->isPost()
-            && true === isset($a_params['passwort_vergessen_email'])
+            && true === isset($a_params['password_forgotten_email'])
         ) {
-            $str_email = base64_decode($a_params['passwort_vergessen_email']);
+            $str_email = base64_decode($a_params['password_forgotten_email']);
 
             $obj_tools = new CAD_Tools();
             $obj_valid_email = new Zend_Validate_EmailAddress();
-            $obj_db_users = new Application_Model_DbTable_Users();
-            $str_new_passwort = $obj_tools->generatePasswort();
+            $obj_db_users = new Model_DbTable_Users();
+            $str_new_password = $obj_tools->generatePassword();
 
             $b_email_valid = $obj_valid_email->isValid($str_email);
             if (true === $b_email_valid) {
@@ -250,21 +250,21 @@ class AuthController extends Zend_Controller_Action {
                     && 0 < count($a_user)
                 ) {
                     $str_user_name = $str_email;
-                    if (true === isset($a_user['user_vorname'])
-                        && 0 < strlen(trim($a_user['user_vorname']))
+                    if (true === isset($a_user['user_first_name'])
+                        && 0 < strlen(trim($a_user['user_first_name']))
                     ) {
-                        $str_user_name = $a_user['user_vorname'] . " ";
+                        $str_user_name = $a_user['user_first_name'] . " ";
                     }
-                    if (true === isset($a_user['user_nachname'])
-                        && 0 <strlen(trim($a_user['user_nachname']))
+                    if (true === isset($a_user['user_name'])
+                        && 0 <strlen(trim($a_user['user_name']))
                     ) {
-                        $str_user_name .= $a_user['user_nachname'];
+                        $str_user_name .= $a_user['user_name'];
                     }
 
                     $str_message = "Hallo " . $str_user_name . ",<br /><br />";
                     $str_message .= "Sie haben ein neues Paswort für den Login-Bereich ";
                     $str_message .= "auf www.byte-artist.de angefordert.<br /><br />";
-                    $str_message .= "Es wurde erfolgreich geändert und lautet <strong>" . $str_new_passwort . "</strong><br /><br />";
+                    $str_message .= "Es wurde erfolgreich geändert und lautet <strong>" . $str_new_password . "</strong><br /><br />";
                     $str_message .= '<a href="http://www.byte-artist.de">Klicken Sie hier, um sich gleich anzumelden.</a><br /><br />';
                     $str_message .= 'Mit freundlichen Grüßen und einen angenehmen Tag<br />';
                     $str_message .= 'Ihr byte-artist.';
@@ -279,7 +279,7 @@ class AuthController extends Zend_Controller_Action {
 
                     if ($result) {
                         $a_data = array();
-                        $a_data['user_passwort'] = md5($str_new_passwort);
+                        $a_data['user_password'] = md5($str_new_password);
 
                         if ($obj_db_users->updateUser($a_data, $a_user['user_id'])) {
                             $i_count_messages = count($a_messages);
@@ -328,7 +328,7 @@ class AuthController extends Zend_Controller_Action {
     /**
      *
      */
-    public function passwortVergessenFormAction() {
+    public function passwordForgottenFormAction() {
     }
 
     /**

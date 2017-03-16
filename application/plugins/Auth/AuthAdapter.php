@@ -1,6 +1,6 @@
 <?php
 
-	class Application_Plugin_Auth_AuthAdapter extends CAD_Auth_Adapter_DbTable
+	class Plugin_Auth_AuthAdapter extends CAD_Auth_Adapter_DbTable
 	{
 		protected $_identity;
 		protected $_a_identity;
@@ -12,7 +12,7 @@
 
 			$this->setTableName('users');
 			$this->setIdentityColumn('user_login');
-			$this->setCredentialColumn('user_passwort');
+			$this->setCredentialColumn('user_password');
 			$this->setCredentialTreatment('MD5(?)');
 		}
 		
@@ -20,8 +20,7 @@
 	    {
 	        $authResult = parent::authenticate();
 	        
-	        if(!is_array($this->_resultRow))
-	        {
+	        if(!is_array($this->_resultRow)) {
 	        	$authResult = new Zend_Auth_Result(
 	        			Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID,
 	        			$this->_identity,
@@ -30,7 +29,7 @@
 	        	return $authResult;
 	        }
 	        
-	        if(strtoupper($this->_resultRow['user_status_name']) != strtoupper("aktiv"))
+	        if(strtoupper($this->_resultRow['user_state_name']) != strtoupper("aktiv"))
 	        {
 	        	$authResult = new Zend_Auth_Result(
 	        			Zend_Auth_Result::FAILURE,
@@ -93,7 +92,7 @@
 	        {
 	        	$session_id = $_COOKIE['PHPSESSID'];
 	        }
-	    	$obj_users = new Application_Model_DbTable_Users();
+	    	$obj_users = new Model_DbTable_Users();
 	    	$last_login = date( "Y-m-d H:i:s");
 	    	
 	    	$data = Array(

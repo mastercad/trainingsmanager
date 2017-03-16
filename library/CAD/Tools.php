@@ -614,7 +614,7 @@ class CAD_Tools
 		return false;
 	}
 	
-	public function generatePasswort($i_length = 8)
+	public function generatePassword($i_length = 8)
 	{
 		$str_password = "";
 		$str_possible = "2346789bcdfghjkmnpqrtvwxyzBCDFGHJKLMNPQRTVWXYZ";

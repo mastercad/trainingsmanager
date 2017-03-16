@@ -1,0 +1,47 @@
+<?php
+    echo $this->devicesContent;
+?>
+
+<script type="text/javascript">
+    jQuery('document').ready(function() {
+        jQuery('.device-delete').unbind('click').bind('click', function() {
+            if(confirm('Diesen Geraet wirklich löschen?\n\nAchtung:\n' +
+                       'Wenn Sie diesen Geraet löschen, werden auch alle ' +
+                       'mit Ihm verknüpften Geraetgruppen und Übungen gelöscht!')
+            ) {
+                jQuery(this).deleteDevice();
+            }
+        });
+
+        jQuery.fn.deleteDevice = function()
+        {
+            var deviceId = jQuery(this).data('device-id');
+            var that = this;
+
+            if (isNumber(deviceId)
+                && 0 < deviceId
+            ) {
+                var url = "/devices/delete-device/";
+                var obj_params = {'id': deviceId, 'ajax': true};
+
+                jQuery.post(url, obj_params, function(response) {
+                    try {
+                        response = JSON.parse(response);
+                        var cad_obj_messages = new CAD.Message();
+                        cad_obj_messages.init(response);
+
+                        if(cad_obj_messages.open()) {
+                            jQuery(that).parent().fadeOut();
+                        }
+                    } catch(e) {
+                        alert(response);
+                    }
+                });
+            } else {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init([{'type': 'fehler', 'message': 'Fehler bei der Übergabe!<br /><br />Ich kann diesen Geraet leider nicht löschen!'}]);
+                obj_cad_messages.open();
+            }
+        };
+    });
+</script>

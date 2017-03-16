@@ -1,6 +1,6 @@
 <?php
 
-class Application_Plugin_CheckeRecht extends Zend_Controller_Plugin_Abstract {
+class Plugin_CheckeRecht extends Zend_Controller_Plugin_Abstract {
 
     public function hatRecht($module, $controller = 'index', $action = 'index') {
         $acl = Zend_Registry::get('acl');

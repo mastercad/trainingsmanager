@@ -1,0 +1,4 @@
+<option value="<?php echo $this->optionValue;?>"
+    <?php if ((0 < $this->currentValue && $this->currentValue == $this->optionValue) || $this->currentText == $this->optionText) {
+        echo ' selected="selected" ';
+    }?>><?php echo $this->optionText;?></option>

@@ -1,0 +1,86 @@
+<div>
+    <h3>
+        Gerätegruppe Name:<span
+            class="editable" 
+            style="margin-left: 20px; border-bottom: 1px dotted gray;"
+            id="device_group_name" data-cad-cms-content-orig="<?php echo base64_encode($this->device_group_name);?>"
+		><?php echo $this->device_group_name;?></span>
+    </h3>
+    
+    <br class="clearfix" />
+    
+    <h3 style="float: left; display: inline; margin-top: 15px;">
+        Geräte:
+    </h3>
+    
+    <img class="device-add" src="/images/content/statisch/grafiken/add_normal.png"
+         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>
+    
+    <br class="clearfix" />
+    
+    <div class="device-group-devices"
+         style="margin-top: 5px;">
+        <?php echo $this->deviceGroupDevicesContent;?>
+    </div>
+    
+    <br class="clearfix" />
+    
+    <input type="hidden" class="id" name="device-group-id" id="device_group_id" value="<?php echo $this->device_group_id;?>" />
+</div>
+
+<br class="clearfix" />
+
+<div class="device-proposals"
+     style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
+            background-color: #FFFFFF; opacity: 0.9; 
+            box-shadow: 5px 5px 5px #111111;" ></div>
+
+<button onclick="save();" 
+        style="margin-top: 15px;"
+        class="button">
+    Speichern
+</button>
+
+<script type="text/javascript">
+	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+	function save() {
+            var hasErrors = false;
+            var a_messages = [];
+            
+            if (!jQuery.trim(jQuery('#device_group_name').html()).length) {
+                hasErrors = true;
+                a_messages.push({'type': 'fehler', 'message': 'Die Gerätegruppe braucht einen Namen!'});
+            }
+            
+            var devicesCollection = jQuery('.device-group-devices').find('.device');
+            var devices = [];
+
+            for (var i = 0, len = devicesCollection.length; i < len; i++) {
+                var device_id              = jQuery(devicesCollection[i]).find('.device-name').data('device-id');
+                
+                if (device_id) {
+                    devices.push({'id': device_id});
+                }
+            }
+            
+            if (!devices.length) {
+                hasErrors = true;
+                a_messages.push({'type': 'fehler', 'message': 'Es muss mindestens ein Gerät für diese Gerätegruppe vollständig ausgefüllt sein!'});
+            }
+            
+            if (!hasErrors) {
+                jQuery().setEditedElements('device_group_devices',   devices);
+                jQuery().setEditedElements('device_group_id',        jQuery('#device_group_id').val());
+                jQuery().setAjax(true);
+
+                CADEditSave();
+            } else {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init(a_messages);
+                obj_cad_messages.open();
+            }
+        }
+        edit_init(false);
+        initDeviceGroupsEdit();
+</script>

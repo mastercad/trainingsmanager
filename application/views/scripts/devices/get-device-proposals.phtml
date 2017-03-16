@@ -1,0 +1,21 @@
+<div style="position: relative;">
+    <img src="/images/content/statisch/grafiken/close_button.png" 
+         style="position: absolute; top: -25px; right: -30px;"
+         onclick="jQuery(this).parent().parent().fadeOut();" />
+<?php
+    if ((is_array($this->deviceProposals)
+        || $this->deviceProposals instanceof Zend_Db_Table_Rowset)
+        && 0 < count($this->deviceProposals)
+    ) {
+        foreach($this->deviceProposals as $deviceProposal)
+        {
+            $this->assign($deviceProposal->toArray());
+            echo $this->render('loops/device-proposal.phtml');
+        }
+    }
+    else
+    {
+        echo "Leider wurde kein entsprechendes Gerät gefunden!";
+    }
+?>
+</div>

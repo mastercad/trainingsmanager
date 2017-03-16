@@ -6,23 +6,23 @@
  * Time: 10:47
  */
 
-class Application_Model_DbTable_TrainingPlanLayouts extends Application_Model_DbTable_Abstract
+class Model_DbTable_TrainingPlanLayouts extends Model_DbTable_Abstract
 {
     /**
      * @var string
      */
-    protected $_name 	= 'trainingsplan_layouts';
+    protected $_name 	= 'training_plan_layouts';
     /**
      * @var string
      */
-    protected $_primary = 'trainingsplan_layout_id';
+    protected $_primary = 'training_plan_layout_id';
 
     /**
      * @param $iTrainingPlanLayoutId
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function findTrainingPlanLayout($iTrainingPlanLayoutId) {
-        return $this->fetchRow('trainingsplan_layout_id = ' . $iTrainingPlanLayoutId);
+        return $this->fetchRow('training_plan_layout_id = ' . $iTrainingPlanLayoutId);
     }
 
     /**
@@ -31,6 +31,6 @@ class Application_Model_DbTable_TrainingPlanLayouts extends Application_Model_Db
      */
     public function findTrainingPlanLayoutByName($sTrainingPlanLayoutName)
     {
-        return $this->fetchRow('trainingsplan_layout_name LIKE("' . $sTrainingPlanLayoutName . '")');
+        return $this->fetchRow('training_plan_layout_name LIKE("' . $sTrainingPlanLayoutName . '")');
     }
 }

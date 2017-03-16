@@ -1,0 +1,100 @@
+<?php
+
+if (FALSE === function_exists('formatFloatValue')) {
+    function formatFloatValue($fValue) {
+        $iValue = number_format($fValue, 0);
+        if ($iValue != $fValue) {
+            return $fValue;
+        }
+        return $iValue;
+    }
+}
+
+//$this->trainingPlanId = $this->trainingsplan_uebung_trainingsplan_fk;
+
+if (TRUE === isset($this->exercise_name)) {
+    $count = $this->iCount;
+    if (NULL !== $this->training_plan_x_exercise_id) {
+        $count = $this->training_plan_x_exercise_id;
+    }
+?>
+
+<li id="<?php echo $count;?>" class="exercise ui-state-default"
+    data-exercise-id="<?php echo $this->exercise_id;?>"
+    data-training-plan-exercise-id="<?php echo $this->training_plan_x_exercise_id;?>">
+    <h3 style="float: left; margin-right: 50px;">
+        Übung : <?php echo $this->exercise_name;?>
+    </h3>
+    <h4 style="float: left;" class="device" data-device-id="<?php echo $this->device_id;?>">
+        Am Gerät : <?php echo $this->device_name;?>
+    </h4>
+
+    <label for="device_options" style="float: left; display: inline;">
+        Geräteoptionen:
+    </label>
+    <div style="float: left; display: inline;">
+        <?php echo $this->deviceOptionsSelectContent;?>
+    </div>
+
+    <img class="device-option-add" src="/images/content/statisch/grafiken/add_normal.png"
+         style="width: 30px; float: left; display: inline;"/>
+
+    <label for="exercise_options" style="margin-left: 20px; clear: none; float: left; display: inline;">
+        Übungsoptionen:
+    </label>
+    <div style="float: left; display: inline;">
+        <?php echo $this->exerciseOptionsSelectContent;?>
+    </div>
+
+    <img class="exercise-option-add" src="/images/content/statisch/grafiken/add_normal.png"
+         style="width: 30px; float: left; display: inline;"/>
+
+    <br class="clearfix" />
+
+    <div class="device-options" style="float: left: display: inline;">
+        <?php echo $this->deviceOptionsContent;?>
+
+        <br class="clearfix" />
+    </div>
+
+    <div class="exercise-options" style="float: left: display: inline;">
+        <?php echo $this->exerciseOptionsContent;?>
+
+        <br class="clearfix" />
+    </div>
+
+    <br class="clearfix" />
+
+    <label for="training_plan_exercise_comment_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
+        style="width: 100px; margin-top: 5px;">
+        Bemerkung:
+    </label>
+
+    <textarea id="training_plan_exercise_comment_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
+           name="training_plan_exercise_comment[<?php echo $this->trainingPlanId;?>][<?php echo $count;?>]"
+           style="margin-top: 5px; width: 590px; font-size: 8px;"
+           class="exercise-comment"
+    ><?php echo $this->training_plan_x_exercise_comment;?></textarea>
+
+    <input type="hidden" name="training_plan_exercise_id[<?php echo $this->trainingPlanId;?>][<?php echo $count;?>]"
+           id="trainingsplan_uebung_id_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
+           value="<?php echo $this->trainingsplan_uebung_id;?>" />
+    <input type="hidden" name="uebung_id[<?php echo $this->trainingPlanId;?>][<?php echo $count;?>]"
+           id="uebung_id_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
+           value="<?php echo $this->uebung_id;?>" />
+    <input type="hidden" name="trainingsplan_uebung_order[<?php echo $this->trainingPlanId;?>][<?php echo $count;?>]"
+           id="trainingsplan_uebung_order_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
+           value="<?php echo $this->trainingsplan_uebung_order;?>" />
+    <br class="clearfix" style="margin-bottom: 15px;"/>
+<?php
+    if (TRUE === is_array($this->aBeanspruchteMuskeln)) {
+        foreach ($this->aBeanspruchteMuskeln as $sMuskelName => $iBeanspruchung) {
+            echo $sMuskelName . ' : ' . $iBeanspruchung . '<br />';
+        }
+    }
+} else {
+    echo "Keine Übung mit der ID " . $this->iUebungId . " gefunden!";
+}
+?>
+</li>
+<?php

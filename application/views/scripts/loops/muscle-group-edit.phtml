@@ -1,0 +1,22 @@
+<div class="muscle-group" style="margin-top: 5px; position: relative; width: 325px;">
+    <input type="text" class="muscle-group-name"
+           style="float: left;"
+           value="<?php echo $this->muscle_group_name;?>"
+           data-muscle-group-name="<?php echo $this->muscle_group_name;?>"
+           data-muscle-group-id="<?php echo $this->muscle_group_id;?>" />
+<!--    <div style="float: left; margin-left: 10px;">-->
+<!--    <img src="/images/content/statisch/grafiken/beanspruchung.png" class="muskelgruppe_beanspruchung"  -->
+<!--             style="background-image: url('/images/content/statisch/grafiken/beanspruchung_bg_neu.png');-->
+<!--                    background-repeat: no-repeat;-->
+<!--                    background-position: -100px 0;-->
+<!--                    width: 100px; height: 20px;-->
+<!--                    background-color: #EEEEEE;">-->
+<!--    </div>-->
+        <img src="/images/content/statisch/grafiken/delete.png"
+             title="zum entfernen hier klicken!"
+             style="position: absolute; height: 20px; width: 20px;
+                    right: 5px; top: 0; <?php if($this->muskelgruppe_id > 0){ echo ' display: block; ';} else
+                    { echo ' display: none; ';}?>"
+             class="muscle-group-delete" />
+    <br class="clearfix" />
+</div>

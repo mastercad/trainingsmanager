@@ -3,22 +3,22 @@
 /**
  * Class Application_Model_DbTable_MuscleGroups
  */
-class Application_Model_DbTable_MuscleGroups extends Application_Model_DbTable_Abstract
+class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
 {
     /**
      * @var string
      */
-    protected $_name 	= 'muskelgruppen';
+    protected $_name 	= 'muscle_groups';
     /**
      * @var string
      */
-    protected $_primary = 'muskelgruppe_id';
+    protected $_primary = 'muscle_group_id';
 
     /**
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllMuscleGroups() {
-        return $this->fetchAll(null, "muskelgruppe_name");
+        return $this->fetchAll(null, "muscle_group_name");
     }
 
     /**
@@ -29,11 +29,9 @@ class Application_Model_DbTable_MuscleGroups extends Application_Model_DbTable_A
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
                                    ->setIntegrityCheck(false);
         try {
-            $oSelect->join('muskelgruppe_muskeln', 'muskelgruppe_muskel_muskelgruppe_fk = muskelgruppe_id')
-                ->join('muskeln', 'muskel_id = muskelgruppe_muskel_muskel_fk')
-                ->where("muskelgruppe_id = '" . $iMuscleGroupId . "'");
+            $oSelect->where("muscle_group_id = '" . $iMuscleGroupId . "'");
 
-            return $this->fetchAll($oSelect);
+            return $this->fetchRow($oSelect);
         } catch( Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -47,7 +45,7 @@ class Application_Model_DbTable_MuscleGroups extends Application_Model_DbTable_A
      */
     public function findMuscleGroupsByName($sMuscleGroupName) {
         try {
-            return $this->fetchAll("muskelgruppe_name LIKE( '" . $sMuscleGroupName . "')", 'muskelgruppe_name');
+            return $this->fetchAll("muscle_group_name LIKE( '" . $sMuscleGroupName . "')", 'muscle_group_name');
         } catch( Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -76,7 +74,7 @@ class Application_Model_DbTable_MuscleGroups extends Application_Model_DbTable_A
      */
     public function updateMuscleGroup($aData, $iMuscleGroupId) {
 		try {
-            return $this->update($aData, "muskelgruppe_id = '" . $iMuscleGroupId . "'");
+            return $this->update($aData, "muscle_group_id = '" . $iMuscleGroupId . "'");
 		} catch( Exception $oException) {
 			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
 			echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -90,7 +88,7 @@ class Application_Model_DbTable_MuscleGroups extends Application_Model_DbTable_A
      */
     public function deleteMuscleGroup($iMuscleGroupId) {
 		try {
-            return $this->delete("muskelgruppe_id = '" . $iMuscleGroupId . "'");
+            return $this->delete("muscle_group_id = '" . $iMuscleGroupId . "'");
 		} catch( Exception $oException) {
 			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
 			echo "Meldung : " . $oException->getMessage() . "<br />";

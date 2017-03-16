@@ -1,229 +1,703 @@
 <?php
 
-require_once APPLICATION_PATH . '/../library/geshi/geshi.php';
+$sGeshiPath = APPLICATION_PATH . '/../library/geshi/geshi.php';
+
+if (is_readable($sGeshiPath)) {
+    include($sGeshiPath);
+}
 
 class CAD_Filter_UbbReplace implements Zend_Filter_Interface
 {
-	protected $b_br_cleart;
-	protected $a_bilder;
-	protected $str_bilder_pfad;
-	protected $str_temp_bilder_pfad;
-	
-	public function __construct($b_br_cleart = true)
-	{
-		$this->$b_br_cleart = $b_br_cleart;
-	}
+    const REGEX = 'regex';
+    const REPLACE_FUNCTION = 'replace_function';
 
-    public function filter( $text)
+    // enhält alle erlaubten tags, die replaced werden sollen
+    protected $_aAllowdTags = array(
+        '[QUOTE=]',
+        '[QUOTE]',
+        '[IMG]',
+        '[IMG=]',
+        '[EMAIL]',
+        '[EMAIL=]',
+        '[URL]',
+        '[URL=]',
+        '[URLIMG=]',
+        '[PHP]',
+        '[CODE=]',
+        '[MITGLIED]',
+        '[LINIE=]',
+        '[ULISTE]',
+        '[DANKE]',
+        '[BLOCK]',
+        '[CENTER]',
+        '[LEFT]',
+        '[RIGHT]',
+        '[FLOAT]',
+        '[MARQUEE]',
+        '[NL]',
+        '[VIDEO]',
+        '[COLOR=]',
+        '[BGCOLOR=]',
+        '[SIZE=]',
+        '[GLOW]',
+        '[WAVE]',
+        '[SHADOW=]',
+        '[I]',
+        '[B]',
+        '[U]',
+        '[S]',
+        '[FONT=]',
+        '[NEWS]'
+    );
+
+    // enthält das Tag und dazu den regex sowie den funktionsaufruf
+    protected $_aMapTagToFunction = array(
+        '[QUOTE=]' => array(
+            self::REGEX => '/(\[QUOTE=)(.*?)(\])(.*?)(\[\/QUOTE\])/is',
+            self::REPLACE_FUNCTION => "generateZitat"
+        ),
+        '[QUOTE]' => array(
+            self::REGEX => '/(\[QUOTE\])(.*?)(\[\/QUOTE\])/is',
+            self::REPLACE_FUNCTION => "generateZitat"
+        ),
+        '[IMG]' => array(
+            self::REGEX => '/(\[IMG\])([^\[]+)?(\[\/IMG\])/is',
+            self::REPLACE_FUNCTION => "generateImage"
+        ),
+        '[IMG=]' => array(
+            self::REGEX => '/(\[IMG[=|:])([^\]]+)?(\])(.*?)(\[\/IMG\])/is',
+            self::REPLACE_FUNCTION => "generateImage"
+        ),
+        '[EMAIL]' => array(
+            self::REGEX => '/(\[EMAIL\])(.*?)(\[\/EMAIL\])/Uis',
+            self::REPLACE_FUNCTION => "generateMail"
+        ),
+        '[EMAIL=]' => array(
+            self::REGEX => '/(\[EMAIL=)([^\[]+)?(\])(.*?)(\[\/EMAIL\])/is',
+            self::REPLACE_FUNCTION => "generateMail"
+        ),
+        '[URL]' => array(
+            self::REGEX => '/(\[URL\])([^\[]+)(\[\/URL\])/Uis',
+            self::REPLACE_FUNCTION => "generateUrl"
+        ),
+        '[URL=]' => array(
+            self::REGEX => '/(\[URL=)([^\[]+)?(\])([^\[]+)?(\[\/URL\])/is',
+            self::REPLACE_FUNCTION => "generateUrl"
+        ),
+        '[URLIMG=]' => array(
+            self::REGEX => '/(\[URLIMG=)(.*)?(\])([^\[]+?)(\[\/URLIMG\])/is',
+            self::REPLACE_FUNCTION => "generateUrlImage"
+        ),
+        '[PHP]' => array(
+            self::REGEX => '/(\[PHP\])(.*?)(\[\/PHP\])/is',
+            self::REPLACE_FUNCTION => "replacePhpCode"
+        ),
+        '[CODE=]' => array(
+            self::REGEX => '|(\[CODE=)(.*?)(\])(.*?)(\[\/CODE\])|is',
+            self::REPLACE_FUNCTION => "replaceCode"
+        ),
+        '[MITGLIED]' => array(
+            self::REGEX => '/(\[MITGLIED\])(.*?)(\[\/MITGLIED\])/is',
+            self::REPLACE_FUNCTION => "mitgliedText"
+        ),
+        '[LINIE=]' => array(
+            self::REGEX => '/(\[LINIE=)(.*?)(\])/Uis',
+            self::REPLACE_FUNCTION => 'generateLine'
+        ),
+        '[ULISTE]' => array(
+            self::REGEX => '/(\[ULISTE\])(.*?)(\[\/ULISTE\])/is',
+            self::REPLACE_FUNCTION => "replaceList"
+        ),
+        '[DANKE]' => array(
+            self::REGEX => '/(\[DANKE\])(.*?)(\[\/DANKE\])/is',
+            self::REPLACE_FUNCTION => "replaceDankeText"
+        ),
+        '[BLOCK]' => array(
+            self::REGEX => '/(\[BLOCK\])(.*?)(\[\/BLOCK\])/is',
+            self::REPLACE_FUNCTION => "replaceBlock"
+        ),
+        '[CENTER]' => array(
+            self::REGEX => '/(\[CENTER\])(.*?)(\[\/CENTER\])/is',
+            self::REPLACE_FUNCTION => "replaceCenter"
+        ),
+        '[LEFT]' => array(
+            self::REGEX => '/(\[LEFT\])(.*?)(\[\/LEFT\])/is',
+            self::REPLACE_FUNCTION => "replaceLeft"
+        ),
+        '[RIGHT]' => array(
+            self::REGEX => '/(\[RIGHT\])(.*?)(\[\/RIGHT\])/is',
+            self::REPLACE_FUNCTION => "replaceRight"
+        ),
+        '[FLOAT]' => array(
+            self::REGEX => '/(\[FLOAT\])(.*?)(\[\/FLOAT\])/is',
+            self::REPLACE_FUNCTION => "replaceFloat"
+        ),
+        '[MARQUEE]' => array(
+            self::REGEX => '/(\[MARQUEE\])(.*?)(\[\/MARQUEE\])/is',
+            self::REPLACE_FUNCTION => "replaceMarquee"
+        ),
+        '[NL]' => array(
+            self::REGEX => '/(\[NL\])/Ui',
+            self::REPLACE_FUNCTION => "replaceNewLine"
+        ),
+        '[VIDEO]' => array(
+            self::REGEX => '/(\[VIDEO\])(.*?)(\[\/VIDEO\])/i',
+            self::REPLACE_FUNCTION => 'addVideo'
+        ),
+        '[COLOR=]' => array(
+            self::REGEX => '/(\[COLOR=)(#+[0-9a-f]{3,}|[A-Z]{3,})(\])(.*?)(\[\/COLOR\])/is',
+            self::REPLACE_FUNCTION => "replaceColor"
+        ),
+        '[BGCOLOR=]' => array(
+            self::REGEX => '/(\[BGCOLOR=)(#+[0-9a-f]{3,}|[A-Z]{3,})(\])(.*?)(\[\/BGCOLOR\])/is',
+            self::REPLACE_FUNCTION => "replaceBackgroundColor"
+        ),
+        '[SIZE=]' => array(
+            self::REGEX => '/(\[SIZE=)([0-9]{1,})(\])(.*?)(\[\/SIZE\])/is',
+            self::REPLACE_FUNCTION => 'replaceSize'
+        ),
+        '[GLOW]' => array(
+            self::REGEX => '/(\[GLOW\])(.*?)(\[\/GLOW\])/is',
+            self::REPLACE_FUNCTION => 'replaceGlow'
+        ),
+        '[WAVE]' => array(
+            self::REGEX => '/(\[WAVE\])(.*?)(\[\/WAVE])/is',
+            self::REPLACE_FUNCTION => 'replaceWave'
+        ),
+        '[SHADOW=]' => array(
+            self::REGEX => '/(\[SHADOW=)(#+[0-9a-f]{3,}|[A-Z]{3,})(\])(.*?)(\[\/SHADOW\])/is',
+            self::REPLACE_FUNCTION => 'replaceShadow'
+        ),
+        '[I]' => array(
+            self::REGEX => '/(\[I\])(.*?)(\[\/I\])/is',
+            self::REPLACE_FUNCTION => "replaceItalic"
+        ),
+        '[B]' => array(
+            self::REGEX => '/(\[B\])(.*?)(\[\/B\])/is',
+            self::REPLACE_FUNCTION => "replaceBold"
+        ),
+        '[U]' => array(
+            self::REGEX => '/(\[U\])(.*?)(\[\/U\])/is',
+            self::REPLACE_FUNCTION => "replaceUnderlined"
+        ),
+        '[S]' => array(
+            self::REGEX => '/(\[S\])(.*?)(\[\/S\])/is',
+            self::REPLACE_FUNCTION => "replaceSmall"
+        ),
+        '[FONT=]' => array(
+            self::REGEX => '/(\[FONT=)(.*?)(\])(.*?)(\[\/FONT\])/is',
+            self::REPLACE_FUNCTION => 'replaceFont'
+        ),
+        '[NEWS]' => array(
+            self::REGEX => '/(\[NEWS])/i',
+            self::REPLACE_FUNCTION => "getNews"
+        )
+    );
+
+    private $_bRemoveDeniedTags = false;
+
+    private $b_br_cleart;
+    private $a_bilder;
+    private $str_bilder_pfad;
+    private $str_temp_bilder_pfad;
+    private $bWithoutLinks = FALSE;
+    private static $_aReplaceSmilies;
+
+    public function __construct($b_br_cleart = true)
     {
-//     	$text = htmlentities($text);
-//    	$text = htmlspecialchars($text);
-//    	$text = addslashes($text);
-        
-        $text = preg_replace( '/\[QUOTE=(.*)?\](.*)?\[\/QUOTE\]/Uis', "<div class='quote' ><div class='quote_kopf'> Zitat von : $1 </div><div class='quote_inhalt'>$2</div></div>", $text);
-        $text = preg_replace( '/\[QUOTE\](.*)?\[\/QUOTE\]/Uis', "<div class='quote' ><div class='quote_kopf'> Zitat :</div><div class='quote_inhalt'>$1</div></div>", $text);
-        $text = preg_replace( '/\[IMG\]([^\[]+)?\[\/IMG\]/eUis', '$this->imageEinfuegen( "$1")', $text);
-        $text = preg_replace( '/\[IMG=([^\]]+)?\](.*)?\[\/IMG\]/eUis', '$this->imageEinfuegen( "$2", "$1")', $text);
-        $text = preg_replace( '/\[IMG:([^]]+)?\](.*)?\[\/IMG\]/eUis', '$this->imageEinfuegenNeu( "$2", "$1")', $text);
-        $text = preg_replace( '/\[EMAIL\]?([^\[]+)?\[\/EMAIL\]/Uis', "<a href='mailto:$1'>$1</a>", $text);
-        $text = preg_replace( '/\[EMAIL=([^\[]+)?\]([^\[]+)?\[\/EMAIL\]/Uis', "<a href='mailto:$1'>$2</a>", $text);
-        $text = preg_replace( '/\[URL=([^\[]+)?\]([^\[]+)?\[\/URL\]/eUis', '$this->ersetzeURL( "$2", "$1")', $text);
-        $text = preg_replace( '/\[URLIMG=(.*)?]([^\[]+?)\[\/URLIMG\]/eUis', '$this->ersetzeURLImage( "$2", "$1")', $text);
-        $text = preg_replace( '/\[URL\]([^\[]+)\[\/URL\]/eUis', '$this->ersetzeURL("$1")', $text);
-        $text = preg_replace( '/\[PHP\](.*)?\[\/PHP\]/eUis', '$this->phpString( "$1")', $text);
-        $text = preg_replace_callback( '/\[CODE=?(.*)??\](.*)?\[\/CODE\]/Uis', array(&$this, "codeString"), $text);
-        $text = preg_replace( '/\[MITGLIED\](.*)?\[\/MITGLIED\]/eUis', '$this->mitgliedText( "$1")', $text);
-        $text = preg_replace( '/\[LINIE=(.*)?\]/Uis', '<hr style="width: 100%; height: 2px; color: $1; background: $1; margin: 10px 0px; border: 0;" />', $text);
-        $text = preg_replace( '/\[ULISTE\](.*)?\[\/ULISTE\]/Ueis', '$this->erstelleListe( "$1")', $text);
-        $text = preg_replace( '/\[DANKE\](.*)?\[\/DANKE\]/eUis', '$this->dankeText( "$1")', $text);
-        $text = preg_replace( '/\[BLOCK\](.*)?\[\/BLOCK\]/Uis', '<div style="text-align: justify;">$1<br style="clear: both;" /></div>', $text);
-        $text = preg_replace( '/\[CENTER\](.*)?\[\/CENTER\]/Uis', "<div style='text-align: center;'>$1<br style='clear: both;' /></div>", $text);
-        $text = preg_replace( '/\[LEFT\](.*)?\[\/LEFT\]/Uis', "<div style='text-align: left;'>$1<br style='clear: both;' /></div>", $text);
-        $text = preg_replace( '/\[RIGHT\](.*)?\[\/RIGHT\]/Uis', "<div style='text-align: right;'>$1<br style='clear: both;' /></div>", $text);
-        $text = preg_replace( '/\[FLOAT\](.*)?\[\/FLOAT\]/Uis', '<div style="float: left; display: inline;">$1</div>', $text);
-        $text = preg_replace( '/\[MARQUEE\](.*)?\[\/MARQUEE\]/Uis', "<marquee>$1</marquee>", $text);
-        $text = preg_replace( '/\[NL\]/Ui', '<br class="clearfix" />', $text);
-        $text = preg_replace( '/\[VIDEO](.*)?\[\/VIDEO\]/i', '<script type="text/javascript" src="/js/swfobject.js"></script><script type="text/javascript" src="/js/jwplayer.js"></script><embed flashvars="file=$1&autostart=false" allowfullscreen="true" allowscripaccess="always" id="player1" name="player1" src="/film/player.swf" width="480" height="270"/>', $text);
+        ini_set('display_errors', 1);
+        ini_set('display_startup_errors',1);
+        error_reporting(E_ALL | E_STRICT);
 
-        while( preg_match( '/\[COLOR=\#[0-9a-f]{3,6}\].*\[\/COLOR\]/eUis', $text))
-        {
-            $text = preg_replace( '/(.*)\[COLOR=(\#[0-9a-f]{3,6})\](.*)\[\/COLOR\](.*?)/eUis', '$this->stylesZusammenfuehren( \'$1\', \'color: $2;\', \'$3\', \'$4\')', $text);
-    	}
+        $this->b_br_cleart = $b_br_cleart;
+    }
 
-        while( preg_match( '/\[BGCOLOR=\#[0-9a-f]{3,6}\].*\[\/BGCOLOR\]/eUis', $text))
-        {
-            $text = preg_replace( '/(.*)\[BGCOLOR=(\#[0-9a-f]{3,6})\](.*)\[\/BGCOLOR\](.*?)/eUis', '$this->stylesZusammenfuehren( \'$1\', \'background-color: $2;\', \'$3\', \'$4\')', $text);
-    	}
-        $text = preg_replace( '/(.*)\[SIZE=([0-9]{1,2})\](.*)?\[\/SIZE\](.*)?/eUis', '$this->stylesZusammenfuehren( \'$1\', \'font-size: $2px; \', \'$3\', \'$4\')', $text);
-        $text = preg_replace( '/(.*)\[GLOW=(.*)\](.*)?\[\/GLOW\]?(.*)?/eUis', '$this->stylesZusammenfuehren( \'$1\', \'filter: glow( color=$2, strength=2); \', \'$3\', \'$4\')', $text);
-        $text = preg_replace( '/(.*)\[WAVE\](.*)?\[\/WAVE]?/eUis', '$this->stylesZusammenfuehren( \'$1\', \'filter: Wave( freq=2, light=20, phase=50, strength=2); \', \'$2\', \'$3\')', $text);
-        $text = preg_replace( '/(.*)\[SHADOW\](.*)?\[\/SHADOW]?/eUis', '$this->stylesZusammenfuehren( \'$1\', \'filter: Shadow( color=#707070, direction=135;) \', \'$2\', \'$3\')', $text);
+    public function filter($sText)
+    {
+        $sText = htmlentities($sText, null, 'UTF-8');
 
-        while( preg_match( '/\[B\](.*)?\[\/B\]/eUis', $text))
-        {
-            $text = preg_replace( '/(.*)\[B\](.*)?\[\/B\](.*)?/eUis', '$this->stylesZusammenfuehren( \'$1\', \'font-weight: bold; \', \'$2\', \'$3\')', $text);
+        foreach ($this->_aAllowdTags as $sAllowedTag) {
+            if (array_key_exists($sAllowedTag, $this->_aMapTagToFunction)) {
+
+                $aCurrentMap = $this->_aMapTagToFunction[$sAllowedTag];
+
+                $sText = preg_replace_callback(
+                    $aCurrentMap[self::REGEX],
+                    array(&$this, $aCurrentMap[self::REPLACE_FUNCTION]),
+                    $sText);
+            }
         }
 
-        while( preg_match( '/\[I\](.*)\[\/I\]/eUis', $text))
-        {
-            $text = preg_replace( '/(.*)\[I\](.*)?\[\/I\](.*)?/eUis', '$this->stylesZusammenfuehren( \'$1\', \'font-style: italic; \', \'$2\', \'$3\')', $text);
-    	}
-
-        while( preg_match( '/\[U\](.*)\[\/U\]/eUis', $text))
-        {
-            $text = preg_replace( '/(.*)\[U\](.*)?\[\/U\](.*)?/eUis', '$this->stylesZusammenfuehren( \'$1\', \'text-decoration: underline; \', \'$2\', \'$3\')', $text);
-    	}
-
-        $text = preg_replace( '/(.*)\[S\](.*)?\[\/S\]/eUis', "<s>$1</s>", $text);
-
-        while( preg_match( '/\[FONT=(.*)\](.*)?\[\/FONT\]/', $text))
-        {
-            $text = preg_replace( '/(.*)\[FONT=(.*)\](.*)\[\/FONT\](.*?)/eUis', '$this->stylesZusammenfuehren( \'$1\', \'font-family: $2; \', \'$3\', \'$4\')', $text);
-    	}
-
-        if($this->b_br_cleart)
-        {
-            $text = preg_replace( '(\n|\r\n|\n\r)', '<br class="clearfix" />', $text);
+        if ($this->b_br_cleart) {
+            $sText = preg_replace_callback( '([\n\r|\n])', array(&$this, "replaceNewLine"), $sText);
+            //            $sText = nl2br($sText);
+        } else {
+            $sText = preg_replace_callback( '([\n\r|\n])', array(&$this, "replaceLineBreak"), $sText);
+            //            $sText = nl2br($sText);
         }
-        else
-        {
-            $text = preg_replace( '(\n|\r\n|\n\r)', '<br />', $text);
+        //
+        $sText = preg_replace_callback("/([\t])/", array(&$this, "replaceTab"), $sText);
+
+        //        $sText = $this->_smileyReplace($sText);
+
+        $oCadMerge = new CAD_DOM_TagMerge();
+
+        return $oCadMerge->merge($sText);
+    }
+
+    public function replaceTab($aMatches)
+    {
+        return "&nbsp;&nbsp;&nbsp;&nbsp;";
+    }
+
+    public function replaceLineBreak($aMatches)
+    {
+        return '<br />';
+    }
+
+    public function replaceSmall($aMatches)
+    {
+        return "<s>" . $aMatches[1] . "</s>";
+    }
+
+    public function replaceNewLine($aMatches)
+    {
+        return '<br class="clearfix" />';
+    }
+
+    public function replaceMarquee($aMatches)
+    {
+        return '<marquee>' . $aMatches[2] . '</marquee>';
+    }
+
+    public function replaceFloat($aMatches)
+    {
+        return '<div style="float: left; display: inline;">' . $aMatches[2] . '</div>';
+    }
+
+    public function replaceRight($aMatches)
+    {
+        return '<div style="text-align: right;">' . $aMatches[2] . '<br style="clear: both;" /></div>';
+    }
+
+    public function replaceLeft($aMatches)
+    {
+        return '<div style="text-align: left;">' . $aMatches[2] . '<br style="clear: both;" /></div>';
+    }
+
+    public function replaceCenter($aMatches)
+    {
+        return '<div style="text-align: center;">' . $aMatches[2] . '<br style="clear: both;" /></div>';
+    }
+
+    public function replaceBlock($aMatches)
+    {
+        return '<div style="text-align: justify;">' . $aMatches[2] . '<br style="clear: both;" /></div>';
+    }
+
+    public function replaceDankeText($aMatches)
+    {
+        return $this->dankeText($aMatches[2]);
+    }
+
+    public function replaceList($aMatches)
+    {
+        return $this->erstelleListe($aMatches[2]);
+    }
+
+    public function replaceColor($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[COLOR=]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<span style="color: ' . $mInput[2] . ';">' . $mInput[4] . '</span>';
         }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceColor"), $mInput);
+    }
 
-        $text = preg_replace( "[\t]", "&nbsp;&nbsp;&nbsp;&nbsp;", $text);
+    public function replaceBackgroundColor($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[BGCOLOR=]"][self::REGEX];
 
-        $text = preg_replace( '/\[NEWS]/Uei', '$this->getNews(\'$1\')', $text);
+        if (is_array($mInput)) {
+            $mInput = '<span style="background-color: ' . $mInput[2] . ';">' . $mInput[4] . '</span>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceBackgroundColor"), $mInput);
+    }
 
-//    	$text = htmlspecialchars($text);
-        
-        return $text;
+    public function replaceBold($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[B]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<span style="font-weight: bold;">' . $mInput[2] . '</span>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceBold"), $mInput);
+    }
+
+    public function replaceItalic($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[I]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<span style="font-style: italic;">' . $mInput[2] . '</span>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceItalic"), $mInput);
+    }
+
+    public function replaceUnderlined($mInput) {
+        $sRegEx = $this->_aMapTagToFunction["[U]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<span style="text-decoration: underline;">' . $mInput[2] . '</span>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceUnderlined"), $mInput);
+    }
+
+    public function replaceCode($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[CODE=]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = $this->codeString($mInput[2], $mInput[4]);
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceCode"), $mInput);
+    }
+
+    public function replacePhpCode($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[PHP]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = $this->codeString('php', $mInput[2]);
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceCode"), $mInput);
+    }
+
+    public function replaceFont($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[FONT=]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<span style="font-family: ' . $mInput[2] . ';">' . $mInput[4] . '</span>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceFont"), $mInput);
+    }
+
+    public function replaceSize($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[SIZE=]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<span style="font-size: ' . $mInput[2] . 'px;">' . $mInput[4] . '</span>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceSize"), $mInput);
+    }
+
+    public function replaceGlow($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[GLOW]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<GLOW>' . $mInput[2] . '</GLOW>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceWave"), $mInput);
+    }
+
+    public function replaceWave($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[WAVE]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<WAVE>' . $mInput[2] . '</WAVE>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceWave"), $mInput);
+    }
+
+    public function replaceShadow($mInput)
+    {
+        $sRegEx = $this->_aMapTagToFunction["[SHADOW=]"][self::REGEX];
+
+        if (is_array($mInput)) {
+            $mInput = '<span style="box-shadow: 5px 5px 15px ' . $mInput[2] . ';">' . $mInput[4] . '</span>';
+        }
+        return preg_replace_callback($sRegEx, array(&$this, "replaceShadow"), $mInput);
+    }
+
+    public function generateZitat($aMatches)
+    {
+        if (6 == count($aMatches)) {
+            return '<div class="quote" ><div class="quote_kopf"> Zitat von : ' . $aMatches[2] .
+            '</div><div class="quote_inhalt">' . $aMatches[4] . '</div></div>';
+        } else {
+            return '<div class="quote" ><div class="quote_kopf"> Zitat :</div><div class="quote_inhalt">' .
+            $aMatches[2] . '</div></div>';
+        }
+    }
+
+    public function generateMail($aMatches)
+    {
+        if (6 == count($aMatches)) {
+            return '<a href="mailto:' . $aMatches[4] . '">' . $aMatches[2] . '</a>';
+        } else {
+            return '<a href="mailto:' . $aMatches[2] . '">' . $aMatches[2] . '</a>';
+        }
+    }
+
+    public function generateImage($aMatches)
+    {
+        if (6 == count($aMatches)) {
+            return $this->imageEinfuegenNeu($aMatches[4], $aMatches[2]);
+        } else {
+            return $this->imageEinfuegen($aMatches[2]);
+        }
+    }
+
+    public function generateLine($aMatches)
+    {
+        return '<hr style="width: 100%; height: 2px; color: ' . $aMatches[2] . '; background: ' . $aMatches[2] .
+        '; margin: 10px 0px; border: 0;" />';
+    }
+
+    public function generateUrl($aMatches)
+    {
+        if (6 == count($aMatches)) {
+            return $this->ersetzeUrl($aMatches[4], $aMatches[2]);
+        } else {
+            return $this->ersetzeUrl($aMatches[2]);
+        }
+    }
+
+    public function generateUrlImage($aMatches)
+    {
+        return $this->ersetzeUrlImage($aMatches[4], $aMatches[2]);
+    }
+
+    /**
+     * @todo weitere weichen und HTML5 Code für embedded videos implementieren
+     * ich brauchte jetzt erstmal nur youtube :D
+     *
+     * @param $aMatches
+     *
+     * @return string
+     */
+    public function addVideo($aMatches)
+    {
+        if (true === is_array($aMatches)
+            && array_key_exists(2, $aMatches)
+        ) {
+            $sVideoUrl = $aMatches[2];
+            if (preg_match('/^http[s]{0,1}:\/\/www\.youtube\..*/i', $sVideoUrl)) {
+                return $this->addYoutubeVideo($sVideoUrl);
+            } else if (preg_match('/^http[s]{0,1}:\/\/youtu\..*/i', $sVideoUrl)) {
+                return $this->addYoutubeVideo($sVideoUrl);
+            } else {
+                return '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/swfobject/2.2/swfobject.js"></script>' .
+                '<script type="text/javascript" src="/js/jwplayer.js"></script>' .
+                '<embed flashvars="file=$1&autostart=false" allowfullscreen="true" ' .
+                'allowscripaccess="always" id="player1" name="player1" src="' . $sVideoUrl . '" ' .
+                'width="480" height="270"/>';
+            }
+        };
+    }
+
+    public function addYoutubeVideo($sVideoUrl) {
+        $sVideoId = $this->_parseYoutubeVideoUrl($sVideoUrl);
+        return
+            '<div style="text-align:center; width: 100%;">' .
+            '<iframe width="560" height="315" src="https://www.youtube.com/embed/' . $sVideoId . '" ' .
+            ' frameborder="0" allowfullscreen ></iframe></div>';
+    }
+
+    private function _parseYoutubeVideoUrl($sVideoUrl) {
+        $sVideoId = $sVideoUrl;
+
+        if (preg_match('/youtu\.be\/(.*)/i', $sVideoUrl, $aMatches)) {
+            $sVideoId = $aMatches[1];
+        } else if (preg_match('/youtube.*[\?|\&]v=([\-\_A-Za-z0-9]{1,})/i', $sVideoUrl, $aMatches)) {
+            $sVideoId = $aMatches[1];
+        } else if (preg_match('/youtube.*?v=(.*?)/i', $sVideoUrl, $aMatches)) {
+            $sVideoId = $aMatches[1];
+        }
+        return trim($sVideoId);
+    }
+
+    public function addKnownVideoFormat($aMatches) {
+
+    }
+
+    public function addUnknownVideoFormat($aMatches) {
+
     }
 
     /* 
      * Funktion zum ersetzen der URLs, ist ein URL außerhalb des lokalen
      * Servers, wird das Link Tag automatisch mit einem Target _blank versehen
      */
-    private function ersetzeURL( $url, $name = '')
+    private function ersetzeUrl( $url, $name = '')
     {
-    	$link = '';
-		$hostname_url = parse_url($url, PHP_URL_HOST);
-		$hostname_server = "byte-artist.de";
-		
-		if(is_array($_SERVER) &&
-		   key_exists('SERVER_NAME', $_SERVER))
-		{
-			$hostname_server = $_SERVER['SERVER_NAME'];
-		}
-		
-    	if(!$name)
-    	{
-    		$name = $url;
-    	}
-    	// wenn eine dateiendung
-    	if(preg_match('/(\.[a-z0-9]{2,5})\/?$/i', $url))
-    	{
-    		$link = '<a href="' . $url . '" target="_blank">' . $name . '</a>';
-    	}
-    	else if($hostname_url &&
-    			$hostname_url != $hostname_server)
-    	{
-    		$link = '<a href="' . $url . '" target="_blank">' . $name . '</a>';
-    	}
-    	else
-    	{
-    		$link = '<a href="' . $url . '">' . $name . '</a>';
-    	}
-    	return $link;
+        $link = '';
+        $hostname_url = parse_url($url, PHP_URL_HOST);
+        $hostname_server = "byte-artist.de";
+
+        if(is_array($_SERVER) &&
+            array_key_exists('SERVER_NAME', $_SERVER))
+        {
+            $hostname_server = $_SERVER['SERVER_NAME'];
+        }
+
+        if(!$name)
+        {
+            $name = $url;
+        }
+
+        if (FALSE === $this->getWithoutLinks()) {
+            // wenn eine dateiendung
+            if(preg_match('/(\.[a-z0-9]{2,5})\/?$/i', $url))
+            {
+                $link = '<a href="' . $url . '" target="_blank">' . $name . '</a>';
+            }
+            else if($hostname_url &&
+                $hostname_url != $hostname_server)
+            {
+                $link = '<a href="' . $url . '" target="_blank">' . $name . '</a>';
+            }
+            else
+            {
+                $link = '<a href="' . $url . '">' . $name . '</a>';
+            }
+        } else {
+            $link = $name;
+        }
+        return $link;
     }
 
-    public function ersetzeURLImage( $url, $image)
+    public function ersetzeUrlImage( $url, $image)
     {
-    	$link = '';
+        $link = '';
+        $hostname_url = parse_url($url, PHP_URL_HOST);
+        $hostname_server = "byte-artist.de";
 
-    	// wenn eine dateiendung
-    	if(preg_match('/(\.[a-z0-9]{2,5})\/?$/i', $url))
-    	{
-    		$link = '<a href="' . $url . '" target="_blank">' . $this->imageEinfuegen($image) . '</a>';
-    	}
-    	else
-    	{
-    		$link = '<a href="' . $url . '">' . $this->imageEinfuegen($image) . '</a>';
-    	}
-    	return $link;
+        if(is_array($_SERVER) &&
+            array_key_exists('SERVER_NAME', $_SERVER))
+        {
+            $hostname_server = $_SERVER['SERVER_NAME'];
+        }
+
+        if (FALSE === $this->getWithoutLinks()) {
+            // wenn eine dateiendung
+            if(preg_match('/(\.[a-z0-9]{2,5})\/?$/i', $url))
+            {
+                $link = '<a href="' . $url . '" target="_blank">' . $this->imageEinfuegen($image) . '</a>';
+            }
+            else if($hostname_url &&
+                $hostname_url != $hostname_server)
+            {
+                $link = '<a href="' . $url . '" target="_blank">' . $this->imageEinfuegen($image) . '</a>';
+            }
+            else
+            {
+                $link = '<a href="' . $url . '" target="_blank">' . $this->imageEinfuegen($image) . '</a>';
+            }
+        } else {
+            $link = $this->imageEinfuegen($image);
+        }
+        return $link;
     }
 
     // function, die checkt, ob das user ein mitglied des forums ist, wenn ja wird text angezeigt, wenn nein, der register link
-    private function mitgliedText( $text)
+    private function mitgliedText($aMatches)
     {
-        if( $_SESSION['mitglieder_id'])
+        $text = $aMatches[2];
+        $iForumId = isset($_GET['forumid']) ? $_GET['forumid'] : '';
+        $iSubForumId = isset($_GET['subforumid']) ? $_GET['subforumid'] : '';
+        $iThreadId = isset($_GET['threadid']) ? $_GET['threadid'] : '';
+        $iAktuelleSeite = isset($_GET['aktuelle_seite']) ? $_GET['aktuelle_seite'] : '';
+        $iAnzahlPosts = isset($_GET['anzahl_posts']) ? $_GET['anzahl_posts'] :'';
+
+        if( isset($_SESSION['mitglieder_id']))
         {
             return $text;
         }
         else
         {
-            return '<span style="color: red;">Bitte einloggen, oder <a style="color: red;" href="?seite=registrieren&amp;forumid=' . $_GET['forumid'] . '&amp;subforumid=' . $_GET['subforumid'] . '&amp;threadid=' . $_GET['threadid'] . '&amp;aktuelle_seite=' . $_GET['aktuelle_seite'] . '&amp;anzahl_posts=' . $_GET['anzahl_posts'] . '" title="Nicht die benötigten Rechte um diesen Text zu sehen" >registrieren</a>, damit der Text angezeigt wird !</span>';
+            return '<span style="color: red;">Bitte einloggen, oder <a style="color: red;" href="?seite=registrieren&amp;forumid=' . $iForumId . '&amp;subforumid=' . $iSubForumId . '&amp;threadid=' . $iThreadId . '&amp;aktuelle_seite=' . $iAktuelleSeite . '&amp;anzahl_posts=' . $iAnzahlPosts . '" title="Nicht die benötigten Rechte um diesen Text zu sehen" >registrieren</a>, damit der Text angezeigt wird !</span>';
         }
     }
 
-    public function codeString($a_params)
+    public function codeString($sLanguage, $sSource)
     {
-        $language = trim($a_params[1]);
-        $source = $a_params[2];
-
         /*
-    	$code_container = '<code class="blog-code lang-' . $language . '" ><pre>' . $source . '</pre></code>';
+    	$code_container = '<code class="blog-code lang-' . $sLanguage . '" ><pre>' . $sSource . '</pre></code>';
 
     	return $code_container;
          *
          */
 
-        $language = strtoupper($language);
+        $sLanguage = strtoupper($sLanguage);
 
-        $source = stripslashes($source);
-        $source = preg_replace('/^\n/', '', $source);
-        $source = preg_replace('/\n$/', '', $source);
+        $sSource = stripslashes($sSource);
+        $sSource = preg_replace('/^\n/', '', $sSource);
+        $sSource = preg_replace('/\n$/', '', $sSource);
 
         $header_content = '<div class="code_header" style="position: relative; padding: 2px 5px; font-weight: bold; background-color: #CCCCCC; color: #333333;">';
         $header_content .= '<span class="highlight_minimize">+</span>';
-        $header_content .= '<h3 style="position: absolute; top: -10px; left: 15px; padding: 2px 5px; background-color: #FFFFFF; border: 1px solid #CCCCCC;">'. $language . ' code</h3>';
-//        $header_content .= '<img src="#" alt="copy to clipboard" style="position: absolute; top: 2px; right: 5px;" />';
+
+        if(strlen(trim($sLanguage)) > 0)
+        {
+            $header_content .= '<h3 style="position: absolute; top: -10px; left: 15px; padding: 2px 5px; background-color: #FFFFFF; border: 1px solid #CCCCCC;">'. $sLanguage . ' code</h3>';
+        }
+
+        //        $header_content .= '<img src="#" alt="copy to clipboard" style="position: absolute; top: 2px; right: 5px;" />';
         $header_content .= '</div>';
         $footer_content = '<div class="code_footer" style="height: 10px; background-color: #CCCCCC; color: #333333;"></div>';
 
-        $obj_geshi = new GeSHi($source);
+        if (true === class_exists("GeSHi")) {
+            $oGeshi = new GeSHi($sSource, $sLanguage);
 
-        $obj_geshi->enable_classes(true);
-        $obj_geshi->set_overall_class('highlight_code');
-//        $obj_geshi->set_header_type(GESHI_HEADER_DIV);
-        $obj_geshi->set_header_type(GESHI_HEADER_PRE);
-        /*
-         *
-            GESHI_NORMAL_LINE_NUMBERS - Use normal line numbering
-            GESHI_FANCY_LINE_NUMBERS - Use fancy line numbering
-            GESHI_NO_LINE_NUMBERS - Disable line numbers (default)
-         */
-        $obj_geshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
-//        $obj_geshi->start_line_numbers_at($number);
-//        $obj_geshi->enable_classes();
-        $obj_geshi->set_header_content($header_content);
-        $obj_geshi->set_footer_content($footer_content);
-//        $obj_geshi->highlight_lines_extra(array(8));
-        $replaced_source = $source;
+            $oGeshi->enable_classes(true);
+            $oGeshi->set_overall_class('highlight_code');
+            //        $oGeshi->set_header_type(GESHI_HEADER_DIV);
+            $oGeshi->set_header_type(GESHI_HEADER_PRE);
+            /*
+             *
+                GESHI_NORMAL_LINE_NUMBERS - Use normal line numbering
+                GESHI_FANCY_LINE_NUMBERS - Use fancy line numbering
+                GESHI_NO_LINE_NUMBERS - Disable line numbers (default)
+             */
+            $oGeshi->enable_line_numbers(GESHI_FANCY_LINE_NUMBERS);
 
-        if(strlen(trim($language)) > 0)
-        {
-            $obj_geshi->set_language($language);
-            if("PHP" == $language)
+            //        $oGeshi->start_line_numbers_at($number);
+            //        $oGeshi->highlight_lines_extra(array(8));
+
+            $oGeshi->set_header_content($header_content);
+            $oGeshi->set_footer_content($footer_content);
+            $replaced_source = $sSource;
+
+            if(strlen(trim($sLanguage)) > 0)
             {
-                $obj_geshi->set_url_for_keyword_group(3, 'http://www.php.net/{FNAME}');
+                $oGeshi->set_language($sLanguage);
+
+                if(false !== $oGeshi->get_language_name()) {
+                    if ("PHP" == $sLanguage
+                    ) {
+                        $oGeshi->set_url_for_keyword_group(3, 'http://www.php.net/{FNAME}');
+                    }
+                }
             }
-            $replaced_source = $obj_geshi->parse_code();
-            // eventuell im text enthaltene [ oder ] escapen
-            $replaced_source = preg_replace('/\[/', '&#91;', $replaced_source);
-            $replaced_source = preg_replace('/\]/', '&#93;', $replaced_source);
+
+            if (TRUE === $this->getWithoutLinks()) {
+                $oGeshi->enable_keyword_links(FALSE);
+            }
+
+            $sSource = $oGeshi->parse_code();
         }
 
-        return ($replaced_source);
+        // eventuell im text enthaltene [ oder ] escapen
+        $sSource = preg_replace('/\[/', '&#91;', $sSource);
+        $sSource = preg_replace('/\]/', '&#93;', $sSource);
+
+        return $sSource;
     }
 
     private function charEinfuegen( $text)
@@ -238,7 +712,7 @@ class CAD_Filter_UbbReplace implements Zend_Filter_Interface
         }
     }
 
-    private function dankethread( $text)
+    private function dankeThread( $text)
     {
         if( ereg( '\[DANKE](.*)\[\/DANKE\]', $text))
         {
@@ -247,42 +721,43 @@ class CAD_Filter_UbbReplace implements Zend_Filter_Interface
         return false;
     }
 
-	function erstelleListe( $text)
-	{
-		$text = stripslashes($text);
+    function erstelleListe( $text)
+    {
+        $text = stripslashes($text);
 
-		if( preg_match( '/\{ULISTE\}(.*)\{\/ULISTE\}/Usi', $text))
-		{
-			preg_replace( '/\{ULISTE\}(.*)\{\/ULISTE\}/Usei', '$self->erstelleListe( $1)', $text);
-		}
+        if( preg_match( '/\{ULISTE\}(.*)\{\/ULISTE\}/Usi', $text))
+        {
+            preg_replace( '/\{ULISTE\}(.*)\{\/ULISTE\}/Usei', '$self->erstelleListe( $1)', $text);
+        }
 
-		$a_listen_punkte = preg_split( '/\n|\r|\<br \/>/Ui', $text);
-		$liste = '<ul style="margin-left: 10px; float: left; display: inline;">';
+        $a_listen_punkte = preg_split( '/\n|\r|\<br \/>/Ui', $text);
+        $liste = '<ul style="margin-left: 10px; float: left; display: inline;">';
 
-		foreach( $a_listen_punkte as $listen_punkt)
-		{
-			if( strlen( $listen_punkt) > 0 &&
-				!preg_match( '/\<ul/i', $listen_punkt))
-			{
-				$liste .= '<li style="list-style: disc inside none; margin-left: 10px;">' . $listen_punkt . '</li>';
-			}
-			else if( !preg_match( '/\<ul/i', $listen_punkt) ||
-					!preg_match( '/\<\/ul\>/i', $listen_punkt))
-			{
-				$liste .= $listen_punkt;
-			}
-		}
+        foreach( $a_listen_punkte as $listen_punkt)
+        {
+            if( strlen( trim($listen_punkt)) > 0 &&
+                !preg_match( '/\<ul/i', $listen_punkt))
+            {
+                $liste .= '<li style="list-style: disc inside none; margin-left: 10px;">' . $listen_punkt . '</li>';
+            }
+            else if( strlen(trim($listen_punkt)) > 0
+                && (!preg_match( '/\<ul/i', $listen_punkt) ||
+                    !preg_match( '/\<\/ul\>/i', $listen_punkt))
+            ) {
+                $liste .= $listen_punkt;
+            }
+        }
 
-		$liste .= '</ul>';
+        $liste .= '</ul>';
 
-		return $liste;
-	}
+        return $liste;
+    }
 
     private function imageAnhaengen( $text, $name = "")
     {
-    	$pfad = '';
-    	$bild_array = array();
-    	
+        $pfad = '';
+        $bild_array = array();
+
         // suchen, ob von extern geöffnet werden soll
         if( ereg( 'http://|http:\\|www.', $text))
         {
@@ -312,12 +787,14 @@ class CAD_Filter_UbbReplace implements Zend_Filter_Interface
             }
 
             $name_array = chunk_split( $name, 20, "<br />");
-			$anhang .= '<div style="display: block; padding: 5px;">' . $name_array . '</div>';
-
-            $anhang .= '<a href="/' . $pfad . $text . '" title="' . $text . '" target="_blank" >';
+            $anhang .= '<div style="display: block; padding: 5px;">' . $name_array . '</div>';
+            if (FALSE === $this->getWithoutLinks()) {
+                $anhang .= '<a href="/' . $pfad . $text . '" title="' . $text . '" target="_blank" >';
+            }
             $anhang .= '<img src="/butler/create-thumb/file/' . $pfad . $text . '" alt="Bild ' . $text . ' nicht gefunden !" title="' . $text . '" />';
-         	
-            $anhang .= '</a>';
+            if (FALSE === $this->getWithoutLinks()) {
+                $anhang .= '</a>';
+            }
             $anhang .= '<div style="width: 140px; height: 20px; background: #FFF; text-align: center;">' . $bild_array[0] . ' x ' . $bild_array[1] . '</div>';
             $anhang .= '</div>';
 
@@ -334,27 +811,27 @@ class CAD_Filter_UbbReplace implements Zend_Filter_Interface
         {
             $a_bildinformationen = @getimagesize( $bild);
         }
-		else if(file_exists(getcwd() . $this->getTempBilderPfad() . $bild) &&
-	           	is_file(getcwd() . $this->getTempBilderPfad() . $bild) &&
-	           	is_readable(getcwd() . $this->getTempBilderPfad() . $bild))
+        else if(file_exists(getcwd() . $this->getTempBilderPfad() . $bild) &&
+            is_file(getcwd() . $this->getTempBilderPfad() . $bild) &&
+            is_readable(getcwd() . $this->getTempBilderPfad() . $bild))
         {
-//         	$bild = '/butler/create-thumb/file/' . base64_encode(getcwd() . $this->getTempBilderPfad() . $bild);
-        	$bild = 'http://' . $_SERVER['SERVER_NAME'] . $this->getTempBilderPfad() . $bild;
+            //         	$bild = '/butler/create-thumb/file/' . base64_encode(getcwd() . $this->getTempBilderPfad() . $bild);
+            $bild = 'http://' . $_SERVER['SERVER_NAME'] . $this->getTempBilderPfad() . $bild;
         }
         else if(file_exists(getcwd() . $this->getBilderPfad() . $bild) &&
-        		is_file(getcwd() . $this->getBilderPfad() . $bild) &&
-        		is_readable(getcwd() . $this->getBilderPfad() . $bild))
+            is_file(getcwd() . $this->getBilderPfad() . $bild) &&
+            is_readable(getcwd() . $this->getBilderPfad() . $bild))
         {
-//         	$bild = '/butler/create-thumb/file/' . base64_encode(getcwd(). $this->getBilderPfad() . $bild);
-        	$bild = 'http://' . $_SERVER['SERVER_NAME'] . $this->getBilderPfad() . $bild;
+            //         	$bild = '/butler/create-thumb/file/' . base64_encode(getcwd(). $this->getBilderPfad() . $bild);
+            $bild = 'http://' . $_SERVER['SERVER_NAME'] . $this->getBilderPfad() . $bild;
         }
 
         $bild_link = '';
-        
+
         if($name)
         {
-        	$name = addslashes($name);
-        	$bild_link .= '<p style="clear: both; float: left; display: inline; padding: 5px 0 2px 0; margin: 5px 0 0 0;">' . $name . '</p>';
+            $name = addslashes($name);
+            $bild_link .= '<p style="clear: both; float: left; display: inline; padding: 5px 0 2px 0; margin: 5px 0 0 0;">' . $name . '</p>';
         }
         $bild_link .= '<img style="float: left; display: inline;" src="' . $bild . '" alt="Bild ' . $bild . ' nicht gefunden !" title="' . $bild . '" />';
 
@@ -364,100 +841,109 @@ class CAD_Filter_UbbReplace implements Zend_Filter_Interface
     private function imageEinfuegenNeu( $bild, $params)
     {
         $name = null;
-		$a_bildinformationen = array();
-		$bild_formatiert = $bild;
-		$b_extern = false;
-		
+
+        $bild = $this->ersetzeUmlaute($bild);
+
+        $a_bildinformationen = array();
+        $bild_formatiert = $bild;
+        $b_extern = false;
+        $bWithoutButler = false;
+
         if( preg_match( '/http\:\/\/|http\:\\\\|www\./Ui', $bild))
         {
-        	$b_extern = true;
-        	$this->setTempBilderPfad(getcwd() . '/tmp/butler/');
-        	$obj_cad_file = new CAD_File();
-        	if($obj_cad_file->checkAndCreateDir($this->getTempBilderPfad()))
-        	{
-	        	$bild_formatiert = $this->getTempBilderPfad() . 'dummy.jpg';
-	        	file_put_contents($bild_formatiert, file_get_contents($bild));
-//        	    $a_bildinformationen = getimagesize( $this->getTempBilderPfad() . $bild_formatiert);
-            	$bild_formatiert = '/butler/create-thumb/file/' . base64_encode($bild_formatiert);
-        	}
-            
-        }
-		else if(file_exists(getcwd() . $this->getTempBilderPfad() . $bild) &&
-	           	is_file(getcwd() . $this->getTempBilderPfad() . $bild) &&
-	           	is_readable(getcwd() . $this->getTempBilderPfad() . $bild))
-        {
-        	$bild_formatiert = 'http://' . $_SERVER['SERVER_NAME'] . '/butler/create-thumb/file/' . base64_encode(getcwd() . $this->getTempBilderPfad() . $bild_formatiert);
-        }
-        else if(file_exists(getcwd() . $this->getBilderPfad() . $bild) &&
-        		is_file(getcwd() . $this->getBilderPfad() . $bild) &&
-        		is_readable(getcwd() . $this->getBilderPfad() . $bild))
-        {
-        	$bild_formatiert = 'http://' . $_SERVER['SERVER_NAME'] . '/butler/create-thumb/file/' . base64_encode(getcwd(). $this->getBilderPfad() . $bild_formatiert);	
+            $b_extern = true;
+            $this->setTempBilderPfad(getcwd() . '/tmp/butler/');
+            $obj_cad_file = new CAD_Service_File();
+            if($obj_cad_file->checkAndCreateDir($this->getTempBilderPfad())
+                && TRUE === is_readable($bild)
+            ) {
+                $bild_formatiert = $this->getTempBilderPfad() . 'dummy.jpg';
+                file_put_contents($bild_formatiert, file_get_contents($bild));
+                //        	    $a_bildinformationen = getimagesize( $this->getTempBilderPfad() . $bild_formatiert);
+                $bild_formatiert = '/butler/create-thumb/file/' . base64_encode($bild_formatiert);
+            }
+
+        } else if(file_exists(getcwd() . $this->getTempBilderPfad() . $bild) &&
+            is_file(getcwd() . $this->getTempBilderPfad() . $bild) &&
+            is_readable(getcwd() . $this->getTempBilderPfad() . $bild)
+        ) {
+            $bild_formatiert = 'http://' . $_SERVER['SERVER_NAME'] . '/butler/create-thumb/file/' . base64_encode(getcwd() . $this->getTempBilderPfad() . $bild_formatiert);
+        } else if(file_exists(getcwd() . $this->getBilderPfad() . $bild)
+            && is_file(getcwd() . $this->getBilderPfad() . $bild)
+            && is_readable(getcwd() . $this->getBilderPfad() . $bild)
+        ) {
+            $bild_formatiert = 'http://' . $_SERVER['SERVER_NAME'] . '/butler/create-thumb/file/' . base64_encode(getcwd(). $this->getBilderPfad() . $bild_formatiert);
+        } else {
+            $bWithoutButler = true;
+            $bild_formatiert = 'http://' . $_SERVER['SERVER_NAME'] . $this->getBilderPfad() . $bild;
         }
 
-        $a_params = explode(":", $params);
-        
-        foreach($a_params as $a_param)
-        {
-        	$a_style = explode("=", $a_param);
-        	if(strtolower($a_style[0]) == "name")
-        	{
-        		$name = addslashes($a_style[1]);
-        	}
-        	else if(isset($a_style[0]) &&
-        			isset($a_style[1]))
-        	{
-        		$bild_formatiert .= '/' . $a_style[0] . '/' . $a_style[1];
-        	}
+        if (false === $bWithoutButler) {
+            $a_params = explode(":", $params);
+
+            foreach ($a_params as $a_param) {
+                $a_style = explode("=", $a_param);
+                if (1 === count($a_style)
+                    && 0 == strlen($name)
+                ) {
+                    $name = addslashes($a_style[0]);
+                } else if (strtolower($a_style[0]) == "name") {
+                    $name = addslashes($a_style[1]);
+                } else if (isset($a_style[0])
+                    && isset($a_style[1])
+                ) {
+                    $bild_formatiert .= '/' . $a_style[0] . '/' . $a_style[1];
+                }
+            }
         }
-        
-        $bild_link = '<div style="margin-right: 15px; margin-bottom: 15px; float: left; display: inline; padding: 5px 0 2px 0; ">';
-        
+
+        $bild_link = '<div class="blog_pic_container" >';
+
         if($name)
         {
-        	$bild_link .= '<p>' . $name . '</p>';
+            $bild_link .= '<p>' . $name . '</p>';
         }
         else
         {
-        	$name = $bild;
+            $name = $bild;
         }
-        $bild_link .= '<img src="' . $bild_formatiert . '" alt="Bild ' . $name . ' nicht gefunden !" title="' . $name . '" />';
-       	$bild_link .= '</div>';
-		
+        $bild_link .= '<img class="blog_pic" src="' . $bild_formatiert . '" alt="Bild ' . $name . ' nicht gefunden !" title="' . $name . '" />';
+        $bild_link .= '</div>';
+
         return $bild_link;
     }
-    
+
     public function setBilderPfad($str_pfad)
     {
-    	$this->str_bilder_pfad = $str_pfad;
+        $this->str_bilder_pfad = $str_pfad;
     }
-    
+
     public function getBilderPfad()
     {
-    	return $this->str_bilder_pfad;
+        return $this->str_bilder_pfad;
     }
-    
+
     public function setTempBilderPfad($str_pfad)
     {
-    	$this->str_temp_bilder_pfad = $str_pfad;
+        $this->str_temp_bilder_pfad = $str_pfad;
     }
-    
+
     public function getTempBilderPfad()
     {
-    	return $this->str_temp_bilder_pfad;
+        return $this->str_temp_bilder_pfad;
     }
 
     private function sonderzeichenErsetzen( $text)
     {
         $replace = array(
-                            '/ä/' => '&auml;',
-                            '/Ä/' => '&Auml;',
-                            '/ü/' => '&uuml;',
-                            '/Ü/' => '&Uuml;',
-                            '/ö/' => '&ouml;',
-                            '/Ö/' => '&Ouml;',
-                            '/ß/' => '&szlig;'
-                        );
+            '/ä/' => '&auml;',
+            '/Ä/' => '&Auml;',
+            '/ü/' => '&uuml;',
+            '/Ü/' => '&Uuml;',
+            '/ö/' => '&ouml;',
+            '/Ö/' => '&Ouml;',
+            '/ß/' => '&szlig;'
+        );
 
         $text = preg_replace( array_keys( $replace), array_values( $replace), $text);
 
@@ -478,311 +964,159 @@ class CAD_Filter_UbbReplace implements Zend_Filter_Interface
         return $text;
     }
 
-    private function ersetzeUmlaute( $text)
+    private function ersetzeUmlaute($text)
     {
+        //        var_dump(utf8_decode($text));
+        //        var_dump(utf8_encode($text));
+        //        var_dump($this->_detectUTF8($text));
+        //        var_dump($this->_detectUTF8(utf8_encode($text)));
+        //        var_dump($this->_detectUTF8(utf8_decode($text)));
+        //        echo '<br />' . $text . '<br />';
+        /*
         $replace = array(
-                            '/ä/' => 'ae',
-                            '/Ä/' => 'ae',
-                            '/ü/' => 'ue',
-                            '/Ü/' => 'ue',
-                            '/ö/' => 'oe',
-                            '/Ö/' => 'oe',
-                            '/ß/' => 'ss'
-                        );
+            '/ä/' => 'ae',
+            '/Ä/' => 'Ae',
+            '/ü/' => 'ue',
+            '/Ü/' => 'Ue',
+            '/ö/' => 'oe',
+            '/Ö/' => 'Oe',
+            '/ß/' => 'ss',
+        );
 
-        $text = preg_replace( array_keys($replace), array_values($replace), $text);
+        return preg_replace( array_keys($replace), array_values($replace), $text);
+        */
+        $text = str_replace(
+            array('ä','ö','ü','ß','Ä','Ö','Ü'),
+            array('ae','oe','ue','ss','Ae','Oe','Ue'),
+            $text
+        );
 
-        return $text;
-    }
+        $text = str_replace(
+            array("\xC4","\xD6","\xDC","\xDF","\xE4","\xF6","\xFC"),
+            array("Ae","Oe","Ue","ss","ae","oe","ue"),
+            $text
+        );
 
-    private function smilieReplace( $text)
-    {
-        $theme = $_SESSION['smilie_theme'];
-
-        if( !$theme)
-        {
-            $theme = 'standart';
-        }
-
-        $requestStringSmilies = "SELECT * FROM smilies WHERE smilie_theme LIKE( '" . $theme . "')";
-        $newResultSmilies = mysql_query( $requestStringSmilies);
-
-        while( $dataResultSmilies = mysql_fetch_array( $newResultSmilies))
-        {
-            // escaped alle sonderzeichen, wie hier eben : oder ( oder )
-            // hier müssen die suchstrings mit sonderzeichen ersetzt werden, da sonst umlaute nicht mehr gefunden werden !
-            $kuerzel = sonderzeichen_ersetzen( $dataResultSmilies['smilie_kuerzel']);
-            $suchstring = ' ' . addcslashes( $kuerzel, ':()?');
-            $ersatz = " <img src='/images/grafiken/smilies/" . $theme . "/" . $dataResultSmilies['smilie_bild'] ."' alt='" . $kuerzel . "' title='" . $kuerzel . "' /> ";
-
-            $text = ereg_replace( $suchstring, $ersatz, $text);
-        }
+        //        echo '<br />' . $text . '<br />';
 
         return $text;
     }
 
-    private function sucheErsten( $text, $tag)
+    private function _detectUTF8($string)
     {
-    	$pos = -1;
-    	
-        return $pos;
+        return (bool) preg_match('%(?:
+            [\xC2-\xDF][\x80-\xBF]        # non-overlong 2-byte
+            |\xE0[\xA0-\xBF][\x80-\xBF]               # excluding overlongs
+            |[\xE1-\xEC\xEE\xEF][\x80-\xBF]{2}      # straight 3-byte
+            |\xED[\x80-\x9F][\x80-\xBF]               # excluding surrogates
+            |\xF0[\x90-\xBF][\x80-\xBF]{2}    # planes 1-3
+            |[\xF1-\xF3][\x80-\xBF]{3}                  # planes 4-15
+            |\xF4[\x80-\x8F][\x80-\xBF]{2}    # plane 16
+            )+%xs', $string);
     }
 
-    private function sucheLetzten( $text, $tag)
-    {
-        $pos = strripos( $text, $tag);
-		return $pos;
+    private function _smileyReplace($sText){
+
+        $this->_prepareSmileys();
+
+        $sText = preg_replace(array_keys(self::$_aReplaceSmilies), array_values(self::$_aReplaceSmilies), $sText);
+
+        return $sText;
     }
 
-	private function stylesZusammenfuehren( $vortext, $style, $string, $text_nach_tag = "NÜX")
-	{
-	    #*********************************************************************
-	    # vars reseten
-	    #*********************************************************************
-		$vortext_tag_start_pos = -1;
-	    $uebergabe_tag_start_pos = -1;
-		$rueckgabe = '';
+    private function _prepareSmileys() {
+        $sTheme = 'standart';
 
-		$vortext_string_vor_tag = -1;
-		$vortext_tag_end_pos = -1;
-		$vortext_string_nach_tag = -1;
-		$vortext_tag = -1;
-		$vortext_style_start_pos = -1;
-		$vortext_string_vor_style = '';
-		$vortext_style_temp_string = '';
-		$vortext_style_end_pos = -1;
-		$vortext_style_string = '';
+        if (true === isset($_SESSION['smiley_theme'])) {
+            $sTheme = $_SESSION['smiley_theme'];
+        }
 
-		$uebergabe_style_start_pos;
-		$uebergabe_string_vor_style = '';
-		$uebergabe_string_vor_tag = -1;
-		$uebergabe_tag_end_pos = -1;
-		$uebergabe_string_nach_tag = -1;
-		$uebergabe_tag = -1;
-		$uebergabe_style_temp_string;
-		$uebergabe_style_end_pos;
-		$uebergabe_style_string = '';
-		$span_start = -1;
+        if (null === self::$_aReplaceSmilies) {
+            self::$_aReplaceSmilies = array();
 
-		$folgetext_tag_start_pos = -1;
+            $oSmileysDbTable = new Cms_Model_DbTable_Smileys();
+            $oSmileysRowSet = $oSmileysDbTable->findSmileys($sTheme, $sCategory = null);
 
-	    $string = stripslashes( $string);
-		$vortext = stripslashes( $vortext);
-		$style = stripslashes( $style);
-		$text_nach_tag = stripslashes( $text_nach_tag);
+            foreach ($oSmileysRowSet as $oSmileyRow) {
+                $sRegEx = '/' . $this->_escapeRegEx($oSmileyRow->smile_short) . '/i';
 
-	    $vortext_tag_start_pos = $this->sucheLetzten( $vortext, '<span ');
-	    $uebergabe_tag_start_pos = $this->sucheErsten( $string, "<span ");
-		$folgetext_tag_start_pos = $this->sucheErsten( trim( $text_nach_tag), "</span>");
+                $sPicturePath = '<img src="/images/content/statisch/grafiken/smileys/' . $sTheme . '/' .
+                    $oSmileyRow->smile_picture . '" alt="' . $oSmileyRow->smile_short . '" title="' .
+                    $oSmileyRow->smile_short . '" />';
 
-		#***********************************************************************
-	    # checken ob die tags auch das letzte oder erste im string sind !
-	    #***********************************************************************
-	    if( $vortext_tag_start_pos > -1)
-	    {
-	    	$vortext_string_vor_tag = substr( $vortext, 0, $vortext_tag_start_pos);
-			$vortext_tag_end_pos = strpos( $vortext, ' ">');
-			$vortext_string_nach_tag = substr( $vortext, $vortext_tag_end_pos + 3, strlen( $vortext) - $vortext_tag_end_pos);
-			$vortext_tag = substr( $vortext, $vortext_tag_start_pos, $vortext_tag_end_pos - $vortext_tag_start_pos + 1);
-	    }
-		$uebergabe_string_vor_tag = substr( $string, 0, $uebergabe_tag_start_pos);
-		$uebergabe_tag_end_pos = strpos( $string, ' ">');
-	    $uebergabe_string_nach_tag = substr( $string, $uebergabe_tag_end_pos + 3 , strlen( $string));
-	    $uebergabe_tag = substr( $string, $uebergabe_tag_start_pos, $uebergabe_tag_end_pos - $uebergabe_tag_start_pos + 1);
+                self::$_aReplaceSmilies[$sRegEx] = $sPicturePath;
+            }
+        }
+    }
 
-		# nun noch checken, ob im string nach dem tag an erster stelle ein span steht,
-		# wenn ja, dieses löschen
-		# wenn nein, stehen lassen und beim zusammenbau darauf reagieren
-	    #**********************************************************************
-	    # wenn der tag das letzte in vortext und ein tag das erste im string
-	    #**********************************************************************
-	    if( ( $vortext_tag_start_pos > -1) &&
-	    	( strlen( trim( $vortext_string_nach_tag)) == 0) &&
-	    	( $uebergabe_tag_start_pos > -1) &&
-	    	( strlen( trim( $uebergabe_string_vor_tag)) == 0))
-		{
-	        # in dem tag nach dem style element suchen ******** slashes müssen nach htmlentities entfernt werden ******************
-	        $vortext_style_start_pos = strpos( $vortext_tag, 'style="');
-	        $vortext_string_vor_style = substr( $vortext_tag, 0, $vortext_style_start_pos);
-			$vortext_style_temp_string = substr( $vortext_tag, $vortext_style_start_pos, strlen( $vortext_tag));
-			$vortext_style_end_pos = strpos( $vortext_tag, '"');
-	        $vortext_style_string = substr( $vortext_tag, $vortext_style_start_pos + 7, $vortext_style_end_pos - $vortext_style_start_pos - 7);
+    private function _escapeRegEx($sText) {
+        return preg_replace('/([\-|\.|\(|\)|\/|\?|\\\])/', "\\\\$1", $sText);
+    }
 
-			$uebergabe_style_start_pos = strrpos( $uebergabe_tag, 'style="');
-			$uebergabe_string_vor_style = substr( $uebergabe_tag, 0, $uebergabe_style_start_pos);
-			$uebergabe_style_temp_string = substr( $uebergabe_tag, $uebergabe_style_start_pos, strlen( $uebergabe_tag));
-	        $uebergabe_style_end_pos = strpos( $uebergabe_tag, '"');
-
-	        $uebergabe_style_string = substr( $uebergabe_tag, $uebergabe_style_start_pos + 7, $uebergabe_style_end_pos - $uebergabe_style_start_pos - 7);
-
-	        # style an vortextstyle anfügen
-	        $style_neu = $style . $vortext_style_string . " " . $uebergabe_style_string;
-	        $string = $uebergabe_string_nach_tag;
-
-	        if( strlen( $folgetext_tag_start_pos) &&
-	        	$folgetext_tag_start_pos == 0)
-	       	{
-		        # wegreduziertes schließendes tag löschen
-				$span_start = strpos( $string, '</span>');
-		        $string_rest = substr( $string, 0, $span_start) . substr( $text_nach_tag, $span_start + 7, strlen( $text_nach_tag));
-
-				$rueckgabe = $vortext_string_vor_tag . '<span style="' . $style_neu . ' ">' . $string . $string_rest;
-	       	}
-	       	else
-	       	{
-	       		$rueckgabe = $vortext . '<span style="' . $style . $uebergabe_style_string . ' ">' . $string . $text_nach_tag;
-	       	}
-	    }
-	    #**********************************************************************
-	    # wenn der tag das letzte in vortext
-	    #**********************************************************************
-	    else if( 	( $vortext_tag_start_pos > -1) &&
-	    		( strlen( trim( $vortext_string_nach_tag)) == 0))
-		{
-	        # in dem tag nach dem style element suchen ******** slashes müssen nach htmlentities entfernt werden ******************
-	        $vortext_style_start_pos = strpos( $vortext_tag, 'style="');
-	        $vortext_string_vor_style = substr( $vortext_tag, 0, $vortext_style_start_pos);
-			$vortext_style_temp_string = substr( $vortext_tag, $vortext_style_start_pos, strlen( $vortext_tag));
-	        $vortext_style_end_pos = strrpos( $vortext_tag, '"');
-			$vortext_style_string = substr( $vortext_tag, $vortext_style_start_pos + 7, $vortext_style_end_pos - $vortext_style_start_pos - 7);
-
-			$rueckgabe = $vortext_string_vor_tag . '<span style="' . $vortext_style_string . ' ' . $style . '">' . $string . $text_nach_tag;
-	    }
-	    #**********************************************************************
-	    # wenn der tag das erste im string
-	    #**********************************************************************
-	    if( ( $uebergabe_tag_start_pos > -1) &&
-	    		( strlen( trim( $uebergabe_string_vor_tag)) == 0))
-		{
-	        $uebergabe_style_start_pos = strrpos( $uebergabe_tag, 'style="');
-	        $uebergabe_string_vor_style = substr( $uebergabe_tag, 0, $uebergabe_style_start_pos);
-			$uebergabe_style_temp_string = substr( $uebergabe_tag, $uebergabe_style_start_pos, strlen( $uebergabe_tag));
-	        $uebergabe_style_end_pos = strrpos( $uebergabe_tag, '"');
-	        $uebergabe_style_string = substr( $uebergabe_tag, $uebergabe_style_start_pos + 7, $uebergabe_style_end_pos - $uebergabe_style_start_pos - 7);
-	        $string = substr( $string, $uebergabe_tag_end_pos + 3, strlen( $string));
-
-			$rueckgabe = $vortext . '<span style="' . $uebergabe_style_string . ' ' . $style . ' ">' . $string . $text_nach_tag;
-	    }
-	    if( !strlen( $rueckgabe))
-		{
-			$rueckgabe = $vortext . '<span style="' . $style . '">' . $string . '</span>' . $text_nach_tag;
-			$ungueltig = 1;
-	    }
-
-	    #**********************************************************************
-	    # wenn keine vorhandenen tags gefunden neuen erzeugen und übergeben
-	    #**********************************************************************
-		return $rueckgabe;
-	}
-
-    private function styleErsetzen( $vortext, $style, $string)
+    public function dankeText($sText)
     {
-        //*********************************************************************
-        // vars reseten
-        //*********************************************************************
-        $vortext_tag_start_pos = -1;
-        $ubergabe_tag_start_pos = -1;
+        return 'Danke, ' . $sText . '!';
+    }
 
-        if( isset( $_GET['debug']))
-        {
-        	$debug = $_GET['debug'];
-        }
-        else
-        {
-        	$debug = 0;
-        }
+    public function getNews($aMatches)
+    {
+        return __METHOD__ . 'NEWS';
+    }
 
-        $string = stripslashes( $string);
-        $vortext = stripslashes( $vortext);
-        $style = stripslashes( $style);
+    /**
+     * @param boolean $bWithoutLinks
+     */
+    public function setWithoutLinks($bWithoutLinks) {
+        $this->bWithoutLinks = $bWithoutLinks;
+        return $this;
+    }
 
-        $vortext_tag_start_pos = $this->sucheLetzten( $vortext, '<span ');
-        $uebergabe_tag_start_pos = $this->sucheErsten( $string, '<span ');
+    /**
+     * @return boolean
+     */
+    public function getWithoutLinks() {
+        return $this->bWithoutLinks;
+    }
 
-        //***********************************************************************
-        // checken ob die tags auch das letzte oder erste im string sind !
-        //***********************************************************************
-        $vortext_string_vor_tag = substr( $vortext, 0, $vortext_tag_start_pos);
-        $vortext_tag_end_pos = strripos( $vortext, '">');
-        $vortext_string_nach_tag = substr( $vortext, $vortext_tag_end_pos + 2, strlen( $vortext));
-        $vortext_tag = substr( $vortext, $vortext_tag_start_pos, $vortext_tag_end_pos - $vortext_tag_start_pos + 2);
+    /**
+     * @return array
+     */
+    public function getAllowdTags() {
+        return $this->_aAllowdTags;
+    }
 
-        $uebergabe_string_vor_tag = substr( $string, 0, $uebergabe_tag_start_pos);
-        $uebergabe_tag_end_pos = strpos( $string, '">');
-        $uebergabe_string_nach_tag = substr( $string, $uebergabe_tag_end_pos + 2 , strlen( $string));
-        $uebergabe_tag = substr( $string, $uebergabe_tag_start_pos, $uebergabe_tag_end_pos - $uebergabe_tag_start_pos + 2);
+    /**
+     * @param array $aAllowdTags
+     */
+    public function setAllowdTags($aAllowdTags) {
+        $this->_aAllowdTags = $aAllowdTags;
+    }
 
-        //**********************************************************************
-        // wenn der tag das letzte in vortext und ein tag das erste im string
-        //**********************************************************************
-        if( ( $vortext_tag_start_pos > -1) && ( strlen( trim( $vortext_string_nach_tag)) == 0) && ( $uebergabe_tag_start_pos > -1) &&  ( strlen( trim( $uebergabe_string_vor_tag)) == 0))
-        {
-            $vortext_style_start_pos = strpos( $vortext_tag, 'style="');
-            $vortext_string_vor_style = substr( $vortext_tag, 0, $vortext_style_start_pos);
-            $vortext_style_temp_string = substr( $vortext_tag, $vortext_style_start_pos, strlen( $vortext_tag));
-            $vortext_style_end_pos = strripos( $vortext_tag, '"');
-            $vortext_style_string = substr( $vortext_tag, $vortext_style_start_pos + 7, $vortext_style_end_pos - $vortext_style_start_pos - 7);
+    /**
+     * @return array
+     */
+    public function getMapTagToFunction() {
+        return $this->_aMapTagToFunction;
+    }
 
-            $uebergabe_style_start_pos = strpos( $uebergabe_tag, 'style="');
-            $uebergabe_string_vor_style = substr( $uebergabe_tag, 0, $uebergabe_style_start_pos);
-            $uebergabe_style_temp_string = substr( $uebergabe_tag, $uebergabe_style_start_pos, strlen( $uebergabe_tag));
-            $uebergabe_style_end_pos = strripos( $uebergabe_tag, '"');
+    /**
+     * @param array $aMapTagToFunction
+     */
+    public function setMapTagToFunction($aMapTagToFunction) {
+        $this->_aMapTagToFunction = $aMapTagToFunction;
+    }
 
-            $uebergabe_style_string = substr( $uebergabe_tag, $uebergabe_style_start_pos + 7, $uebergabe_style_end_pos - $uebergabe_style_start_pos - 7);
+    /**
+     * @return boolean
+     */
+    public function isRemoveDeniedTags() {
+        return $this->_bRemoveDeniedTags;
+    }
 
-            // style an vortextstyle anfügen
-            $style .= $vortext_style_string . $uebergabe_style_string;
-            $string = $uebergabe_string_nach_tag;
-
-            // wegreduziertes schließendes tag löschen
-            $span_start = strpos( $string, '</span>');
-            $string = substr( $string, 0, $span_start) . substr( $string, $span_start + 7, strlen( $string));
-
-            $rueckgabe = $vortext_string_vor_tag . ' <span style="' . $style . ' ">' . $string;
-
-            return $rueckgabe;
-        }
-        //**********************************************************************
-        // wenn der tag das erste im string
-        //**********************************************************************
-        else if( ( $uebergabe_tag_start_pos > -1) && ( strlen( trim( $uebergabe_string_vor_tag)) == 0))
-        {
-            $uebergabe_style_start_pos = strpos( $uebergabe_tag, 'style="');
-            $uebergabe_string_vor_style = substr( $uebergabe_tag, 0, $uebergabe_style_start_pos);
-            $uebergabe_style_temp_string = substr( $uebergabe_tag, $uebergabe_style_start_pos, strlen( $uebergabe_tag));
-            $uebergabe_style_end_pos = strripos( $uebergabe_tag, '"');
-            $uebergabe_style_string = substr( $uebergabe_tag, $uebergabe_style_start_pos + 7, $uebergabe_style_end_pos - $uebergabe_style_start_pos - 7);
-
-            $string = substr( $string, $uebergabe_tag_end_pos + 2, strlen( $string));
-            $rueckgabe = $vortext . ' <span style="' . $uebergabe_style_string . ' ' . $style . ' ">' . $string;
-
-            return $rueckgabe;
-        }
-        //**********************************************************************
-        // wenn der tag das letzte in vortext
-        //**********************************************************************
-        else if( ( $vortext_tag_start_pos > -1) && ( strlen( trim( $vortext_string_nach_tag)) == 0))
-        {
-            // in dem tag nach dem style element suchen ******** slashes müssen nach htmlentities entfernt werden ******************
-            $vortext_style_start_pos = strpos( $vortext_tag, 'style="');
-            $vortext_string_vor_style = substr( $vortext_tag, 0, $vortext_style_start_pos);
-            $vortext_style_temp_string = substr( $vortext_tag, $vortext_style_start_pos, strlen( $vortext_tag));
-            $vortext_style_end_pos = strripos( $vortext_tag, '"');
-            $vortext_style_string = substr( $vortext_tag, $vortext_style_start_pos + 7, $vortext_style_end_pos - $vortext_style_start_pos - 7);
-
-            $rueckgabe = $vortext_string_vor_tag . ' <span style="' . $vortext_style_string . ' ' . $style . ' ">' . $string;
-
-            return $rueckgabe;
-        }
-        else
-        {
-            $ungueltig = 1;
-        }
-
-        //**********************************************************************
-        // wenn keine vorhandenen tags gefunden neuen erzeugen und �bergeben
-        //**********************************************************************
-        $rueckgabe = $vortext . '<span style="' . $style . '">' . $string . '</span>';
-        return $rueckgabe;
+    /**
+     * @param boolean $bRemoveDeniedTags
+     */
+    public function setRemoveDeniedTags($bRemoveDeniedTags) {
+        $this->_bRemoveDeniedTags = $bRemoveDeniedTags;
     }
 }

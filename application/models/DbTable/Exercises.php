@@ -3,13 +3,13 @@
 /**
  * Class Application_Model_DbTable_Exercises
  */
-class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abstract
+class Model_DbTable_Exercises extends Model_DbTable_Abstract
 {
     /** @var string */
-    protected $_name 	= 'uebungen';
+    protected $_name 	= 'exercises';
 
     /** @var string */
-    protected $_primary = 'uebung_id';
+    protected $_primary = 'exercise_id';
 
     /**
      * search all available exercises
@@ -17,7 +17,7 @@ class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abst
      * @return array|bool
      */
     public function findExercises() {
-        return $this->fetchAll(null, 'uebung_name');
+        return $this->fetchAll(null, 'exercise_name');
     }
 
     /**
@@ -28,7 +28,7 @@ class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abst
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findExercisesByName($sExerciseNamePiece) {
-        return $this->fetchAll("uebung_name LIKE('" . $sExerciseNamePiece . "')", 'uebung_name');
+        return $this->fetchAll("exercise_name LIKE('" . $sExerciseNamePiece . "')", 'exercise_name');
     }
 
     /**
@@ -39,30 +39,105 @@ class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abst
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
     public function findExerciseById($iExerciseId) {
-		$oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-					   ->setIntegrityCheck(false);
-		try {
-            $oSelect->join('geraete', 'geraet_id = uebung_geraet_fk')
-                ->where('uebung_id = ?', $iExerciseId);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(false);
+        try {
+            $oSelect->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
+                ->joinLeft('devices', 'device_id = exercise_x_device_device_fk')
+                ->joinLeft('device_x_device_group', 'device_x_device_group_device_fk = device_id')
+                ->joinLeft('device_groups', 'device_group_id = device_x_device_group_device_group_fk')
+                ->joinLeft('device_x_device_option', 'device_x_device_option_device_fk = device_id')
+                ->joinLeft('device_options', 'device_option_id = device_x_device_option_device_option_fk')
+                ->joinLeft('exercise_x_exercise_option', 'exercise_x_exercise_option_exercise_fk = exercise_id')
+                ->joinLeft('exercise_options', 'exercise_option_id = exercise_x_exercise_option_exercise_option_fk')
+                ->joinLeft('exercise_x_exercise_type', 'exercise_x_exercise_type_exercise_fk = exercise_id')
+                ->joinLeft('exercise_types', 'exercise_type_id = exercise_x_exercise_type_exercise_type_fk')
+                //                ->joinLeft('')
+                ->where('exercise_id = ?', $iExerciseId);
 
             return $this->fetchRow($oSelect);
-		} catch(Exception $oExceptions) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oExceptions->getMessage() . "<br />";
-			return false;
-		}
-	}
+        } catch(Exception $oExceptions) {
+            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+            echo "Meldung : " . $oExceptions->getMessage() . "<br />";
+            return false;
+        }
+    }
+
+    /**
+     * search exercise by id
+     *
+     * @param int $iExerciseId
+     *
+     * @return bool|null|Zend_Db_Table_Row_Abstract
+     */
+    public function findExerciseByTrainingPlanExerciseId($iExerciseId) {
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(false);
+        try {
+            $oSelect->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
+                ->joinInner('devices', 'device_id = exercise_x_device_device_fk')
+                ->joinInner('device_x_device_group', 'device_x_device_group_device_fk = device_id')
+                ->joinLeft('device_x_option', 'device_x_option_device_fk = device_id')
+                //                ->joinLeft('')
+                ->where('exercise_id = ?', $iExerciseId);
+
+            return $this->fetchRow($oSelect);
+        } catch(Exception $oExceptions) {
+            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+            echo "Meldung : " . $oExceptions->getMessage() . "<br />";
+            return false;
+        }
+    }
+
+    /**
+     * search exercise by id
+     *
+     * @param int $iExerciseId
+     *
+     * @return bool|null|Zend_Db_Table_Row_Abstract
+     */
+    public function findExerciseByTrainingExerciseId($iExerciseId) {
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(false);
+        try {
+            $oSelect->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
+                ->joinInner('devices', 'device_id = exercise_x_device_device_fk')
+                ->joinInner('device_x_device_group', 'device_x_device_group_device_fk = device_id')
+                ->joinLeft('device_x_option', 'device_x_option_device_fk = device_id')
+                //                ->joinLeft('')
+                ->where('exercise_id = ?', $iExerciseId);
+
+            return $this->fetchRow($oSelect);
+        } catch(Exception $oExceptions) {
+            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+            echo "Meldung : " . $oExceptions->getMessage() . "<br />";
+            return false;
+        }
+    }
 
     /**
      * search all exercises for device by device id
+     *
+     * @deprecated this result should search over devices or exercise_x_device!
      *
      * @param int $iDeviceId
      *
      * @return array|bool
      */
-    public function findExerciseForDevice($iDeviceId) {
-        return $this->fetchAll("uebung_geraet_fk = '" . $iDeviceId . "'");
-    }
+//    public function findExercisesForDevice($iDeviceId) {
+//        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+//            ->setIntegrityCheck(false);
+//        try {
+//            $oSelect->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
+//                ->joinInner('devices', 'device_id = exercise_x_device_device_fk')
+//                ->where('device_id = ?', $iDeviceId);
+//            return $this->fetchAll($oSelect);
+//        } catch(Exception $oExceptions) {
+//            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+//            echo "Meldung : " . $oExceptions->getMessage() . "<br />";
+//            return false;
+//        }
+//    }
 
     /**
      * @param array $aData
@@ -89,7 +164,7 @@ class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abst
      */
     public function updateExercise($aData, $iExerciseId) {
 		try {
-            return $this->update( $aData, "uebung_id = '" . $iExerciseId . "'");
+            return $this->update( $aData, "exercise_id = '" . $iExerciseId . "'");
 		} catch(Exception $oException) {
 			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
 			echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -106,7 +181,7 @@ class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abst
      */
     public function deleteExercise($iExerciseId) {
         try {
-            return $this->delete("uebung_id = '" . $iExerciseId . "'");
+            return $this->delete("exercise_id = '" . $iExerciseId . "'");
         } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -121,14 +196,14 @@ class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abst
      *
      * @return bool|int
      */
-    public function deleteExerciseByDeviceId($iDeviceId)
-    {
-        try {
-            return $this->delete("uebung_geraet_fk = '" . $iDeviceId . "'");
-        } catch(Exception $oException) {
-            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-            echo "Meldung : " . $oException->getMessage() . "<br />";
-            return false;
-        }
-    }
+//    public function deleteExerciseByDeviceId($iDeviceId)
+//    {
+//        try {
+//            return $this->delete("uebung_geraet_fk = '" . $iDeviceId . "'");
+//        } catch(Exception $oException) {
+//            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+//            echo "Meldung : " . $oException->getMessage() . "<br />";
+//            return false;
+//        }
+//    }
 }

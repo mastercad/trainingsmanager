@@ -5,15 +5,13 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-family: courier new;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 body	{
 }
 
-ul li
-{
+ul li {
     margin-top: 5px;
 	margin-left: 20px;
 	list-style-position: inside;
@@ -43,7 +41,6 @@ header	{
 }
 
 header h1   {
-	font-family: courier;
 	padding-top: 50px;
 	margin-left: 4%;
 }
@@ -224,7 +221,7 @@ input[type=radio]{
     /*color: #234DA1;*/
 }
 
-.vorschaubild   {
+.preview-picture   {
 	float: left;
 	display: inline;
 	width: 60%;
@@ -281,7 +278,7 @@ input[type=radio]{
 	width: 50%;
 }
 
-.miniaturbild-delete   {
+.thumb-delete   {
     position: absolute;
     width: 20px;
     height: 20px;
@@ -291,7 +288,7 @@ input[type=radio]{
     background-repeat: no-repeat;
 }
 
-.miniaturbild {
+.thumb {
      position: relative;
      margin: 5px;
      float: left;
@@ -913,7 +910,7 @@ input[type=radio]{
 	top: 5px;
 	right: 55px;
     font-size: 0;
-    font-color: transparent;
+    color: transparent;
     width: 19px;
     height: 19px;
     background-image: url('/images/content/statisch/grafiken/edit.png');
@@ -925,7 +922,7 @@ input[type=radio]{
     top: 5px;
     right: 30px;
     font-size: 0;
-    font-color: transparent;
+    color: transparent;
     width: 19px;
     height: 19px;
     background-image: url('/images/content/statisch/grafiken/delete.png');
@@ -933,7 +930,7 @@ input[type=radio]{
     background-position: top left;
 }
 
-#uebungen-vorschlaege {
+#exercise_proposals {
     position: absolute;
     top: -5000px;
     left: -5000px;
@@ -946,18 +943,48 @@ input[type=radio]{
     box-shadow: 5px black;
 }
 
-
-
-
-.uebung-option {
+.exercise-option {
     width: 50px;
     float: left;
     padding: 2px;
     margin-top: 5px;
 }
 
-#trainingstagebuch {
+#training {
     overflow: hidden;
+}
+
+.muscles-in-muscle-group {
+    margin-left: 20px;
+    font-size: 80%;
+}
+
+.deactivated * {
+    color: grey;
+}
+
+.device .device-option {
+    margin-left: 20px;
+    margin-top: 5px;
+    border-bottom: 1px dotted gray;
+    font-size: 12px;
+    width: 300px;
+    height: 20px
+}
+
+.training-plan .exercise-options label,
+.training-plan .device-options label {
+    /*width: 100px;*/
+    float: left;
+    clear: left;
+    margin-top: 7px;
+}
+
+.training-plan .exercise-options .exercise-option,
+.training-plan .device-options .device-option {
+    /*width: 44px;*/
+    float: left;
+    margin-top: 7px;
 }
 
 /* ]]> */

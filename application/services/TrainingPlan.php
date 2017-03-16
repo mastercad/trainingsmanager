@@ -10,11 +10,11 @@ require_once __DIR__ . '/../models/DbTable/Exercises.php';
 
 class Service_TrainingPlan
 {
-    /** @var Application_Model_DbTable_Uebungen */
+    /** @var Model_DbTable_Exercises */
     private $_oExerciseStorage = NULL;
 
     public function __construct() {
-        $this->setExerciseStorage(new Application_Model_DbTable_Exercise());
+        $this->setExerciseStorage(new Model_DbTable_Exercises());
     }
 
     public function searchExercise($iExerciseId) {
@@ -23,7 +23,7 @@ class Service_TrainingPlan
     /**
      * @param null $oUebungenStorage
      */
-    public function setExerciseStorage(Application_Model_DbTable_Uebungen $oExerciseStorage) {
+    public function setExerciseStorage(Model_DbTable_Exercises $oExerciseStorage) {
         $this->_oExerciseStorage = $oExerciseStorage;
         return $this;
     }

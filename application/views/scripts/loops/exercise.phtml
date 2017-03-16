@@ -1,0 +1,27 @@
+<?php
+    $vorschaubild = '/images/content/statisch/grafiken/blank.gif';
+    if(strlen(trim($this->uebung_vorschaubild)) > 0)
+    {
+        $vorschaubild_pfad = '/images/content/dynamisch/exercises/' . $this->uebung_id . '/' . $this->uebung_vorschaubild;
+        if(file_exists(getcwd() . $vorschaubild_pfad) &&
+           is_file(getcwd() . $vorschaubild_pfad) &&
+           is_readable(getcwd() . $vorschaubild_pfad))
+        {
+            $vorschaubild = $vorschaubild_pfad;
+        }
+    }
+?>
+<div style="position: relative;">
+    <img src="<?php echo $this->previewPicture;?>" style="width: 200px; float: left; display: inline;" />
+    <div style="float: left; display: inline;">
+        <a href="/exercises/edit/id/<?php echo $this->exercise_id;?>"
+           style="text-decoration: none;">
+            <?php echo $this->exercise_name;?>
+        </a>
+    </div>
+    <img src="/images/content/statisch/grafiken/delete.png"
+         class="exercise-delete"
+         data-exercise-id="<?php echo $this->exercise_id;?>"
+         style="position: absolute; top: 0; right: 0;" />
+    <br class="clearfix" />
+</div>

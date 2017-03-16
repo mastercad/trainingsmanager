@@ -10,19 +10,19 @@
 /**
  * Class Application_Model_DbTable_DeviceGroups
  */
-class Application_Model_DbTable_DeviceGroups extends Application_Model_DbTable_Abstract
+class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
 {
     /** @var string */
-    protected $_name 	= 'geraetegruppen';
+    protected $_name 	= 'device_groups';
 
     /** @var string */
-    protected $_primary = 'geraetegruppe_id';
+    protected $_primary = 'device_group_id';
 
     /**
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllDeviceGroups() {
-        return $this->fetchAll(null, "geraetegruppe_name");
+        return $this->fetchAll(null, "device_group_name");
     }
 
     /**
@@ -32,7 +32,7 @@ class Application_Model_DbTable_DeviceGroups extends Application_Model_DbTable_A
      */
     public function findDeviceGroup($iDeviceGroupId) {
         try {
-            return $this->fetchRow("geraetegruppe_id = '" . $iDeviceGroupId . "'");
+            return $this->fetchRow("device_group_id = '" . $iDeviceGroupId . "'");
         } catch( Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -47,7 +47,7 @@ class Application_Model_DbTable_DeviceGroups extends Application_Model_DbTable_A
      */
     public function findDeviceGroupByName($sDeviceGroupName) {
         try {
-            return $this->fetchAll("geraetegruppe_name LIKE( '" . $sDeviceGroupName . "')", 'geraetegruppe_name');
+            return $this->fetchAll("device_group_name LIKE( '" . $sDeviceGroupName . "')", 'device_group_name');
         } catch( Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -78,7 +78,7 @@ class Application_Model_DbTable_DeviceGroups extends Application_Model_DbTable_A
      */
     public function updateDeviceGroup($aData, $iDeviceGroupId) {
         try {
-            return $this->update($aData, "geraetegruppe_id = '" . $iDeviceGroupId . "'");
+            return $this->update($aData, "device_group_id = '" . $iDeviceGroupId . "'");
         } catch( Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -93,7 +93,7 @@ class Application_Model_DbTable_DeviceGroups extends Application_Model_DbTable_A
      */
     public function deleteDeviceGroup($iDeviceGroupId) {
         try {
-            return $this->delete("geraetegruppe_id = '" . $iDeviceGroupId . "'");
+            return $this->delete("device_group_id = '" . $iDeviceGroupId . "'");
         } catch( Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";

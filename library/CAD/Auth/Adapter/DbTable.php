@@ -39,8 +39,8 @@
 	        // get select
 	        $dbSelect = clone $this->getDbSelect();
 	        $dbSelect->from($this->_tableName, array('*', $credentialExpression));
-	        $dbSelect->join('user_status', 'user_status_id = user_status_fk');
-	        $dbSelect->join('user_rechte_gruppen', 'user_rechte_gruppe_id = user_rechte_gruppe_fk');
+	        $dbSelect->join('user_state', 'user_state_id = user_state_fk');
+	        $dbSelect->join('user_right_groups', 'user_right_group_id = user_right_group_fk');
 	        $dbSelect->where($this->_zendDb->quoteIdentifier($this->_identityColumn, true) . ' = ?', $this->_identity);
 
 	        return $dbSelect;

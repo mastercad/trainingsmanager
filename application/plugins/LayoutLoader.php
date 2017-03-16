@@ -1,6 +1,6 @@
 <?php
 
-class Application_Plugin_LayoutLoader extends Zend_Controller_Plugin_Abstract {
+class Plugin_LayoutLoader extends Zend_Controller_Plugin_Abstract {
 
     public function preDispatch(Zend_Controller_Request_Abstract $request) {
 

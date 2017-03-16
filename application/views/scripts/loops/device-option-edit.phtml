@@ -1,0 +1,18 @@
+<h4 style="margin-top: 15px; font-size: 12px;">
+    <?php echo $this->device_option_name;?>
+</h4>
+
+<input
+    class="device-option"
+    id="device_option_<?php echo $this->device_option_id;?>"
+    data-cad-cms-content-orig="<?php echo base64_encode($this->device_option_value);?>"
+    data-device-option-id="<?php echo $this->device_option_id;?>"
+    data-device-x-device-option-id="<?php echo $this->device_x_device_option_id;?>"
+    data-exercise-x-device-option-id="<?php echo $this->exercise_x_device_option_id;?>"
+    data-training-plan-x-device-option-id="<?php echo $this->training_plan_x_device_option_id;?>"
+    data-device-x-device-option-value="<?php echo $this->device_x_device_option_device_option_value;?>"
+    data-exercise-x-device-option-value="<?php echo $this->exercise_x_device_option_device_option_value;?>"
+    data-training-plan-x-device-option-value="<?php echo $this->training_plan_x_device_option_device_option_value;?>"
+    value="<?php echo $this->device_option_value;?>" />
+
+<br class="clearfix" />

@@ -1,0 +1,147 @@
+<?php
+
+?>
+<div>
+    <h2>
+        Gerät Name:<span
+            class="editable" 
+            style="margin-left: 20px; border-bottom: 1px dotted gray;"
+            id="device_name" data-cad-cms-content-orig="<?php echo base64_encode($this->device_name);?>"
+		><?php echo $this->device_name;?></span>
+    </h2>
+
+    <br class="clearfix" />
+
+    <img src="<?php echo $this->preview?>"
+         class="editable preview-picture"
+         alt="Vorschaubild"
+         style="margin-top: 15px;"
+         title="klicken Sie hier, um ein Bild hochzuladen"
+         id="device_preview_picture" />
+
+    <br class="clearfix" />
+    
+    <h3 style="margin-top: 15px; font-size: 12px;">
+        Geräte Optionen:
+    </h3>
+
+    <div style="float: left; display: inline;">
+        <?php echo $this->deviceOptionsDropDownContent;?>
+    </div>
+
+    <img class="device-option-add" src="/images/content/statisch/grafiken/add_normal.png"
+         style="width: 30px; float: left; display: inline;"/>
+
+    <br class="clearfix" />
+
+    <br class="clearfix" />
+
+    <div class="device-options">
+        <?php echo $this->deviceOptionsContent;?>
+    </div>
+
+    <br class="clearfix" />
+
+    <input type="hidden" class="id" name="device-id" id="device_id" value="<?php echo $this->device_id;?>" />
+</div>
+
+<br class="clearfix" />
+
+<h3 style="margin-top: 15px;">
+    Gerätebilder:
+</h3>
+
+<div class="preview-pictures"
+     style="margin-top: 5px;">
+
+</div>
+
+<br class="clearfix" />
+
+<button onclick="save();" 
+        class="button"
+        style="margin-top: 15px;">
+    Speichern
+</button>
+
+<script type="text/javascript">
+	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+	function save() {
+        var hasErrors = false;
+        var messages = [];
+
+        if(!jQuery.trim(jQuery('#device_name').html()).length) {
+            hasErrors = true;
+            messages.push({'type': 'fehler', 'message': 'Das Geraet braucht einen Namen!'});
+        }
+
+        var optionsList = jQuery('.device-options').find('.device-option');
+        var options = [];
+
+        for (var i = 0, len = optionsList.length; i < len; i++) {
+            var option_id = jQuery(optionsList[i]).data('device-option-id');
+            var option_value = jQuery(optionsList[i]).val();
+
+            if (option_id
+                && option_value
+            ) {
+                options.push({'id': option_id, 'value': Base64.encode(option_value)});
+            }
+        }
+            
+        if (!hasErrors) {
+            jQuery().setEditedElements('device_id', jQuery('#device_id').val());
+            jQuery().setEditedElements('device_preview_picture', jQuery('#device_preview_picture').data('file'));
+            jQuery().setEditedElements('device_options', options);
+
+            jQuery().setAjax(true);
+
+            CADEditSave();
+        } else {
+            var obj_cad_messages = new CAD.Message();
+            obj_cad_messages.init(messages);
+            obj_cad_messages.open();
+        }
+    }
+
+    jQuery(document).ready(function() {
+        jQuery('.device-option-add').unbind('click').bind('click', function() {
+
+            // check if selected option already exists
+            var selectedOption = jQuery('#device_options_select').val();
+            var currentOptionsList = jQuery('.device-options').find('.device-option');
+
+            for (var i = 0, len = currentOptionsList.length; i < len; i++) {
+                var option_id = jQuery(currentOptionsList[i]).data('device-option-id');
+
+                if (option_id == selectedOption) {
+                    var obj_cad_messages = new CAD.Message();
+                    obj_cad_messages.init([
+                        {
+                            'type': 'fehler',
+                            'message': 'Die ausgewählte Option existiert bereits!',
+                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
+                        }
+                    ]);
+                    obj_cad_messages.open();
+
+                    return false;
+                }
+            }
+
+            jQuery.post('/devices/get-device-option-edit', {ajax: true, device_option_id: selectedOption}, function(response) {
+                jQuery('.device-options').append(response);
+            });
+        });
+        edit_init(true);
+        initDevicesEdit();
+    });
+
+    function deleteMuscleGroup() {
+        jQuery(obj_ref).find('.muscle-group-name').data('muscle-group-name', '');
+        jQuery(obj_ref).find('.muscle-group-name').data('muscle-group-id', '');
+        jQuery(obj_ref).fadeOut();
+    }
+
+</script>

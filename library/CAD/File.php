@@ -15,6 +15,7 @@
 	 * @author mastercad
 	 *
 	 */
+
 	class CAD_File
 	{
 		const SYS_PFAD	 = 'sys_pfad';
@@ -56,13 +57,13 @@
 		protected $a_source_files = array();
 
 		/**
-		 * variable, die die uploadet files enthält, die per form auf den
+		 * variable, die die uploaded files enthält, die per form auf den
 		 * server geladen wurden
 		 *
 		 * @access protected
-		 * @var array $a_uploadet_files
+		 * @var array $a_uploaded_files
 		 */
-		protected $a_uploadet_files = array();
+		protected $a_uploaded_files = array();
 		
 		/**
 		 * variable, die die verschobenen und/oder entpackten dateien
@@ -142,7 +143,10 @@
 				}
 			}
 		}
-		
+
+        /**
+         *
+         */
 		public function clearSourcePath()
 		{
 			$this->a_source_paths = array();
@@ -161,8 +165,7 @@
 		 */
 		protected function cleanPathName($str_path)
 		{
-			if(substr($str_path, -1) != "/")
-			{
+			if (substr($str_path, -1) != "/") {
 				$str_path .= "/";
 			}
 			return $str_path;
@@ -176,8 +179,7 @@
 		 */
 		protected function checkDirExists($str_path)
 		{
-			if(!strlen(trim($str_path)))
-			{
+			if (!strlen(trim($str_path))) {
 				echo "Habe keinen Pfad übergeben bekommen!<br />";
 				return false;
 			}
@@ -195,7 +197,7 @@
 		 * str_source_path, dem herkunftspfad der dateien
 		 * 
 		 * @access public
-		 * @return string $str_source_path
+		 * @return array $a_source_paths
 		 */
 		public function getSourcePaths()
 		{
@@ -354,43 +356,43 @@
 		}
 		
 		/**
-		 * function, die den inhalt von a_uploadet_files setzt, das format
+		 * function, die den inhalt von a_uploaded_files setzt, das format
 		 * kommt dabei aus der upload file form des html elements und wird
 		 * direkt so übergeben
 		 * 
 		 * @access public
-		 * @param array $a_uploadet_files
+		 * @param array $a_uploaded_files
 		 */
-		public function setUploadetFiles($a_uploadet_files)
+		public function setUploadedFiles($a_uploaded_files)
 		{
-			if(is_array($a_uploadet_files))
+			if(is_array($a_uploaded_files))
 			{
-				$this->a_uploadet_files = $a_uploadet_files;
+				$this->a_uploaded_files = $a_uploaded_files;
 			}
 		}
 		
 		/**
-		 * function, die den inhalt von a_uploadet_files zurück gibt, der
-		 * zuvor mit setUploadetFiles gesetzt werden muss
+		 * function, die den inhalt von a_uploaded_files zurück gibt, der
+		 * zuvor mit setUploadedFiles gesetzt werden muss
 		 * 
 		 * @access public
-		 * @return array $a_uploadet_files
+		 * @return array $a_uploaded_files
 		 */
-		public function getUploadetFiles()
+		public function getUploadedFiles()
 		{
-			return $this->a_uploadet_files;
+			return $this->a_uploaded_files;
 		}
 		
 		/**
-		 * function, die die uploadet files in ihr vorgesehenes verzeichnis
+		 * function, die die uploaded files in ihr vorgesehenes verzeichnis
 		 * ($str_dest_path), unterberücksichtigung von $a_allowed_extensions,
 		 * welche vorher per setAllowedExtensions gesetzt wurde
 		 * 
 		 * return boolean 
 		 */
-		public function moveUploadetFiles()
+		public function moveUploadedFiles()
 		{
-			if(!is_array($this->getUploadetFiles()))
+			if(!is_array($this->getUploadedFiles()))
 			{
 				echo "Fehler! Es wurden noch keine hochgeladenen Files übergeben!<br />";
 				return false;
@@ -401,7 +403,7 @@
 			if(strlen(trim($this->getDestPath())) &&
 			   $this->checkAndCreateDir($this->getDestPath()))
 			{
-				$a_files = $this->getUploadetFiles();
+				$a_files = $this->getUploadedFiles();
 				$a_moved_files = array();
 				$count_moved_files = 0;
 				
@@ -426,7 +428,7 @@
 								$count_moved_files = count($a_moved_files);
 								
 								$a_moved_files[$count_moved_files][self::SYS_PFAD] = $this->getDestPath() . $orig_name;
-								$a_moved_files[$count_moved_files][self::HTML_PFAD] = 'http://' . $_SERVER['SERVER_NAME'] . str_replace(getcwd(), '', $this->getDestPath()) . $orig_name;
+								$a_moved_files[$count_moved_files][self::HTML_PFAD] = 'http://' . $_SERVER['HTTP_HOST'] . str_replace(getcwd(), '', $this->getDestPath()) . $orig_name;
 								$a_moved_files[$count_moved_files][self::FILE] = $orig_name;
 // 								$a_moved_files[$count_moved_files] = $this->getDestPath() . $orig_name;
 							}
@@ -823,24 +825,19 @@
 		{
 	        $path = explode("/", $path);
 	        $conn_id = @ftp_connect("localhost");
-	
-	        if(!$conn_id)
-	        {
+            $currPath = null;
+
+	        if (!$conn_id) {
 	            return false;
 	        }
-	        if (@ftp_login($conn_id, "ftpuser", "oj1NOskc"))
-	        {
-	            foreach ($path as $dir)
-	            {
-	                if(!$dir)
-	                {
+	        if (@ftp_login($conn_id, "ftpuser", "oj1NOskc")) {
+	            foreach ($path as $dir) {
+	                if (!$dir) {
 	                    continue;
 	                }
 	                $currPath .= "/" . trim($dir);
-	                if(!@ftp_chdir($conn_id,$currPath))
-	                {
-	                    if(!@ftp_mkdir($conn_id,$currPath))
-	                    {
+	                if ( !@ftp_chdir($conn_id,$currPath)) {
+	                    if (!@ftp_mkdir($conn_id,$currPath)) {
 	                        @ftp_close($conn_id);
 	                        return false;
 	                    }
@@ -855,12 +852,11 @@
 
 		public function holeDateienAusPfad($str_path = null)
 		{
-			if(strlen(trim($str_path)))
-			{
+			if (strlen(trim($str_path))) {
 				$this->setSourcePath($str_path);
 			}
 			
-			foreach($this->getSourcePaths() as $key => $str_path)
+			foreach ($this->getSourcePaths() as $key => $str_path)
 			{
 				if($handle = opendir($str_path))
 				{

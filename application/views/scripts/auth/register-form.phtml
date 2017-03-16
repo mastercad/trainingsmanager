@@ -35,51 +35,47 @@
 </div>
 <script type="text/javascript">
 
-	function init_regsiter()
+	function initRegister()
 	{
 		jQuery('#register-form').submit(function(e)
 		{
 			e.preventDefault();
 			
-			var register_vorname	= jQuery('#register-form #register_vorname').val() != jQuery('#register-form #register_vorname').data('default') ? jQuery('#register-form #register_vorname').val() : '';
-			var register_nachname	= jQuery('#register-form #register_nachname').val() != jQuery('#register-form #register_nachname').data('default') ? jQuery('#register-form #register_nachname').val() : '';
-			var register_email 		= jQuery('#register-form #register_email').val() != jQuery('#register-form #register_email').data('default') ? jQuery('#register-form #register_email').val() : '';
-			var register_passwort 	= jQuery('#register-form #register_passwort').val() != jQuery('#register-form #register_passwort').data('default') ? jQuery('#register-form #register_passwort').val() : '';
+			var registerFirstName	= jQuery('#register_form #register_first_name').val() != jQuery('#register_form #register_first_name').data('default') ? jQuery('#register-form #register_first_name').val() : '';
+			var registerName	    = jQuery('#register_form #register_name').val() != jQuery('#register_form #register_name').data('default') ? jQuery('#register-form #register_name').val() : '';
+			var registerEmail 		= jQuery('#register_form #register_email').val() != jQuery('#register_form #register_email').data('default') ? jQuery('#register-form #register_email').val() : '';
+			var registerPassword    = jQuery('#register_form #register_password').val() != jQuery('#register_form #register_password').data('default') ? jQuery('#register-form #register_password').val() : '';
 
-			if(trim(register_email).length > 0 &&
-			   trim(register_passwort).length >= 8)
-			{
+			if(0 < trim(registerEmail).length
+			   && 8 <= trim(registerPassword).length
+            ) {
 				var url = '/auth/register/';
-				var obj_params = {	'register_vorname': Base64.encode(register_vorname),
-									'register_nachname': Base64.encode(register_nachname),
-									'register_email': Base64.encode(register_email),
-									'register_passwort': Base64.encode(register_passwort),
+				var obj_params = {	'register_first_name': Base64.encode(registerFirstName),
+									'register_name': Base64.encode(registerName),
+									'register_email': Base64.encode(registerEmail),
+									'register_password': Base64.encode(registerPassword),
 									'ajax': true
 								};
 	
-				jQuery.post(url, obj_params, function(response)
-				{
+				jQuery.post(url, obj_params, function(response) {
 					var obj_cad_message = new CAD.Message();
 					obj_cad_message.init(response);
 
 					// wenn daten erfolgreich gespeichert wurden
-					if(obj_cad_message.open())
-					{
-						jQuery('#login_form #user_login_name').val(register_email);
-						jQuery('#login_form #user_login_passwort').val(register_passwort);
+					if(obj_cad_message.open()) {
+						jQuery('#login_form #user_login_name').val(registerEmail);
+						jQuery('#login_form #user_login_password').val(registerPassword);
 					}
 					return false;
 				});
 			}
-			else if(trim(register_email).length == 0 ||
-					trim(register_passwort).length == 0)
-			{
+			else if (0 == trim(registerEmail).length
+                || 0 == trim(registerPassword).length
+            ) {
 				var obj_cad_message = new CAD.Message();
 				obj_cad_message.init([{'type': 'fehler', 'message': 'Bitte füllen Sie alle mit "*" markierten Felder aus!'}]);
 				obj_cad_message.open();
-			}
-			else if(trim(register_passwort).length < 8)
-			{
+			} else if (8 < trim(registerPassword).length) {
 				var obj_cad_message = new CAD.Message();
 				obj_cad_message.init([{'type': 'fehler', 'message': 'das Passwort muss aus mindestens 8 Zeichen bestehen!'}]);
 				obj_cad_message.open();
@@ -88,6 +84,6 @@
 
 		prepareInputs();
 	}
-	init_regsiter();
+    initRegister();
 
 </script>

@@ -1,0 +1,42 @@
+<?php
+if(isset($this->json_string))
+{
+    echo $this->json_string;
+}
+else if(is_array($this->aMuskelGruppe)
+    && 0 < count($this->aMuskelGruppe)
+) {
+?>
+    <div class="muscle-group"
+         style="clear: both; margin-top: 15px; position: relative; width: 300px;">
+    <strong class="muscle-group-name"
+            data-muskelgruppe-id="<?php echo $this->aMuskelGruppe['muscle_group_id'];?>">
+        <?php echo $this->aMuskelGruppe['muscle_group_name'];?>
+    </strong>
+    <img src="/images/content/statisch/grafiken/delete.png"
+         class="muscle-group-delete"
+         data-muskelgruppe-id="<?php echo $this->aMuskelGruppe['muscle_group_id'];?>"
+         style="position: absolute; top: 0; right: 0;" />
+    <br class="clearfix" />
+<?php
+    foreach($this->aMuskelGruppe['muscles'] as $aMuskel) {
+        $this->assign($aMuskel);
+        echo $this->render('loops/muscle-edit.phtml');
+    }
+?>
+        <br class="clearfix" />
+    </div>
+<?php
+}
+?>
+
+<?php
+$this->assign('muskelgruppe_name', '');
+$this->assign('muskelgruppe_id', '');
+$this->assign('uebung_muskelgruppe_id', '');
+echo $this->render('loops/muscle-group-edit.phtml');
+?>
+
+<script type="text/javascript">
+    initMuskelgruppenEdit();
+</script>

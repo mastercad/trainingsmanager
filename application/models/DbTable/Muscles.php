@@ -3,30 +3,30 @@
 /**
  * Class Application_Model_DbTable_Muscles
  */
-class Application_Model_DbTable_Muscles extends Application_Model_DbTable_Abstract
+class Model_DbTable_Muscles extends Model_DbTable_Abstract
 {
     /**
      * @var string
      */
-    protected $_name 	= 'muskeln';
+    protected $_name 	= 'muscles';
     /**
      * @var string
      */
-    protected $_primary = 'muskel_id';
+    protected $_primary = 'muscle_id';
 
     /**
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllMuscles() {
-        return $this->fetchAll(null, 'muskel_name');
+        return $this->fetchAll(null, 'muscle_name');
     }
 
     /**
-     * @param $sMuscleName
+     * @param string $muscleName
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findMuscleByName($sMuscleName) {
-        return $this->fetchAll("muskel_name LIKE('" . $sMuscleName . "')", 'muskel_name');
+    public function findMusclesByName($muscleName) {
+        return $this->fetchAll("muscle_name LIKE('" . $muscleName . "')", 'muscle_name');
     }
 
     /**
@@ -35,7 +35,7 @@ class Application_Model_DbTable_Muscles extends Application_Model_DbTable_Abstra
      */
     public function findMuscle($iMuscleId) {
 		try {
-            return $this->fetchRow("muskel_id = '" . $iMuscleId . "'");
+            return $this->fetchRow("muscle_id = '" . $iMuscleId . "'");
 		} catch( Exception $oException) {
 			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
 			echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -64,7 +64,7 @@ class Application_Model_DbTable_Muscles extends Application_Model_DbTable_Abstra
      */
     public function updateMuscle($aData, $iMuscleId) {
 		try {
-            return $this->update($aData, "muskel_id = '" . $iMuscleId . "'");
+            return $this->update($aData, "muscle_id = '" . $iMuscleId . "'");
         } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -78,7 +78,7 @@ class Application_Model_DbTable_Muscles extends Application_Model_DbTable_Abstra
      */
     public function deleteMuscle($iMuscleId) {
 		try {
-            return $this->delete("muskel_id = '" . $iMuscleId . "'");
+            return $this->delete("muscle_id = '" . $iMuscleId . "'");
 
         } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";

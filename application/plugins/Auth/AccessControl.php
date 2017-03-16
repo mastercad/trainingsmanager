@@ -3,8 +3,8 @@
 /**
  * Class Application_Plugin_Auth_AccessControl
  */
-class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstract
-	{
+class Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstract
+{
     /**
      * @var CAD_Auth|null
      */
@@ -66,7 +66,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
 // 				$logger->info("Lösche Session!");
 
             unset($_SESSION['user_login']);
-            unset($_SESSION['user_passwort']);
+            unset($_SESSION['user_password']);
 
             $this->_auth->getStorage()->write(null);
 
@@ -80,7 +80,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
         }
         else if ($request->isPost() &&
                 null !== $request->getPost('enc_user_login_name') &&
-                null !== $request->getPost('enc_user_login_passwort'))
+                null !== $request->getPost('enc_user_login_password'))
         {
 // 				$logger->info("Habe Post ENC Login Daten!");
 
@@ -93,13 +93,13 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
             $filter = new Zend_Filter_StripTags();
 
             $username = $filter->filter(base64_decode($request->getPost('enc_user_login_name')));
-            $password = $filter->filter(base64_decode($request->getPost('enc_user_login_passwort')));
+            $password = $filter->filter(base64_decode($request->getPost('enc_user_login_password')));
 
             $this->b_logged_in = true;
         }
         else if ($request->isPost() &&
                  null !== $request->getPost('user_login_name') &&
-                 null !== $request->getPost('user_login_passwort'))
+                 null !== $request->getPost('user_login_password'))
         {
 // 				$logger->info("Habe Post Login Daten!");
 
@@ -112,7 +112,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
             $filter = new Zend_Filter_StripTags();
 
             $username = $filter->filter($request->getPost('user_login_name'));
-            $password = $filter->filter($request->getPost('user_login_passwort'));
+            $password = $filter->filter($request->getPost('user_login_password'));
 
             $this->b_logged_in = true;
         }
@@ -124,7 +124,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
 // 				$logger->info("Habe login Daten in der Session! Lade sie!");
 
             $username = $_SESSION['user_login'];
-            $password = $_SESSION['user_passwort'];
+            $password = $_SESSION['user_password'];
         }
 
         // wenn username gesetzt und unterschiedlich zur session,
@@ -135,7 +135,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
            $_SESSION['user_login'] != $username)
         {
             unset($_SESSION['user_login']);
-            unset($_SESSION['user_passwort']);
+            unset($_SESSION['user_password']);
 
             $this->_auth->clearIdentity();
         }
@@ -159,7 +159,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
         {
 // 				$logger->info("Habe keine Auth, aber Login und Passwort!");
 
-            $authAdapter = new Application_Plugin_Auth_AuthAdapter();
+            $authAdapter = new Plugin_Auth_AuthAdapter();
 
             $authAdapter->setIdentity($username);
             $authAdapter->setCredential($password);
@@ -176,7 +176,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
                 $registry = Zend_Registry::getInstance();
                 $view = $registry->view;
                 $view->user_login = $username;
-                $view->user_passwort = $password;
+                $view->user_password = $password;
                 $view->a_messages = $this->a_messages;
             }
             else if($this->error_code == -4)
@@ -186,7 +186,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
                 $registry = Zend_Registry::getInstance();
                 $view = $registry->view;
                 $view->user_login = $username;
-                $view->user_passwort = $password;
+                $view->user_password = $password;
                 $view->user_email = $result->user_email;
                 $view->user_id = $result->user_id;
                 $view->user_validierungshash = $result->user_validierungshash;
@@ -197,7 +197,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
             else if($this->error_code == -1)
             {
                 unset($_SESSION['user_login']);
-                unset($_SESSION['user_passwort']);
+                unset($_SESSION['user_password']);
             }
             else if(!$this->error_code)
             {
@@ -206,7 +206,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
                 $registry = Zend_Registry::getInstance();
                 $view = $registry->view;
                 $view->user_login = $username;
-                $view->user_passwort = $password;
+                $view->user_password = $password;
                 $view->a_messages = $this->a_messages;
             }
             else if (!$result)
@@ -214,7 +214,7 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
                 $this->a_messages[] = $result;
 
                 unset($_SESSION['user_login']);
-                unset($_SESSION['user_passwort']);
+                unset($_SESSION['user_password']);
 
                 $this->_auth->clearIdentity();
             }
@@ -281,12 +281,12 @@ class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstr
                 $time = date("Y-m-d H:i:s");
 
                 $a_data['user_last_login'] = $time;
-                $a_data['user_aenderung_datum'] = $time;
-                $a_data['user_aenderung_user_fk'] = $obj_user->user_id;
+                $a_data['user_update_date'] = $time;
+                $a_data['user_update_user_fk'] = $obj_user->user_id;
 
                 $obj_user->user_last_login = $time;
 
-                $obj_db_users = new Application_Model_DbTable_Users();
+                $obj_db_users = new Model_DbTable_Users();
                 $obj_db_users->updateUser($a_data, $obj_user->user_id);
 
                 $this->_auth->getStorage()->write($obj_user);
