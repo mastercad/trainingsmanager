@@ -158,31 +158,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view = $this->getResource('view');
 
         $view->headMeta()->appendHttpEquiv('Content-Type', 'text/html; charset=UTF-8');
-//          $this->view->headMeta()->appendHttpEquiv('Content-Language', 'de-DE');
+        $view->headMeta()->appendHttpEquiv('Content-Language', 'de-DE');
         $view->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1.0');
         $view->headMeta()->appendName('robots', 'index, follow');
         $view->headMeta()->appendName('author', 'Andreas Kempe');
-
-        /*
-        if(preg_match('/google/i', $_SERVER['HTTP_USER_AGENT']))
-        {
-//          $view->headMeta()->appendName('author-link', 'https://plus.google.com/u/0/100952657106943880213');
-//          $view->headMeta()->appendName('og:url', 'http://www.byte-artist.de');
-//          $view->headMeta()->appendName('og:title', $view->title);
-//          $view->headMeta()->appendName('og:description', $view->description);
-//          $view->headMeta()->appendName('og:image', $view->image);
-        }
-
-        if(preg_match('/facebook/i', $_SERVER['HTTP_USER_AGENT']))
-        {
-//          $view->headMeta()->appendName('fb:admins', '100001360008435');
-//          $view->headMeta()->appendName('fb:page_id', '198506923607446');
-//          $view->headMeta()->appendName('og:url', 'http://www.byte-artist.de');
-//          $view->headMeta()->appendName('og:title', $view->title);
-//          $view->headMeta()->appendName('og:description', $view->description);
-//          $view->headMeta()->appendName('og:image', $view->image);
-        }
-        */
     }
 
     protected function _initHeadScripts()
@@ -198,9 +177,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
 
         $view->headScript()->prependFile($view->baseUrl() . '/js/jquery.min.js', 'text/javascript');
-//      $view->headScript()->prependFile($view->baseUrl() . '/js/jquery.js', 'text/javascript');
         $view->headScript()->appendFile($view->baseUrl() . '/js/jquery-ui.min.js', 'text/javascript');
-//      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery-ui.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.sharrre-1.3.4.min.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery_counts.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen.min.js', 'text/javascript');

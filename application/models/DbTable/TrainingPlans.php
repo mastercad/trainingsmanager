@@ -24,6 +24,19 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
     public function findTrainingPlan($iTrainingPlanId) {
         return $this->fetchRow('training_plan_id = ' . $iTrainingPlanId);
     }
+    /**
+     * @param $iTrainingPlanId
+     * @return null|Zend_Db_Table_Row_Abstract
+     */
+    public function findFirstExerciseInTrainingPlan($iTrainingPlanId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_training_plan_fk = ' . $iTrainingPlanId)
+            ->order('training_plan_x_exercise_exercise_order DESC')
+            ->limit(1);
+
+        return $this->fetchRow($select);
+    }
 
     public function findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId) {
         return $this->fetchAll(

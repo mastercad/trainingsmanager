@@ -1,289 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="25404030-811d-40ea-896a-252c495195ea" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/CAD/DOM/DOMRecursiveIterator.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/DeviceOptions.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/services/View/Generator/DeviceOptions.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/DeviceXDeviceOption.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/CAD/DOM/DomTree.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/ExerciseOptions.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/services/View/Generator/ExerciseOptions.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/ExerciseTypes.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/ExerciseXDeviceOption.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/ExerciseXExerciseOption.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/ExerciseXExerciseType.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/ExerciseXMuscle.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/controllers/MuscleGroupsController.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/services/Options.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/services/View/Generator/Options.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/CAD/DOM/TagMerge.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingPlanXDeviceOption.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingPlanXExerciseOption.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingXTrainingPlanExercise.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/Trainings.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/library/CAD/DOM/composer.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device-group-device-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device-option-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/exercise-option-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/get-device-option.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/devices/get-devices-for-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/get-exercise-option-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/get-exercise-option.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/get-exercise-proposals.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/get-exercise.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/get-muscle-group-for-exercise-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/get-muscle-proposals.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/get-muscles-for-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/get-muscles-for-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/muscle-edit-loop.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/muscle-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/muscle-group.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/muscle-proposal.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/muscles-for-exercise.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/option-input.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/option.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/preview-picture-for-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/globals/preview-picture.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/globals/preview-pictures-for-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/globals/proposal-row.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/globals/proposals.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/rating.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/globals/select.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/training-plan-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/training-plan-exercise-edit.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/loops/training-plan-exercise-option.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/upload-bild.phtml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/upload-picture.phtml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/controllers/MuskelgruppenController.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/models/DbTable/ExerciseMuscleGroups.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingDiaries.php" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/auth/passwort-vergessen.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/get-geraete-fuer-edit.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-einstellungen.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-gewichte.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-rueckenpolster.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-sitzpositionen.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/uebersicht.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/upload-bild.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/geraetegruppe-edit-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/uebersicht.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/upload-bild.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskelgruppen-vorschlaege.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskeln-fuer-edit.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskel-edit-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-muskel-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/uebersicht.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/upload-bild.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/get-muskeln-fuer-edit.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/muskel-edit-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/muskel-vorschlag-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/uebersicht.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/upload-bild.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/uebung-vorschlag.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/get-muskelgruppen-fuer-edit.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/muskel-edit-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/muskelgruppe-loop.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/uebersicht.phtml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/1/Gerät_3.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/1/Gerät_4.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/1/Gerät_5.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/1/Gerät_6.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/1/Gerät_7.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/1/Gerät_8.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/1/IMG_3433.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/10/IMG_3409.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/10/resize.jpeg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/124755-high.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/8564_0.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/FQ2306.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/FQ2315.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/IMG_3433.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/11/blume2.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/12/IMG_3413.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/12/cXP.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/12/dru.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/12/lautspr06.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/12/nec.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/12/pal.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/14/IMG_3449.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/15/IMG_3397.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/15/IMG_3426.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/16/IMG_3439.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/17/IMG_3397.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/18/IMG_3450.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/19/IMG_3447.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/2/IMG_3381.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/20/IMG_3446.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/21/IMG_3521.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/IMG_3526.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/cXP.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/dru.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/lautspr06.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/nec.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/pal.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/22/sor.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/23/IMG_3527.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/24/IMG_3522.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/25/IMG_3533.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/26/IMG_3523.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/27/IMG_3525.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/28/IMG_3520.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/3/IMG_3391.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/33/IMG_3538.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/34/IMG_3539.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/35/IMG_3540.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/36/IMG_3542.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/37/IMG_3544.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/38/IMG_3549.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/39/IMG_3551.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/4/IMG_3389.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/40/IMG_3547.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/41/IMG_3546.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/42/IMG_3545.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/43/IMG_3554.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/44/IMG_3555.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/46/IMG_3556.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/46/IMG_3557.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/5/IMG_3395.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/7/IMG_3437.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/8/IMG_3404.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/public/images/content/dynamisch/uebungen/9/IMG_3393.jpg" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/controllers/GeraeteController.php" afterPath="$PROJECT_DIR$/application/controllers/DevicesController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/controllers/GeraetegruppenController.php" afterPath="$PROJECT_DIR$/application/controllers/DeviceGroupsController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/controllers/MuskelnController.php" afterPath="$PROJECT_DIR$/application/controllers/MusclesController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/controllers/TrainingsplanController.php" afterPath="$PROJECT_DIR$/application/controllers/TrainingPlansController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/controllers/TrainingstagebuchController.php" afterPath="$PROJECT_DIR$/application/controllers/TrainingsController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/controllers/UebungenController.php" afterPath="$PROJECT_DIR$/application/controllers/ExercisesController.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/DeviceGroupDevices.php" afterPath="$PROJECT_DIR$/application/models/DbTable/DeviceXDeviceGroup.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/ExerciseMuscles.php" afterPath="$PROJECT_DIR$/application/models/DbTable/ExerciseXDevice.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/MuscleGroupMuscles.php" afterPath="$PROJECT_DIR$/application/models/DbTable/MuscleXMuscleGroup.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingDiaryExercises.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingXExercises.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingPlanExercises.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingPlanXExercise.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/UserRightGroupsRight.php" afterPath="$PROJECT_DIR$/application/models/DbTable/UserRightGroupRights.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/auth/passwort-vergessen-form.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/auth/password-forgotten-form.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/geraet-edit-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/geraet-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/geraet-vorschlag-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device-proposal.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/get-geraet-vorschlaege.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/get-device-proposals.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/hole-bilder-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/get-pictures-for-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/index.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/loesche-bild.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/exercise-type-content.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/loesche-geraet.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/save.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/optionen-moegliche-beinpolster.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device-option.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/show.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraete/speichern.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/delete-muscle.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/geraet-edit-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/geraet-edit-loop.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/geraetegruppe-geraet-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device-device-group.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/geraetegruppe-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/device-group.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/geraetegruppe-vorschlag-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/geraetegruppe-vorschlag-loop.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/get-geraete-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/get-geraete-fuer-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/get-geraetegruppe-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/get-geraetegruppe-fuer-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/get-geraetegruppen-vorschlaege.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/get-geraetegruppen-vorschlaege.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/hole-bilder-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/hole-bilder-fuer-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/index.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/loesche-bild.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/delete-picture.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/loesche-geraetegruppe.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/save.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/show.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/geraetegruppen/speichern.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/delete-muscle-group.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/get-muskelgruppe-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/get-muscle-group-for-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/hole-bilder-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/get-pictures-for-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/index.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/loesche-bild.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/get-device-option-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/loesche-muskelgruppe.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/save.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-edit-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/muscle-group-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/muskelgruppe-vorschlag-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/muscle-group-proposal.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/show.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskelgruppen/speichern.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/delete-exercise.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/get-muskel-vorschlaege.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscle-groups/get-muscle-group-proposals.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/hole-bilder-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/get-pictures-for-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/muscles/index.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/loesche-bild.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/delete-picture.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/loesche-muskel.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/save.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/muskel-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/muscle.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/show.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/speichern.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/delete-device.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/muskeln/speichern_1.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/save.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/archiv.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/index.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/create-layout.phtml" afterPath="$PROJECT_DIR$/application/services/ExerciseOptions.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/get-trainingsplan-fuer-split.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/get-training-plan-for-split.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/get-uebungen-vorschlaege.phtml" afterPath="$PROJECT_DIR$/application/services/DeviceOptions.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/archive.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan-uebung-partial.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/training-plan-exercise.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/partials/trainingsplan_partial.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/training-plan.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/select-layout.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/select-layout.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/show.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingsplan/speichern.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/training-plans/save.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/get-base-trainingsplan-layout.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/get-base-trainingsplan-layout.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/get-split-trainingsplan-layout.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/get-split-trainingsplan-layout.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/get-trainingsplan.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/get-trainingsplan.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/get-uebung.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/get-uebung.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/index.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/partials/trainingsplan-entry.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/partials/trainingsplan-entry.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/partials/trainingstagebuch-trainingsplan-partial.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/partials/trainingstagebuch-trainingsplan-partial.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/partials/trainingstagebuch-uebung-partial.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/trainings-exercise.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/show-uebung.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/show-exercise.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/show.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/speichern.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/speichern.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/trainingstagebuch/start.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/trainings/start.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/hole-bilder-fuer-edit.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/hole-bilder-fuer-edit.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/index.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/exercises/index.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/loesche-bild.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/loesche-bild.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/loesche-uebung.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/delete-device-group.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/show.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/device-groups/show.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/speichern.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/auth/password-forgotten.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/uebung-loop.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/loops/exercise.phtml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/application/views/scripts/uebungen/upload-bild.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/devices/upload-picture.phtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/facebook-php-sdk" afterPath="$PROJECT_DIR$/library/facebook-php-sdk" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/Abstract.php" afterPath="$PROJECT_DIR$/application/models/DbTable/Abstract.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/plugins/Auth/AccessControl.php" afterPath="$PROJECT_DIR$/application/plugins/Auth/AccessControl.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/plugins/Auth/Acl.php" afterPath="$PROJECT_DIR$/application/plugins/Auth/Acl.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/plugins/Auth/AuthAdapter.php" afterPath="$PROJECT_DIR$/application/plugins/Auth/AuthAdapter.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/AuthController.php" afterPath="$PROJECT_DIR$/application/controllers/AuthController.php" />
+    <list default="true" id="25404030-811d-40ea-896a-252c495195ea" name="Default" comment="- komplett auf neue struktur angepasst, bis auf einige funktionen, die scheinbar obsolete sind oder zumindest nicht essenziell. &#10;- trainings wird noch komplett angepasst. die funktionalität steht, es müssen aber noch die options neu geladen werden, außerdem muss das anzeigen von den ursprungswerten der optionen, der letzten übung, der aktuellen übung und der vorraussage nochmal überdacht werden">
+      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingXExercises.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingsXExercise.php" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingXTrainingPlanExercise.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlanExercise.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/CAD/Auth.php" afterPath="$PROJECT_DIR$/library/CAD/Auth.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/Bootstrap.php" afterPath="$PROJECT_DIR$/application/Bootstrap.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/plugins/CheckeRecht.php" afterPath="$PROJECT_DIR$/application/plugins/CheckeRecht.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/CAD/Auth/Adapter/DbTable.php" afterPath="$PROJECT_DIR$/library/CAD/Auth/Adapter/DbTable.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/DeviceGroups.php" afterPath="$PROJECT_DIR$/application/models/DbTable/DeviceGroups.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/Devices.php" afterPath="$PROJECT_DIR$/application/models/DbTable/Devices.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/ErrorController.php" afterPath="$PROJECT_DIR$/application/controllers/ErrorController.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/services/Exercise.php" afterPath="$PROJECT_DIR$/application/services/Exercise.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/Exercises.php" afterPath="$PROJECT_DIR$/application/models/DbTable/Exercises.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/CAD/File.php" afterPath="$PROJECT_DIR$/library/CAD/File.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/plugins/LayoutLoader.php" afterPath="$PROJECT_DIR$/application/plugins/LayoutLoader.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/MuscleGroups.php" afterPath="$PROJECT_DIR$/application/models/DbTable/MuscleGroups.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/Muscles.php" afterPath="$PROJECT_DIR$/application/models/DbTable/Muscles.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/CAD/Tools.php" afterPath="$PROJECT_DIR$/library/CAD/Tools.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingDiaryTrainingPlans.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingDiaryTrainingPlans.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/services/TrainingPlan.php" afterPath="$PROJECT_DIR$/application/services/TrainingPlan.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingPlanLayouts.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingPlanLayouts.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingPlans.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingPlans.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/library/CAD/Filter/UbbReplace.php" afterPath="$PROJECT_DIR$/library/CAD/Filter/UbbReplace.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/UserRightGroups.php" afterPath="$PROJECT_DIR$/application/models/DbTable/UserRightGroups.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/UserRights.php" afterPath="$PROJECT_DIR$/application/models/DbTable/UserRights.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/Users.php" afterPath="$PROJECT_DIR$/application/models/DbTable/Users.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/helpers/ViewGenerator.php" afterPath="$PROJECT_DIR$/application/views/helpers/ViewGenerator.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/configs/application.ini" afterPath="$PROJECT_DIR$/application/configs/application.ini" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/auth.js" afterPath="$PROJECT_DIR$/public/js/auth.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/cad_cms.js" afterPath="$PROJECT_DIR$/public/js/cad_cms.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/edit.js" afterPath="$PROJECT_DIR$/public/js/edit.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/global.css" afterPath="$PROJECT_DIR$/public/css/global.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/index.php" afterPath="$PROJECT_DIR$/public/index.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/controllers/TrainingsController.php" afterPath="$PROJECT_DIR$/application/controllers/TrainingsController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php" afterPath="$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/layout/layout.phtml" afterPath="$PROJECT_DIR$/application/layout/layout.phtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/auth/login-form.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/auth/login-form.phtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/dictionaries/mastercad.xml" afterPath="$PROJECT_DIR$/.idea/dictionaries/mastercad.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/layout/mobile.layout.phtml" afterPath="$PROJECT_DIR$/application/layout/mobile.layout.phtml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/css/normal.css" afterPath="$PROJECT_DIR$/public/css/normal.css" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/php.xml" afterPath="$PROJECT_DIR$/.idea/php.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/application/views/scripts/auth/register-form.phtml" afterPath="$PROJECT_DIR$/application/views/scripts/auth/register-form.phtml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="rundumfit.iws" />
@@ -329,27 +55,62 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ExerciseOptions.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/services/View/Generator/ExerciseOptions.php">
+      <file leaf-file-name="TrainingsController.php" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/application/controllers/TrainingsController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.625" vertical-offset="630" max-vertical-offset="1725">
-              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-              <folding>
-                <element signature="e#6#89#0#PHP" expanded="true" />
-                <element signature="e#4102#4135#0#PHP" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="0.49518073" vertical-offset="1044" max-vertical-offset="6600">
+              <caret line="102" column="108" selection-start-line="102" selection-start-column="108" selection-end-line="102" selection-end-column="108" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TrainingsController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/application/controllers/TrainingsController.php">
+      <file leaf-file-name="TrainingsXTrainingPlanExercise.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlanExercise.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.5384616" vertical-offset="315" max-vertical-offset="5430">
-              <caret line="174" column="41" selection-start-line="174" selection-start-column="41" selection-end-line="174" selection-end-column="41" />
-              <folding>
-                <element signature="n#showAction#0;n#TrainingsController#0;n#!!top" expanded="false" />
-              </folding>
+            <state vertical-scroll-proportion="-16.25" vertical-offset="0" max-vertical-offset="600">
+              <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="layout.phtml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/layout/layout.phtml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-17.5" vertical-offset="0" max-vertical-offset="3150">
+              <caret line="28" column="85" selection-start-line="28" selection-start-column="85" selection-end-line="28" selection-end-column="85" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Auth.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/library/CAD/Auth.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-18.75" vertical-offset="0" max-vertical-offset="840">
+              <caret line="34" column="36" selection-start-line="34" selection-start-column="36" selection-end-line="34" selection-end-column="36" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="QrController.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/controllers/QrController.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-21.25" vertical-offset="0" max-vertical-offset="645">
+              <caret line="39" column="11" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Bootstrap.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/application/Bootstrap.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-20.125" vertical-offset="2547" max-vertical-offset="6390">
+              <caret line="202" column="130" selection-start-line="202" selection-start-column="130" selection-end-line="202" selection-end-column="130" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -396,21 +157,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TrainingsXTrainingPlan.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-21.916666" vertical-offset="44" max-vertical-offset="915">
-              <caret line="43" column="20" selection-start-line="43" selection-start-column="20" selection-end-line="43" selection-end-column="20" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="TrainingPlans.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingPlans.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="1410">
-              <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+            <state vertical-scroll-proportion="-13.958333" vertical-offset="85" max-vertical-offset="1605">
+              <caret line="33" column="121" selection-start-line="33" selection-start-column="121" selection-end-line="33" selection-end-column="121" />
               <folding />
             </state>
           </provider>
@@ -471,9 +222,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/application/views/scripts/loops/training-plan-exercise-option.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/loops/device-option.phtml" />
-        <option value="$PROJECT_DIR$/application/views/scripts/training-plans/get-exercise-option.phtml" />
         <option value="$PROJECT_DIR$/application/views/scripts/training-plans/get-device-option.phtml" />
         <option value="$PROJECT_DIR$/application/views/scripts/loops/option.phtml" />
         <option value="$PROJECT_DIR$/public/css/global.css" />
@@ -499,7 +247,6 @@
         <option value="$PROJECT_DIR$/library/CAD/Auth/Adapter/DbTable.php" />
         <option value="$PROJECT_DIR$/application/plugins/Auth/AccessControl.php" />
         <option value="$PROJECT_DIR$/application/views/scripts/auth/register-form.phtml" />
-        <option value="$PROJECT_DIR$/application/Bootstrap.php" />
         <option value="$PROJECT_DIR$/application/controllers/AuthController.php" />
         <option value="$PROJECT_DIR$/application/views/scripts/auth/password-forgotten-form.phtml" />
         <option value="$PROJECT_DIR$/library/CAD/Tools.php" />
@@ -514,14 +261,18 @@
         <option value="$PROJECT_DIR$/application/views/scripts/training-plans/edit.phtml" />
         <option value="$PROJECT_DIR$/application/services/TrainingPlan.php" />
         <option value="$PROJECT_DIR$/application/controllers/TrainingPlansController.php" />
-        <option value="$PROJECT_DIR$/application/layout/layout.phtml" />
-        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingPlans.php" />
         <option value="$PROJECT_DIR$/application/models/DbTable/Trainings.php" />
-        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php" />
         <option value="$PROJECT_DIR$/application/models/DbTable/TrainingPlanXExercise.php" />
         <option value="$PROJECT_DIR$/application/views/scripts/trainings/show-exercise.phtml" />
-        <option value="$PROJECT_DIR$/application/controllers/TrainingsController.php" />
         <option value="$PROJECT_DIR$/application/views/scripts/loops/trainings-exercise.phtml" />
+        <option value="$PROJECT_DIR$/application/Bootstrap.php" />
+        <option value="$PROJECT_DIR$/application/layout/layout.phtml" />
+        <option value="$PROJECT_DIR$/library/CAD/Auth.php" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsXExercises.php" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlanExercise.php" />
+        <option value="$PROJECT_DIR$/application/models/DbTable/TrainingPlans.php" />
+        <option value="$PROJECT_DIR$/application/controllers/TrainingsController.php" />
       </list>
     </option>
   </component>
@@ -942,6 +693,32 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="partials" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trainingsmanager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="trainingsmanager" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="application" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="views" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scripts" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="qr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1593,7 +1370,13 @@
       <option name="project" value="LOCAL" />
       <updated>1487793245099</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="- komplett auf neue struktur angepasst, bis auf einige funktionen, die scheinbar obsolete sind oder zumindest nicht essenziell. &#10;- trainings wird noch komplett angepasst. die funktionalität steht, es müssen aber noch die options neu geladen werden, außerdem muss das anzeigen von den ursprungswerten der optionen, der letzten übung, der aktuellen übung und der vorraussage nochmal überdacht werden">
+      <created>1489694779368</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1489694779368</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1622,6 +1405,7 @@
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924107" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32142857" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Command Line Tools Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924107" sideWeight="0.5" order="16" side_tool="false" content_ui="tabs" />
@@ -1645,7 +1429,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Plugins" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="15" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="File Transfer" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32722512" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
     </layout>
@@ -1663,6 +1446,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
@@ -1673,7 +1457,8 @@
     <MESSAGE value="- umstellung der beanspruchungseinstellung von muskelgruppen auf einzelne muskeln in den übungen abgeschlossen&#10;" />
     <MESSAGE value="- partial einer übung im trainingstagebuch erstellt" />
     <MESSAGE value="- stand gesichert, vor umbau auf optionen in kreuztabellen" />
-    <option name="LAST_COMMIT_MESSAGE" value="- stand gesichert, vor umbau auf optionen in kreuztabellen" />
+    <MESSAGE value="- komplett auf neue struktur angepasst, bis auf einige funktionen, die scheinbar obsolete sind oder zumindest nicht essenziell. &#10;- trainings wird noch komplett angepasst. die funktionalität steht, es müssen aber noch die options neu geladen werden, außerdem muss das anzeigen von den ursprungswerten der optionen, der letzten übung, der aktuellen übung und der vorraussage nochmal überdacht werden" />
+    <option name="LAST_COMMIT_MESSAGE" value="- komplett auf neue struktur angepasst, bis auf einige funktionen, die scheinbar obsolete sind oder zumindest nicht essenziell. &#10;- trainings wird noch komplett angepasst. die funktionalität steht, es müssen aber noch die options neu geladen werden, außerdem muss das anzeigen von den ursprungswerten der optionen, der letzten übung, der aktuellen übung und der vorraussage nochmal überdacht werden" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1943,16 +1728,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/application/controllers/TrainingsController.php</url>
-          <line>105</line>
+          <line>123</line>
           <option name="timeStamp" value="139" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php">
           <url>file://$PROJECT_DIR$/application/controllers/TrainingsController.php</url>
-          <line>170</line>
+          <line>188</line>
           <option name="timeStamp" value="140" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php</url>
+          <line>59</line>
+          <option name="timeStamp" value="141" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="141" />
+      <option name="time" value="142" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="index.php">
@@ -1962,62 +1752,6 @@
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/UserRightGroupRights.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.10332951" vertical-offset="0" max-vertical-offset="871">
-          <caret line="11" column="59" selection-start-line="11" selection-start-column="59" selection-end-line="11" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/views/scripts/loops/option.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.625" vertical-offset="0" max-vertical-offset="135">
-          <caret line="1" column="84" selection-start-line="1" selection-start-column="84" selection-end-line="1" selection-end-column="84" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingPlanXDeviceOption.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.6666665" vertical-offset="854" max-vertical-offset="1740">
-          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/library/Zend/View/Abstract.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.2083335" vertical-offset="11596" max-vertical-offset="17820">
-          <caret line="801" column="0" selection-start-line="801" selection-start-column="0" selection-end-line="801" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/ExerciseXDeviceOption.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.39494833" vertical-offset="136" max-vertical-offset="1995">
-          <caret line="32" column="98" selection-start-line="32" selection-start-column="98" selection-end-line="32" selection-end-column="98" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingPlanXExerciseOption.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.708333" vertical-offset="136" max-vertical-offset="1185">
-          <caret line="28" column="146" selection-start-line="28" selection-start-column="146" selection-end-line="28" selection-end-column="146" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/DeviceOptions.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.125" vertical-offset="0" max-vertical-offset="465">
-          <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingPlanLayouts.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-17.5" vertical-offset="0" max-vertical-offset="555">
@@ -2087,8 +1821,8 @@
         <state vertical-scroll-proportion="-7.5" vertical-offset="0" max-vertical-offset="390">
           <caret line="12" column="88" selection-start-line="12" selection-start-column="88" selection-end-line="12" selection-end-column="88" />
           <folding>
-            <element signature="n#style#0;n#input#1;n#form#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#input#1;n#form#0;n#!!top" expanded="false" />
+            <element signature="n#style#0;n#a#0;n#div#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2130,7 +1864,7 @@
         <state vertical-scroll-proportion="0.29276693" vertical-offset="0" max-vertical-offset="871">
           <caret line="17" column="23" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
           <folding>
-            <element signature="n#style#0;n#h4#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#h4#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2140,7 +1874,7 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="895">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#style#0;n#span#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#span#0;n#!!top" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2257,34 +1991,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/Bootstrap.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.891608" vertical-offset="5877" max-vertical-offset="6735">
-          <caret line="112" column="117" selection-start-line="112" selection-start-column="117" selection-end-line="112" selection-end-column="117" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/layout/layout.phtml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="2.324914" vertical-offset="315" max-vertical-offset="3090">
-          <caret line="156" column="67" selection-start-line="156" selection-start-column="67" selection-end-line="156" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/library/Zend/Controller/Dispatcher/Standard.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-5.875" vertical-offset="4224" max-vertical-offset="7485">
           <caret line="310" column="0" selection-start-line="310" selection-start-column="0" selection-end-line="310" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingPlans.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.25" vertical-offset="0" max-vertical-offset="1410">
-          <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -2301,22 +2011,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-17.541666" vertical-offset="989" max-vertical-offset="1860">
           <caret line="99" column="20" selection-start-line="99" selection-start-column="20" selection-end-line="99" selection-end-column="20" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Trainings.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.5" vertical-offset="0" max-vertical-offset="600">
-          <caret line="17" column="36" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-21.916666" vertical-offset="44" max-vertical-offset="915">
-          <caret line="43" column="20" selection-start-line="43" selection-start-column="20" selection-end-line="43" selection-end-column="20" />
           <folding />
         </state>
       </provider>
@@ -2359,14 +2053,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/application/controllers/TrainingPlansController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.6666665" vertical-offset="8984" max-vertical-offset="12120">
-          <caret line="608" column="0" selection-start-line="608" selection-start-column="0" selection-end-line="608" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/application/services/View/Generator/ExerciseOptions.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.625" vertical-offset="630" max-vertical-offset="1725">
@@ -2378,13 +2064,115 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/data/application.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.776536" vertical-offset="14120" max-vertical-offset="15015">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/data/mod_rewrite.log">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1364.2101" vertical-offset="1169128" max-vertical-offset="1169985">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/Bootstrap.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-20.125" vertical-offset="2547" max-vertical-offset="6390">
+          <caret line="202" column="130" selection-start-line="202" selection-start-column="130" selection-end-line="202" selection-end-column="130" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/views/scripts/qr/get-image-for-url.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="895">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/QrController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-21.25" vertical-offset="0" max-vertical-offset="645">
+          <caret line="39" column="11" selection-start-line="39" selection-start-column="11" selection-end-line="39" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/layout/layout.phtml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.5" vertical-offset="0" max-vertical-offset="3150">
+          <caret line="28" column="85" selection-start-line="28" selection-start-column="85" selection-end-line="28" selection-end-column="85" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/library/CAD/Auth.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-18.75" vertical-offset="0" max-vertical-offset="840">
+          <caret line="34" column="36" selection-start-line="34" selection-start-column="36" selection-end-line="34" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/controllers/TrainingPlansController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-5.6666665" vertical-offset="8984" max-vertical-offset="12120">
+          <caret line="608" column="0" selection-start-line="608" selection-start-column="0" selection-end-line="608" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsXExercise.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.051664755" vertical-offset="0" max-vertical-offset="871">
+          <caret line="8" column="29" selection-start-line="8" selection-start-column="29" selection-end-line="8" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlan.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.92996556" vertical-offset="0" max-vertical-offset="945">
+          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/Trainings.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.5" vertical-offset="0" max-vertical-offset="600">
+          <caret line="17" column="36" selection-start-line="17" selection-start-column="36" selection-end-line="17" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingsXTrainingPlanExercise.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-16.25" vertical-offset="0" max-vertical-offset="600">
+          <caret line="31" column="39" selection-start-line="31" selection-start-column="39" selection-end-line="31" selection-end-column="39" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/application/models/DbTable/TrainingPlans.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-13.958333" vertical-offset="85" max-vertical-offset="1605">
+          <caret line="33" column="121" selection-start-line="33" selection-start-column="121" selection-end-line="33" selection-end-column="121" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/application/controllers/TrainingsController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.5384616" vertical-offset="315" max-vertical-offset="5430">
-          <caret line="174" column="41" selection-start-line="174" selection-start-column="41" selection-end-line="174" selection-end-column="41" />
-          <folding>
-            <element signature="n#showAction#0;n#TrainingsController#0;n#!!top" expanded="false" />
-          </folding>
+        <state vertical-scroll-proportion="0.49518073" vertical-offset="1044" max-vertical-offset="6600">
+          <caret line="102" column="108" selection-start-line="102" selection-start-column="108" selection-end-line="102" selection-end-column="108" />
+          <folding />
         </state>
       </provider>
     </entry>

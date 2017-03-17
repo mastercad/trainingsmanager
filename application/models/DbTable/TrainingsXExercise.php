@@ -6,7 +6,7 @@
  * Time: 16:15
  */
 
-class Model_DbTable_TrainingXExercises extends Model_DbTable_Abstract
+class Model_DbTable_TrainingsXExercise extends Model_DbTable_Abstract
 {
     /**
      * @var string

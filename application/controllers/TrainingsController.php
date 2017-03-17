@@ -47,7 +47,7 @@ class TrainingsController extends Zend_Controller_Action
             $oTrainingsplaeneStorage = new Model_DbTable_TrainingPlans();
 
             // erst informationen zum plan ziehen
-            $oTrainingsplanRow = $oTrainingsplaeneStorage->findTrainingPlan($iTrainingsplanId);
+            $oTrainingsplanRow = $oTrainingsplaeneStorage->findFirstExerciseInTrainingPlan($iTrainingsplanId);
 
             if (FALSE === $oTrainingsplanRow) {
                 echo "Diesen Trainingsplan gibt es nicht!";
@@ -76,14 +76,32 @@ class TrainingsController extends Zend_Controller_Action
                     if (0 == $oAktuellesTrainingstagebuch->count()) {
                         echo "Habe noch keinen Trainingstagebucheintrag für diesen Trainingsplan, der aber offen ist!";
 
-                        $aData = array(
+                        $trainingsDb = new Model_DbTable_Trainings();
+                        $data = [
+                            'trainings_training_plan_x_exercise_fk' => $oTrainingsplanRow->offsetGet('training_plan_x_exercise_id'),
+                            'trainings_create_date' => date('Y-m-d H:i:s'),
+                            'trainings_create_user_fk' => $iUserId
+                        ];
+                        $trainingsId = $trainingsDb->insert($data);
+
+                        $aData = [
+                            'trainings_x_training_plan_trainings_fk' => $trainingsId,
                             'trainings_x_training_plan_training_plan_fk' => $iTrainingsplanId,
                             'trainings_x_training_plan_create_date' => date('Y-m-d H:i:s'),
                             'trainings_x_training_plan_create_user_fk' => $iUserId
-                        );
-                        // @FIXME das hier macht keinen sinn! hier kommt man nur rein, wenn es keinen letzten offenen
-                        // gibt, es wird dann der letzte offene übergeben an die view?!
+                        ];
+
                         $iTrainingstagebuchTrainingsplanId = $oTrainingstagebuchTrainingsplaeneStorage->insert($aData);
+
+                        $trainingsXTrainingPlanExerciseDb = new Model_DbTable_TrainingsXTrainingPlanExercise();
+
+                        $data = [
+                            'trainings_x_training_plan_exercise_training_plan_x_exercise_fk' => $oTrainingsplanRow->offsetGet('training_plan_x_exercise_id'),
+                            'trainings_x_training_plan_exercise_create_date' => date('Y-m-d H:i:s'),
+                            'trainings_x_training_plan_exercise_create_user_fk' => $iUserId
+                        ];
+                        $trainingXTrainingPlanExerciseId = $trainingsXTrainingPlanExerciseDb->insert($data);
+
                         $oAktuellesTrainingstagebuch = $oTrainingstagebuchTrainingsplaeneStorage->findLastOpenTrainingPlan($iTrainingsplanId);
                         $this->redirect('/trainings/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_plan_x_exercise_exercise_fk, $aParams);
 //                        $this->redirect('/trainingstagebuch/show/id/' . $iTrainingsplanId, $aParams);

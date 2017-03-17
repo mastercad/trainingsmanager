@@ -32,7 +32,7 @@
 			{
 	 			$this->getStorage()->write('');
 	 			
-				$obj_db_users = new Application_Model_DbTable_Users();
+				$obj_db_users = new Model_DbTable_Users();
 			
 				$a_data = Array(
 								'user_session_id' => '',

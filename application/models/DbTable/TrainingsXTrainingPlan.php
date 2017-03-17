@@ -47,13 +47,15 @@ class Model_DbTable_TrainingsXTrainingPlan extends Model_DbTable_Abstract
 
         $oSelect
             ->from('training_plans')
-            ->joinLeft('training_plan_x_exercise', 'training_plan_x_exercise_training_plan_fk = training_plan_id')
-            ->joinLeft('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinLeft('trainings_x_training_plan', 'trainings_x_training_plan_training_plan_fk = ' . $iTrainingPlanId)
-            ->joinLeft('trainings', 'trainings_x_training_plan_training_plan_fk = ' . $iTrainingPlanId)
+            ->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_training_plan_fk = training_plan_id')
+            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner('trainings_x_training_plan', 'trainings_x_training_plan_training_plan_fk = ' . $iTrainingPlanId)
+            ->joinInner('trainings', 'trainings_x_training_plan_training_plan_fk = ' . $iTrainingPlanId)
             ->where('trainings_x_training_plan_flag_finished != 1 OR trainings_x_training_plan_flag_finished IS NULL')
             ->where('training_plan_id = ' . $iTrainingPlanId)
             ->order('training_plan_x_exercise_exercise_order');
+
+        $sql = $oSelect->assemble();
 
         return $this->fetchAll($oSelect);
     }
