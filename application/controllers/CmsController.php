@@ -1,21 +1,8 @@
 <?php
-class CmsController extends Zend_Controller_Action {
-    var $breadcrumb;
 
-    public function init() {
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-    }
-
-    public function postDispatch() {
-        $this->view->assign('breadcrumb', $this->breadcrumb);
-
-        $req = $this->getRequest();
-        $a_params = $req->getParams();
-
-        if (isset($a_params['ajax'])) {
-            $this->view->layout()->disableLayout();
-        }
-    }
+class CmsController extends AbstractController {
 
     public function indexAction() {
     }

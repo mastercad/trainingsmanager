@@ -166,7 +166,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initHeadScripts()
     {
+        /** @var Zend_View $view */
         $view = $this->getResource('view');
+
         $user_agent = NULL;
         $obj_device = NULL;
 
@@ -176,31 +178,36 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             $obj_device = $obj_user_agent->getDevice();
         }
 
-        $view->headScript()->prependFile($view->baseUrl() . '/js/jquery.min.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/jquery-ui.min.js', 'text/javascript');
+        /** @var Zend_View_Helper_HeadScript $view->headScript() */
+//        $view->headScript()->prependFile($view->baseUrl() . '/js/default.js', 'text/javascript');
+//        $view->headScript()->prependFile($view->baseUrl() . '/js/auth.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(1, $view->baseUrl() . '/js/jquery-3.2.0.min.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(5, $view->baseUrl() . '/js/jquery-ui.min.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(6, $view->baseUrl() . '/js/tether.min.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.sharrre-1.3.4.min.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery_counts.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen.min.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(10, $view->baseUrl() . '/js/funktionen.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen_jquery.min.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen_jquery.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(15, $view->baseUrl() . '/js/funktionen_jquery.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(20, $view->baseUrl() . '/js/default.js', 'text/javascript');
 
-        if(TRUE === is_object($obj_device)
-            && $obj_device->getType() == "desktop"
-        ) {
-            $view->headScript()->appendFile($view->baseUrl() . '/js/blur.js', 'text/javascript');
-        }
+//        if(TRUE === is_object($obj_device)
+//            && $obj_device->getType() == "desktop"
+//        ) {
+//            $view->headScript()->appendFile($view->baseUrl() . '/js/blur.js', 'text/javascript');
+//        }
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.snippet.min.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/cad.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/cad_wrapper.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/cad_catch_esc.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/cad_cms.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/cad_sperre.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/cad_message.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/cad_loader.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(25, $view->baseUrl() . '/js/cad.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(30, $view->baseUrl() . '/js/cad_wrapper.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(35, $view->baseUrl() . '/js/cad_catch_esc.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(40, $view->baseUrl() . '/js/cad_cms.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(45, $view->baseUrl() . '/js/cad_sperre.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(50, $view->baseUrl() . '/js/cad_message.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(55, $view->baseUrl() . '/js/cad_loader.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery-ui-1.10.1.custom.min.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/default.js', 'text/javascript');
-        $view->headScript()->appendFile($view->baseUrl() . '/js/html5.js', 'text/javascript', array('conditional' => 'lt IE 9',));
+        $view->headScript()->offsetSetFile(60, $view->baseUrl() . '/js/auth.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(100, $view->baseUrl() . '/js/html5.js', 'text/javascript', ['conditional' => 'lt IE 9']);
 //      $view->headScript()->appendFile('https://apis.google.com/js/plusone.js', 'text/javascript');
     }
 
@@ -222,10 +229,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headLink()->appendAlternate($view->baseUrl() . '/feed-rss', 'application/rss+xml', 'News-Feed im RSS Format');
         $view->headLink()->appendAlternate($view->baseUrl() . '/feed-atom', 'application/atom+xml', 'News-Feed im Atom Format');
 
+        $view->headLink()->prependStylesheet($view->baseUrl() . '/css/global.css', 'screen', true);
+/*
         if(TRUE === is_object($obj_device)
             && $obj_device->getType() == "desktop"
         ) {
-            $view->headLink()->prependStylesheet($view->baseUrl() . '/css/global.css', 'screen', true);
             $view->headLink()->appendStylesheet($view->baseUrl() . '/css/normal.css', 'screen', true, array('title' => 'normal'));
         }
         else if(TRUE === is_object($obj_device)
@@ -291,6 +299,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         ) {
             $view->headLink()->appendStylesheet($view->baseUrl() . '/css/effekte.css', 'screen', true);
         }
+*/
     }
 
     protected function _initInlineScripts()

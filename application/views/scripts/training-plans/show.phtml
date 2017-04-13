@@ -1,12 +1,14 @@
 <a href="/training-plans/edit/id/<?php echo $this->training_plan_id;?>">
-    <button >Diesen Trainingsplan bearbeiten</button>
+    <button class="btn btn-primary btn-default" data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_training_plan');?>">
+        <?php echo $this->translate('label_edit_training_plan');?>
+    </button>
 </a>
 <?php
     echo $this->trainingPlanContent;
 ?>
 <script type="text/javascript" language="JavaScript">
 
-    function trainingsplan_show_init() {
+    function trainingPlanShowInit() {
 //        $(function() {
 //            $(".droppable").sortable({
 //                revert: true,
@@ -30,12 +32,12 @@
 //        });
 
         $('.edit').each(function(){
-            var iTrainingsplanId = $(this).parent().attr('id');
+            var trainingPlanId = $(this).parent().attr('id');
             $(this).unbind('click');
             $(this).bind('click', function(){
-                location.href = '/training-plans/edit/id/' + iTrainingsplanId;
+                location.href = '/training-plans/edit/id/' + trainingPlanId;
             });
         });
     }
-    trainingsplan_show_init();
+    trainingPlanShowInit();
 </script>

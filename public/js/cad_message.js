@@ -7,7 +7,7 @@ CAD.Message = function(el) {
   
   if ( !el ) {
 	
-	var dom_element = jQuery('<div class="message"><div class="button_close"></div><div class="message_text"></div><br class="clearfix" /></div>');
+	var dom_element = jQuery('<div class="message"><div class="button_close"></div><div class="message_text"></div><br class="clear-fix" /></div>');
 	jQuery(dom_element).find('.button_close').unbind('click');
 	jQuery(dom_element).find('.button_close').bind('click', function()
 	{
@@ -161,7 +161,7 @@ CAD.Message.prototype.init = function(text, b_hide_sperre, b_blur) {
 		if(b_need_confirm)
 		{
 			
-			content += '<b class="clearfix" /><div class="confirm_container">';
+			content += '<b class="clear-fix" /><div class="confirm_container">';
 			content += '<div class="button_ok" >' + button_1_text + '</div>';
 			content += '<div class="button_cancel" >' + button_2_text + '</div>';
 			content += '<br class="clear;" />';
@@ -169,7 +169,7 @@ CAD.Message.prototype.init = function(text, b_hide_sperre, b_blur) {
 		}
 		else
 		{
-			content += '<b class="clearfix" /><div class="ok_container">';
+			content += '<b class="clear-fix" /><div class="ok_container">';
 			content += '<div class="button_ok" >' + button_1_text + '</div>';
 			content += '<br class="clear;" />';
 			content += '</div>';

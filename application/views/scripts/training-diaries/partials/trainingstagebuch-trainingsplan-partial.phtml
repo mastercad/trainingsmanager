@@ -1,0 +1,128 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 20.05.14
+ * Time: 21:32
+ */ 
+
+?>
+
+<div class="uebung" style="margin-bottom: 15px; font-size: 10px;">
+    <strong>
+        <?php echo $this->exercise_name;?>
+    </strong>
+    <?php echo $this->uebung_id;?> / <?php echo $this->trainingsplan_uebung_fk;?> / <?php echo $this->trainingstagebuch_uebung_trainingsplan_uebung_fk;?>
+    <br class="clear-fix" />
+    <table>
+        <thead>
+        </thead>
+
+        <tfoot>
+        </tfoot>
+
+        <tbody>
+            <tr>
+                <td rowspan="7" style="width: 250px;">
+                    <img src="<?php echo '/images/content/dynamisch/exercises/' . $this->uebung_id . '/' . $this->uebung_vorschaubild;?>"
+                         style="width: 200px;" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Wiederholungen:
+                </td>
+                <td>
+                    <?php echo $this->trainingsplan_uebung_wiederholungen;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_wiederholungen;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_wiederholungen_perspektivisch;?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Sätze:
+                </td>
+                <td>
+                    <?php echo $this->trainingsplan_uebung_saetze;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_saetze;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_saetze_perspektivisch;?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Gewicht:
+                </td>
+                <td>
+                    <?php echo $this->trainingsplan_uebung_gewicht;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_gewicht;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_gewicht_perspektivisch;?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Sitzposition:
+                </td>
+                <td>
+                    <?php echo $this->trainingsplan_uebung_sitzposition;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_sitzposition;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_sitzposition_perspektivisch;?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Rückenpolster:
+                </td>
+                <td>
+                    <?php echo $this->trainingsplan_uebung_rueckenpolster;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_rueckenpolster;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_rueckenpolster_perspektivisch;?>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Beinpolster:
+                </td>
+                <td>
+                    <?php echo $this->trainingsplan_uebung_beinpolster;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_beinpolster;?>
+                </td>
+                <td>
+                    <?php echo $this->trainingstagebuch_uebung_beinpolster_perspektivisch;?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <p>
+            <?php echo $this->uebung_beschreibung;?>
+        </p>
+    </div>
+    <div>
+        <p>
+            <?php echo $this->uebung_besonderheiten;?>
+        </p>
+    </div>
+    <br class="cleafix" />
+</div>

@@ -1,44 +1,44 @@
 <div>
     <h3>
-        Gerätegruppe Name:<span
+        <?php echo $this->translate('label_device_group_name');?>:<span
             class="editable" 
             style="margin-left: 20px; border-bottom: 1px dotted gray;"
             id="device_group_name" data-cad-cms-content-orig="<?php echo base64_encode($this->device_group_name);?>"
+            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_device_group_name');?>"
 		><?php echo $this->device_group_name;?></span>
     </h3>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <h3 style="float: left; display: inline; margin-top: 15px;">
-        Geräte:
+        <?php echo $this->translate('label_devices');?>:
     </h3>
     
-    <img class="device-add" src="/images/content/statisch/grafiken/add_normal.png"
-         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>
+    <span class="add device-add glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_add_new_device_input');?>">
+
+    </span>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <div class="device-group-devices"
          style="margin-top: 5px;">
         <?php echo $this->deviceGroupDevicesContent;?>
     </div>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <input type="hidden" class="id" name="device-group-id" id="device_group_id" value="<?php echo $this->device_group_id;?>" />
 </div>
 
-<br class="clearfix" />
+<br class="clear-fix" />
 
-<div class="device-proposals"
+<div class="proposals"
      style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
             background-color: #FFFFFF; opacity: 0.9; 
             box-shadow: 5px 5px 5px #111111;" ></div>
 
-<button onclick="save();" 
-        style="margin-top: 15px;"
-        class="button">
-    Speichern
+<button class="save btn btn-primary btn-block">
+    <?php echo $this->translate('label_save');?>
 </button>
 
 <script type="text/javascript">
@@ -50,7 +50,7 @@
             
             if (!jQuery.trim(jQuery('#device_group_name').html()).length) {
                 hasErrors = true;
-                a_messages.push({'type': 'fehler', 'message': 'Die Gerätegruppe braucht einen Namen!'});
+                a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_name');?>'});
             }
             
             var devicesCollection = jQuery('.device-group-devices').find('.device');
@@ -66,7 +66,7 @@
             
             if (!devices.length) {
                 hasErrors = true;
-                a_messages.push({'type': 'fehler', 'message': 'Es muss mindestens ein Gerät für diese Gerätegruppe vollständig ausgefüllt sein!'});
+                a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_device');?>'});
             }
             
             if (!hasErrors) {

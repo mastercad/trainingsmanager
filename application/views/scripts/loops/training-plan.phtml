@@ -8,16 +8,18 @@
 
 ?>
 
-<ol class="trainingsplan droppable ui-sortable" style="background-color: gainsboro; border-radius: 5px; border-color: lightgray;
-            margin-top: 15px; padding: 10px; font-size: 10px; color: darkslategray; position: relative;
-            /*list-style-type: none;*/
-            "
+<ol class="training-plan droppable row ui-sortable"
     id="<?php echo $this->training_plan_id;?>">
-    <a href="/training-plans/edit/id/<?php echo $this->training_plan_id;?>"
-       style="width: 15px; position: absolute; top: 0px; right: 15px;">
-        <img src="/images/content/statisch/grafiken/edit.png"
-             alt="Bearbeiten" title="Hier klicken um diesen Split zu bearbeiten!" />
+    <a class="glyphicon glyphicon-edit" href="/training-plans/edit/id/<?php echo $this->training_plan_id;?>"
+       style="width: 15px; position: absolute; top: 15px; font-size: 15px; right: 15px; z-index: 2;"
+       data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_training_plan');?>" >
     </a>
+
+    <div class="col-sm-12">
+        <strong>
+            <?php echo $this->training_plan_name;?>
+        </strong>
+    </div>
 
     <?php echo $this->exercisesContent;?>
 
@@ -28,12 +30,12 @@
 <?php
     echo $this->musclesForExerciseContent;
 ?>
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
-    <a href="/trainings/start/id/<?php echo $this->training_plan_id;?>">
-        <button >
-            Trainingsplan starten
+    <a href="/training-diaries/start/id/<?php echo $this->training_plan_id;?>">
+        <button class="btn btn-primary btn-default">
+            <?php echo $this->translate('label_start_training_plan');?>
         </button>
     </a>
+    <br class="clear-fix" />
 </ol>
-<br class="clearfix" />

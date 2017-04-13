@@ -1,19 +1,28 @@
-<div style="float: left; display: inline;">
-    <label style="clear: none; float: left; display: inline; margin-right: 15px;">
+<div id="<?php echo $this->selectId;?>"
+     class="form-group <?php echo $this->optionClassName;?> option-input dropdown"
+     data-value="<?php echo $this->currentValue;?>"
+     data-value-orig="<?php echo $this->currentValue;?>"
+     data-base-value="<?php echo $this->baseValue;?>"
+     data-option-id="<?php echo $this->optionId;?>"
+    <?php echo $this->additionalDataInformation;?>>
+    <label>
         <?php echo $this->optionLabelText;?>
     </label>
-    <select class="<?php echo $this->optionClassName;?> option-input"
-        id="<?php echo $this->selectId;?>" style="float: left; display: inline; margin-right: 5px; min-width: 40px;"
-        data-option-id="<?php echo $this->optionId;?>" <?php echo $this->additionalDataInformation;?> >
+    <button class="btn btn-primary dropdown-toggle <?php echo $this->selectClass;?>" type="button" data-toggle="dropdown">
+        <?php echo $this->optionSelectText;?>
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" >
         <?php echo $this->optionsContent;?>
-    </select>
-
-<?php
+    </ul>
+    <?php
     if ($this->optionDeleteShow) {
-?>
-    <img class="option-delete" style="float: left; display: inline; margin-top: 10px; margin-right: 10px;" src="/images/content/statisch/grafiken/delete.gif" alt="Delete Option"/>
-<?php
+        ?>
+        <span class="delete option-delete glyphicon glyphicon-remove-sign"
+              data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_delete_option');?>">
+        </span>
+    <?php
     }
-?>
-    <br class="clearfix" />
+    ?>
+    <br class="clear-fix" />
 </div>

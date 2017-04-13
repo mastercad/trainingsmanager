@@ -6,20 +6,16 @@
 //        $beanspruchung_pos_x = -100 + ($this->muskelgruppe_muskel_beanspruchung * 20);
 //    }
 ?>
-<div class="muscle" style="margin-top: 5px; position: relative; width: 325px;">
-    <input type="text" class="muscle-name"
-           style="float: left;"
+<div class="form-group muscle" >
+    <input type="text" class="form-control muscle-name"
            value="<?php echo $this->muscle_name;?>"
            data-muscle-name="<?php echo $this->muscle_name;?>"
-           data-muscle-id="<?php echo $this->muscle_id;?>" />
+           data-muscle-id="<?php echo $this->muscle_id;?>"
+        placeholder="<?php echo $this->translate('label_muscle_name');?>" />
 
     <?php echo $this->muscleUseRatingContent;?>
 
-    <img src="/images/content/statisch/grafiken/delete.png"
-         title="zum entfernen hier klicken!"
-         style="position: absolute; height: 20px; width: 20px;
-                right: 5px; top: 0; <?php if($this->muscle_id > 0){ echo ' display: block; ';} else
-                { echo ' display: none; ';}?>"
-         class="muscle-delete" />
-    <br class="clearfix" />
+    <span class="muscle-delete glyphicon glyphicon-remove-sign delete"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_muscle_selection');?>"></span>
+    <br class="clear-fix" />
 </div>

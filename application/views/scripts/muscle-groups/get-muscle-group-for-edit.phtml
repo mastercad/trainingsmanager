@@ -17,14 +17,14 @@ else if(is_array($this->aMuskelGruppe)
          class="muscle-group-delete"
          data-muskelgruppe-id="<?php echo $this->aMuskelGruppe['muscle_group_id'];?>"
          style="position: absolute; top: 0; right: 0;" />
-    <br class="clearfix" />
+    <br class="clear-fix" />
 <?php
     foreach($this->aMuskelGruppe['muscles'] as $aMuskel) {
         $this->assign($aMuskel);
         echo $this->render('loops/muscle-edit.phtml');
     }
 ?>
-        <br class="clearfix" />
+        <br class="clear-fix" />
     </div>
 <?php
 }

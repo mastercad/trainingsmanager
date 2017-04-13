@@ -1,0 +1,59 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 27.04.14
+ * Time: 11:28
+ */
+
+?>
+
+<div style="padding: 25px;">
+
+<?php
+$iFaktor = $this->iMaxBeanspruchterMuskel / 5; // 5 sind die maximale anzahl der sterne
+
+foreach ($this->aBeanspruchteMuskeln as $sMuskelName => $iBeanspruchung) {
+
+    $beanspruchung_pos_x = -100;
+    $iReelleBeanspruchung = $iBeanspruchung;
+
+    if($iBeanspruchung > 0)
+    {
+        $iReelleBeanspruchung = $iBeanspruchung / $iFaktor;
+        $beanspruchung_pos_x = -100 + ($iReelleBeanspruchung * 20);
+    }
+//    echo $sMuskelName . ' : ' . $iBeanspruchung . ' - ' . $iReelleBeanspruchung . ' - ' . $iFaktor . ' - ' . $this->iMaxBeanspruchterMuskel;
+    ?>
+    <div style="width: 200px; float: left; display: inline; position: relative; padding-right: 20px; height: 25px; font-size: 10px;">
+        <span style="vertical-align: middle;">
+            <?php echo $sMuskelName;?>
+        </span>
+        <img src="/images/content/statisch/grafiken/beanspruchung.png"
+             class="muskel-beanspruchung"
+             style="background-image: url('/images/content/statisch/grafiken/beanspruchung_bg_neu.png');
+                 background-repeat: no-repeat;
+                 background-position: <?php echo $beanspruchung_pos_x;?>px <?php echo $beanspruchung_pos_x;?>px;
+                 width: 100px; height: 20px;
+                 background-color: #EEEEEE;
+                 position: absolute;
+                 right: 20px;"
+             data-muskel-beanspruchung="<?php echo $iBeanspruchung;?>"
+             data-background_position="<?php echo $beanspruchung_pos_x;?>px <?php echo $beanspruchung_pos_x;?>px">
+    </div>
+<?php
+}
+?>
+
+<br class="clear-fix" />
+<?php
+
+echo $this->sContent;
+
+?>
+    <a href="/training-diaries/start/id/<?php echo $this->trainingsplan_id;?>">
+        <button>
+            Trainingsplan starten
+        </button>
+    </a>
+</div>

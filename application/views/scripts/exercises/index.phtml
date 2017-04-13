@@ -1,3 +1,7 @@
+<h2>
+    <?php echo $this->translate('label_exercises');?>
+</h2>
+<div class="col-sm-12 exercises-overview">
 <?php
     if (is_array($this->a_uebungen)) {
         foreach($this->a_uebungen as $a_uebung) {
@@ -6,52 +10,42 @@
         }
     }
 ?>
+</div>
+
 <script type="text/javascript">
-    jQuery('document').ready(function()
-    {
-        jQuery('.uebung-delete').unbind('click');
-        jQuery('.uebung-delete').bind('click', function()
-        {
-            if(confirm('Diese Übung wirklich löschen?\n'))
-            {
+    jQuery('document').ready(function() {
+        jQuery('.exercise-delete').unbind('click').click(function() {
+            if(confirm('<?php echo $this->translate('question_warning_delete_exercise');?>')) {
                 jQuery(this).loescheUebung();
             }
         });
         
-        jQuery.fn.loescheUebung = function()
-        {
-            var i_uebung_id = jQuery(this).data('uebung-id');
+        jQuery.fn.deleteExercise = function() {
+            var exerciseId = jQuery(this).data('exercise-id');
             var that = this;
             
-            if(isNumber(i_uebung_id) &&
-               0 < i_uebung_id)
-            {
-                var url = "/exercises/loesche-uebung/";
-                var obj_params = {'id': i_uebung_id, 'ajax': true};
+            if(isNumber(exerciseId)
+                && 0 < exerciseId
+            ) {
+                var url = "/exercises/delete-exercise/";
+                var obj_params = {'id': exerciseId, 'ajax': true};
                 
-                jQuery.post(url, obj_params, function(response)
-                {
-                    try
-                    {
+                jQuery.post(url, obj_params, function(response) {
+                    try {
                         response = JSON.parse(response);
                         var cad_obj_messages = new CAD.Message();
                         cad_obj_messages.init(response);
                         
-                        if(cad_obj_messages.open())
-                        {
+                        if(cad_obj_messages.open()) {
                             jQuery(that).parent().fadeOut();
                         }
-                    }
-                    catch(e)
-                    {
+                    } catch(e) {
                         alert(response);
                     }
                 });
-            }
-            else
-            {
+            } else {
                 var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init([{'type': 'fehler', 'message': 'Fehler bei der Übergabe!<br /><br />Ich kann diese Übung leider nicht löschen!'}]);
+                obj_cad_messages.init([{'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_cant_delete_exercise');?>'}]);
                 obj_cad_messages.open();
             }
         };

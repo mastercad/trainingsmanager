@@ -1,6 +1,8 @@
 <?php
 
-class ErrorController extends Zend_Controller_Action {
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+
+class ErrorController extends AbstractController {
 
     public function errorAction() {
         $errors = $this->_getParam('error_handler');

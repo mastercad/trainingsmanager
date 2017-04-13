@@ -5,31 +5,10 @@
  * and open the template in the editor.
  */
 
-class MusclesController extends Zend_Controller_Action
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+
+class MusclesController extends AbstractController
 {
-    protected $breadcrumb;
-    protected $schlagwoerter;
-    protected $beschreibung;
-    
-    public function init()
-    {
-    }
-	    
-    public function postDispatch()
-    {
-        $this->view->assign('breadcrumb', $this->breadcrumb);
-
-        $params = $this->getRequest()->getParams();
-
-        if(isset($params['ajax']))
-        {
-            $this->view->layout()->disableLayout();
-        }
-
-        $this->view->headMeta()->appendName('keywords', $this->schlagwoerter);
-        $this->view->headMeta()->appendName('description', $this->beschreibung);
-    }
-
     /**
      * shows overview over all stored muscles in database
      */
@@ -37,7 +16,7 @@ class MusclesController extends Zend_Controller_Action
         $musclesDb = new Model_DbTable_Muscles();
         $musclesCollection = $musclesDb->findAllMuscles();
 
-        $musclesContent = 'Es wurden leider keine Muskeln gefunden!';
+        $musclesContent = $this->getTranslator()->translate('label_no_muscles_found');
 
         if ((is_array($musclesCollection)
             || $musclesCollection instanceof Zend_Db_Table_Rowset)
@@ -80,7 +59,7 @@ class MusclesController extends Zend_Controller_Action
         }
     }
     
-    public function getMusclesForEditAction() {
+    public function getMuscleForEditAction() {
         $params = $this->getRequest()->getParams();
         
         if (isset($params['id'])) {
@@ -89,34 +68,34 @@ class MusclesController extends Zend_Controller_Action
             $musclesCollection = $muscleXMuscleGroupDb->findMusclesByMuscleGroupId($muscleGroupId);
             
             $this->view->assign('musclesCollection', $musclesCollection);
-            $this->view->assign('musclesContent', $this->view->render('loops/muscle-edit.phtml'));
         }
+        $this->view->assign('musclesContent', $this->view->render('loops/muscle-edit.phtml'));
     }
     
     public function getMuscleProposalsAction() {
         $params = $this->getRequest()->getParams();
         
         if (isset($params['search'])) {
-            $search = base64_decode($params['search']) . '%';
+            $search = '%' . base64_decode($params['search']) . '%';
             $musclesDb = new Model_DbTable_Muscles();
             $musclesCollection = $musclesDb->findMusclesByName($search);
 
-            $muscleProposalContent = "Leider wurden keine entsprechenden Muskeln gefunden!";
+            $muscleProposalsContent = Zend_Registry::get('Zend_Translate')->translate('label_no_muscles_found');
 
             if((is_array($musclesCollection)
                     || $musclesCollection instanceof Zend_Db_Table_Rowset)
                 && 0 < count($musclesCollection))
             {
-                $muscleProposalContent = '';
+                $proposalContent = '';
                 foreach($musclesCollection as $muscle) {
-                    if ($muscle instanceof Zend_Db_Table_Row) {
-                        $muscle = $muscle->toArray();
-                    }
-                    $this->view->assign($muscle);
-                    $muscleProposalContent .= $this->view->render('loops/muscle-proposal.phtml');
+                    $this->view->assign('proposalText', $muscle['muscle_name']);
+                    $this->view->assign('proposalId', $muscle['muscle_id']);
+                    $proposalContent .= $this->view->render('globals/proposal-row.phtml');
                 }
+                $this->view->assign('proposalContent', $proposalContent);
+                $muscleProposalsContent = $this->view->render('globals/proposals.phtml');
             }
-            $this->view->assign('muscleProposalContent', $muscleProposalContent);
+            $this->view->assign('muscleProposalsContent', $muscleProposalsContent);
         }
     }
     
@@ -157,7 +136,7 @@ class MusclesController extends Zend_Controller_Action
             if (0 == strlen(trim($muscleName))
                && !$muscleId
             ) {
-                array_push($messageCollection, array('type' => 'fehler', 'message' => 'Dieser Muskel benötigt einen Namen'));
+                array_push($messageCollection, array('type' => 'fehler', 'message' => $this->getTranslator()->translate('tooltip_muscle_needs_name')));
                 $hasError = true;
             } else if(0 < strlen(trim($muscleName))) {
                 $data['muscle_name'] = $muscleName;
@@ -171,7 +150,7 @@ class MusclesController extends Zend_Controller_Action
             ) {
                 $muscleCurrent = $musclesDb->findMusclesByName($muscleName);
                 if (0 < count($muscleCurrent)) {
-                    array_push($messageCollection, array('type' => 'fehler', 'message' => 'Muskel existiert bereits!', 'result' => false));
+                    array_push($messageCollection, array('type' => 'fehler', 'message' => $this->getTranslator()->translate('tooltip_muscle_already_exists'), 'result' => false));
                     $hasError = true;
                 }
             }
@@ -219,7 +198,7 @@ class MusclesController extends Zend_Controller_Action
                     $data['muscle_update_user_fk'] = $userId;
 
                     $musclesDb->updateMuscle($data, $muscleId);
-                    array_push($messageCollection, array('type' => 'meldung', 'message' => 'Dieser Muskel wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $muscleId));
+                    array_push($messageCollection, array('type' => 'meldung', 'message' => $this->getTranslator()->translate('tooltip_muscle_edited_successfully'), 'result' => true, 'id' => $muscleId));
                 }
                 // neu anlegen
                 else if(count($data) > 0)

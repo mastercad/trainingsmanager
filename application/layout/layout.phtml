@@ -1,204 +1,260 @@
 <?php echo $this->doctype(); ?>
 <html lang="de" <?php if($this->obj_social_media){ echo $this->obj_social_media->getHtmlAttributes();}?> >
     <head <?php if($this->obj_social_media){ echo $this->obj_social_media->getHeadAttributes();}?> >
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
     	<?php echo $this->headMeta();?>
 
         <?php echo $this->headTitle()->setSeparator(' | ')->setAutoEscape(false) ?>
 
-		<?php echo $this->headLink();?>
+        <script src="/js/utils.js"></script>
+        <link rel="stylesheet" href="/css/tether-theme-arrows.min.css" />
+        <link rel="stylesheet" href="/css/bootstrap.min.css">
+<!--        <link rel="stylesheet" href="/css/jquery.smartmenus.bootstrap.css">-->
+        <link rel="stylesheet" href="/css/login-form.css">
 
-		<?php echo $this->headScript();?>
+        <?php echo $this->headLink();?>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+        <?php echo $this->headScript();?>
     </head>
     <body itemscope itemtype="http://schema.org/Article" <?php if($this->obj_social_media){ echo $this->obj_social_media->getBodyAttributes();}?> >
-
-    <div id="wrapper">
-	    <header>
-	      <div id="login-container">
 <?php
-	$obj_user_identity = Zend_Auth::getInstance()->getIdentity();
+	$user = Zend_Auth::getInstance()->getIdentity();
 
-	$obj_checkRecht = new Plugin_CheckeRecht();
+	$userRightsService = new Plugin_CheckeRecht();
 
-	if($obj_user_identity)
-	{
-?>
-			<form method="post" action="" id="login_form">
-				<span>Willkommen, <?php echo ucfirst($obj_user_identity->user_first_name);?> <?php echo ucfirst($obj_user_identity->user_name);?></span>
-				<input type="hidden" name="user_logout" id="user_logout" value="1" />
-				<input type="submit" id="logout-button" value=" Logout " />
-			</form>
-<?php
-	}
-	else
-	{
-?>
-	      	<a href="/auth/login" id="login-button" >Login</a>
-<?php
-	}
-?>
-	      </div>
-        </header>
-        <div class="container">
-            <ul id="navi">
-                <li class="<?php if($this->controller == "handbuch"){ echo 'active';}?>">
-                    <a href="/downloads/Rundumfit.pdf" target="_blank">
-                        Handbuch
-                    </a>
-                </li>
-                <li class="<?php if($this->controller == "muscles"){ echo 'active';}?>">
-                    <a href="/muscles/">
-                        Muskeln
-                    </a>
-                    <ul>
-                        <li class="<?php if($this->controller == "muscles" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/muscles/">
-                                Übersicht
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "muscles" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/muscles/edit/">
-                                Neu anlegen
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "muscle-groups"){ echo 'active';}?>">
-                    <a href="/muscle-groups/">
-                        Muskelgruppen
-                    </a>
-                    <ul>
-                        <li class="<?php if($this->controller == "muscle-groups" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/muscle-groups/">
-                                Übersicht
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "muscle-groups" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/muscle-groups/edit/">
-                                Neu anlegen
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "devices"){ echo 'active';}?>">
-                    <a href="/devices/">
-                        Geräte
-                    </a>
-                    <ul>
-                        <li class="<?php if($this->controller == "devices" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/devices/">
-                                Übersicht
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "devices" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/devices/edit/">
-                                Neu anlegen
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "device-groups"){ echo 'active';}?>">
-                    <a href="/device-groups/">
-                        Gerätegruppen
-                    </a>
-                    <ul>
-                        <li class="<?php if($this->controller == "device-groups" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/device-groups/">
-                                Übersicht
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "device-groups" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/device-groups/edit/">
-                                Neu anlegen
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "exercises"){ echo 'active';}?>">
-                    <a href="/exercises/">
-                        Übungen
-                    </a>
-                    <ul>
-                        <li class="<?php if($this->controller == "exercises" && $this->action == "index"){ echo 'active';}?>">
-                            <a href="/exercises">
-                                Übersicht
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "exercises" && $this->action == "edit"){ echo 'active';}?>">
-                            <a href="/exercises/edit/">
-                                Neu anlegen
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "training-plans"){ echo 'active';}?>">
-                    <a href="/training-plans/">
-                        Trainingsplan
-                    </a>
-                    <ul>
-                        <li class="<?php if($this->controller == "training-plans" && $this->action == "index"){
-                            echo 'active';}?>">
-                            <a href="/training-plans">
-                                Übersicht
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "training-plans" && $this->action == "select-layout"){
-                            echo 'active';}?>">
-                            <a href="/training-plans/select-layout/">
-                                Neu anlegen
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "training-plans" && $this->action == "archiv"){
-                            echo 'active';}?>">
-                            <a href="/training-plans/archiv/">
-                                Archiv
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "trainings"){ echo 'active';}?>">
-                    <a href="/trainings/">
-                        Trainingstagebuch
-                    </a>
-                    <ul>
-                        <li class="<?php if($this->controller == "trainings" && $this->action == "index"){
-                            echo 'active';}?>">
-                            <a href="/trainings">
-                                Übersicht
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "trainings" && $this->action == "edit"){
-                            echo 'active';}?>">
-                            <a href="/trainings/edit/">
-                                Neu anlegen
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "trainings" && $this->action == "archiv"){
-                            echo 'active';}?>">
-                            <a href="/trainings/archiv/">
-                                Archiv
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <br class="clearfix" />
-            </ul>
-	        <div id="content">
-
-	         <?php  echo $this->layout()->content;?>
-
-                <br class="clearfix" />
-	        </div> <!-- /container -->
-                <br class="clearfix" />
+    ?>
+        <div class="navbar navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    Trainingsmanager
+                </a>
             </div>
 
-            <footer>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="<?php if($this->controller == "manual"){ echo 'active';}?>">
+                        <a href="/downloads/Rundumfit.pdf" target="_blank">
+                            <?php echo $this->translate('label_manual');?>
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="<?php if($this->controller == "muscles"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_muscles');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "muscles" && $this->action == "index"){ echo 'active';}?>"><a href="/muscles/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "muscles" && $this->action == "edit"){ echo 'active';}?>"><a href="/muscles/edit"><?php echo $this->translate('label_create');?></a></li>
+<!--                                    <li><a href="#">One more separated link <span class="caret"></span></a>-->
+<!--                                        <ul class="dropdown-menu">-->
+<!--                                            <li><a href="#">Action</a></li>-->
+<!--                                        </ul>-->
+<!--                                    </li>-->
+<!--                                    <li><a href="#">Something else here</a></li>-->
+<!--                                    <li role="separator" class="divider"></li>-->
+<!--                                    <li><a href="#">Separated link</a></li>-->
+<!--                                    <li role="separator" class="divider"></li>-->
+<!--                                    <li><a href="#">One more separated link</a></li>-->
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "muscle-groups"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_muscle_groups');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "muscle-groups" && $this->action == "index"){ echo 'active';}?>"><a href="/muscle-groups/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "muscle-groups" && $this->action == "edit"){ echo 'active';}?>"><a href="/muscle-groups/edit"><?php echo $this->translate('label_create');?></a></li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "devices"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_devices');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "devices" && $this->action == "index"){ echo 'active';}?>"><a href="/devices/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "devices" && $this->action == "edit"){ echo 'active';}?>"><a href="/devices/edit"><?php echo $this->translate('label_create');?></a></li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "device-groups"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle <?php if($this->controller == "device-groups"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_device_groups');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "device-groups" && $this->action == "index"){ echo 'active';}?>"><a href="/device-groups/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "device-groups" && $this->action == "edit"){ echo 'active';}?>"><a href="/device-groups/edit"><?php echo $this->translate('label_create');?></a></li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "exercises"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle <?php if($this->controller == "exercises"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_exercises');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "exercises" && $this->action == "index"){ echo 'active';}?>"><a href="/exercises/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "exercises" && $this->action == "edit"){ echo 'active';}?>"><a href="/exercises/edit"><?php echo $this->translate('label_create');?></a></li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "training-plans"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle <?php if($this->controller == "training-plans"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_training_plans');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "training-plans" && $this->action == "index"){ echo 'active';}?>"><a href="/training-plans/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "training-plans" && $this->action == "select-layout"){ echo 'active';}?>"><a href="/training-plans/select-layout"><?php echo $this->translate('label_create');?></a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="<?php if($this->controller == "training-plans" && $this->action == "archive"){ echo 'active';}?>"><a href="/training-plans/archive"><?php echo $this->translate('label_archive');?></a></li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "training-diaries"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle <?php if($this->controller == "training-diaries"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_training_diaries');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "training-diaries" && $this->action == "index"){ echo 'active';}?>"><a href="/training-diaries/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "training-diaries" && $this->action == "edit"){ echo 'active';}?>"><a href="/training-diaries/edit"><?php echo $this->translate('label_create');?></a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="<?php if($this->controller == "training-diaries" && $this->action == "archive"){ echo 'active';}?>"><a href="/training-diaries/archive"><?php echo $this->translate('label_archive');?></a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <p class="navbar-text">
+                            <span>
+                                <?php
 
-            </footer>
+                                if (! isset($user)) {
+                                    echo $this->translate('label_have_account');
+                                }
+                                ?>
+                            </span>
+                        </p>
+                    </li>
+                    <li class="">
+<?php
+                        if (!isset($user)) {
+?>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_login');?></b> <span class="caret"></span></a>
+                        <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <?php echo $this->translate('label_login_via');?>
+                                         <div class="social-buttons">
+                                            <a href = "#" class="btn btn-fb">
+                                                <i class="fa fa-facebook" ></i >
+                                                <?php echo $this->translate('facebook');?>
+                                            </a >
+                                            <a href = "#" class="btn btn-tw" >
+                                                <i class="fa fa-twitter" ></i >
+                                                <?php echo $this->translate('twitter');?>
+                                            </a >
+                                        </div >
+                                        <?php echo $this->translate('or');?>
+                                        <form class="form" role="form" method="post" action="/auth/login" accept-charset="UTF-8" id="login_form" >
+                                            <div class="form-group" >
+                                                <label class="sr-only" for="user_login_name" >
+                                                    <?php echo $this->translate('label_email');?>
+                                                </label >
+                                                <input type="email" class="form-control" id="user_login_name" placeholder="<?php echo $this->translate('label_email');?>" required >
+                                            </div >
+                                            <div class="form-group" >
+                                                <label class="sr-only" for="user_login_password" >
+                                                    <?php echo $this->translate('label_password');?>
+                                                </label >
+                                                <input type="password" class="form-control" id="user_login_password" placeholder="<?php echo $this->translate('label_password');?>" required >
+                                                <div class="help-block text-right" >
+                                                    <a href = "" >
+                                                        <?php echo $this->translate('label_forgotten_password');?>
+                                                    </a ></div >
+                                            </div >
+                                            <div class="form-group" >
+                                                <button type="submit" class="btn btn-primary btn-block" > <?php echo $this->translate('label_login');?> </button >
+                                            </div >
+                                            <div class="checkbox" >
+                                                <label >
+                                                    <input type="checkbox" > <?php echo $this->translate('label_keep_logged_in');?>
+                                                </label >
+                                            </div >
+                                        </form >
+                                    </div >
+                                   <div class="bottom text-center">
+                                       <?php echo $this->translate('label_new_here');?>
+                                       <a href="#">
+                                           <b>
+                                               <?php echo $this->translate('label_join_us');?>
+                                           </b>
+                                       </a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+<?php
+                } else {
+?>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_welcome') . ", " . ucfirst($user->user_first_name) . ' ' . ucfirst($user->user_last_name);?></b> <span class="caret"></span></a>
+                        <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                        <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login_form" >
+                                            <input type="hidden" name="user_logout" id="user_logout" value="1" />
+                                            <input class="btn btn-primary btn-block" type="submit" id="logout-button" value="<?php echo $this->translate('label_logout');?>" />
+                                        </form >
+<?php
+                                }
+?>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="<?php echo $this->translate('label_search');?>">
+                    </div>
+                    <button type="submit" class="btn btn-default"><?php echo $this->translate('label_submit');?></button>
+                </form>
+            </div><!-- /.navbar-collapse -->
         </div>
 
+    <div id="wrapper">
+        <div class="container">
+	        <div id="content">
+
+	            <?php  echo $this->layout()->content;?>
+
+                <br class="clear-fix" />
+	        </div> <!-- /container -->
+            <br class="clear-fix" />
+        </div>
+    </div>
+
         <?php echo $this->inlineScript(); ?>
+
+        <script src="/js/tether.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            initAuth();
+            jQuery(function () {
+                jQuery('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+<!--        <script src="/js/jquery.smartmenus.js"></script>-->
+<!--        <script src="/js/jquery.smartmenus.bootstrap.js"></script>-->
+
     </body>
 </html>

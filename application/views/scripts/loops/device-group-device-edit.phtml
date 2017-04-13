@@ -1,16 +1,9 @@
-<div class="device" style="margin-top: 5px; position: relative; width: 325px;">
-    <input type="text" class="device-name"
-           style="float: left;"
+<div class="device form-group" style="position: relative;">
+    <input class="device-name form-control"
+           type="text"
            value="<?php echo $this->device_name;?>"
            data-device-name="<?php echo $this->device_name;?>"
            data-device-id="<?php echo $this->device_id;?>" />
-    <div style="float: left; margin-left: 10px;">
-    </div>
-        <img src="/images/content/statisch/grafiken/delete.png" 
-             title="zum entfernen hier klicken!" 
-             style="position: absolute; height: 20px; width: 20px;
-                    right: 5px; top: 0; <?php if($this->device_id > 0){ echo ' display: block; ';} else
-                    { echo ' display: none; ';}?>"
-             class="device-delete" />
-    <br class="clearfix" />
+
+    <span class="delete device-delete glyphicon glyphicon-remove-sign" data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_delete_device_from_selection');?>"></span>
 </div>

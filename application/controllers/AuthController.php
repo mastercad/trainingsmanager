@@ -1,26 +1,11 @@
 <?php
 
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+
 /**
  * Class AuthController
  */
-class AuthController extends Zend_Controller_Action {
-    /**
-     *
-     */
-    public function __init() {
-    }
-
-    /**
-     *
-     */
-    public function postDispatch() {
-        $a_params = $this->getRequest()->getParams();
-
-        if(isset($a_params['ajax']))
-        {
-            $this->view->layout()->disableLayout();
-        }
-    }
+class AuthController extends AbstractController {
 
     /**
      *
@@ -164,7 +149,7 @@ class AuthController extends Zend_Controller_Action {
             }
 
             if (strlen(trim($str_register_name)) > 0) {
-                $a_data['user_name'] = $str_register_name;
+                $a_data['user_last_name'] = $str_register_name;
             }
 
             if ( true === $b_all_valid) {
@@ -255,10 +240,10 @@ class AuthController extends Zend_Controller_Action {
                     ) {
                         $str_user_name = $a_user['user_first_name'] . " ";
                     }
-                    if (true === isset($a_user['user_name'])
-                        && 0 <strlen(trim($a_user['user_name']))
+                    if (true === isset($a_user['user_last_name'])
+                        && 0 <strlen(trim($a_user['user_last_name']))
                     ) {
-                        $str_user_name .= $a_user['user_name'];
+                        $str_user_name .= $a_user['user_last_name'];
                     }
 
                     $str_message = "Hallo " . $str_user_name . ",<br /><br />";

@@ -1,11 +1,13 @@
 <div style="position: relative; width: 300px; margin-top: 10px;">
      <a href="/devices/edit/id/<?php echo $this->device_id;?>"
-   style="margin-top: 5px; text-decoration: none;">
-    <?php echo $this->device_name;?>
+        style="margin-top: 5px; text-decoration: none;"
+        data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_device');?>"
+        ><?php echo $this->device_name;?>
     </a>
-    <br />
-    <img src="/images/content/statisch/grafiken/delete.png" 
-         class="device-delete"
-         data-device-id="<?php echo $this->device_id;?>"
-         style="position: absolute; top: 0; right: 0;" />
+
+    <span class="device-delete glyphicon glyphicon-remove-sign delete"
+          data-muscle-id="<?php echo $this->muscle_id;?>"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_delete_device');?>"></span>
+
+    <br class="clear-fix" />
 </div>

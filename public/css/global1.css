@@ -396,7 +396,7 @@ code    {
 	border-bottom: 1px solid #111111;
 }
 
-.clearfix	{
+.clear-fix	{
 	clear: both;
 	height: 0;
 	visibility: hidden;

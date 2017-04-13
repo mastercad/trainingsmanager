@@ -13,9 +13,7 @@
     {
         jQuery('.device-group-delete').unbind('click').bind('click', function()
         {
-            if(confirm('Diese Geraetegruppe wirklich löschen?\n\nAchtung:\n' +
-                       'Wenn Sie diese Geraetegruppe löschen, werden auch alle ' +
-                       'mit Ihr verknüpften Übungen gelöscht!'))
+            if(confirm('<?php echo $this->translate('question_warning_delete_device_group');?>'))
             {
                 jQuery(this).deleteDeviceGroup();
             }
@@ -46,7 +44,7 @@
                 });
             } else {
                 var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init([{'type': 'fehler', 'message': 'Fehler bei der Übergabe!<br /><br />Ich kann diese Geraetegruppe leider nicht löschen!'}]);
+                obj_cad_messages.init([{'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_cant_delete_device_group');?>'}]);
                 obj_cad_messages.open();
             }
         };

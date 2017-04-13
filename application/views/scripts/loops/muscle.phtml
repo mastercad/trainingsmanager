@@ -1,14 +1,15 @@
 <div class="muscle" data-muscle-id="<?php echo $this->muscle_id;?>" style="position: relative; width: 300px; margin-top: 10px;">
      <a href="/muscles/edit/id/<?php echo $this->muscle_id;?>"
-   style="margin-top: 5px; text-decoration: none; float: left;">
-    <?php echo $this->muscle_name;?>
+        style="margin-top: 5px; text-decoration: none; float: left;"
+        data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_muscle');?>">
+        <?php echo $this->muscle_name;?>
     </a>
 
     <?php echo $this->muscleUseRatingContent;?>
 
-    <br />
-    <img src="/images/content/statisch/grafiken/delete.png" 
-         class="muscle-delete"
-         data-muscle-id="<?php echo $this->muscle_id;?>"
-         style="position: absolute; top: 0; right: 0;" />
+    <span class="muscle-delete glyphicon glyphicon-remove-sign delete"
+          data-muscle-id="<?php echo $this->muscle_id;?>"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_muscle_selection');?>"></span>
+
+    <br class="clear-fix" />
 </div>

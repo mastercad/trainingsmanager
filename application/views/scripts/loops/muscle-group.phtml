@@ -1,17 +1,20 @@
 <div class="muscle-group" data-muscle-group-id="<?php echo $this->muscle_group_id;?>" style="clear: both; margin-top: 15px; position: relative; width: 300px;">
     <a href="/muscle-groups/edit/id/<?php echo $this->muscle_group_id;?>"
-       style="text-decoration: none;">
+       style="text-decoration: none;"
+       data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_muscle_group');?>">
         <?php echo $this->muscle_group_name;?>
     </a>
-    <br class="clearfix" />
-    <div class="muscles-in-muscle-group">
+    <br class="clear-fix" />
+
+    <div class="muscles-in-muscle-group" style="margin-left: 25px;">
 <?php
         echo $this->musclesInMuscleGroupContent;
 ?>
     </div>
-    <img src="/images/content/statisch/grafiken/delete.png"
-         class="muscle-group-delete"
-         data-muscle-group-id="<?php echo $this->muscle_group_id;?>"
-         style="position: absolute; top: 0; right: 0;" />
-    <br class="clearfix" />
+
+    <span class="muscle-group-delete glyphicon glyphicon-remove-sign delete"
+          data-muscle-group-id="<?php echo $this->muscle_group_id;?>"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_delete_muscle_group');?>"></span>
+
+    <br class="clear-fix" />
 </div>

@@ -1,17 +1,15 @@
 <?php
 
-class IndexController extends Zend_Controller_Action
-{
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-    public function init()
-    {
-        /* Initialize action controller here */
+class IndexController extends AbstractController {
+
+    public function indexAction() {
+
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/c3.min.js', 'text/javascript');
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/d3.min.js', 'text/javascript');
+
+        $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/c3.min.css', 'screen', true);
     }
-
-    public function indexAction()
-    {
-    }
-
-
 }
 

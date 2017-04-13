@@ -54,7 +54,7 @@
             var object_y = position.top;
             */
 
-            var obj_wrapper = jQuery('<div style="position: relative;"></div>');
+            var obj_wrapper = jQuery('<div style="position: relative; display: inline-block; min-width: 200px; width: auto;"></div>');
             var obj_clone = jQuery(editable_object).clone();
 
             /** 
@@ -72,8 +72,8 @@
                 jQuery(obj_wrapper).addClass("cad-cms-text-float-wrapper");
                 this.searchAndMoveAllFloatingSiblings(obj_clone, obj_wrapper);
 
-//              	jQuery('<br class="clearfix" />').insertAfter(jQuery(obj_wrapper).find(':last'));
-                jQuery(obj_wrapper).append('<br class="clearfix" />');
+//              	jQuery('<br class="clear-fix" />').insertAfter(jQuery(obj_wrapper).find(':last'));
+                jQuery(obj_wrapper).append('<br class="clear-fix" />');
                 jQuery(obj_wrapper).css('float', jQuery(obj_clone).css("float"));
                 jQuery(obj_wrapper).css('display', jQuery(obj_clone).css("display"));
                 jQuery(obj_wrapper).css('width', jQuery(obj_clone).css("width"));
@@ -162,7 +162,7 @@
                 jQuery(obj_image_wrapper).addClass("cad-cms-image-float-wrapper");
 
                 this.searchAndMoveAllFloatingSiblings(obj_clone, obj_image_wrapper);
-                jQuery('<br class="clearfix" />').insertAfter(jQuery(obj_image_wrapper).find(':last'));
+                jQuery('<br class="clear-fix" />').insertAfter(jQuery(obj_image_wrapper).find(':last'));
             }
             else
             {
@@ -736,16 +736,16 @@
 
             obj_image_dialog.append(jQuery('<div class="button_close"></div>'));
 
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<label for="cad-dms-image-dialog-bild-pfad" class="cad-cms-label" style="margin-top: 10px;">Geben Sie den Pfad zu einem Bild ein:</label>'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<input type="text" id="cad-dms-image-dialog-bild-pfad" />'));
 
             if(jQuery('.miniaturbild-src').length)
             {
-                obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+                obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
                 obj_image_dialog.append(jQuery('<label class="cad-cms-label" style="margin-top: 10px;">oder wählen Sie ein vorhandenes Bild aus:</label>'));
-                obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+                obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
 
                 jQuery('.miniaturbild-src').each(function()
                 {
@@ -765,33 +765,33 @@
                 });
             }
 
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<label class="cad-cms-label" style="margin-top: 10px;">Optionale Parameter:</label>'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<label for="cad-cms-image-dialog-name" class="cad-cms-label" style="margin-top: 10px;">Anzuzueigender Name für das Bild:</label>'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<input type="text" id="cad-cms-image-dialog-name" />'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<label for="cad-cms-image-dialog-width" class="cad-cms-label" style="margin-top: 10px;">Anzuzueigende Breite des Bildes:</label>'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<input type="text" id="cad-cms-image-dialog-width" />'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<label for="cad-cms-image-dialog-height" class="cad-cms-label" style="margin-top: 10px;">Anzuzueigende Höhe des Bildes:</label>'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<input type="text" id="cad-cms-image-dialog-height" />'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<label for="cad-cms-image-dialog-prio-width" class="cad-cms-label" style="margin-top: 10px;">Prio Width?:</label>'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<input type="checkbox" id="cad-cms-image-dialog-prio-width" value="1" />'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<label for="cad-cms-image-dialog-prio-height" class="cad-cms-label" style="margin-top: 10px;">Prio Height?:</label>'));
-            obj_image_dialog.append(jQuery('<br class="clearfix" />'));
+            obj_image_dialog.append(jQuery('<br class="clear-fix" />'));
             obj_image_dialog.append(jQuery('<input type="checkbox" id="cad-cms-image-dialog-prio-height" value="1" />'));
 
             obj_image_dialog.append(jQuery('<input type="hidden" id="cad-cms-image-dialog-file" value=""/>'));
 //          obj_image_dialog.append(jQuery('<input type="hidden" id="cad-cms-image-dialog-name" value="" />'));
 
-            obj_image_dialog.append('<br class="clearfix" />');
+            obj_image_dialog.append('<br class="clear-fix" />');
             obj_image_dialog.append(jQuery('<button id="cad-cms-image-dialog-image-einfuegen" class="button">Einfügen</button>'));
             obj_image_dialog.find('#cad-cms-image-dialog-image-einfuegen').unbind('click');
             obj_image_dialog.find('#cad-cms-image-dialog-image-einfuegen').bind('click', function()
@@ -925,7 +925,7 @@
                             beispiel_content = Base64.decode(obj_content.str_beispiel_content);
                         }
 
-                        self.html(Base64.decode(response) + '<br class="clearfix" />');
+                        self.html(Base64.decode(response) + '<br class="clear-fix" />');
 
                         if(true === b_init_syntaxhighlight)
                         {

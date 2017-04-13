@@ -7,26 +7,10 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class DeviceGroupsController extends Zend_Controller_Action
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+
+class DeviceGroupsController extends AbstractController
 {
-    protected $breadcrumb;
-    protected $schlagwoerter;
-    protected $beschreibung;
-
-    public function postDispatch() {
-        $this->view->assign('breadcrumb', $this->breadcrumb);
-
-        $params = $this->getRequest()->getParams();
-
-        if(isset($params['ajax']))
-        {
-            $this->view->layout()->disableLayout();
-        }
-
-        $this->view->headMeta()->appendName('keywords', $this->schlagwoerter);
-        $this->view->headMeta()->appendName('description', $this->beschreibung);
-    }
-
     public function indexAction() {
         $deviceGroupsDb = new Model_DbTable_DeviceGroups();
         $deviceXDeviceGroupDb = new Model_DbTable_DeviceXDeviceGroup();

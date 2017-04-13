@@ -1,86 +1,88 @@
 <div>
     <h3>
-        Muskelgruppe Name:<span 
+        <?php echo $this->translate('label_muscle_group_name');?>:<span
             class="editable" 
             style="margin-left: 20px; border-bottom: 1px dotted gray;"
             id="muscle_group_name" data-cad-cms-content-orig="<?php echo base64_encode($this->muscle_group_name);?>"
+            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_muscle_group_name');?>"
 		><?php echo $this->muscle_group_name;?></span>
     </h3>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <h3 style="float: left; display: inline; margin-top: 15px;">
-        Muskeln:
+        <?php echo $this->translate('label_muscle_name');?>:
     </h3>
     
-    <img class="muscle-add" src="/images/content/statisch/grafiken/add_normal.png"
-         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>
+    <span class="muscle-add add glyphicon glyphicon-plus-sign" data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_add_new_muscle_input');?>"></span>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <div class="muscles-in-muscle-group"
          style="margin-top: 5px;">
         <?php echo $this->muscle_collection_content;?>
     </div>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <input type="hidden" class="id" name="muscle-group-id" id="muscle_group_id" value="<?php echo $this->muscle_group_id;?>" />
 </div>
 
-<br class="clearfix" />
+<br class="clear-fix" />
 
-<div class="muscle-proposals"
+<div class="proposals"
      style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
             background-color: #FFFFFF; opacity: 0.9; 
             box-shadow: 5px 5px 5px #111111;" ></div>
 
-<button onclick="save();" 
-        style="margin-top: 15px;"
-        class="button">
-    Speichern
+<button class="save btn btn-primary btn-block">
+    <?php echo $this->translate('label_save');?>
 </button>
 
 <script type="text/javascript">
 	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
 
 	function save() {
-            var hasError = false;
-            var messages = [];
-            
-            if (!jQuery.trim(jQuery('#muscle_group_name').html()).length) {
-                hasError = true;
-                messages.push({'type': 'fehler', 'message': 'Die Muskelgruppe braucht einen Namen!'});
-            }
-            
-            var muscleList = jQuery('.muscles-in-muscle-group').find('.muscle');
-            var muscles = [];
+        var hasError = false;
+        var messages = [];
 
-            for (var i = 0, len = muscleList.length; i < len; i++) {
-                var muscle_id = jQuery(muscleList[i]).find('.muscle-name').data('muscle-id');
-                
-                if (muscle_id) {
-                    muscles.push({'id': muscle_id});
-                }
-            }
-            
-            if (!muscles.length) {
-                hasError = true;
-                messages.push({'type': 'fehler', 'message': 'Es muss mindestens ein Muskel für diese Muskelgruppe vollständig ausgefüllt sein!'});
-            }
-            
-            if (!hasError) {
-                jQuery().setEditedElements('muscles_in_muscle_group', muscles);
-                jQuery().setEditedElements('muscle_group_id', jQuery('#muscle_group_id').val());
-                jQuery().setAjax(true);
+        if (!jQuery.trim(jQuery('#muscle_group_name').html()).length) {
+            hasError = true;
+            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_muscle_group_needs_name');?>'});
+        }
 
-                CADEditSave();
-            } else {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init(messages);
-                obj_cad_messages.open();
+        var muscleList = jQuery('.muscles-in-muscle-group').find('.muscle');
+        var muscles = [];
+
+        for (var i = 0, len = muscleList.length; i < len; i++) {
+            var muscle_id = jQuery(muscleList[i]).find('.muscle-name').data('muscle-id');
+
+            if (muscle_id) {
+                muscles.push({'id': muscle_id});
             }
         }
-        edit_init(false);
-        initMusclesEdit();
+
+        if (!muscles.length) {
+            hasError = true;
+            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_muscle_group_needs_muscle');?>'});
+        }
+
+        if (!hasError) {
+            jQuery().setEditedElements('muscles_in_muscle_group', muscles);
+            jQuery().setEditedElements('muscle_group_id', jQuery('#muscle_group_id').val());
+            jQuery().setAjax(true);
+
+            CADEditSave();
+        } else {
+            var obj_cad_messages = new CAD.Message();
+            obj_cad_messages.init(messages);
+            obj_cad_messages.open();
+        }
+    }
+
+    jQuery('.save').unbind('click').click(function() {
+        save();
+    });
+    edit_init(false);
+    initMusclesEdit();
 </script>

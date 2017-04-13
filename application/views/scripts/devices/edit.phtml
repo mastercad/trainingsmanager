@@ -3,52 +3,53 @@
 ?>
 <div>
     <h2>
-        Gerät Name:<span
+        <?php echo $this->translate('label_device_name');?>:<span
             class="editable" 
             style="margin-left: 20px; border-bottom: 1px dotted gray;"
             id="device_name" data-cad-cms-content-orig="<?php echo base64_encode($this->device_name);?>"
+            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_device_name');?>"
 		><?php echo $this->device_name;?></span>
     </h2>
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
     <img src="<?php echo $this->preview?>"
          class="editable preview-picture"
-         alt="Vorschaubild"
+         alt="<?php echo $this->translate('alternate_preview_picture');?>"
          style="margin-top: 15px;"
-         title="klicken Sie hier, um ein Bild hochzuladen"
-         id="device_preview_picture" />
+         title="<?php echo $this->translate('tooltip_click_to_upload_picture');?>"
+         id="device_preview_picture"
+         data-toggle="tooltip" data-placement="right"
+        />
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
-    <h3 style="margin-top: 15px; font-size: 12px;">
-        Geräte Optionen:
-    </h3>
+<!--    <h3 style="margin-top: 15px; font-size: 12px;">-->
+<!--        Geräte Optionen:-->
+<!--    </h3>-->
 
-    <div style="float: left; display: inline;">
-        <?php echo $this->deviceOptionsDropDownContent;?>
-    </div>
+    <?php echo $this->deviceOptionsDropDownContent;?>
 
-    <img class="device-option-add" src="/images/content/statisch/grafiken/add_normal.png"
-         style="width: 30px; float: left; display: inline;"/>
+<!--    <img class="device-option-add" src="/images/content/statisch/grafiken/add_normal.png"-->
+<!--         style="width: 30px; float: left; display: inline;"/>-->
 
-    <br class="clearfix" />
+<!--    <br class="clear-fix" />-->
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
-    <div class="device-options">
+    <div class="device-options" style="margin-top: 20px;">
         <?php echo $this->deviceOptionsContent;?>
     </div>
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
     <input type="hidden" class="id" name="device-id" id="device_id" value="<?php echo $this->device_id;?>" />
 </div>
 
-<br class="clearfix" />
+<br class="clear-fix" />
 
 <h3 style="margin-top: 15px;">
-    Gerätebilder:
+    <?php echo $this->translate('label_device_pictures');?>:
 </h3>
 
 <div class="preview-pictures"
@@ -56,12 +57,10 @@
 
 </div>
 
-<br class="clearfix" />
+<br class="clear-fix" />
 
-<button onclick="save();" 
-        class="button"
-        style="margin-top: 15px;">
-    Speichern
+<button class="save btn btn-primary btn-block">
+    <?php echo $this->translate('label_save');?>
 </button>
 
 <script type="text/javascript">
@@ -73,7 +72,7 @@
 
         if(!jQuery.trim(jQuery('#device_name').html()).length) {
             hasErrors = true;
-            messages.push({'type': 'fehler', 'message': 'Das Geraet braucht einen Namen!'});
+            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_needs_name');?>'});
         }
 
         var optionsList = jQuery('.device-options').find('.device-option');
@@ -106,10 +105,10 @@
     }
 
     jQuery(document).ready(function() {
-        jQuery('.device-option-add').unbind('click').bind('click', function() {
+        jQuery('.option-add').unbind('click').bind('click', function() {
 
             // check if selected option already exists
-            var selectedOption = jQuery('#device_options_select').val();
+            var selectedOption = jQuery(this).data('value');
             var currentOptionsList = jQuery('.device-options').find('.device-option');
 
             for (var i = 0, len = currentOptionsList.length; i < len; i++) {
@@ -120,7 +119,7 @@
                     obj_cad_messages.init([
                         {
                             'type': 'fehler',
-                            'message': 'Die ausgewählte Option existiert bereits!',
+                            'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
                             'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
                         }
                     ]);
@@ -130,9 +129,14 @@
                 }
             }
 
+            // hide current option from dropdown
+//            jQuery(this).parent().toggle();
+            jQuery(this).parent().parent().parent().find('.dropdown-toggle').dropdown('toggle');
+
             jQuery.post('/devices/get-device-option-edit', {ajax: true, device_option_id: selectedOption}, function(response) {
                 jQuery('.device-options').append(response);
             });
+            return false;
         });
         edit_init(true);
         initDevicesEdit();

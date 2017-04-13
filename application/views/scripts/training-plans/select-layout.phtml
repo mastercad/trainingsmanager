@@ -7,38 +7,43 @@
  */ 
 ?>
 
-<form method="post" target="#upload_frame" action="">
-    <label for="user_id">
-        Mitglied:
-    </label>
-    <select name="user_id" id="user_id">
-        <option value="0" >Bitte wählen...</option>
-<?php
-    if (is_array($this->aUsers)) {
-        foreach ($this->aUsers as $aUser) {
-?>
-        <option value="<?php echo $aUser['user_id'];?>">
-            <?php echo $aUser['user_vorname'] . ' | ' . $aUser['user_email'];?>
-        </option>
-<?php
-        }
-    }
-?>
-    </select>
+<form method="post" action="">
 
-    <label for="trainingsplan_einfach">
-        Einfacher Trainingsplan
-    </label>
-    <input type="radio" value="1" name="layout" id="trainingsplan_einfach" />
-    <label for="trainingsplan_split">
-        Split Trainingsplan
-    </label>
-    <input type="radio" value="2" name="layout" id="trainingsplan_split" />
-    <input type="submit" value="erstellen" name="erstellen" />
+    <?php echo $this->userSelect;?>
+
+    <div class="form-group" style="margin-top: 20px;">
+        <label class="custom-control custom-radio">
+            <input id="layout1" name="layout" type="radio" class="custom-control-input" value="1">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description"><?php echo $this->translate('label_normal_training_plan');?></span>
+        </label>
+        <label class="custom-control custom-radio">
+            <input id="layout2" name="layout" type="radio" class="custom-control-input" value="2">
+            <span class="custom-control-indicator"></span>
+            <span class="custom-control-description"><?php echo $this->translate('label_split_training_plan');?></span>
+        </label>
+    </div>
+
+    <input type="hidden" id="user_id" name="user_id" value="" />
+    <input class="btn btn-primary btn-block"
+           style="margin-top: 20px;"
+           type="submit"
+           value="<?php echo $this->translate('label_create_training_plan');?>"
+           name="create" />
 </form>
 
 <script type="text/javascript" language="JavaScript">
     jQuery('document').ready(function(){
+        jQuery('.member-select .option-add').unbind('click').bind('click', function() {
+            var selectedOption = jQuery(this).data('value');
+            var selectedOptionName = jQuery(this).html();
+            var caretContent = '<span class="caret"></span>';
 
+            jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
+            jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+            jQuery(this).parent().parent().parent().find('#user_id').val(selectedOption);
+
+            return false;
+        });
     });
 </script>

@@ -1,9 +1,11 @@
 <div style="clear: both; margin-top: 15px; position: relative; width: 300px;">
     <a href="/device-groups/edit/id/<?php echo $this->device_group_id;?>"
-       style="text-decoration: none;">
+       style="text-decoration: none;"
+       data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_device_group');?>"
+        >
         <?php echo $this->device_group_name;?>
     </a>
-    <br class="clearfix" />
+    <br class="clear-fix" />
 <?php
     if (is_array($this->a_geraetegruppe_geraete)
         || $this->a_geraetegruppe_geraete instanceof Zend_Db_Table_Rowset
@@ -14,9 +16,9 @@
         }
     }
 ?>
-    <img src="/images/content/statisch/grafiken/delete.png"
-         class="device-group-delete"
-         data-device-group-id="<?php echo $this->device_group_id;?>"
-         style="position: absolute; top: 0; right: 0;" />
-    <br class="clearfix" />
+    <span class="device-group-delete glyphicon glyphicon-remove-sign delete"
+          data-device-group-id="<?php echo $this->device_group_id;?>"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_device_group');?>"></span>
+
+    <br class="clear-fix" />
 </div>

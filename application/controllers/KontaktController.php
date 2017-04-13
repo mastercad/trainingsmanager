@@ -1,37 +1,11 @@
 <?php
 
-class KontaktController extends Zend_Controller_Action
-{
-	protected $breadcrumb;
-	
-    public function init()
-    {
-    	$this->view->assign('kontakt_aktiv', 'aktiv');
-		$this->breadcrumb = '<a href="/kontakt">kontakt</a><br />';
-    }
-	
-    public function postDispatch()
-    {
-    	$req = $this->getRequest();
-    	$a_params = $req->getParams();
-    	
-    	if(isset($a_params['ajax']))
-    	{
-    		$this->view->layout()->disableLayout();
-    	}
-    	
-    	$this->view->assign('breadcrumb', $this->breadcrumb);
-    }
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+class KontaktController extends AbstractController
+{
     public function indexAction()
     {
-    	$req = $this->getRequest();
-    	$a_params = $req->getParams();
-    	
-    	if(isset($a_params['ajax']))
-    	{
-    		$this->view->assign('b_ajax', true);
-    	}
     }
     
     public function parseKontaktanfrageAction()
@@ -55,8 +29,6 @@ class KontaktController extends Zend_Controller_Action
     	{
     		$b_ajax = true;
     	}
-    	
-    	$this->breadcrumb .= 'senden<br />';
     	
     	if(isset($a_params['kontaktformular_name']) &&
     	   strlen(trim($a_params['kontaktformular_name'])))

@@ -3,20 +3,13 @@
            style="float: left;"
            value="<?php echo $this->muscle_group_name;?>"
            data-muscle-group-name="<?php echo $this->muscle_group_name;?>"
-           data-muscle-group-id="<?php echo $this->muscle_group_id;?>" />
-<!--    <div style="float: left; margin-left: 10px;">-->
-<!--    <img src="/images/content/statisch/grafiken/beanspruchung.png" class="muskelgruppe_beanspruchung"  -->
-<!--             style="background-image: url('/images/content/statisch/grafiken/beanspruchung_bg_neu.png');-->
-<!--                    background-repeat: no-repeat;-->
-<!--                    background-position: -100px 0;-->
-<!--                    width: 100px; height: 20px;-->
-<!--                    background-color: #EEEEEE;">-->
-<!--    </div>-->
-        <img src="/images/content/statisch/grafiken/delete.png"
-             title="zum entfernen hier klicken!"
-             style="position: absolute; height: 20px; width: 20px;
-                    right: 5px; top: 0; <?php if($this->muskelgruppe_id > 0){ echo ' display: block; ';} else
-                    { echo ' display: none; ';}?>"
-             class="muscle-group-delete" />
-    <br class="clearfix" />
+           data-muscle-group-id="<?php echo $this->muscle_group_id;?>"
+           data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_muscle_group');?>"
+        />
+
+    <span class="muscle-group-delete glyphicon glyphicon-remove-sign delete"
+          data-muscle-id="<?php echo $this->muscle_id;?>"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_delete_muscle_group');?>"></span>
+
+    <br class="clear-fix" />
 </div>

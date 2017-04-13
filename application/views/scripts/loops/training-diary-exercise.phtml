@@ -1,0 +1,94 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 06.06.14
+ * Time: 12:44
+ */
+
+?>
+
+<div class="training-diary-exercise col-lg-12 item <?php echo $this->exerciseActive;?>"
+     data-id="<?php echo $this->trainingDiaryXTrainingPlanExerciseId;?>"
+     data-training-plan-exercise-id="<?php echo $this->trainingPlanXExerciseId;?>"
+     data-finished="<?php echo $this->exerciseFinished;?>"
+    >
+    <?php
+    $iFaktor = $this->iMaxBeanspruchterMuskel / 5; // 5 sind die maximale anzahl der sterne
+
+    foreach ($this->aBeanspruchteMuskeln as $sMuskelName => $iBeanspruchung) {
+
+        $beanspruchung_pos_x = -100;
+        $iReelleBeanspruchung = $iBeanspruchung;
+
+        if($iBeanspruchung > 0)
+        {
+            $iReelleBeanspruchung = $iBeanspruchung / $iFaktor;
+            $beanspruchung_pos_x = -100 + ($iReelleBeanspruchung * 20);
+    //    echo $sMuskelName . ' : ' . $iBeanspruchung . ' - ' . $iReelleBeanspruchung . ' - ' . $iFaktor . ' - ' . $this->iMaxBeanspruchterMuskel;
+        ?>
+    <div style="width: 200px; float: left; display: inline; position: relative; padding-right: 20px; height: 25px; font-size: 10px;">
+        <span style="vertical-align: middle;">
+            <?php echo $sMuskelName;?>
+        </span>
+        <img src="/images/content/statisch/grafiken/beanspruchung.png"
+             class="muscle-use"
+             style="background-image: url('/images/content/statisch/grafiken/beanspruchung_bg_neu.png');
+                 background-repeat: no-repeat;
+                 background-position: <?php echo $beanspruchung_pos_x;?>px <?php echo $beanspruchung_pos_x;?>px;
+                 width: 100px; height: 20px;
+                 background-color: #EEEEEE;
+                 position: absolute;
+                 right: 20px;"
+             data-muscle-use="<?php echo $iBeanspruchung;?>"
+             data-background_position="<?php echo $beanspruchung_pos_x;?>px <?php echo $beanspruchung_pos_x;?>px"
+
+            >
+    </div>
+    <?php
+        }
+    }
+
+    ?>
+
+    <br class="clear-fix" />
+
+    <div class="col-md-12">
+        <h3>
+            <?php echo $this->exercise_name;?>
+        </h3>
+    </div>
+
+    <div class="col-md-6">
+        <img class="preview-picture" src="<?php echo '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture.'.resized.jpg';?>" />
+    </div>
+
+    <div class="col-md-6">
+        <strong>
+            <?php echo $this->translate('label_description');?>:
+        </strong>
+        <p>
+            <?php echo $this->exercise_description;?>
+        </p>
+        <strong>
+            <?php echo $this->translate('label_special_features');?>:
+        </strong>
+        <p>
+            <?php echo $this->exercise_special_features;?>
+        </p>
+    </div>
+
+    <div class="col-md-12 device-options">
+        <?php echo $this->deviceOptionsContent;?>
+    </div>
+
+    <div class="col-md-12 exercise-options">
+        <?php echo $this->exerciseOptionsContent;?>
+    </div>
+
+    <br class="cleafix" />
+
+    <div class="col-md-12 text-right">
+        <?php echo $this->translate('label_exercise');?> <?php echo $this->currentExerciseNumber;?> <?php echo $this->translate('of');?> <?php echo $this->exerciseSum;?>
+    </div>
+</div>

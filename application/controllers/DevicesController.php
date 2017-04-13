@@ -7,26 +7,9 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class DevicesController extends Zend_Controller_Action {
-    protected $breadcrumb;
-    protected $schlagwoerter;
-    protected $beschreibung;
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-    public function init() {
-    }
-
-    public function postDispatch() {
-        $this->view->assign('breadcrumb', $this->breadcrumb);
-
-        $params = $this->getRequest()->getParams();
-
-        if (isset($params['ajax'])) {
-            $this->view->layout()->disableLayout();
-        }
-
-        $this->view->headMeta()->appendName('keywords', $this->schlagwoerter);
-        $this->view->headMeta()->appendName('description', $this->beschreibung);
-    }
+class DevicesController extends AbstractController {
 
     public function indexAction() {
 
@@ -64,6 +47,7 @@ class DevicesController extends Zend_Controller_Action {
 
             if ($deviceCollection instanceof Zend_Db_Table_Rowset) {
                 $this->view->assign('preview', $this->generatePreviewPictureContent($deviceCollection->getRow(0)));
+                $this->view->assign('optionLabelText', 'Geräte Optionen:');
                 $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($deviceCollection));
                 $this->view->assign('previewPictureContent', $this->generatePreviewPicturesForEditContent());
                 $this->view->assign($deviceCollection->getRow(0)->toArray());

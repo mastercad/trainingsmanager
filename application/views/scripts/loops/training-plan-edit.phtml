@@ -7,18 +7,23 @@
  */
 
 ?>
-<ol class="training-plan droppable ui-sortable" style="background-color: gainsboro; border-radius: 5px; border-color: lightgray;
-            margin-top: 15px; padding: 10px; font-size: 10px; color: darkslategray; position: relative;
-            /*list-style-type: none;*/
-            "
-    id="<?php echo $this->training_plan_id;?>">
+<ol class="training-plan droppable ui-sortable"
+    id="<?php echo $this->trainingPlanId;?>">
 
+    <div class="form-group">
+        <label>
+            <?php echo $this->translate('label_training_plan_name');?>:
+        </label>
+        <input type="text" class="training-plan-name form-control" name="training-plan-name" value="<?php echo $this->trainingPlanName;?>" />
+    </div>
     <?php echo $this->exercisesContent;?>
 
-    <input type="hidden" name="training-plan-id[<?php echo $this->training_plan_id;?>]" id="training_plan_id_<?php echo $this->training_plan_id;?>"
+    <input type="hidden"
+           name="training-plan-id[<?php echo $this->training_plan_id;?>]"
+           id="training_plan_id_<?php echo $this->training_plan_id;?>"
            value="<?php echo $this->training_plan_id;?>" />
 <?php
     echo $this->musclesForExerciseContent;
 ?>
-    <br class="clearfix" />
+    <br class="clear-fix" />
 </ol>

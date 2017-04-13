@@ -40,17 +40,13 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
             ->setIntegrityCheck(FALSE);
 
         $oSelect->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
+            ->joinInner('training_plans', 'training_plan_id = ' . $iTrainingPlanId)
+//            ->joinLeft('training_diaries', '')
+//            ->joinLeft('training_diary_x_training_plan', '')
             ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft('exercise_x_exercise_option', 'exercise_x_exercise_option_exercise_fk = exercise_id')
-            ->joinLeft('exercise_options', 'exercise_option_id = exercise_x_exercise_option_exercise_option_fk')
-            ->joinLeft('device_x_device_option', 'device_x_device_option_device_fk = exercise_x_device_device_fk')
-            ->joinLeft('device_options', 'device_option_id = device_x_device_option_device_option_fk')
             ->joinLeft('devices', 'device_id = exercise_x_device_device_fk')
-            ->where('training_plan_id = ?', $iTrainingPlanId)
+            ->where('training_plan_x_exercise_training_plan_fk = ?', $iTrainingPlanId)
             ->order('training_plan_x_exercise_exercise_order');
-
-        $sql = $oSelect->assemble();
 
         return $this->fetchAll($oSelect);
     }
@@ -108,13 +104,16 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
 //            ->order('trainingsplan_uebung_order');
 
         $oSelect
-            ->joinLeft('trainings_x_training_plan', 'trainings_x_training_plan_training_plan_fk = training_plan_x_exercise_training_plan_fk')
-//            ->joinLeft('training_plan_x_exercise', 'trainingstagebuch_uebung_trainingsplan_uebung_fk = trainingsplan_uebung_id')
-            ->join('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
-            ->join('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner('training_diary_x_training_plan', 'training_diary_x_training_plan_training_plan_fk = training_plan_x_exercise_training_plan_fk')
+//            ->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_ = trainingsplan_uebung_id')
+            ->joinInner('training_diary_x_training_plan_exercise', 'training_diary_x_training_plan_exercise_t_p_x_e_fk = training_plan_x_exercise_id AND training_diary_x_training_plan_exercise_training_diary_fk = training_diary_x_training_plan_training_diary_fk')
+            ->joinInner('training_diaries', 'training_diary_id = training_diary_x_training_plan_training_diary_fk')
+            ->joinInner('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
+            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
             ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-            ->join('devices', 'device_id = exercise_x_device_device_fk')
+            ->joinLeft('devices', 'device_id = exercise_x_device_device_fk')
             ->where('training_plan_x_exercise_exercise_fk = ' . $iTrainingPlanExerciseId)
+            ->order('training_diary_create_date DESC')
 //            ->order('trainingsplan_uebung_order')
         ;
 

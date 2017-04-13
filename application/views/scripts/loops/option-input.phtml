@@ -1,11 +1,16 @@
-<div style="float: left; display: inline">
-    <label style="clear: none; float: left; display: inline; margin-right: 15px;">
+<div class="form-group" style="float: left; display: inline">
+<!--    <label style="clear: none; float: left; display: inline; margin-right: 15px;">-->
+    <label class="control-label">
         <?php echo $this->optionLabelText;?>
     </label>
-    <input class="<?php echo $this->optionClassName;?> option-input" type="text" id="<?php echo $this->optionInputId;?>"
+    <input class="<?php echo $this->optionClassName;?> <?php echo $this->selectClass;?> form-control option-input" type="text" id="<?php echo $this->optionInputId;?>"
            data-option-id="<?php echo $this->optionId;?>"
             <?php echo $this->additionalDataInformation;?>
-           value="<?php echo $this->currentText;?>" style="float: left; display: inline; margin-right: 5px;" >
+           data-value-orig="<?php echo $this->optionSelectText;?>"
+           data-base-value="<?php echo $this->baseValue;?>"
+           value="<?php echo $this->optionSelectText;?>"
+           data-toggle="tooltip" data-placement="right" title="<?php echo $this->baseValue;?>"
+    >
 
 <?php
     if ($this->optionDeleteShow) {
@@ -14,5 +19,5 @@
 <?php
     }
 ?>
-    <br class="clearfix" />
+    <br class="clear-fix" />
 </div>

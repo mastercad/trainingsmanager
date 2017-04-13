@@ -7,24 +7,14 @@
  */
 
 require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+
 
 /**
  * Class QrController
  */
-class QrController extends Zend_Controller_Action
+class QrController extends AbstractController
 {
-    /**
-     *
-     */
-    public function __init()
-    {
-        $a_params = $this->getRequest()->getParams();
-
-        if(isset($a_params['ajax']))
-        {
-        }
-    }
-
     /**
      * @param string $sUrl
      */

@@ -1,7 +1,12 @@
 <div class="thumb">
-    <div class="thumb-delete" ></div>
+    <div class="thumb-delete"
+         data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_delete_picture');?>"
+        ></div>
+
     <img class="thumb-src" class=""
          src="<?php echo '/butler/create-thumb/file/' . base64_encode($this->picture[CAD_File::SYS_PFAD]) . '/height/50/width/67/prio_height/true';?>"
          data-src="<?php echo base64_encode($this->picture[CAD_FILE::HTML_PFAD]);?>"
-         data-file="<?php echo base64_encode($this->picture[CAD_FILE::FILE]);?>" />
+         data-file="<?php echo base64_encode($this->picture[CAD_FILE::FILE]);?>"
+         data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_change_current_preview_picture');?>"
+        />
 </div>

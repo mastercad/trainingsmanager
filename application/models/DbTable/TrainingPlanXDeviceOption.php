@@ -43,10 +43,11 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
     public function findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($trainingPlanExerciseId, $deviceOptionId = null) {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner('exercises', 'exercise_id = training_plan_x_device_option_training_plan_exercise_fk')
+        $oSelect->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_id = training_plan_x_device_option_training_plan_exercise_fk')
+            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
             ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
             ->joinLeft('device_options', 'device_option_id = training_plan_x_device_option_device_option_fk')
-            ->joinLeft('device_x_device_option', 'device_x_device_option_id = training_plan_x_device_option_device_option_fk AND device_x_device_option_device_fk = exercise_x_device_device_fk')
+            ->joinLeft('device_x_device_option', 'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = exercise_x_device_device_fk')
             ->where('training_plan_x_device_option_training_plan_exercise_fk = ?', $trainingPlanExerciseId);
 
         if (! empty($deviceOptionId)) {

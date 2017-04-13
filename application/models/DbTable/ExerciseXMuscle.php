@@ -130,7 +130,7 @@ class Model_DbTable_ExerciseXMuscle extends Model_DbTable_Abstract {
      */
     public function updateExerciseMuscle($aData, $iExerciseMuscleId) {
         try {
-            return $this->update($aData, "exercise_x_muscles_id = '" . $iExerciseMuscleId . "'");
+            return $this->update($aData, "exercise_x_muscle_id = '" . $iExerciseMuscleId . "'");
         } catch (Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";

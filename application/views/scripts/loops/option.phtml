@@ -1,4 +1,7 @@
-<option value="<?php echo $this->optionValue;?>"
-    <?php if ((0 < $this->currentValue && $this->currentValue == $this->optionValue) || $this->currentText == $this->optionText) {
-        echo ' selected="selected" ';
-    }?>><?php echo $this->optionText;?></option>
+<li>
+    <a class="option-add <?php echo $this->optionClass;?>" href="#" data-value="<?php echo $this->optionValue;?>"
+        data-toggle="tooltip" data-placement="right" title="<?php echo $this->baseValue;?>"
+        >
+        <?php echo $this->optionText;?>
+    </a>
+</li>

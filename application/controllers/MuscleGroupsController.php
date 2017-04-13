@@ -5,27 +5,9 @@
  * and open the template in the editor.
  */
 
-class MuscleGroupsController extends Zend_Controller_Action {
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-    protected $breadcrumb;
-    protected $schlagwoerter;
-    protected $beschreibung;
-
-    public function init() {
-    }
-
-    public function postDispatch() {
-        $this->view->assign('breadcrumb', $this->breadcrumb);
-
-        $a_params = $this->getRequest()->getParams();
-
-        if (isset($a_params['ajax'])) {
-            $this->view->layout()->disableLayout();
-        }
-
-        $this->view->headMeta()->appendName('keywords', $this->schlagwoerter);
-        $this->view->headMeta()->appendName('description', $this->beschreibung);
-    }
+class MuscleGroupsController extends AbstractController {
 
     public function indexAction() {
         $muscleGroupsDb = new Model_DbTable_MuscleGroups();

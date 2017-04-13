@@ -3,17 +3,13 @@
 //    ini_set('memory_limit', '200M');
     error_reporting(E_ALL);
 
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+
 /**
  * Class ButlerController
  */
-class ButlerController extends Zend_Controller_Action
+class ButlerController extends AbstractController
 {
-    /**
-     *
-     */
-    public function init()
-    {
-    }
 
     /**
      *

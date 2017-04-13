@@ -1,6 +1,7 @@
 <img src="<?php echo $this->previewPicturePath;?>"
      class="editable preview-picture"
-     alt="Vorschaubild"
+     alt="<?php echo $this->translate('alternate_preview_picture');?>"
      style="margin-top: 15px;"
-     title="klicken Sie hier, um ein Bild hochzuladen"
-     id="<?php echo $this->previewPictureId;?>" />
+     title="<?php echo $this->translate('tooltip_click_to_add_new_picture');?>"
+     id="<?php echo $this->previewPictureId;?>"
+     data-toggle="tooltip" data-placement="right" />

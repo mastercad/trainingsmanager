@@ -5,25 +5,9 @@
  * and open the template in the editor.
  */
 
-class ExercisesController extends Zend_Controller_Action
-{
-    protected $breadcrumb;
-    protected $schlagwoerter;
-    protected $beschreibung;
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-    public function postDispatch() {
-        $this->view->assign('breadcrumb', $this->breadcrumb);
-
-        $params = $this->getRequest()->getParams();
-
-        if(isset($params['ajax']))
-        {
-            $this->view->layout()->disableLayout();
-        }
-
-        $this->view->headMeta()->appendName('keywords', $this->schlagwoerter);
-        $this->view->headMeta()->appendName('description', $this->beschreibung);
-    }
+class ExercisesController extends AbstractController {
     
     public function indexAction() {
         $exercisesDb = new Model_DbTable_Exercises();
@@ -63,7 +47,7 @@ class ExercisesController extends Zend_Controller_Action
         }
         $this->view->assign('previewPicturesContent', $this->generatePreviewPicturesForEditContent($exerciseId));
         $this->view->assign('previewPictureContent', $this->generatePreviewPictureContent($exercise));
-        $this->view->assign('exerciseTypeContent', $this->generateExerciseTypeContent($exercise));
+        $this->view->assign('exerciseTypeSelectContent', $this->generateExerciseTypeContent($exercise));
         $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
         $this->view->assign('exerciseOptionsDropDownContent', $this->generateExerciseOptionsDropDownContent());
 
@@ -152,23 +136,29 @@ class ExercisesController extends Zend_Controller_Action
         $exerciseId = $exercise->offsetGet('exercise_id');
 
         $deviceXDeviceOptionDb = new Model_DbTable_DeviceXDeviceOption();
-        $deviceXDeviceOptionCollection = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId($exercise->offsetGet('exercise_x_device_device_fk'))->toArray();
+
+        $deviceOptionCollection = [];
+
+        if ($exercise->offsetGet('exercise_x_device_device_fk')) {
+            $deviceXDeviceOptionCollection = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId($exercise->offsetGet('exercise_x_device_device_fk'))->toArray();
+
+            /** unify DeviceOptions */
+            foreach ($deviceXDeviceOptionCollection as $deviceOption) {
+                $deviceOptionCollection[$deviceOption['device_option_id']] = $deviceOption;
+            }
+        }
         $ExerciseXDeviceOptionDb = new Model_DbTable_ExerciseXDeviceOption();
         $exerciseOptionCollection = $ExerciseXDeviceOptionDb->findDeviceOptionsForExercise($exerciseId)->toArray();
 
-        /** unify DeviceOptions */
-        $deviceOptionCollection = [];
-        foreach ($deviceXDeviceOptionCollection as $deviceOption) {
-            $deviceOptionCollection[$deviceOption['device_option_id']] = $deviceOption;
-        }
 
         foreach ($exerciseOptionCollection as $exerciseDeviceOption) {
             $deviceOptionId = $exerciseDeviceOption['device_option_id'];
             if (array_key_exists($deviceOptionId, $deviceOptionCollection)
                 && ! empty($exerciseDeviceOption['exercise_x_device_option_device_option_value'])
             ) {
-                $deviceOptionCollection[$deviceOptionId] = array_merge($deviceOptionCollection[$deviceOptionId], $exerciseDeviceOption);
-            } else if(! array_key_exists($deviceOptionId, $deviceOptionCollection)) {
+                $deviceOptionCollection[$deviceOptionId] = array_merge($deviceOptionCollection[$deviceOptionId],
+                    $exerciseDeviceOption);
+            } else if (! array_key_exists($deviceOptionId, $deviceOptionCollection)) {
                 $deviceOptionCollection[$deviceOptionId] = $exerciseDeviceOption;
             }
         }
@@ -218,21 +208,32 @@ class ExercisesController extends Zend_Controller_Action
         $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
 
         $exerciseTypeContent = '';
+        $optionSelectText = $this->translate('label_please_select');
+
         foreach ($exerciseTypesCollection as $exerciseType) {
             $this->view->assign('optionValue', $exerciseType->offsetGet('exercise_type_id'));
             $this->view->assign('optionText', $exerciseType->offsetGet('exercise_type_name'));
 
-            if ($exercise instanceof Zend_Db_Table_Row) {
-                $this->view->assign('currentValue', $exercise->offsetGet('exercise_x_exercise_type_exercise_type_fk'));
-            }
             $exerciseTypeContent .= $this->view->render('loops/option.phtml');
         }
+
+        if ($exercise instanceof Zend_Db_Table_Row
+            && $exercise->offsetGet('exercise_type_id')
+        ) {
+            $optionSelectText = $exercise->offsetGet('exercise_type_name');
+            $this->view->assign('currentValue', $exercise->offsetGet('exercise_type_id'));
+        }
+
         $this->view->assign('selectId', 'exercise_type_id');
         $this->view->assign('optionsContent', $exerciseTypeContent);
 
+        $this->view->assign('optionSelectText', $optionSelectText);
+        $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
+        $this->view->assign('optionClassName', 'exercise-type-select custom-drop-down');
         $content = $this->view->render('globals/select.phtml');
-        $this->view->assign('exerciseTypeSelectContent', $content);
-        return $this->view->render('exercises/exercise-type-content.phtml');
+
+        return $content;
+//        return $this->view->render('exercises/exercise-type-content.phtml');
     }
 
     private function generatePreviewPictureContent($exercise)
@@ -465,7 +466,7 @@ class ExercisesController extends Zend_Controller_Action
             if (true === empty($exerciseId)
                 && 0 == strlen(trim($exerciseName))
             ) {
-                $currentExercise = $exercisesDb->findExerciseByName($exerciseName);
+                $currentExercise = $exercisesDb->findExercisesByName($exerciseName);
                 if (! $currentExercise instanceof Zend_Db_Table_Row) {
                     array_push($messages, array('type' => 'fehler', 'message' => 'Übung "' . $exerciseName . '" existiert bereits!', 'result' => false));
                     $hasErrors = true;
@@ -712,21 +713,19 @@ class ExercisesController extends Zend_Controller_Action
             $deviceOptionsCollection = array();
 
             foreach ($currentDeviceOptionsInDb as $deviceOption) {
-                $deviceOptionsCollection[$deviceOption->exercise_x_device_option_device_option_fk] = $deviceOption;
+                $deviceOptionsCollection[$deviceOption->exercise_x_device_option_id] = $deviceOption;
             }
 
             foreach ($params['edited_elements']['exercise_device_options'] as $deviceOption) {
                 // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
-                if (true === array_key_exists($deviceOption['exerciseDeviceOptionId'], $deviceOptionsCollection)
-                    && ! empty($deviceOption['deviceXDeviceOptionId'])
+                if (true === array_key_exists($deviceOption['exerciseXDeviceOptionId'], $deviceOptionsCollection)
+//                    && ! empty($deviceOption['deviceXDeviceOptionId'])
                 ) {
                     // checken ob der aktuelle muskel keine beanspruchung, dann löschen
                     if (TRUE === empty($deviceOption['value'])) {
-                        $bResult = $exerciseXDeviceOptionDb->deleteDeviceOption(
-                            $deviceOptionsCollection[$deviceOption['exerciseDeviceOptionId']]->exercise_x_device_option_id
-                        );
+                        $bResult = $exerciseXDeviceOptionDb->deleteDeviceOption($deviceOption['exerciseXDeviceOptionId']);
                         // wenn beanspruchung und != eingetragener, dann updaten
-                    } else if ($deviceOptionsCollection[$deviceOption['exerciseDeviceOptionId']]->exercise_x_device_option_device_option_value != $deviceOption['value']) {
+                    } else if ($deviceOptionsCollection[$deviceOption['exerciseXDeviceOptionId']]->exercise_x_device_option_device_option_value != $deviceOption['value']) {
                         $aData = array(
                             'exercise_x_device_option_device_option_fk' => $deviceOption['deviceOptionId'],
                             'exercise_x_device_option_device_option_value' => $deviceOption['value'],
@@ -735,12 +734,12 @@ class ExercisesController extends Zend_Controller_Action
                         );
                         $bResult = $exerciseXDeviceOptionDb->updateExerciseXDeviceOption(
                             $aData,
-                            $deviceOptionsCollection[$deviceOption['exerciseDeviceOptionId']]->exercise_x_device_option_id
+                            $deviceOption['exerciseXDeviceOptionId']
                         );
                     }
                     // wenn es den muskel noch nicht gibt
-                } else if (false == array_key_exists($deviceOption['exerciseDeviceOptionId'], $deviceOptionsCollection)
-                    && empty($deviceOption['deviceXDeviceOptionId'])
+                } else if (false == array_key_exists($deviceOption['exerciseXDeviceOptionId'], $deviceOptionsCollection)
+//                    && empty($deviceOption['deviceXDeviceOptionId'])
                     && false == empty($deviceOption['value'])
                 ) {
                     $aData = array(
@@ -777,19 +776,17 @@ class ExercisesController extends Zend_Controller_Action
             $exerciseOptionsCollection = array();
 
             foreach ($currentExerciseOptionsInDb as $exerciseOption) {
-                $exerciseOptionsCollection[$exerciseOption->exercise_x_exercise_option_exercise_option_fk] = $exerciseOption;
+                $exerciseOptionsCollection[$exerciseOption->exercise_x_exercise_option_id] = $exerciseOption;
             }
 
             foreach ($params['edited_elements']['exercise_options'] as $exerciseOption) {
                 // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
-                if (true === array_key_exists($exerciseOption['exerciseOptionId'], $exerciseOptionsCollection)) {
+                if (true === array_key_exists($exerciseOption['exerciseXExerciseOptionId'], $exerciseOptionsCollection)) {
                     // checken ob der aktuelle muskel keine beanspruchung, dann löschen
-                    if (TRUE === empty($exerciseOption['value'])) {
-                        $bResult = $exerciseXExerciseOptionDb->deleteExerciseXExerciseOption(
-                            $exerciseOptionsCollection[$exerciseOption['exerciseOptionId']]->exercise_x_exercise_option_id
-                        );
+                    if (true === empty($exerciseOption['value'])) {
+                        $bResult = $exerciseXExerciseOptionDb->deleteExerciseXExerciseOption($exerciseOption['exerciseXExerciseOptionId']);
                         // wenn beanspruchung und != eingetragener, dann updaten
-                    } else if ($exerciseOptionsCollection[$exerciseOption['exerciseOptionId']]->exercise_x_exercise_option_exercise_option_value != $exerciseOption['value']) {
+                    } else if ($exerciseOptionsCollection[$exerciseOption['exerciseXExerciseOptionId']]->exercise_x_exercise_option_exercise_option_value != $exerciseOption['value']) {
                         $aData = array(
                             'exercise_x_exercise_option_update_date' => date('Y-m-d H:i:s'),
                             'exercise_x_exercise_option_update_user_fk' => $userId,
@@ -798,12 +795,12 @@ class ExercisesController extends Zend_Controller_Action
                         );
                         $bResult = $exerciseXExerciseOptionDb->updateExerciseXExerciseOption(
                             $aData,
-                            $exerciseOptionsCollection[$exerciseOption['exerciseOptionId']]->exercise_x_exercise_option_id
+                            $exerciseOption['exerciseOptionId']
                         );
                     }
                     // wenn es den muskel noch nicht gibt
-                } else if (false == array_key_exists($exerciseOption['exerciseOptionId'], $exerciseOptionsCollection)
-                    && false == empty($exerciseOption['exerciseOptionId']['value'])
+                } else if (false == array_key_exists($exerciseOption['exerciseXExerciseOptionId'], $exerciseOptionsCollection)
+                    && false == empty($exerciseOption['value'])
                 ) {
                     $aData = array(
                         'exercise_x_exercise_option_exercise_option_fk' => $exerciseOption['exerciseOptionId'],
@@ -942,19 +939,8 @@ class ExercisesController extends Zend_Controller_Action
      * @return string
      */
     public function generateDeviceOptionsDropDownContent() {
-        $content = '';
-        $deviceOptions = new Model_DbTable_DeviceOptions();
-        $optionsCollection = $deviceOptions->findAllDeviceOptions();
-
-        foreach ($optionsCollection as $option) {
-            $this->view->assign('optionValue', $option->offsetGet('device_option_id'));
-            $this->view->assign('optionText', $option->offsetGet('device_option_name'));
-            $content .= $this->view->render('loops/option.phtml');
-        }
-
-        $this->view->assign('optionsContent', $content);
-        $this->view->assign('selectId', 'device_options_select');
-        return $this->view->render('globals/select.phtml');
+        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        return $deviceOptionsService->generateDeviceOptionsSelectContent();
     }
 
     /**
@@ -963,18 +949,7 @@ class ExercisesController extends Zend_Controller_Action
      * @return string
      */
     public function generateExerciseOptionsDropDownContent() {
-        $content = '';
-        $deviceOptions = new Model_DbTable_ExerciseOptions();
-        $optionsCollection = $deviceOptions->findAllExerciseOptions();
-
-        foreach ($optionsCollection as $option) {
-            $this->view->assign('optionValue', $option->offsetGet('exercise_option_id'));
-            $this->view->assign('optionText', $option->offsetGet('exercise_option_name'));
-            $content .= $this->view->render('loops/option.phtml');
-        }
-
-        $this->view->assign('optionsContent', $content);
-        $this->view->assign('selectId', 'exercise_options_select');
-        return $this->view->render('globals/select.phtml');
+        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        return $exerciseOptionsService->generateExerciseOptionsSelectContent();
     }
 }

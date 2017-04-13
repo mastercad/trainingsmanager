@@ -1,6 +1,8 @@
 <?php
 
-class XmlController extends Zend_Controller_Action
+require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+
+class XmlController extends AbstractController
 {
     public function init()
     {

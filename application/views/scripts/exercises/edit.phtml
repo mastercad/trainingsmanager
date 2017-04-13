@@ -7,129 +7,133 @@
 ?>
 <div>
     <h3>
-        Übung Name:<span 
-            class="editable" 
+        <?php echo $this->translate('label_exercise_name');?>:
+        <span
+            class="editable col-md-12"
             style="margin-left: 20px; border-bottom: 1px dotted gray;"
-            id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>" 
-		><?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_name);?></span>
+            id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>"
+            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_exercise_name');?>"
+		><?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_name);?>
+        </span>
     </h3>
 
     <?php echo $this->previewPictureContent;?>
 
-    <br class="clearfix" style="margin-top: 15px;" />
+    <br class="clear-fix" style="margin-top: 15px;" />
 
-    <?php echo $this->exerciseTypeContent;?>
+    <?php echo $this->exerciseTypeSelectContent;?>
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
     <h3 class=""
         style="margin-top: 15px;">
-        Beschreibung:
+        <?php echo $this->translate('label_description');?>:
     </h3>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
-    <div class="editable beschreibung" 
+    <div class="editable beschreibung col-md-12"
          id="exercise_description"
-         style="margin-top: 5px; border-bottom: 1px dotted gray;" 
-         data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_description);?>" ><?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_description);?></div>
+         style="margin-top: 5px; border-bottom: 1px dotted gray;"
+         data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_description');?>"
+         data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_description);?>" >
+        <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_description);?>
+    </div>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <h3 class="besonderheit-ueberschrift"
         style="margin-top: 15px;">
-        Besonderheiten:
+        <?php echo $this->translate('label_special_features');?>:
     </h3>
     
-    <br class="clearfix" />
-    
-    <div class="editable beschreibung" 
-        id="exercise_special_features"
-        style="margin-top: 5px; border-bottom: 1px dotted gray;"
-        data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_special_features);?>" ><?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_special_features);?></div>
-    
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
-    <h3 style="float: left; display: inline; margin-top: 15px;">
-        Gerät:
+    <div class="row">
+        <div class="editable beschreibung col-md-12"
+            id="exercise_special_features"
+            style="margin-top: 5px; border-bottom: 1px dotted gray;"
+            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_special_features');?>"
+            data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_special_features);?>" >
+            <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_special_features);?>
+        </div>
+    </div>
+
+    <br class="clear-fix" />
+
+    <h3 style="margin-top: 25px;">
+        <?php echo $this->translate('label_device');?>:
     </h3>
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
-    <input type="text" class="exercise-device-name"
-           style="float: left;"
-           id="exercise_device_name"
-           name="exercise_device_name"
-           value="<?php echo $this->device_name;?>"
-           data-exercise-device-name="<?php echo base64_encode($this->device_name);?>"
-           data-exercise-device-id="<?php echo $this->device_id;?>" />
+    <div class="form-group" style="margin-top: 10px;">
+        <input type="text" class="form-control device-name"
+               id="exercise_device_name"
+               name="exercise_device_name"
+               value="<?php echo $this->device_name;?>"
+               data-exercise-device-name="<?php echo base64_encode($this->device_name);?>"
+               data-exercise-device-id="<?php echo $this->device_id;?>"
+               data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_type_to_get_device_proposals');?>"
+            />
+    </div>
 
-    <br class="clearfix" />
-
-    <h3 style="float: left; display: inline; margin-top: 15px;">
-        Geräte Einstellung:
-    </h3>
-
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
     <div style="float: left; display: inline;">
         <?php echo $this->deviceOptionsDropDownContent;?>
     </div>
 
-    <img class="device-option-add" src="/images/content/statisch/grafiken/add_normal.png"
-         style="width: 30px; float: left; display: inline;"/>
+    <br class="clear-fix" />
 
-    <br class="clearfix" />
-
-    <div class="device-options">
+    <div class="device-options" style="margin-top: 25px;">
         <?php echo $this->deviceOptionsContent;?>
     </div>
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
-    <h3 style="float: left; display: inline; margin-top: 15px;">
-        Übung Einstellung:
-    </h3>
-
-    <br class="clearfix" />
-
-    <div style="float: left; display: inline;">
+    <div style="float: left; display: inline; margin-top: 25px;">
         <?php echo $this->exerciseOptionsDropDownContent;?>
     </div>
 
-    <img class="exercise-option-add" src="/images/content/statisch/grafiken/add_normal.png"
-         style="width: 30px; float: left; display: inline;"/>
+    <br class="clear-fix" />
 
-    <br class="clearfix" />
-
-    <div class="exercise-options">
+    <div class="exercise-options" style="margin-top: 25px;">
         <?php echo $this->exerciseOptionsContent;?>
     </div>
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
-    <h3 style="float: left; display: inline; margin-top: 15px;">
-        Muskelgruppen:
+    <h3 style="float: left; display: inline; margin-top: 25px;">
+        <?php echo $this->translate('label_muscle_groups');?>:
     </h3>
 
-    <br class="clearfix" />
+    <br class="clear-fix" />
 
-    <input class="muscle-group-name" style="float: left;" value="" data-muscle-group-name="" data-muscle-group-id="" type="text">
+    <div class="form-group" style="margin-top: 15px;">
+        <input class="form-control muscle-group-name"
+               value=""
+               data-muscle-group-name=""
+               data-muscle-group-id=""
+               type="text"
+               data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_type_to_get_muscle_or_muscle_group_proposals');?>"
+            >
+    </div>
 
 <!--    <img class="muscle-group-add" src="/images/content/statisch/grafiken/add_normal.png"-->
 <!--         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>-->
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <div class="exercise-muscle-groups"
          style="margin-top: 5px;">
         <?php echo $this->exerciseMuscleGroupsContent;?>
     </div>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <h3 style="margin-top: 15px;">
-        Übungsbilder:
+        <?php echo $this->translate('label_exercise_pictures');?>:
     </h3>
     
     <div class="preview-pictures"
@@ -137,10 +141,10 @@
         <?php echo $this->previewPicturesContent;?>
     </div>
     
-    <br class="clearfix" />
+    <br class="clear-fix" />
     
     <h3 style="margin-top: 15px;">
-        Übungsvideo:
+        <?php echo $this->translate('label_exercise_video');?>:
     </h3>
     
     <div id="exercise_video"
@@ -150,20 +154,18 @@
     <input type="hidden" class="id" name="exercise_id" id="exercise_id" value="<?php echo $this->exercise_id;?>" />
 </div>
 
-<br class="clearfix" />
+<br class="clear-fix" />
 
 <input type="hidden" id="picture_path" value="<?php echo base64_encode($this->picturePath);?>" />
 <input type="hidden" id="picture_temp_path" value="<?php echo base64_encode($this->pictureTempPath);?>" />
 <input type="hidden" id="exercise_id" value="<?php echo $this->exercise_id;?>" />
 
-<div class="muscle-group-proposals"
+<div class="proposals"
      style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
             background-color: #FFFFFF; opacity: 0.9; box-shadow: 5px 5px 5px #111111;" ></div>
 
-<button onclick="save();" 
-        style="margin-top: 15px;"
-        class="button">
-    Speichern
+<button class="save button btn btn-primary btn-block">
+    <?php echo $this->translate('label_save');?>
 </button>
 
 <script type="text/javascript">
@@ -176,7 +178,7 @@
 
         if (!trim(jQuery('#exercise_name').html()).length) {
             hasErrors = true;
-            messages.push({'type': 'fehler', 'message': 'Die Übung braucht einen Namen!'});
+            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_exercise_needs_name');?>'});
         }
 
         if (!trim(jQuery('#exercise_description').html()).length) {
@@ -214,20 +216,20 @@
         var deviceOptions = [];
 
         for (i = 0, len = currentDeviceOptions.length; i < len; i++) {
+            var deviceOptionValue = jQuery(currentDeviceOptions[i]).val();
             var deviceOptionId = jQuery(currentDeviceOptions[i]).data('device-option-id');
             var deviceXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('device-x-device-option-id');
-            var exerciseDeviceOptionId = jQuery(currentDeviceOptions[i]).data('exercise-x-device-option-id');
-            var trainingPlanDeviceOptionId = jQuery(currentDeviceOptions[i]).data('training-plan-x-device-option-id');
-            var deviceOptionValue = jQuery(currentDeviceOptions[i]).val();
+            var exerciseXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('exercise-x-device-option-id');
+            var trainingPlanXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('training-plan-x-device-option-id');
+            var trainingDiaryXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('training-diary-x-device-option-id');
 
-            if (deviceOptionId
-                && deviceOptionValue
-            ) {
+            if (deviceOptionId) {
                 deviceOptions.push({
                     deviceOptionId: deviceOptionId,
                     deviceXDeviceOptionId: deviceXDeviceOptionId,
-                    exerciseXDeviceOptionId: exerciseDeviceOptionId,
-                    trainingPlanXDeviceOptionId: trainingPlanDeviceOptionId,
+                    exerciseXDeviceOptionId: exerciseXDeviceOptionId,
+                    trainingPlanXDeviceOptionId: trainingPlanXDeviceOptionId,
+                    trainingDiaryXDeviceOptionId: trainingDiaryXDeviceOptionId,
                     value: deviceOptionValue});
             }
         }
@@ -238,16 +240,16 @@
         for (i = 0, len = currentExerciseOptions.length; i < len; i++) {
             var exerciseOptionValue = jQuery(currentExerciseOptions[i]).val();
             var exerciseOptionId = jQuery(currentExerciseOptions[i]).data('exercise-option-id');
-            var trainingExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-exercise-option-id');
-            var trainingPlanExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-plan-exercise-option-id');
+            var exerciseXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('exercise-x-exercise-option-id');
+            var trainingDiaryXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-diary-x-exercise-option-id');
+            var trainingPlanXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-plan-x-exercise-option-id');
 
-            if (exerciseOptionId
-                && exerciseOptionValue
-            ) {
+            if (exerciseOptionId) {
                 exerciseOptions.push({
                     exerciseOptionId: exerciseOptionId,
-                    trainingExerciseOptionId: trainingExerciseOptionId,
-                    trainingPlanExerciseOptionId: trainingPlanExerciseOptionId,
+                    exerciseXExerciseOptionId: exerciseXExerciseOptionId,
+                    trainingPlanXExerciseOptionId: trainingPlanXExerciseOptionId,
+                    trainingDiaryXExerciseOptionId: trainingDiaryXExerciseOptionId,
                     value: exerciseOptionValue});
             }
         }
@@ -255,7 +257,7 @@
         if (!hasErrors) {
             jQuery().setEditedElements('exercise_muscle_groups', muscleGroups);
             jQuery().setEditedElements('exercise_preview_picture', jQuery('#exercise_preview_picture').data('file'));
-            jQuery().setEditedElements('exercise_type_id', jQuery('#exercise_type_id').val());
+            jQuery().setEditedElements('exercise_type_id', jQuery('.exercise-type-select').data('value'));
             jQuery().setEditedElements('exercise_options', exerciseOptions);
             jQuery().setEditedElements('exercise_device_options', deviceOptions);
             jQuery().setEditedElements('exercise_id', jQuery('#exercise_id').val());
@@ -271,10 +273,32 @@
     }
 
     jQuery(document).ready(function() {
-        jQuery('.device-option-add').unbind('click').bind('click', function () {
+//        jQuery('.exercise-type-select .option-add').unbind('click').bind('click', function() {
+//            var selectedOption = jQuery(this).data('value');
+//            var selectedOptionName = jQuery(this).html();
+//            var caretContent = '<span class="caret"></span>';
+//
+//            jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
+//            jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+//
+//            return false;
+//        });
+
+        jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
+            var selectedOption = jQuery(this).data('value');
+            var selectedOptionName = jQuery(this).html();
+            var caretContent = '<span class="caret"></span>';
+
+            jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
+            jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+
+            return false;
+        });
+
+        jQuery('.device-option-select .option-add').unbind('click').bind('click', function() {
 
             // check if selected option already exists
-            var selectedOption = jQuery('#device_options_select').val();
+            var selectedOption = jQuery(this).data('value');
             var currentOptionsList = jQuery('.device-options').find('.device-option');
 
             for (var i = 0, len = currentOptionsList.length; i < len; i++) {
@@ -285,7 +309,7 @@
                     obj_cad_messages.init([
                         {
                             'type': 'fehler',
-                            'message': 'Die ausgewählte Option existiert bereits!',
+                            'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
                             'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
                         }
                     ]);
@@ -295,18 +319,18 @@
                 }
             }
 
-            jQuery.post('/devices/get-device-option-edit', {
-                ajax: true,
-                device_option_id: selectedOption
-            }, function (response) {
+            jQuery(this).parent().parent().parent().find('.dropdown-toggle').dropdown('toggle');
+
+            jQuery.post('/devices/get-device-option-edit', {ajax: true, device_option_id: selectedOption}, function(response) {
                 jQuery('.device-options').append(response);
             });
+            return false;
         });
 
-        jQuery('.exercise-option-add').unbind('click').bind('click', function () {
+        jQuery('.exercise-option-select .option-add').unbind('click').bind('click', function () {
 
             // check if selected option already exists
-            var selectedOption = jQuery('#exercise_options_select').val();
+            var selectedOption = jQuery(this).data('value');
             var currentOptionsList = jQuery('.exercise-options').find('.exercise-option');
 
             for (var i = 0, len = currentOptionsList.length; i < len; i++) {
@@ -317,7 +341,7 @@
                     obj_cad_messages.init([
                         {
                             'type': 'fehler',
-                            'message': 'Die ausgewählte Option existiert bereits!',
+                            'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
                             'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
                         }
                     ]);
@@ -327,6 +351,8 @@
                 }
             }
 
+            jQuery(this).parent().parent().parent().find('.dropdown-toggle').dropdown('toggle');
+
             jQuery.post('/exercises/get-exercise-option-edit', {
                 ajax: true,
                 exercise_option_id: selectedOption,
@@ -334,6 +360,7 @@
             }, function (response) {
                 jQuery('.exercise-options').append(response);
             });
+            return false;
         });
 
         jQuery('.muscle-group-name').each(function() {
@@ -358,12 +385,12 @@
                     data: "search=" + search + "&ajax=true",
                     success: function (response) {
                         var offset = jQuery(self).offset();
-                        jQuery('body').append(jQuery('.muscle-group-proposals'));
-                        jQuery('.muscle-group-proposals').html(response)
+                        jQuery('body').append(jQuery('.proposals'));
+                        jQuery('.proposals').html(response)
                             .css('left', offset.left + "px")
-                            .css('top', offset.top + 20 + "px");
+                            .css('top', offset.top + 40 + "px");
 
-                        jQuery('.muscle-group-proposals').find('.proposal').unbind('click').bind('click', function () {
+                        jQuery('.proposals').find('.proposal').unbind('click').bind('click', function () {
                             // check ob diese muskelgruppe bereits gesetzt wurde
                             var vorhandene_muskelgruppen = jQuery('.exercise-muscle-groups').find('.muscle-group');
 
@@ -384,30 +411,31 @@
                             }
 
                             addMuscleGroup(jQuery(this).data('proposal-id'), jQuery('#exercise_id').val());
-                            jQuery('.muscle-group-proposals').fadeOut();
+                            jQuery('.proposals').fadeOut();
                             return false;
                         });
-                        jQuery('.muscle-group-proposals').fadeIn();
+                        jQuery('.proposals').fadeIn();
                     }
                 });
             });
         });
 
-        function addMuscleGroup(muscleGroupId, exerciseId) {
-            jQuery.ajax({
-                type: "POST",
-                url: '/exercises/get-muscle-group-for-exercise-edit/',
-                data: "muscle_group_id=" + muscleGroupId + "&exercise_id=" + exerciseId + "&ajax=true",
-                success: function (response) {
-                    jQuery('.exercise-muscle-groups').append(response);
-                    initMuscleRating();
-                }
-            });
-        }
-
-        edit_init();
+        edit_init(true);
+        initDevicesEdit();
         initMuscleRating();
     });
+
+    function addMuscleGroup(muscleGroupId, exerciseId) {
+        jQuery.ajax({
+            type: "POST",
+            url: '/exercises/get-muscle-group-for-exercise-edit/',
+            data: "muscle_group_id=" + muscleGroupId + "&exercise_id=" + exerciseId + "&ajax=true",
+            success: function (response) {
+                jQuery('.exercise-muscle-groups').append(response);
+                initMuscleRating();
+            }
+        });
+    }
 
     function initMuscleRating() {
         jQuery('.exercise-muscle-groups').find('.muscle-use').unbind('mouseover').unbind('mouseout').unbind('click').hover(

@@ -9,7 +9,7 @@
 <?php
 $vorschaubild = '/images/content/statisch/grafiken/blank.gif';
 if(strlen(trim($this->exercise_preview_picture)) > 0) {
-    $vorschaubild_pfad = '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture;
+    $vorschaubild_pfad = '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture.'.resized.jpg';
     if(file_exists(APPLICATION_PATH . '/../public' . $vorschaubild_pfad) &&
         is_file(APPLICATION_PATH . '/../public' . $vorschaubild_pfad) &&
         is_readable(APPLICATION_PATH . '/../public' . $vorschaubild_pfad))
@@ -28,53 +28,48 @@ if (FALSE === function_exists('formatFloatValue')) {
     }
 }
 
-$sUebungLink = '/trainings/show/id/' . $this->training_plan_x_exercise_id;
+$sUebungLink = '/training-diaries/show/id/' . $this->training_plan_x_exercise_id;
 if (2 == $this->training_plan_training_plan_layout_fk) {
     $sUebungLink = '/training-plans/show/id/' . $this->training_plan_x_exercise_training_plan_fk;
 }
 ?>
-<div style="position: relative; margin-top: 20px;">
+<div class="exercise" style="position: relative;">
     <a href="<?php echo $sUebungLink;?>"
-       style="text-decoration: none;">
-        <h3 style="float: left; display: inline;">
-            <?php echo $this->exercise_name;?>
-        </h3>
+       data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_show_current_exercise_in_training');?>" >
+        <div class="col-sm-12">
+            <p>
+                <?php echo $this->exercise_name;?>
 <?php
-    if ($this->device_name) {
+        if ($this->device_name) {
 ?>
-        <span style="float: left; display: inline; margin: 0 10px;">
-            an :
-        </span>
-        <h5 style="float: left; display: inline;">
-            <?php echo $this->device_name;?>
-        </h5>
+                an :
+                <?php echo $this->device_name;?>
 <?php
-    }
+        }
 ?>
-        <br class="clearfix" />
-        <img src="<?php echo $vorschaubild;?>"
-             style="margin: 10px 10px 10px 0; width: 200px; float: left; display: inline;" />
-        <div style="float: left; display: inline;">
+            </p>
+        </div>
+        <div class="col-sm-5">
+            <img src="<?php echo $vorschaubild;?>"
+                 style="margin: 10px 10px 10px 0; width: 100%;" />
+        </div>
+        <div class="col-sm-7">
 
             <?php echo $this->deviceOptionsContent;?>
 
-            <br class="clearfix" />
-
             <?php echo $this->exerciseOptionsContent;?>
 
-            <br class="clearfix" />
+        </div>
+        <div class="col-sm-12">
             <span style="float: left; margin-top: 10px;">
-                Bemerkung:
+                <?php echo $this->translate('label_description');?>:
             </span>
-            <br class="clearfix" />
-            <span style="float: left; margin-top: 10px;">
+        </div>
+        <div class="col-sm-12">
+            <span>
                 <?php echo $this->exercise_description;?>
             </span>
         </div>
-<!--        <img src="/images/content/statisch/grafiken/delete.png"-->
-<!--             class="uebung-delete"-->
-<!--             data-uebung-id="--><?php //echo $this->uebung_id;?><!--"-->
-<!--             style="position: absolute; top: 0; right: 0;" />-->
-        <br class="clearfix" />
     </a>
+    <br class="clear-fix" />
 </div>
