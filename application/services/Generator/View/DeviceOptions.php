@@ -46,7 +46,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
             && $this->isForceGenerateEmptyInput()
         ) {
             $deviceOptionDb = new Model_DbTable_DeviceOptions();
-            $deviceOption = $deviceOptionDb->findDeviceOption($this->getOptionId());
+            $deviceOption = $deviceOptionDb->findOptionById($this->getOptionId());
             $this->setOptionName($deviceOption['device_option_name']);
             $this->setOptionValue($deviceOption['device_option_default_value']);
             $deviceOptionsContent = $this->generateOptionInputContent();
@@ -138,7 +138,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
     public function generateDeviceOptionsSelectContent() {
         $deviceOptionsContent = '';
         $deviceOptionsDb = new Model_DbTable_DeviceOptions();
-        $deviceOptionsCollection = $deviceOptionsDb->findAllDeviceOptions();
+        $deviceOptionsCollection = $deviceOptionsDb->findAllOptions();
 //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);
 

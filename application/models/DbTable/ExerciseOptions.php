@@ -10,7 +10,7 @@
 /**
  * Class Application_Model_DbTable_Devices
  */
-class Model_DbTable_ExerciseOptions extends Model_DbTable_Abstract {
+class Model_DbTable_ExerciseOptions extends Model_DbTable_Abstract implements Interface_OptionsStorageInterface {
 
     /** @var string */
     protected $_name 	= 'exercise_options';
@@ -19,13 +19,37 @@ class Model_DbTable_ExerciseOptions extends Model_DbTable_Abstract {
     protected $_primary = 'exercise_option_id';
 
     /**
-     * @return Zend_Db_Table_Rowset_Abstract
+     * @inheritdoc
      */
-    public function findAllExerciseOptions() {
+    public function findAllOptions() {
         return $this->fetchAll(null, 'exercise_option_name');
     }
 
-    public function findExerciseOption($exerciseOptionId) {
+    /**
+     * @inheritdoc
+     */
+    public function findOptionById($exerciseOptionId) {
         return $this->fetchRow('exercise_option_id = "' . $exerciseOptionId . '"');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function updateOption($data, $optionId) {
+        return $this->update($data, 'exercise_option_id = ' . $optionId);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function deleteOption($optionId) {
+        return $this->delete('exercise_option_id = ' . $optionId);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function insertOption($data) {
+        return $this->insert($data);
     }
 }

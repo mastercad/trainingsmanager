@@ -1,0 +1,14 @@
+<div class="form-group item" style="position: relative;">
+    <label class="control-label" for="<?php echo $this->uniqueId;?>">
+        <?php echo $this->translate('label_' . $this->type);?>:
+    </label>
+    <input type="text"
+           id="<?php echo $this->uniqueId;?>"
+           class="form-control <?php echo $this->type;?>"
+           value="<?php echo $this->value;?>"
+           data-value-orig="<?php echo $this->value;?>"
+           placeholder="<?php echo $this->translate('label_' . $this->type);?>" />
+
+    <span class="<?php echo $this->type;?>-delete glyphicon glyphicon-remove-sign delete"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_' . $this->type . '_selection');?>"></span>
+</div>

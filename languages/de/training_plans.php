@@ -11,4 +11,6 @@
         'label_training_plan_active' => 'Trainingsplan aktiv?',
 
         'tooltip_click_to_show_current_exercise_in_training' => 'Klicken, um die aktuelle Übung im Trainingstagebuch anzusehen',
+
+        'select_existing_training_plan_as_template' => 'bestehenden Trainingsplan als Vorlage auswählen'
     ];

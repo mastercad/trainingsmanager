@@ -89,7 +89,7 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
     public function generateExerciseOptionsContent($trainingDiaryXExercise) {
 
         $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->getView());
-
+        $exerciseOptionsService->setShowTrainingProgress(true);
         // bereits ein value durch eine übung gesetzt
         if (array_key_exists('training_diary_x_exercise_option_exercise_option_value', $trainingDiaryXExercise)) {
             $exerciseOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_exercise_option_exercise_option_value']);
@@ -104,6 +104,7 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
     public function generateDeviceOptionsContent($trainingDiaryXExercise) {
 
         $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->getView());
+        $deviceOptionsService->setShowTrainingProgress(true);
 
         // bereits ein value durch eine übung gesetzt
         if (array_key_exists('training_diary_x_device_option_device_option_value', $trainingDiaryXExercise)) {

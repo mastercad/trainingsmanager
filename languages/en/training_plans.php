@@ -11,4 +11,6 @@
         'label_training_plan_active' => 'Training Plan active?',
 
         'tooltip_click_to_show_current_exercise_in_training' => 'Click, to show current exercise in actual trainings',
+
+        'select_existing_training_plan_as_template' => 'Select existing Training Plan as Template',
     ];

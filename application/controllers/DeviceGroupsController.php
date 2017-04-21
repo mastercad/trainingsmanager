@@ -116,51 +116,6 @@ class DeviceGroupsController extends AbstractController
         $this->view->assign('json_string', json_encode($messages));
     }
 
-    /**
-     * eine geraetegruppe als edit feld zurück geben
-     */
-//    public function getGeraeteFuerEditAction()
-//    {
-//        $params = $this->getRequest()->getParams();
-//
-//        if(isset($params['id']))
-//        {
-//            $i_geraetegruppe_id = $params['id'];
-//            $obj_db_geraetegruppe_geraete = new Model_DbTable_DeviceGroupDevices();
-//            $a_geraetegruppe_geraete = $obj_db_geraetegruppe_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
-//
-//            $this->view->assign('a_geraetegruppe_geraete', $a_geraetegruppe_geraete);
-//        }
-//    }
-    /*
-    public function getGeraetVorschlaegeAction()
-    {
-        $params = $this->getRequest()->getParams();
-        
-        if(isset($params['suche']))
-        {
-            $str_suche = base64_decode($params['suche']) . '%';
-            $obj_db_geraete = new Model_DbTable_Devices();
-            
-            $a_geraet_vorschlaege = $obj_db_geraete->getGeraetByName($str_suche);
-            $this->view->assign('a_geraet_vorschlaege', $a_geraet_vorschlaege);
-        }
-    }
-    */
-    public function getGeraetegruppenVorschlaegeAction()
-    {
-        $params = $this->getRequest()->getParams();
-
-        if(isset($params['suche']))
-        {
-            $str_suche = base64_decode($params['suche']) . '%';
-            $obj_db_geraetegruppen = new Model_DbTable_DeviceGroups();
-
-            $a_geraetegruppen_vorschlaege = $obj_db_geraetegruppen->findDeviceGroupByName($str_suche);
-            $this->view->assign('a_geraetegruppen_vorschlaege', $a_geraetegruppen_vorschlaege);
-        }
-    }
-
     public function saveAction() {
         $params = $this->getRequest()->getParams();
         $userId = 1;
@@ -176,7 +131,6 @@ class DeviceGroupsController extends AbstractController
 
             $deviceGroupName = '';
             $deviceGroupId = 0;
-            $deviceGroupDevicesUpdates = array();
             $deviceGroupDevicesDeletes = array();
             $deviceGroupDevicesInserts = array();
             $countDevicesInDeviceGroup = 0;
@@ -204,7 +158,9 @@ class DeviceGroupsController extends AbstractController
                 $devicesInDeviceGroupInDb = $deviceXDeviceGroupDb->findDevicesByDeviceGroupId($deviceGroupId);
                 $countDevicesInDeviceGroup = count($devicesInDeviceGroupInDb);
 
-                if (is_array($devicesInDeviceGroupInDb)) {
+                if (is_array($devicesInDeviceGroupInDb)
+                    || $devicesInDeviceGroupInDb instanceof Zend_Db_Table_Rowset
+                ) {
                     foreach ($devicesInDeviceGroupInDb as $device) {
                         // an die stelle der tag id wird der projekt tag id eintrag gesetzt
                         $deviceGroupDevicesCurrent[$device['device_x_device_group_device_fk']] = array(
@@ -217,22 +173,20 @@ class DeviceGroupsController extends AbstractController
 
                 foreach ($params['edited_elements']['device_group_devices'] as $device) {
                     // es wurde eine id übergeben und diese id bestand bereits
-                    if (isset($device['id'])
+                    if(isset($device['id'])
                         && 0 < $device['id']
-                        && isset($deviceGroupDevicesCurrent[$device['id']])
-                    ) {
-                        array_push($deviceGroupDevicesUpdates, array(
-                            'device_id' => $device['id'],
-                            'device_x_device_group_id' => $deviceGroupDevicesCurrent[$device['id']]['device_x_device_group_id'])
-                        );
-                        unset($deviceGroupDevicesDeletes[$device['id']]);
-                    } else if(isset($device['id'])
-                        && 0 < $device['id']
+                        && !isset($deviceGroupDevicesCurrent[$device['id']])
                     ) {
                         array_push($deviceGroupDevicesInserts, array(
                             'device_id' => $device['id'])
                         );
                         $countDevicesInDeviceGroup++;
+                    // update routine, but nothing to do else prevent deletion for device in group
+                    } else if (isset($device['id'])
+                        && 0 < $device['id']
+                        && isset($deviceGroupDevicesCurrent[$device['id']])
+                    ) {
+                        unset($deviceGroupDevicesDeletes[$device['id']]);
                     }
                 }
             }
@@ -330,8 +284,7 @@ class DeviceGroupsController extends AbstractController
                     array_push($messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde erfolgreich angelegt!', 'result' => true, 'id' => $deviceGroupId));
                 }
 
-                if (count($deviceGroupDevicesInserts)
-                    && 0 == count($deviceGroupDevicesUpdates)
+                if (0 == count($deviceGroupDevicesInserts)
                     && 0 == count($deviceGroupDevicesDeletes)
                     && 0 < $deviceGroupId
                 ) {
@@ -341,7 +294,6 @@ class DeviceGroupsController extends AbstractController
                 if ($deviceGroupId > 0 &&
                     (
                         count($deviceGroupDevicesInserts) > 0 ||
-                        count($deviceGroupDevicesUpdates) > 0 ||
                         count($deviceGroupDevicesDeletes) > 0)
                 ) {
                     array_push($messages, array('type' => 'meldung', 'message' => 'Die Geraete der Geraetegruppen wurden erfolgreich geändert!', 'result' => true, 'id' => $deviceGroupId));
@@ -372,16 +324,6 @@ class DeviceGroupsController extends AbstractController
                         $data['device_x_device_group_create_user_fk'] = $userId;
 
                         $deviceXDeviceGroupDb->saveDeviceGroupDevice($data);
-                    }
-
-                    /** @TODO macht irgendwie keinen sinn, was soll hier geupdatet werden ... */
-                    foreach ($deviceGroupDevicesUpdates as $device) {
-                        $data = array();
-                        $data['device_x_device_group_device_group_fk']   = $deviceGroupId;
-                        $data['device_x_device_group_update_date']     = date("Y-m-d H:i:s");
-                        $data['device_x_device_group_update_user_fk']   = $userId;
-
-                        $deviceXDeviceGroupDb->updateDeviceGroupDevice($data, $device['device_x_device_group_id']);
                     }
 
                     foreach ($deviceGroupDevicesDeletes as $device) {

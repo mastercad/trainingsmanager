@@ -43,14 +43,14 @@ class DevicesController extends AbstractController {
             $deviceContent = '';
             $deviceId = $params['id'];
             $devicesDb = new Model_DbTable_Devices();
-            $deviceCollection = $devicesDb->findDeviceById($deviceId);
+            $device = $devicesDb->findDeviceById($deviceId);
 
-            if ($deviceCollection instanceof Zend_Db_Table_Rowset) {
-                $this->view->assign('preview', $this->generatePreviewPictureContent($deviceCollection->getRow(0)));
+            if ($device instanceof Zend_Db_Table_Row) {
+                $this->view->assign('preview', $this->generatePreviewPictureContent($device));
                 $this->view->assign('optionLabelText', 'Geräte Optionen:');
-                $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($deviceCollection));
+                $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($device));
                 $this->view->assign('previewPictureContent', $this->generatePreviewPicturesForEditContent());
-                $this->view->assign($deviceCollection->getRow(0)->toArray());
+                $this->view->assign($device->toArray());
             }
 
         }
@@ -83,16 +83,18 @@ class DevicesController extends AbstractController {
     }
 
     /**
-     * @param Zend_Db_Table_Rowset $deviceCollection
+     * @param Zend_Db_Table_Row $device
      *
      * @return string
      */
-    public function generateDeviceOptionsContent($deviceCollection) {
+    public function generateDeviceOptionsContent($device) {
 
+        $deviceOptionsDb = new Model_DbTable_DeviceOptions();
+        $deviceOptions = $deviceOptionsDb->findDeviceOptionsByDeviceId($device->offsetGet('device_id'));
         $deviceOptionsContent = '';
 
         /** generates option inputs for device **/
-        foreach ($deviceCollection as $deviceOption) {
+        foreach ($deviceOptions as $deviceOption) {
             if (0 < $deviceOption->offsetGet('device_x_device_option_device_option_fk')) {
                 $deviceOptionsContent .= $this->generateDeviceOptionEditContent($deviceOption);
             }
@@ -109,7 +111,7 @@ class DevicesController extends AbstractController {
     public function generateDeviceOptionsDropDownContent() {
         $content = '';
         $deviceOptions = new Model_DbTable_DeviceOptions();
-        $optionsCollection = $deviceOptions->findAllDeviceOptions();
+        $optionsCollection = $deviceOptions->findAllOptions();
 
         foreach ($optionsCollection as $option) {
             $this->view->assign('optionValue', $option->offsetGet('device_option_id'));
@@ -565,7 +567,7 @@ class DevicesController extends AbstractController {
 
         if (0 < $deviceOptionId) {
             $deviceOptionsDb = new Model_DbTable_DeviceOptions();
-            $deviceOption = $deviceOptionsDb->findDeviceOption($deviceOptionId);
+            $deviceOption = $deviceOptionsDb->findOptionById($deviceOptionId);
 
             $this->view->assign('device_option_id', $deviceOption->offsetGet('device_option_id'));
             $this->view->assign('device_option_name', $deviceOption->offsetGet('device_option_name'));

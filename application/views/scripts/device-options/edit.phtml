@@ -1,0 +1,42 @@
+<?php echo $this->optionContent;?>
+
+<input type="hidden" name="id" id="id" class="id" value="<?php echo $this->id;?>" />
+
+<button class="save btn btn-primary btn-block">
+    <?php echo $this->translate('label_save');?>
+</button>
+
+<script type="text/javascript">
+    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+    jQuery(document).ready(function() {
+        jQuery('.save').unbind('click').click(function() {
+            var hasError = false;
+            var messages = [];
+            var name = jQuery('.option-name').val();
+
+            if (!name.length) {
+                hasError = true;
+                messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_needs_name');?>'});
+            }
+
+            if (!hasError) {
+                var url = "/"+controller+"/save";
+                jQuery.post(url, {
+                    name: name,
+                    value: jQuery('.option-value').val(),
+                    id: jQuery('.id').val(),
+                    ajax: true
+                }, function(response) {
+                    var obj_cad_messages = new CAD.Message();
+                    obj_cad_messages.init(response);
+                    obj_cad_messages.open();
+                });
+            } else {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init(messages);
+                obj_cad_messages.open();
+            }
+        });
+    });
+</script>

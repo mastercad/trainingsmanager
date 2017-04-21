@@ -14,10 +14,36 @@ class Model_DbTable_Exercises extends Model_DbTable_Abstract
     /**
      * search all available exercises
      *
+     * @param exerciseType
+     * @param device
+     *
      * @return array|bool
      */
-    public function findExercises() {
-        return $this->fetchAll(null, 'exercise_name');
+    public function findExercises($exerciseType = null, $device = null) {
+        $select = $this->select(static::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+
+        if (is_numeric($exerciseType)
+            && 0 < $exerciseType
+        ) {
+            $exerciseType = (int) $exerciseType;
+            $select->joinInner('exercise_x_exercise_type', 'exercise_x_exercise_type_exercise_fk = exercise_id');
+            $select->where('exercise_x_exercise_type_exercise_type_fk = ?', $exerciseType);
+        } else if ('WITHOUT' == $exerciseType) {
+            $select->joinLeft('exercise_x_exercise_type', 'exercise_x_exercise_type_exercise_fk = exercise_id');
+            $select->where('exercise_x_exercise_type_id IS NULL');
+        }
+        if (is_numeric($device)
+            && 0 < $device
+        ) {
+            $device = (int) $device;
+            $select->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id');
+            $select->where('exercise_x_device_device_fk = ?', $device);
+        } else if ('WITHOUT' == $device) {
+            $select->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id');
+            $select->where('exercise_x_device_id IS NULL');
+        }
+
+        return $this->fetchAll($select);
     }
 
     /**

@@ -31,6 +31,23 @@ class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
         return false;
     }
 
+    public function findExercisesWithoutExerciseTypes()
+    {
+        $select = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        try {
+            $select->from('exercises', '')
+                ->joinLeft('exercise_x_exercise_type', 'exercise_x_exercise_type_exercise_fk = exercise_id', '')
+                ->where('exercise_x_exercise_type_id IS NULL')
+                ->columns(['COUNT(exercise_id) AS exerciseCount']);
+
+            return $this->fetchRow($select);
+        } catch (Exception $oException) {
+            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+            echo "Meldung : " . $oException->getMessage() . "<br />";
+        }
+        return false;
+    }
+
     /**
      * @param $aData
      * @return bool|mixed

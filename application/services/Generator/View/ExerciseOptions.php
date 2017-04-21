@@ -44,7 +44,7 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
             && $this->isForceGenerateEmptyInput()
         ) {
             $exerciseOptionDb = new Model_DbTable_ExerciseOptions();
-            $exerciseOption = $exerciseOptionDb->findExerciseOption($this->getOptionId());
+            $exerciseOption = $exerciseOptionDb->findOptionById($this->getOptionId());
             $this->setOptionName($exerciseOption['exercise_option_name']);
             $this->setOptionValue($exerciseOption['exercise_option_default_value']);
             $exerciseOptionsContent = $this->generateOptionInputContent();
@@ -95,7 +95,7 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
     public function generateExerciseOptionsSelectContent() {
         $exerciseOptionsContent = '';
         $exerciseOptionsDb = new Model_DbTable_ExerciseOptions();
-        $exerciseOptionsCollection = $exerciseOptionsDb->findAllExerciseOptions();
+        $exerciseOptionsCollection = $exerciseOptionsDb->findAllOptions();
 //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);
 

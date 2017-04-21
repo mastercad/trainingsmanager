@@ -61,11 +61,9 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
             $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
                 ->setIntegrityCheck(false);
 
-            $oSelect->joinLeft('device_x_device_option', 'device_x_device_option_device_fk = device_id')
-                ->joinLeft('device_options', 'device_option_id = device_x_device_option_device_option_fk')
-                ->where('device_id = ?', $iDeviceId);
+            $oSelect->where('device_id = ?', $iDeviceId);
 
-            return $this->fetchAll($oSelect);
+            return $this->fetchRow($oSelect);
         } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";

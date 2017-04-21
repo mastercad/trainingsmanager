@@ -62,6 +62,9 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
     /** @var string|int */
     private $baseOptionValue = null;
 
+    /** @var bool  */
+    private $showTrainingProgress = false;
+
     abstract public function generate();
 
     abstract protected function collectOptions();
@@ -113,12 +116,14 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
         $this->getView()->assign('baseValue', $this->getBaseOptionValue());
         $this->getView()->assign('additionalDataInformation', $this->getAdditionalElementAttributes());
 
-        if ($this->getSelectedOptionValue() < $this->getBaseOptionValue()) {
-            $this->getView()->assign('selectClass', 'negative');
-        } else if ($this->getSelectedOptionValue() == $this->getBaseOptionValue()) {
-            $this->getView()->assign('selectClass', 'current');
-        } else {
-            $this->getView()->assign('selectClass', 'positive');
+        if ($this->isShowTrainingProgress()) {
+            if ($this->getSelectedOptionValue() < $this->getBaseOptionValue()) {
+                $this->getView()->assign('selectClass', 'negative');
+            } else if ($this->getSelectedOptionValue() == $this->getBaseOptionValue()) {
+                $this->getView()->assign('selectClass', 'current');
+            } else {
+                $this->getView()->assign('selectClass', 'positive');
+            }
         }
 
         if ($this->isExerciseFinished()) {
@@ -145,12 +150,14 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
 
     private function receiveCurrentOptionClass($currentValue, $selectedValue, $baseValue)
     {
-        if ($currentValue < $baseValue) {
-            $this->getView()->assign('optionClass', 'negative');
-        } else if ($currentValue == $baseValue) {
-            $this->getView()->assign('optionClass', 'current');
-        } else {
-            $this->getView()->assign('optionClass', 'positive');
+        if ($this->isShowTrainingProgress()) {
+            if ($currentValue < $baseValue) {
+                $this->getView()->assign('optionClass', 'negative');
+            } else if ($currentValue == $baseValue) {
+                $this->getView()->assign('optionClass', 'current');
+            } else {
+                $this->getView()->assign('optionClass', 'positive');
+            }
         }
         return $this;
     }
@@ -440,4 +447,22 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
         $this->baseOptionValue = $baseOptionValue;
         return $this;
     }
+
+    /**
+     * @return boolean
+     */
+    public function isShowTrainingProgress() {
+        return $this->showTrainingProgress;
+    }
+
+    /**
+     * @param boolean $showTrainingProgress
+     *
+     * @return $this
+     */
+    public function setShowTrainingProgress($showTrainingProgress) {
+        $this->showTrainingProgress = $showTrainingProgress;
+        return $this;
+    }
+
 }

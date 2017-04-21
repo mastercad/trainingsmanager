@@ -3,11 +3,16 @@
     if(strlen(trim($this->exercise_preview_picture)) > 0) {
 
         $vorschaubild_pfad = '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture . '.resized.jpg';
-        if(file_exists(getcwd() . $vorschaubild_pfad) &&
-           is_file(getcwd() . $vorschaubild_pfad) &&
-           is_readable(getcwd() . $vorschaubild_pfad))
-        {
+        if(file_exists(getcwd() . $vorschaubild_pfad)
+           && is_file(getcwd() . $vorschaubild_pfad)
+           && is_readable(getcwd() . $vorschaubild_pfad)
+        ) {
             $vorschaubild = $vorschaubild_pfad;
+        } else if (file_exists(getcwd() . '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture)
+            && is_file(getcwd() . '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture)
+            && is_readable(getcwd() . '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture)
+        ) {
+            $vorschaubild = '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture;
         }
     }
 ?>

@@ -11,17 +11,12 @@ class ExercisesController extends AbstractController {
     
     public function indexAction() {
         $exercisesDb = new Model_DbTable_Exercises();
-//        $obj_db_uebung_muskelgruppen = new Model_DbTable_ExerciseMuscleGroups();
+        $exerciseType = $this->getParam('exercise-type', null);
+        $device = $this->getParam('device', null);
+        $exercisesCollection = $exercisesDb->findExercises($exerciseType, $device)->toArray();
         
-        $a_uebungen = $exercisesDb->findExercises()->toArray();
-        
-//        foreach ($a_uebungen as &$a_uebung) {
-            $a_uebung_muskelgruppen =
-//                $obj_db_uebung_muskelgruppen->findExerciseMuscleGroupByExerciseId($a_uebung['exercise_id']);
-//            $a_uebung['uebung_muskelgruppen'] = $a_uebung_muskelgruppen;
-//        }
-        
-        $this->view->assign('a_uebungen', $a_uebungen);
+        $this->view->assign('exercisesCollection', $exercisesCollection);
+        $this->view->assign('exercisesFilterContent', $this->generateFilterContent());
     }
     
     public function showAction() {
@@ -81,6 +76,122 @@ class ExercisesController extends AbstractController {
         }
         return $content;
     }
+
+    private function generateFilterContent() {
+
+        $this->view->assign('exerciseTypeFilterContent', $this->generateExerciseTypeContentForFilter(null));
+        $this->view->assign('deviceFilterContent', $this->generateDeviceFilterContentForFilter());
+
+        return $this->view->render('exercises/filter.phtml');
+    }
+
+    private function generateDeviceFilterContentForFilter() {
+
+        $device = $this->getParam('device', null);
+        $deviceName = '';
+
+        $exerciseXDeviceDb = new Model_DbTable_ExerciseXDevice();
+        $devicesCollection = $exerciseXDeviceDb->findDevicesWithExercises();
+        $exercisesWithoutDevices = $exerciseXDeviceDb->findExercisesWithoutDevices();
+
+        $deviceContent = '';
+        $optionSelectText = $this->translate('label_please_select');
+
+        $this->view->assign('optionValue', 0);
+        $this->view->assign('optionText', $this->translate('label_please_select'));
+        $deviceContent .= $this->view->render('loops/option.phtml');
+
+        foreach ($devicesCollection as $currentDevice) {
+            $this->view->assign('optionValue', $currentDevice->offsetGet('device_id'));
+            $this->view->assign('optionText', $currentDevice->offsetGet('device_name') . ' (' . $currentDevice->offsetGet('exerciseCount') . ' ' . (1 < $currentDevice->offsetGet('exerciseCount') ?  $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+
+            if ($device == $currentDevice->offsetGet('device_id')) {
+                $deviceName = $currentDevice->offsetGet('device_name');
+            }
+
+            $deviceContent .= $this->view->render('loops/option.phtml');
+        }
+
+        if ($exercisesWithoutDevices) {
+            $this->view->assign('optionValue', 'WITHOUT');
+            $this->view->assign('optionText', $this->translate('label_exercises_without_device') . ' (' . $exercisesWithoutDevices->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutDevices->offsetGet('exerciseCount') ?  $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+
+            if ($device == 'WITHOUT') {
+                $deviceName = $this->translate('label_exercises_without_exercise_type');
+            }
+
+            $deviceContent .= $this->view->render('loops/option.phtml');
+        }
+
+        if ($device) {
+            $optionSelectText = $deviceName;
+            $this->view->assign('currentValue', $device);
+        }
+
+        $this->view->assign('selectId', 'device_id');
+        $this->view->assign('optionsContent', $deviceContent);
+
+        $this->view->assign('optionSelectText', $optionSelectText);
+        $this->view->assign('optionLabelText', $this->translate('label_device_name') . ':');
+        $this->view->assign('optionClassName', 'device-select custom-drop-down');
+
+        return $this->view->render('globals/select.phtml');
+    }
+
+    private function generateExerciseTypeContentForFilter() {
+
+        $exerciseType = $this->getParam('exercise-type', null);
+        $exerciseTypeName = '';
+
+        $exerciseTypeDb = new Model_DbTable_ExerciseTypes();
+        $exerciseXExerciseTypes = new Model_DbTable_ExerciseXExerciseType();
+        $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
+
+        $exerciseTypeContent = '';
+        $optionSelectText = $this->translate('label_please_select');
+
+        $this->view->assign('optionValue', 0);
+        $this->view->assign('optionText', $this->translate('label_please_select'));
+        $exerciseTypeContent .= $this->view->render('loops/option.phtml');
+
+        foreach ($exerciseTypesCollection as $currentExerciseType) {
+            $this->view->assign('optionValue', $currentExerciseType->offsetGet('exercise_type_id'));
+            $this->view->assign('optionText', $currentExerciseType->offsetGet('exercise_type_name'));
+
+            if ($exerciseType == $currentExerciseType->offsetGet('exercise_type_id')) {
+                $exerciseTypeName = $currentExerciseType->offsetGet('exercise_type_name');
+            }
+            $exerciseTypeContent .= $this->view->render('loops/option.phtml');
+        }
+
+        $exercisesWithoutExerciseTypes = $exerciseXExerciseTypes->findExercisesWithoutExerciseTypes();
+
+        if ($exercisesWithoutExerciseTypes) {
+            $this->view->assign('optionValue', 'WITHOUT');
+            $this->view->assign('optionText', $this->translate('label_exercises_without_exercise_type') . ' (' . $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') ?  $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+
+            if ($exerciseType == 'WITHOUT') {
+                $exerciseTypeName = $this->translate('label_exercises_without_exercise_type');
+            }
+
+            $exerciseTypeContent .= $this->view->render('loops/option.phtml');
+        }
+
+        if ($exerciseType) {
+            $optionSelectText = $exerciseTypeName;
+            $this->view->assign('currentValue', $exerciseType);
+        }
+
+        $this->view->assign('selectId', 'exercise_type_id');
+        $this->view->assign('optionsContent', $exerciseTypeContent);
+
+        $this->view->assign('optionSelectText', $optionSelectText);
+        $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
+        $this->view->assign('optionClassName', 'exercise-type-select custom-drop-down');
+
+        return $this->view->render('globals/select.phtml');
+    }
+
 
     private function generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId) {
         $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
@@ -202,13 +313,16 @@ class ExercisesController extends AbstractController {
         return $content;
     }
 
-    private function generateExerciseTypeContent($exercise)
-    {
+    private function generateExerciseTypeContent($exercise) {
         $exerciseTypeDb = new Model_DbTable_ExerciseTypes();
         $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
 
         $exerciseTypeContent = '';
         $optionSelectText = $this->translate('label_please_select');
+
+        $this->view->assign('optionValue', 0);
+        $this->view->assign('optionText', $this->translate('label_please_select'));
+        $exerciseTypeContent .= $this->view->render('loops/option.phtml');
 
         foreach ($exerciseTypesCollection as $exerciseType) {
             $this->view->assign('optionValue', $exerciseType->offsetGet('exercise_type_id'));
@@ -230,10 +344,8 @@ class ExercisesController extends AbstractController {
         $this->view->assign('optionSelectText', $optionSelectText);
         $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
         $this->view->assign('optionClassName', 'exercise-type-select custom-drop-down');
-        $content = $this->view->render('globals/select.phtml');
 
-        return $content;
-//        return $this->view->render('exercises/exercise-type-content.phtml');
+        return $this->view->render('globals/select.phtml');
     }
 
     private function generatePreviewPictureContent($exercise)

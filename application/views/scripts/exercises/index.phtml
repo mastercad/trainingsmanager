@@ -1,22 +1,37 @@
 <h2>
     <?php echo $this->translate('label_exercises');?>
 </h2>
+
+<div class="col-sm-4 exercises-filter">
+    <?php echo $this->exercisesFilterContent;?>
+</div>
+<div class="col-sm-4">
+    <?php echo $this->deviceFilterContent;?>
+</div>
+<div class="col-sm-2">
+    <button class="btn btn-primary btn-default search">
+        <?php echo $this->translate('label_search');?>
+    </button>
+</div>
+
 <div class="col-sm-12 exercises-overview">
 <?php
-    if (is_array($this->a_uebungen)) {
-        foreach($this->a_uebungen as $a_uebung) {
-            $this->assign($a_uebung);
+    if (is_array($this->exercisesCollection)) {
+        foreach($this->exercisesCollection as $exercise) {
+            $this->assign($exercise);
             echo $this->render('loops/exercise.phtml');
         }
     }
 ?>
 </div>
 
+<script type="text/javascript" src="/js/purl.js"></script>
+
 <script type="text/javascript">
     jQuery('document').ready(function() {
         jQuery('.exercise-delete').unbind('click').click(function() {
             if(confirm('<?php echo $this->translate('question_warning_delete_exercise');?>')) {
-                jQuery(this).loescheUebung();
+                jQuery(this).deleteExercise();
             }
         });
         
@@ -49,5 +64,67 @@
                 obj_cad_messages.open();
             }
         };
+
+        jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
+            var selectedOption = jQuery(this).data('value');
+            var selectedOptionName = jQuery(this).html();
+            var caretContent = '<span class="caret"></span>';
+
+            jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
+            jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+
+            return false;
+        });
+
+        jQuery('.search').unbind('click').on('click', function() {
+
+            var exerciseType = jQuery('.exercise-type-select').attr('data-value');
+            var device = jQuery('.device-select').attr('data-value');
+
+            var currentLocation = location.href;
+            var newLocation = jQuery.url(currentLocation);
+            var params = newLocation.param();
+
+            if (0 == exerciseType) {
+                delete params["exercise-type"];
+            } else {
+                params['exercise-type'] = exerciseType;
+            }
+
+            if (0 == device) {
+                delete params["device"];
+            } else {
+                params['device'] = device;
+            }
+
+            newLocation = newLocation.attr('base') + newLocation.attr('directory');
+
+            if (jQuery.param(params).length) {
+                newLocation =  newLocation + '?' + jQuery.param(params)
+            }
+            location.href = newLocation;
+        });
+
+        /**
+         * manipulate part of string
+         */
+        /**
+         *
+         var exerciseType = jQuery('.exercise-type-select').find('.dropdown-toggle').html();
+         var device = jQuery('.device-select').find('.dropdown-toggle').html();
+
+         var regEx = /(\(.*?\))/g;
+
+         if (exerciseType.match('<?php echo $this->translate('label_please_select');?>')) {
+                exerciseType = undefined;
+            } else {
+                exerciseType = exerciseType.replace(regEx, '');
+            }
+         if (device.match('<?php echo $this->translate('label_please_select');?>')) {
+                device = undefined;
+            } else {
+                device = device.replace(regEx, '');
+            }
+         */
     });
 </script>

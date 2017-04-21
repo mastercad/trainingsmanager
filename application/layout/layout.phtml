@@ -88,6 +88,16 @@
                             <li class="<?php if($this->controller == "devices" && $this->action == "edit"){ echo 'active';}?>"><a href="/devices/edit"><?php echo $this->translate('label_create');?></a></li>
                         </ul>
                     </li>
+                    <li class="<?php if($this->controller == "device-options"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_device_options');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "device-options" && $this->action == "index"){ echo 'active';}?>"><a href="/device-options/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "device-options" && $this->action == "edit"){ echo 'active';}?>"><a href="/device-options/edit"><?php echo $this->translate('label_create');?></a></li>
+                        </ul>
+                    </li>
                     <li class="<?php if($this->controller == "device-groups"){ echo 'active';}?>">
                         <a href="#" class="dropdown-toggle <?php if($this->controller == "device-groups"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <?php echo $this->translate('label_device_groups');?>
@@ -106,6 +116,16 @@
                         <ul class="dropdown-menu">
                             <li class="<?php if($this->controller == "exercises" && $this->action == "index"){ echo 'active';}?>"><a href="/exercises/"><?php echo $this->translate('label_overview');?></a></li>
                             <li class="<?php if($this->controller == "exercises" && $this->action == "edit"){ echo 'active';}?>"><a href="/exercises/edit"><?php echo $this->translate('label_create');?></a></li>
+                        </ul>
+                    </li>
+                    <li class="<?php if($this->controller == "exercise-options"){ echo 'active';}?>">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <?php echo $this->translate('label_exercise_options');?>
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="<?php if($this->controller == "exercise-options" && $this->action == "index"){ echo 'active';}?>"><a href="/exercise-options/"><?php echo $this->translate('label_overview');?></a></li>
+                            <li class="<?php if($this->controller == "exercise-options" && $this->action == "edit"){ echo 'active';}?>"><a href="/exercise-options/edit"><?php echo $this->translate('label_create');?></a></li>
                         </ul>
                     </li>
                     <li class="<?php if($this->controller == "training-plans"){ echo 'active';}?>">
@@ -194,7 +214,7 @@
                                             </div >
                                         </form >
                                     </div >
-                                   <div class="bottom text-center">
+                                    <div class="col-md-12 bottom text-center">
                                        <?php echo $this->translate('label_new_here');?>
                                        <a href="#">
                                            <b>
@@ -211,10 +231,19 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_welcome') . ", " . ucfirst($user->user_first_name) . ' ' . ucfirst($user->user_last_name);?></b> <span class="caret"></span></a>
                         <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
                             <li>
-                                        <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login_form" >
+                                <div class="row">
+                                    <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login_form" >
+                                        <div class="form-group">
                                             <input type="hidden" name="user_logout" id="user_logout" value="1" />
                                             <input class="btn btn-primary btn-block" type="submit" id="logout-button" value="<?php echo $this->translate('label_logout');?>" />
-                                        </form >
+                                        </div>
+                                    </form >
+                                </div>
+                                <a href="/profile">
+                                    <b>
+                                        <?php echo $this->translate('label_profile');?>
+                                    </b>
+                                </a>
 <?php
                                 }
 ?>

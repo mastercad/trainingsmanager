@@ -24,6 +24,13 @@
         </label>
     </div>
 
+    <div class="form-group">
+        <label class="checkbox-inline">
+            <?php echo $this->translate('or') . ' ' . $this->translate('select_existing_training_plan_as_template');?> :
+        </label>
+        <?php echo $this->trainingPlanSelect;?>
+    </div>
+
     <input type="hidden" id="user_id" name="user_id" value="" />
     <input class="btn btn-primary btn-block"
            style="margin-top: 20px;"

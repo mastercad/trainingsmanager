@@ -420,75 +420,77 @@
             });
         });
 
+        function addMuscleGroup(muscleGroupId, exerciseId) {
+            jQuery.ajax({
+                type: "POST",
+                url: '/exercises/get-muscle-group-for-exercise-edit/',
+                data: "muscle_group_id=" + muscleGroupId + "&exercise_id=" + exerciseId + "&ajax=true",
+                success: function (response) {
+                    jQuery('.exercise-muscle-groups').append(response);
+                    initMuscleRating();
+                    initMuscleGroups();
+                }
+            });
+        }
+
+        function initMuscleRating() {
+            jQuery('.exercise-muscle-groups').find('.muscle-use').unbind('mouseover').unbind('mouseout').unbind('click').hover(
+                function() {
+                    var x = null;
+                    jQuery(this).unbind('mousemove').mousemove(function (e) {
+                        if (!jQuery(this).parent().parent().hasClass('deactivated')) {
+                            var parentOffset = jQuery(this).parent().offset();
+                            x = -100 + ( parseFloat(e.pageX) - parentOffset.left);
+                            x = Math.round(x / 20) * 20;
+                            jQuery(this).css('background-position', x + "px " + x + "px");
+                        }
+                    });
+
+                    jQuery(this).unbind('click').click(function () {
+                        if (!jQuery(this).parent().parent().hasClass('deactivated')) {
+                            jQuery(this).data('background-position', x + "px " + x + "px");
+                            jQuery(this).data('muscle-use', Math.round(5 + (x / 20)));
+                            jQuery(this).css('background-position', jQuery(this).data('background-position'));
+                            jQuery(this).attr('title', Math.round(5 + (x / 20)));
+                        }
+                    });
+                },
+                function() {
+                    if (!jQuery(this).parent().parent().hasClass('deactivated')) {
+                        if (undefined !== jQuery(this).data('background-position')) {
+                            jQuery(this).css('background-position', jQuery(this).data('background-position'));
+                        } else {
+                            jQuery(this).css('background-position', '-100px 0');
+                        }
+                    }
+                }
+            );
+
+            jQuery('.muscle-delete').unbind('click').bind('click', function () {
+                if (jQuery(this).parent().hasClass('deactivated')) {
+                    jQuery(this).parent().find('.muscle-use').css('background-position', jQuery(this).parent().find('.muscle-use').data('background-position'))
+                        .data('muscle-use', jQuery(this).parent().find('.muscle-use').attr('data-muscle-use-before-delete'))
+                        .attr('data-muscle-use-before-delete', 0);
+                    jQuery(this).parent().removeClass('deactivated');
+                } else {
+                    jQuery(this).parent().find('.muscle-use')
+                        .css('background-position', '-100px -100px')
+                        .attr('data-muscle-use-before-delete', jQuery(this).parent().find('.muscle-use').data('muscle-use'))
+                        .data('muscle-use', 0)
+                        .parent().parent().addClass('deactivated');
+                }
+            });
+        }
+
+        function initMuscleGroups() {
+            jQuery('.muscle-group-delete').unbind('click').click(function () {
+                jQuery(this).parent().data('muscle-group-id', null).fadeOut();
+            });
+        }
+
         edit_init(true);
         initDevicesEdit();
         initMuscleRating();
+        initMuscleGroups();
     });
-
-    function addMuscleGroup(muscleGroupId, exerciseId) {
-        jQuery.ajax({
-            type: "POST",
-            url: '/exercises/get-muscle-group-for-exercise-edit/',
-            data: "muscle_group_id=" + muscleGroupId + "&exercise_id=" + exerciseId + "&ajax=true",
-            success: function (response) {
-                jQuery('.exercise-muscle-groups').append(response);
-                initMuscleRating();
-            }
-        });
-    }
-
-    function initMuscleRating() {
-        jQuery('.exercise-muscle-groups').find('.muscle-use').unbind('mouseover').unbind('mouseout').unbind('click').hover(
-            function() {
-                var x = null;
-                jQuery(this).unbind('mousemove').mousemove(function (e) {
-                    if (!jQuery(this).parent().parent().hasClass('deactivated')) {
-                        var parentOffset = jQuery(this).parent().offset();
-                        x = -100 + ( parseFloat(e.pageX) - parentOffset.left);
-                        x = Math.round(x / 20) * 20;
-                        jQuery(this).css('background-position', x + "px " + x + "px");
-                    }
-                });
-
-                jQuery(this).unbind('click').click(function () {
-                    if (!jQuery(this).parent().parent().hasClass('deactivated')) {
-                        jQuery(this).data('background-position', x + "px " + x + "px");
-                        jQuery(this).data('muscle-use', Math.round(5 + (x / 20)));
-                        jQuery(this).css('background-position', jQuery(this).data('background-position'));
-                        jQuery(this).attr('title', Math.round(5 + (x / 20)));
-                    }
-                });
-            },
-            function() {
-                if (!jQuery(this).parent().parent().hasClass('deactivated')) {
-                    if (undefined !== jQuery(this).data('background-position')) {
-                        jQuery(this).css('background-position', jQuery(this).data('background-position'));
-                    } else {
-                        jQuery(this).css('background-position', '-100px 0');
-                    }
-                }
-            }
-        );
-
-        jQuery('.muscle-delete').unbind('click').bind('click', function () {
-            if (jQuery(this).parent().hasClass('deactivated')) {
-                jQuery(this).parent().find('.muscle-use').css('background-position', jQuery(this).parent().find('.muscle-use').data('background-position'))
-                    .data('muscle-use', jQuery(this).parent().find('.muscle-use').attr('data-muscle-use-before-delete'))
-                    .attr('data-muscle-use-before-delete', 0);
-                jQuery(this).parent().removeClass('deactivated');
-            } else {
-                jQuery(this).parent().find('.muscle-use')
-                    .css('background-position', '-100px -100px')
-                    .attr('data-muscle-use-before-delete', jQuery(this).parent().find('.muscle-use').data('muscle-use'))
-                    .data('muscle-use', 0)
-                    .parent().parent().addClass('deactivated');
-            }
-        });
-    }
-
-    function deleteMuscleGroup() {
-        jQuery(obj_ref).data('muscle-group-name', '');
-        jQuery(obj_ref).data('muscle-group-id', '');
-        jQuery(obj_ref).fadeOut();
-    }
 </script>

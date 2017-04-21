@@ -10,4 +10,6 @@
         'label_exercise_pictures' => 'Exercise pictures',
         'label_exercise_video' => 'Exercise video',
         'label_exercise_type' => 'Exercise type',
+        'label_exercises_without_exercise_type' => 'Exercises without exercise type',
+        'label_exercises_without_device' => 'Exercises without device',
     ];

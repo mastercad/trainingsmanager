@@ -57,6 +57,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         ));
         $resourceLoader->addResourceType('plugin', 'plugins', 'Plugin');
         $resourceLoader->addResourceType('service', 'services', 'Service');
+        $resourceLoader->addResourceType('interface', 'interfaces', 'Interface');
         $resourceLoader->addResourceType('model', 'models', 'Model');
 
         return $resourceLoader;

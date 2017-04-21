@@ -88,6 +88,21 @@
 
             return false;
         });
+
+        jQuery('input.option-input').unbind('change').change(function() {
+            var SelectOptionWrapper = jQuery(this);
+            var selectedOption = jQuery.trim(jQuery(this).val());
+            var baseValue = SelectOptionWrapper.data('base-value');
+
+            SelectOptionWrapper.removeClass('positive').removeClass('negative').removeClass('current');
+            if (selectedOption < baseValue) {
+                SelectOptionWrapper.addClass('negative');
+            } else if (selectedOption == baseValue) {
+                SelectOptionWrapper.addClass('current');
+            } else {
+                SelectOptionWrapper.addClass('positive');
+            }
+        });
     }
 
     function collectionTrainingDiaryExerciseInformation() {

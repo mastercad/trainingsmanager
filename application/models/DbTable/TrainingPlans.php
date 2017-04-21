@@ -38,6 +38,18 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
         return $this->fetchRow($select);
     }
 
+    public function findAllTrainingPlansForUser($userId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->order('training_plan_create_date DESC')
+            ->where('training_plan_user_fk = ?', $userId)
+//            ->where('training_plan_parent_fk IS NULL')
+        ;
+
+        return $this->fetchAll($select);
+
+    }
+
     public function findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId) {
         return $this->fetchAll(
             'training_plan_id = ' . $trainingPlanId . ' OR training_plan_parent_fk = ' . $trainingPlanId,

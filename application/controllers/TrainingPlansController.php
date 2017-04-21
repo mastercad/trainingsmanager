@@ -279,7 +279,8 @@ class TrainingPlansController extends AbstractController {
      */
     public function selectLayoutAction() {
 
-        $this->view->assign('userSelect', $this->generateUserSelect());
+        $this->view->assign('userSelect', $this->generateUserSelectContent());
+        $this->view->assign('trainingPlanSelect', $this->generateTrainingPlanSelectContent());
 
         if ($this->getRequest()->isPost()) {
             try {
@@ -296,7 +297,8 @@ class TrainingPlansController extends AbstractController {
             }
         }
     }
-    private function generateUserSelect()
+
+    private function generateUserSelectContent()
     {
         $usersDb = new Model_DbTable_Users();
         $usersCollection = $usersDb->findActiveUsers();
@@ -319,6 +321,24 @@ class TrainingPlansController extends AbstractController {
         return $content;
     }
 
+    private function generateTrainingPlanSelectContent()
+    {
+        $trainingPlanSelectContent = '';
+        $user = Zend_Auth::getInstance()->getIdentity();
+        $userId = null;
+        if (true === is_object($user)) {
+            $userId = $user->user_id;
+        }
+
+        if ($userId) {
+            $trainingPlansDb = new Model_DbTable_TrainingPlans();
+            $trainingPlanCollection = $trainingPlansDb->findAllTrainingPlansForUser($userId);
+
+            var_dump($trainingPlanCollection);
+        }
+
+        return $trainingPlanSelectContent;
+    }
 
     public function createLayoutAction() {
         $aParams = $this->getAllParams();
