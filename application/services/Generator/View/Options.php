@@ -65,6 +65,12 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
     /** @var bool  */
     private $showTrainingProgress = false;
 
+    /** @var bool  */
+    private $allowEdit = false;
+
+    /** @var bool  */
+    private $convertDropDownValues = true;
+
     abstract public function generate();
 
     abstract protected function collectOptions();
@@ -116,35 +122,44 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
         $this->getView()->assign('baseValue', $this->getBaseOptionValue());
         $this->getView()->assign('additionalDataInformation', $this->getAdditionalElementAttributes());
 
-        if ($this->isShowTrainingProgress()) {
-            if ($this->getSelectedOptionValue() < $this->getBaseOptionValue()) {
-                $this->getView()->assign('selectClass', 'negative');
-            } else if ($this->getSelectedOptionValue() == $this->getBaseOptionValue()) {
-                $this->getView()->assign('selectClass', 'current');
-            } else {
-                $this->getView()->assign('selectClass', 'positive');
+        if ($this->isAllowEdit()) {
+            if ($this->isShowTrainingProgress()) {
+                if ($this->getSelectedOptionValue() < $this->getBaseOptionValue()) {
+                    $this->getView()->assign('selectClass', 'negative');
+                } else if ($this->getSelectedOptionValue() == $this->getBaseOptionValue()) {
+                    $this->getView()->assign('selectClass', 'current');
+                } else {
+                    $this->getView()->assign('selectClass', 'positive');
+                }
             }
-        }
 
-        if ($this->isExerciseFinished()) {
-            return '<label>' . $this->getOptionName() . ':</label> ' . $this->getSelectedOptionValue();
-        } else if (false != strpos($this->getOptionValue(), '|')) {
-            $this->getView()->assign('optionClassName', $this->getOptionClassName() . ' custom-drop-down');
-            $this->getView()->assign('selectId', $optionId);
-            $optionValues = explode('|', $this->getOptionValue());
-            $optionRowContent = '';
-            foreach ($optionValues as $optionKey => $optionValue) {
-                $this->getView()->assign('optionValue', $optionKey);
-                $this->getView()->assign('optionText', $optionValue);
-                $this->receiveCurrentOptionClass($optionValue, $this->getSelectedOptionValue(), $this->getBaseOptionValue());
-                $optionRowContent .= $this->getView()->render('loops/option.phtml');
-                $this->getView()->assign('optionsContent', $optionRowContent);
+            if ($this->isExerciseFinished()) {
+                return '<label>' . $this->getOptionName() . ':</label> ' . $this->getSelectedOptionValue();
+            } else if ($this->isConvertDropDownValues()
+                && false != strpos($this->getOptionValue(), '|')
+            ) {
+                $this->getView()->assign('optionClassName', $this->getOptionClassName() . ' custom-drop-down');
+                $this->getView()->assign('selectId', $optionId);
+                $optionValues = explode('|', $this->getOptionValue());
+                $optionRowContent = '';
+                foreach ($optionValues as $optionKey => $optionValue) {
+                    $this->getView()->assign('optionValue', $optionKey);
+                    $this->getView()->assign('optionText', $optionValue);
+                    $this->receiveCurrentOptionClass($optionValue, $this->getSelectedOptionValue(),
+                        $this->getBaseOptionValue());
+                    $optionRowContent .= $this->getView()->render('loops/option.phtml');
+                    $this->getView()->assign('optionsContent', $optionRowContent);
+                }
+
+                return $this->getView()->render('globals/select.phtml');
+            } else {
+                $this->getView()->assign('optionInputId', $optionId);
+                $this->getView()->assign('optionValue', $this->getOptionValue());
+
+                return $this->getView()->render('loops/option-input.phtml');
             }
-            return $this->getView()->render('globals/select.phtml');
         } else {
-            $this->getView()->assign('optionInputId', $optionId);
-            $this->getView()->assign('optionValue', $this->getOptionValue());
-            return $this->getView()->render('loops/option-input.phtml');
+            return $this->getView()->render('loops/option-row.phtml');
         }
     }
 
@@ -462,6 +477,40 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
      */
     public function setShowTrainingProgress($showTrainingProgress) {
         $this->showTrainingProgress = $showTrainingProgress;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isAllowEdit() {
+        return $this->allowEdit;
+    }
+
+    /**
+     * @param boolean $allowEdit
+     *
+     * @return $this
+     */
+    public function setAllowEdit($allowEdit) {
+        $this->allowEdit = $allowEdit;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isConvertDropDownValues() {
+        return $this->convertDropDownValues;
+    }
+
+    /**
+     * @param boolean $convertDropDownValues
+     *
+     * @return $this;
+     */
+    public function setConvertDropDownValues($convertDropDownValues) {
+        $this->convertDropDownValues = $convertDropDownValues;
         return $this;
     }
 

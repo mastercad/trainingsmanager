@@ -1,52 +1,83 @@
+<div class="col-lg-6" id="left">
 <?php
-    if(is_array($this->a_geraetegruppen))
-    {
-        foreach($this->a_geraetegruppen as $a_geraetegruppe) {
-            $this->assign($a_geraetegruppe);
-            echo $this->render('loops/device-group.phtml');
-        }
-    }
+    echo $this->deviceGroupsContent;
 ?>
+</div>
+<div class="col-lg-6" id="right">
+    <?php echo $this->translate('device_groups_default_content');?> :
+</div>
 
 <script type="text/javascript">
-    jQuery('document').ready(function()
-    {
-        jQuery('.device-group-delete').unbind('click').bind('click', function()
-        {
-            if(confirm('<?php echo $this->translate('question_warning_delete_device_group');?>'))
-            {
-                jQuery(this).deleteDeviceGroup();
+    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+    jQuery('document').ready(function() {
+
+        function initItems() {
+            function singleClick(e) {
+                var id = jQuery(this).data('id');
+                loadShowContent(id);
             }
-        });
-        
-        jQuery.fn.deleteDeviceGroup = function() {
-            var deviceGroupId = jQuery(this).data('device-group-id');
-            var that = this;
-            
-            if (isNumber(deviceGroupId)
-               && 0 < deviceGroupId
-            ) {
-                var url = "/device-groups/delete-device-group/";
-                var obj_params = {'id': deviceGroupId, 'ajax': true};
-                
-                jQuery.post(url, obj_params, function(response) {
-                    try {
-                        response = JSON.parse(response);
-                        var cad_obj_messages = new CAD.Message();
-                        cad_obj_messages.init(response);
-                        
-                        if(cad_obj_messages.open()) {
-                            jQuery(that).parent().fadeOut();
-                        }
-                    } catch(e) {
-                        alert(response);
+
+            function doubleClick(e) {
+                var id = jQuery(this).data('id');
+                loadEditContent(id);
+            }
+
+            jQuery('span.item').unbind('click').click(function(e) {
+                var that = this;
+                setTimeout(function() {
+                    var dblclick = parseInt(jQuery(that).data('double'), 10);
+                    if (dblclick > 0) {
+                        jQuery(that).data('double', dblclick-1);
+                    } else {
+                        singleClick.call(that, e);
                     }
-                });
-            } else {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init([{'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_cant_delete_device_group');?>'}]);
-                obj_cad_messages.open();
-            }
-        };
+                }, 300);
+            }).dblclick(function(e) {
+                jQuery(this).data('double', 2);
+                doubleClick.call(this, e);
+            });
+        }
+
+        initItems();
     });
+
+    function showSpinner(element) {
+        var spinner = jQuery('<div class="spinner"></div>');
+        element.html(spinner);
+    }
+
+    function loadShowContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/show', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+        });
+    }
+
+    function loadEditContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/edit', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+            var obj_cad_cms = new jQuery('html').CAD_CMS(jQuery('.editable'), controller);
+            edit_init(true);
+        });
+    }
+
+    function deleteEntry(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            jQuery('#'+id).fadeOut();
+        });
+    }
+
+    function scrollToAnchor(aid){
+        var aTag = jQuery("a[name='"+ aid +"']");
+        jQuery('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    }
 </script>

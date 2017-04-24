@@ -58,6 +58,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $resourceLoader->addResourceType('plugin', 'plugins', 'Plugin');
         $resourceLoader->addResourceType('service', 'services', 'Service');
         $resourceLoader->addResourceType('interface', 'interfaces', 'Interface');
+        $resourceLoader->addResourceType('collection', 'collections', 'Collection');
+        $resourceLoader->addResourceType('entities', 'entities', 'Entity');
         $resourceLoader->addResourceType('model', 'models', 'Model');
 
         return $resourceLoader;
@@ -137,7 +139,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         // Nur Einträge vom Level Warnung und höher schicken
         $writer_mail->addFilter(Zend_Log::WARN);
 
-        $writer_file = new Zend_Log_Writer_Stream('../data/application.log');
+        $writer_file = new Zend_Log_Writer_Stream(APPLICATION_PATH . '/../data/application.log');
 
         $logger = new Zend_Log();
         $logger->addWriter($writer);

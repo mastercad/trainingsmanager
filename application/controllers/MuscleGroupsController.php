@@ -10,8 +10,9 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 class MuscleGroupsController extends AbstractController {
 
     public function indexAction() {
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+
         $muscleGroupsDb = new Model_DbTable_MuscleGroups();
-        $muscleXMuscleGroupDb = new Model_DbTable_MuscleXMuscleGroup();
 
         $muscleGroupsCollection = $muscleGroupsDb->findAllMuscleGroups()->toArray();
         $muscleGroupsContent = "Es wurden leider keine Muskelgruppen gefunden!";
@@ -19,29 +20,65 @@ class MuscleGroupsController extends AbstractController {
         if (0 < count($muscleGroupsCollection)) {
             $muscleGroupsContent = '';
             foreach ($muscleGroupsCollection as $muscleGroup) {
-                $musclesInMuscleGroup = $muscleXMuscleGroupDb->findMusclesByMuscleGroupId($muscleGroup['muscle_group_id']);
-                $muscleGroup['musclesInMuscleGroup'] = $musclesInMuscleGroup;
-                $musclesInMuscleGroupContent = 'Diese Muskelgruppe besitzt keine Muskeln!';
 
-                if (0 < count($musclesInMuscleGroup)) {
-                    $musclesInMuscleGroupContent = '';
-                    foreach ($musclesInMuscleGroup as $muscle) {
-                        $this->view->assign($muscle->toArray());
-                        $musclesInMuscleGroupContent .= $this->view->render('loops/muscle.phtml');
-                    }
-                }
-                $this->view->assign('musclesInMuscleGroupContent', $musclesInMuscleGroupContent);
-                $this->view->assign($muscleGroup);
-                $muscleGroupsContent .= $this->view->render('/loops/muscle-group.phtml');
+                $this->view->assign('name', $muscleGroup['muscle_group_name']);
+                $this->view->assign('id', $muscleGroup['muscle_group_id']);
+                $muscleGroupsContent .= $this->view->render('/loops/item-row.phtml');
             }
         }
         $this->view->assign('muscleGroupsContent', $muscleGroupsContent);
     }
 
+    public function showAction() {
+
+        $id = intval($this->getParam('id'));
+        if (0 < $id) {
+            $musclesDb = new Model_DbTable_MuscleGroups();
+            $muscle = $musclesDb->findMuscleGroup($id);
+
+            if ($muscle instanceof Zend_Db_Table_Row_Abstract) {
+                $this->view->assign('musclesContent', $this->generateMusclesContent($id));
+                $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($id));
+                $this->view->assign('name', $muscle->offsetGet('muscle_group_name'));
+                $this->view->assign('id',  $muscle->offsetGet('muscle_group_id'));
+            }
+        }
+    }
+
+    private function generateMusclesContent($id) {
+        $content = '';
+
+        $musclesDb = new Model_DbTable_Muscles();
+        $musclesCollection = $musclesDb->findAllMusclesByMuscleGroupId($id);
+
+        foreach ($musclesCollection as $muscle) {
+            $this->view->assign('name', $muscle->offsetGet('muscle_name'));
+            $this->view->assign('id', $muscle->offsetGet('muscle_id'));
+            $content .= $this->view->render('loops/muscle-row.phtml');
+        }
+
+        return $content;
+    }
+
+    /**
+     *
+     */
+    public function deleteAction() {
+
+        $id = intval($this->getParam('id'));
+        if (0 < $id) {
+            $musclesDb = new Model_DbTable_Muscles();
+            $result = $musclesDb->deleteMuscle($id);
+            echo $result;
+        }
+    }
+
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+        }
 
         if (isset($params['id'])
             && is_numeric($params['id'])

@@ -1,38 +1,82 @@
+<div class="col-lg-6" id="left">
 <?php
     echo $this->optionsContent;
 ?>
+</div>
+<div class="col-lg-6" id="right">
+    <?php echo $this->translate('device_options_default_content');?>
+</div>
 
 <script type="text/javascript">
     controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
 
     jQuery(document).ready(function() {
-        jQuery('.save').unbind('click').click(function() {
-            var hasError = false;
-            var messages = [];
-            var name = jQuery('.option-name').val();
+        function initOptions() {
 
-            if (!name.length) {
-                hasError = true;
-                messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_needs_name');?>'});
-            }
+            jQuery('span.item').unbind('click').click(function(e) {
+                var that = this;
+                setTimeout(function() {
+                    var dblclick = parseInt(jQuery(that).data('double'), 10);
+                    if (dblclick > 0) {
+                        jQuery(that).data('double', dblclick-1);
+                    } else {
+                        singleClick.call(that, e);
+                    }
+                }, 300);
+            }).dblclick(function(e) {
+                jQuery(this).data('double', 2);
+                doubleClick.call(this, e);
+            });
+        }
 
-            if (!hasError) {
-                var url = "/"+controller+"/save";
-                jQuery.post(url, {
-                    name: name,
-                    value: jQuery('.option-value').val(),
-                    id: jQuery('.id').val(),
-                    ajax: true
-                }, function(response) {
-                    var obj_cad_messages = new CAD.Message();
-                    obj_cad_messages.init(response);
-                    obj_cad_messages.open();
-                });
-            } else {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init(messages);
-                obj_cad_messages.open();
-            }
-        });
+        function singleClick(e) {
+            var id = jQuery(this).data('id');
+            loadShowContent(id);
+        }
+
+        function doubleClick(e) {
+            var id = jQuery(this).data('id');
+            loadEditContent(id);
+        }
+
+        initOptions();
     });
+    function showSpinner(element) {
+        var spinner = jQuery('<div class="spinner"></div>');
+        element.html(spinner);
+    }
+
+    function loadShowContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/show', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+        });
+    }
+
+    function loadEditContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/edit', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+            var obj_cad_cms = new jQuery('html').CAD_CMS(jQuery('.editable'), controller);
+            edit_init(true);
+        });
+    }
+
+    function deleteEntry(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            jQuery('#'+id).fadeOut();
+        });
+    }
+
+    function scrollToAnchor(aid){
+        var aTag = jQuery("a[name='"+ aid +"']");
+        jQuery('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    }
 </script>

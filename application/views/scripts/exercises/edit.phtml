@@ -1,3 +1,4 @@
+<a name="right" />
 <?php
     $obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace();
 /*
@@ -257,7 +258,7 @@
         if (!hasErrors) {
             jQuery().setEditedElements('exercise_muscle_groups', muscleGroups);
             jQuery().setEditedElements('exercise_preview_picture', jQuery('#exercise_preview_picture').data('file'));
-            jQuery().setEditedElements('exercise_type_id', jQuery('.exercise-type-select').data('value'));
+            jQuery().setEditedElements('exercise_type_id', jQuery('#right .exercise-type-select').attr('data-value'));
             jQuery().setEditedElements('exercise_options', exerciseOptions);
             jQuery().setEditedElements('exercise_device_options', deviceOptions);
             jQuery().setEditedElements('exercise_id', jQuery('#exercise_id').val());
@@ -323,6 +324,7 @@
 
             jQuery.post('/devices/get-device-option-edit', {ajax: true, device_option_id: selectedOption}, function(response) {
                 jQuery('.device-options').append(response);
+                initOptions();
             });
             return false;
         });
@@ -359,6 +361,7 @@
                 exercise_id: jQuery('#exercise_id').val()
             }, function (response) {
                 jQuery('.exercise-options').append(response);
+                initOptions();
             });
             return false;
         });
@@ -466,7 +469,7 @@
                 }
             );
 
-            jQuery('.muscle-delete').unbind('click').bind('click', function () {
+            jQuery('.muscle-delete').unbind('click').click(function () {
                 if (jQuery(this).parent().hasClass('deactivated')) {
                     jQuery(this).parent().find('.muscle-use').css('background-position', jQuery(this).parent().find('.muscle-use').data('background-position'))
                         .data('muscle-use', jQuery(this).parent().find('.muscle-use').attr('data-muscle-use-before-delete'))
@@ -482,6 +485,28 @@
             });
         }
 
+        function initOptions() {
+            jQuery('.option-delete').unbind('click').click(function () {
+                var currentOption = jQuery(this).parent().find('.option');
+
+                if (jQuery(this).parent().hasClass('deactivated')) {
+                    currentOption.val(currentOption.attr('data-value-before-delete'))
+                        .attr('data-value-before-delete', 0)
+                        .prop('disabled', false)
+                        .parent().removeClass('deactivated');
+                    jQuery(this).removeClass('glyphicon-refresh')
+                        .addClass('glyphicon-trash');
+                } else {
+                    currentOption.attr('data-value-before-delete', currentOption.val())
+                        .val(null)
+                        .prop('disabled', true)
+                        .parent().addClass('deactivated');
+                    jQuery(this).removeClass('glyphicon-trash')
+                        .addClass('glyphicon-refresh');
+                }
+            });
+        }
+
         function initMuscleGroups() {
             jQuery('.muscle-group-delete').unbind('click').click(function () {
                 jQuery(this).parent().data('muscle-group-id', null).fadeOut();
@@ -492,5 +517,6 @@
         initDevicesEdit();
         initMuscleRating();
         initMuscleGroups();
+        initOptions();
     });
 </script>

@@ -114,6 +114,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
             $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->getView());
             $exerciseOptionsService->setTrainingPlanXExerciseId($trainingPlanExerciseId);
             $exerciseOptionsService->setExerciseId($exerciseId);
+            $exerciseOptionsService->setAllowEdit(true);
             $exerciseOptionsService->setShowDelete(true);
 
             $this->getView()->assign('exerciseOptionsContent', $exerciseOptionsService->generate());
@@ -121,6 +122,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
             $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->getView());
             $deviceOptionsService->setTrainingPlanXExerciseId($trainingPlanExerciseId);
             $deviceOptionsService->setExerciseId($exerciseId);
+            $deviceOptionsService->setAllowEdit(true);
             $deviceOptionsService->setShowDelete(true);
 
             $this->getView()->assign('deviceOptionsContent', $deviceOptionsService->generate());

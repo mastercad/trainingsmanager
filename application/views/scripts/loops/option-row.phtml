@@ -1,0 +1,16 @@
+<div>
+    <strong>
+        <?php echo $this->optionLabelText;?>:
+    </strong>
+    <span>
+        <?php echo $this->currentValue;?>
+    </span>
+<?php
+    if ($this->showDelete) {
+?>
+    <span class="option-delete glyphicon glyphicon-trash delete"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_selection');?>"></span>
+<?php
+    }
+?>
+</div>

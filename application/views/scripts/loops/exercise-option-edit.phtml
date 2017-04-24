@@ -1,9 +1,9 @@
-<div class="form-group">
+<div class="form-group" style="position: relative;">
     <label >
         <?php echo $this->exercise_option_name;?>
     </label>
     <input type="text"
-           class="exercise-option form-control"
+           class="option exercise-option form-control"
            id="exercise_option_<?php echo $this->exercise_option_id;?>"
            data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_option_value);?>"
            data-exercise-option-id="<?php echo $this->exercise_option_id;?>"
@@ -14,4 +14,7 @@
            data-training-diary-x-exercise-option-id="<?php echo $this->training_diary_x_exercise_option_id;?>"
            data-training_diary-x-exercise-option-value="<?php echo $this->training_diary_x_exercise_option_exercise_option_value;?>"
            value="<?php echo $this->exercise_option_value;?>" />
+
+    <span class="option-delete glyphicon glyphicon-trash delete"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_selection');?>"></span>
 </div>

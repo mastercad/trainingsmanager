@@ -26,6 +26,59 @@
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body, html {
+    margin: 0;
+}
+
+@media (min-width: 768px){
+    body, html {
+        margin: 0;
+        overflow: hidden;
+        height:100%;
+    }
+
+    #left {
+        position: absolute;
+        top: 70px;
+        bottom: 0;
+        left: 0;
+        /*width: 75%;*/
+        overflow-y: scroll;
+    }
+
+    #right {
+        position: absolute;
+        top: 70px;
+        bottom: 0;
+        right: 0;
+        overflow-y: scroll;
+        /*width: 25%;*/
+    }
+}
+
+#single {
+    /*background-color: #FC6E51;*/
+    /*text-align: center;*/
+    /*height:100%;*/
+    overflow-y: scroll;
+    max-height: 100%;
+    width: 100%;
+}
+
+#left {
+    /*background-color: #FC6E51;*/
+    /*text-align: center;*/
+    /*height:100%;*/
+    max-height: calc(100% - 100px);
+}
+
+#right {
+    /*background-color: #4FC1E9;*/
+    /*text-align: center;*/
+    /*height:100%;*/
+    max-height: calc(100% - 100px);
+}
+
 header	{
 	position: relative; 
 	width: 980px; 
@@ -141,12 +194,12 @@ pre {
     width: 200px;	
 }
 
-#content	{
-    padding: 20px;
-    float: left; 
-    display: inline;
+/*#content	{*/
+    /*padding: 20px;*/
+    /*float: left; */
+    /*display: inline;*/
     /*width: 740px;*/
-}
+/*}*/
 
 .container    {
     background-color: #FFFFFF;
@@ -602,17 +655,17 @@ span.editable {
     height: 23px;
     width: 23px;
     right: -7px !important;
-    top: -7px !important;
+    top: 12px !important;
     /*color: dodgerblue;*/
     /*color: #2e6da4;*/
     color: var(--el-bg-color);
     font-size: 22px;
     background-color: white;
     cursor: pointer;
-    border: 1px solid var(--el-border-color);
-    -moz-border-radius: 11px;
-    -webkit-border-radius: 11px;
-    border-radius: 11px;
+    /*border: 1px solid var(--el-border-color);*/
+    /*-moz-border-radius: 11px;*/
+    /*-webkit-border-radius: 11px;*/
+    /*border-radius: 11px;*/
 }
 
 .add {
@@ -835,6 +888,35 @@ input.option-input {
 .current {
     background-color: #0000ff !important;
     color: white;
+}
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -15px;
+    margin-top: -15px;
+    width: 31px;
+    height: 31px;
+    background: url('/images/content/statisch/grafiken/ajax-loader_black_trans.gif');
+}
+
+.detail-options {
+    padding: 5px;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+
+.detail-options div {
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+#left span.item,
+#left .exercise,
+div span.device {
+    cursor: pointer;
 }
 
 /* ]]> */

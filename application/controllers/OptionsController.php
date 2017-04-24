@@ -22,6 +22,7 @@ abstract class OptionsController extends AbstractController {
 
     public function indexAction() {
 
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
         $optionsCollection = $this->useOptionsStorage()->findAllOptions();
         $optionsContent = 'Es konnten leider keine optionen gefunden werden!';
 
@@ -30,7 +31,8 @@ abstract class OptionsController extends AbstractController {
             foreach ($optionsCollection as $option) {
                 $this->view->assign('editLink', '/'.$this->getRequest()->getControllerName().'/edit/id/' . $option->offsetGet($this->map['option_id']));
                 $this->view->assign('name', $option->offsetGet($this->map['option_name']));
-                $optionsContent .= $this->view->render('loops/item.phtml');
+                $this->view->assign('id', $option->offsetGet($this->map['option_id']));
+                $optionsContent .= $this->view->render('loops/item-row.phtml');
             }
         }
         $this->view->assign('optionsContent', $optionsContent);
@@ -39,7 +41,6 @@ abstract class OptionsController extends AbstractController {
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
         $optionName = '';
         $optionValue = '';
         $optionContent = '';
@@ -49,7 +50,7 @@ abstract class OptionsController extends AbstractController {
             && 0 < $params['id']
         ) {
             $optionContent = '';
-            $optionId = $params['id'];
+            $optionId = intval($params['id']);
             $option = $this->useOptionsStorage()->findOptionById($optionId);
 
             if ($option instanceof Zend_Db_Table_Row) {
@@ -70,6 +71,21 @@ abstract class OptionsController extends AbstractController {
 
         $optionContent .= $this->view->render('/loops/item-edit.phtml');
         $this->view->assign('optionContent', $optionContent);
+    }
+
+    public function showAction() {
+
+        $optionId = intval($this->getParam('id'));
+        if (0 < $optionId) {
+            $option = $this->useOptionsStorage()->findOptionById($optionId);
+
+            if ($option instanceof Zend_Db_Table_Row_Abstract) {
+                $this->view->assign('optionName', $option->offsetGet($this->map['option_name']));
+                $this->view->assign('optionValue', $option->offsetGet($this->map['option_value']));
+                $this->view->assign('optionId', $option->offsetGet($this->map['option_id']));
+                $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($optionId));
+            }
+        }
     }
 
     public function saveAction() {
@@ -102,5 +118,14 @@ abstract class OptionsController extends AbstractController {
             array_push($messages, array('type' => 'fehler', 'message' => 'Falscher Aufruf dieser Seite', 'result' => false));
         }
         $this->view->assign('json_string', json_encode($messages));
+    }
+
+    public function deleteAction() {
+
+        $optionId = intval($this->getParam('id'));
+        if (0 < $optionId) {
+            $result = $this->useOptionsStorage()->deleteOption($optionId);
+            echo $result;
+        }
     }
 }

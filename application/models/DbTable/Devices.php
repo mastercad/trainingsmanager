@@ -51,6 +51,16 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
         return $this->fetchAll($oSelect);
     }
 
+    public function findAllDevicesByDeviceGroupId($id) {
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+            ->setIntegrityCheck(false);
+
+        $oSelect->joinInner('device_x_device_group', 'device_x_device_group_device_fk = device_id AND device_x_device_group_device_group_fk = ' . $id)
+            ->order(array('device_name'));
+
+        return $this->fetchAll($oSelect);
+    }
+
     /**
      * @param $iDeviceId
      *

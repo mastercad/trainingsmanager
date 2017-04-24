@@ -11,7 +11,8 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
     protected $optionType = 'device';
 
     protected $optionValuePriorities = [
-//        'training_plan_x_device_option_device_option_value',
+        'training_diary_x_device_option_device_option_value',
+        'training_plan_x_device_option_device_option_value',
         'exercise_x_device_option_device_option_value',
         'device_x_device_option_device_option_value'
     ];
@@ -26,13 +27,21 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
         $this->setOptionClassName('device-option');
         $deviceOptionsCollection = $this->collectOptions();
 
+        /**
+         * @var int $deviceOptionId
+         * @var array $deviceOption
+         */
         foreach ($deviceOptionsCollection as $deviceOptionId => $deviceOption) {
             $trainingPlanDeviceOptionId = (isset($deviceOption['training_plan_x_device_option_id']) ? $deviceOption['training_plan_x_device_option_id'] : null);
             $trainingDiaryDeviceOptionId = (isset($deviceOption['training_diary_x_device_option_id']) ? $deviceOption['training_diary_x_device_option_id'] : null);
             $this->setOptionId($deviceOptionId);
             $this->setDeviceId($deviceOption['device_id']);
-            $this->setBaseOptionValue($deviceOption['training_plan_x_device_option_device_option_value']);
-            $this->setSelectedOptionValue($deviceOption['training_diary_x_device_option_device_option_value'] ? $deviceOption['training_diary_x_device_option_device_option_value'] : $deviceOption['training_plan_x_device_option_device_option_value']);
+
+            if (array_key_exists('training_plan_x_device_option_device_option_value', $deviceOption)) {
+                $this->setBaseOptionValue($deviceOption['training_plan_x_device_option_device_option_value']);
+            }
+//            $this->setSelectedOptionValue($deviceOption['training_diary_x_device_option_device_option_value'] ? $deviceOption['training_diary_x_device_option_device_option_value'] : $deviceOption['training_plan_x_device_option_device_option_value']);
+            $this->setSelectedOptionValue($this->extractOptionValue($deviceOption));
             $this->setAdditionalElementAttributes('data-training-plan-device-option-id="' . $trainingPlanDeviceOptionId . '" data-training-diary-device-option-id="' . $trainingDiaryDeviceOptionId . '"');
 
             /** TODO überprüfen, was hier sinnvoller, weil unique ist! diese ID KANN in device und exercise vorkommen! */
@@ -76,10 +85,12 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
         }
         $collectedDeviceOptions = [];
 
-        if ($this->isForceGenerateEmptyInput()) {
+//        if ($this->isForceGenerateEmptyInput()) {
             $exerciseXDeviceOptionDb = new Model_DbTable_ExerciseXDeviceOption();
 
-            if (empty($this->getOptionId())) {
+            if (empty($this->getOptionId())
+                && !empty($this->getDeviceId())
+            ) {
                 $deviceXDeviceOptionDb = new Model_DbTable_DeviceXDeviceOption();
 
                 $deviceXDeviceOptionCollection = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId(
@@ -97,6 +108,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
                 }
             }
 
+        if (!empty($this->getExerciseId())) {
             $exerciseXDeviceOptionCollection = $exerciseXDeviceOptionDb->findDeviceOptionsForExercise(
                 $this->getExerciseId(), $this->getOptionId());
 
@@ -110,6 +122,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
                 }
             }
         }
+//        }
         foreach ($trainingPlanXDeviceOptionCollection as $deviceOption) {
             $deviceOptionId = $deviceOption->offsetGet('device_option_id');
             if (! array_key_exists($deviceOptionId, $collectedDeviceOptions)) {

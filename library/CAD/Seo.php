@@ -190,16 +190,13 @@
 		
 		public function createSeoLink($str_link_name = null, &$ref_obj_db = null, $str_table_field_name = null)
 		{
-			if($str_link_name)
-			{
+			if($str_link_name) {
 				$this->setLinkName($str_link_name);
 			}
-			if($ref_obj_db)
-			{
+			if($ref_obj_db) {
 				$this->setDbTable($ref_obj_db);
 			}
-			if($str_table_field_name)
-			{
+			if($str_table_field_name) {
 				$this->setTableFieldName($str_table_field_name);
 			}
 			$this->setCleanLinkName($this->replaceBadSigns($str_link_name));

@@ -11,8 +11,10 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
     protected $optionType = 'exercise';
 
     protected $optionValuePriorities = [
-//        'training_plan_x_exercise_option_exercise_option_value',
+        'training_diary_x_exercise_option_exercise_option_value',
+        'training_plan_x_exercise_option_exercise_option_value',
         'exercise_x_exercise_option_exercise_option_value',
+        'exercise_option_default_value',
     ];
 
     /**
@@ -29,7 +31,8 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
 
             $this->setOptionId($exerciseOptionId);
             $this->setBaseOptionValue($exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
-            $this->setSelectedOptionValue($exerciseOption['training_diary_x_exercise_option_exercise_option_value'] ? $exerciseOption['training_diary_x_exercise_option_exercise_option_value'] : $exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
+//            $this->setSelectedOptionValue($exerciseOption['training_diary_x_exercise_option_exercise_option_value'] ? $exerciseOption['training_diary_x_exercise_option_exercise_option_value'] : $exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
+            $this->setSelectedOptionValue($this->extractOptionValue($exerciseOption));
             $this->setInputFieldUniqueId($trainingPlanExerciseId);
             $this->extractOptionValue($exerciseOption);
             $this->setOptionName($exerciseOption['exercise_option_name']);

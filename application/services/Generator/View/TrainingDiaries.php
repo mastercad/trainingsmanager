@@ -90,6 +90,7 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
 
         $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->getView());
         $exerciseOptionsService->setShowTrainingProgress(true);
+        $exerciseOptionsService->setAllowEdit(true);
         // bereits ein value durch eine übung gesetzt
         if (array_key_exists('training_diary_x_exercise_option_exercise_option_value', $trainingDiaryXExercise)) {
             $exerciseOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_exercise_option_exercise_option_value']);
@@ -105,11 +106,12 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
 
         $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->getView());
         $deviceOptionsService->setShowTrainingProgress(true);
+        $deviceOptionsService->setAllowEdit(true);
 
         // bereits ein value durch eine übung gesetzt
-        if (array_key_exists('training_diary_x_device_option_device_option_value', $trainingDiaryXExercise)) {
-            $deviceOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_device_option_device_option_value']);
-        }
+//        if (array_key_exists('training_diary_x_device_option_device_option_value', $trainingDiaryXExercise)) {
+//            $deviceOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_device_option_device_option_value']);
+//        }
         $deviceOptionsService->setExerciseId($trainingDiaryXExercise['exercise_id']);
         $deviceOptionsService->setTrainingDiaryXTrainingPlanExerciseId($trainingDiaryXExercise['training_diary_x_training_plan_exercise_id']);
         $deviceOptionsService->setTrainingPlanXExerciseId($trainingDiaryXExercise['training_plan_x_exercise_id']);

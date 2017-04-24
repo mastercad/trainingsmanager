@@ -1,50 +1,46 @@
-<?php
+<a name="right" />
+<div class="form-group">
+    <label class="control-label" for="device_name">
+        <?php echo $this->translate('label_device_name');?>:
+    </label>
+    <input type="text" class="form-control" id="device_name" name="device-name"
+           value="<?php echo $this->device_name;?>"
+           data-cad-cms-content-orig="<?php echo base64_encode($this->device_name);?>" />
+</div>
 
-?>
-<div>
-    <h2>
-        <?php echo $this->translate('label_device_name');?>:<span
-            class="editable" 
-            style="margin-left: 20px; border-bottom: 1px dotted gray;"
-            id="device_name" data-cad-cms-content-orig="<?php echo base64_encode($this->device_name);?>"
-            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_device_name');?>"
-		><?php echo $this->device_name;?></span>
-    </h2>
+<br class="clear-fix" />
 
-    <br class="clear-fix" />
+<img src="<?php echo $this->preview?>"
+     class="editable preview-picture"
+     alt="<?php echo $this->translate('alternate_preview_picture');?>"
+     style="margin-top: 15px;"
+     title="<?php echo $this->translate('tooltip_click_to_upload_picture');?>"
+     id="device_preview_picture"
+     data-toggle="tooltip" data-placement="right"
+    />
 
-    <img src="<?php echo $this->preview?>"
-         class="editable preview-picture"
-         alt="<?php echo $this->translate('alternate_preview_picture');?>"
-         style="margin-top: 15px;"
-         title="<?php echo $this->translate('tooltip_click_to_upload_picture');?>"
-         id="device_preview_picture"
-         data-toggle="tooltip" data-placement="right"
-        />
+<br class="clear-fix" />
 
-    <br class="clear-fix" />
-    
 <!--    <h3 style="margin-top: 15px; font-size: 12px;">-->
 <!--        Geräte Optionen:-->
 <!--    </h3>-->
 
-    <?php echo $this->deviceOptionsDropDownContent;?>
+<?php echo $this->deviceOptionsDropDownContent;?>
 
 <!--    <img class="device-option-add" src="/images/content/statisch/grafiken/add_normal.png"-->
 <!--         style="width: 30px; float: left; display: inline;"/>-->
 
 <!--    <br class="clear-fix" />-->
 
-    <br class="clear-fix" />
+<br class="clear-fix" />
 
-    <div class="device-options" style="margin-top: 20px;">
-        <?php echo $this->deviceOptionsContent;?>
-    </div>
-
-    <br class="clear-fix" />
-
-    <input type="hidden" class="id" name="device-id" id="device_id" value="<?php echo $this->device_id;?>" />
+<div class="device-options" style="margin-top: 20px;">
+    <?php echo $this->deviceOptionsContent;?>
 </div>
+
+<br class="clear-fix" />
+
+<input type="hidden" class="id" name="device-id" id="device_id" value="<?php echo $this->device_id;?>" />
 
 <br class="clear-fix" />
 
@@ -70,7 +66,8 @@
         var hasErrors = false;
         var messages = [];
 
-        if(!jQuery.trim(jQuery('#device_name').html()).length) {
+//        if(!jQuery.trim(jQuery('#device_name').html()).length) {
+        if(!jQuery.trim(jQuery('#device_name').val()).length) {
             hasErrors = true;
             messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_needs_name');?>'});
         }
@@ -88,8 +85,9 @@
                 options.push({'id': option_id, 'value': Base64.encode(option_value)});
             }
         }
-            
+
         if (!hasErrors) {
+            jQuery().setEditedElements('device_name', Base64.encode(jQuery('#device_name').val()));
             jQuery().setEditedElements('device_id', jQuery('#device_id').val());
             jQuery().setEditedElements('device_preview_picture', jQuery('#device_preview_picture').data('file'));
             jQuery().setEditedElements('device_options', options);
@@ -135,17 +133,41 @@
 
             jQuery.post('/devices/get-device-option-edit', {ajax: true, device_option_id: selectedOption}, function(response) {
                 jQuery('.device-options').append(response);
+                initOptions();
             });
             return false;
         });
         edit_init(true);
         initDevicesEdit();
+        initOptions();
     });
 
     function deleteMuscleGroup() {
         jQuery(obj_ref).find('.muscle-group-name').data('muscle-group-name', '');
         jQuery(obj_ref).find('.muscle-group-name').data('muscle-group-id', '');
         jQuery(obj_ref).fadeOut();
+    }
+
+    function initOptions() {
+        jQuery('.option-delete').unbind('click').click(function () {
+            var currentOption = jQuery(this).parent().find('.option');
+
+            if (jQuery(this).parent().hasClass('deactivated')) {
+                currentOption.val(currentOption.attr('data-value-before-delete'))
+                    .attr('data-value-before-delete', 0)
+                    .prop('disabled', false)
+                    .parent().removeClass('deactivated');
+                jQuery(this).removeClass('glyphicon-refresh')
+                    .addClass('glyphicon-trash');
+            } else {
+                currentOption.attr('data-value-before-delete', currentOption.val())
+                    .val(null)
+                    .prop('disabled', true)
+                    .parent().addClass('deactivated');
+                jQuery(this).removeClass('glyphicon-trash')
+                    .addClass('glyphicon-refresh');
+            }
+        });
     }
 
 </script>

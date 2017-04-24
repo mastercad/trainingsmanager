@@ -14,8 +14,35 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
+function customAutoload($class) {
+    $map = [
+        'Entity' => 'entities',
+        'Collection' => 'collections',
+        'Interface' => 'interfaces',
+        'Service' => 'services',
+        'Model' => 'models',
+    ];
+
+    $path = preg_split('/\_/', $class);
+    $replacedPath = APPLICATION_PATH;
+
+    foreach ($path as $pathPiece) {
+        $pathPiece = str_replace(array_keys($map), array_values($map), $pathPiece);
+        $replacedPath .= '/' . $pathPiece;
+    }
+    $replacedPath .= '.php';
+
+    if (is_readable($replacedPath)) {
+        return require_once($replacedPath);
+    }
+    return false;
+}
+
+spl_autoload_register('customAutoload');
+
 /** Zend_Application */
 require_once 'Zend/Application.php';
+//require_once APPLICATION_PATH . '/../vendor/autoload.php';
 
 // Create application, bootstrap, and run
 $application = new Zend_Application(

@@ -10,6 +10,8 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 class ExercisesController extends AbstractController {
     
     public function indexAction() {
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+
         $exercisesDb = new Model_DbTable_Exercises();
         $exerciseType = $this->getParam('exercise-type', null);
         $device = $this->getParam('device', null);
@@ -20,7 +22,24 @@ class ExercisesController extends AbstractController {
     }
     
     public function showAction() {
-        
+        $exerciseId = intval($this->getRequest()->getParam('id', null));
+        $exercise = null;
+
+        if (0 < $exerciseId) {
+            $exerciseDb = new Model_DbTable_Exercises();
+            $exercise = $exerciseDb->findExerciseById($exerciseId);
+
+            if ($exercise instanceof Zend_Db_Table_Row) {
+                $this->view->assign($exercise->toArray());
+                $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($exerciseId));
+                $this->view->assign('previewPictureContent', $this->generatePreviewPictureContent($exercise));
+                $this->view->assign('exerciseMuscleGroupsContent', $this->generateExerciseMuscleGroupsContent($exercise));
+                $this->view->assign('exerciseOptionsContent', $this->generateExerciseOptionsContent($exerciseId));
+                $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($exerciseId));
+            } else {
+                echo "Übung konte nicht geladen werden!";
+            }
+        }
     }
     
     public function editAction() {
@@ -45,8 +64,91 @@ class ExercisesController extends AbstractController {
         $this->view->assign('exerciseTypeSelectContent', $this->generateExerciseTypeContent($exercise));
         $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
         $this->view->assign('exerciseOptionsDropDownContent', $this->generateExerciseOptionsDropDownContent());
+    }
 
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+    /**
+     * @param $exerciseId
+     *
+     * @return string
+     */
+    private function generateExerciseOptionsContent($exerciseId)
+    {
+        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        $exerciseOptionsService->setExerciseId($exerciseId);
+        $exerciseOptionsService->setAllowEdit(false);
+
+        return $exerciseOptionsService->generate();
+    }
+
+    /**
+     * @param $exerciseId
+     *
+     * @return string
+     */
+    private function generateDeviceOptionsContent($exerciseId)
+    {
+        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService->setExerciseId($exerciseId);
+        $deviceOptionsService->setAllowEdit(false);
+
+        return $deviceOptionsService->generate();
+    }
+
+    /**
+     * @param Zend_Db_Table_Row $exercise
+     *
+     * @todo hier werden nur alle muskeln geholt, die für die übung abgelegt wurden, es müssen aber auch alle
+     *       anderen muskeln zu der muskelgruppe gezogen werden. muskeln, die zu dieser übung gehören, können
+     *       aus der übersicht gelöscht werden, gehört der jeweiligen muskelgruppe kein muskel mehr der übung an
+     *       wird die komplette muskelgruppe entfernt
+     *
+     * @return string
+     */
+    public function generateExerciseMuscleGroupsContent($exercise) {
+        $exerciseId = $exercise->offsetGet('exercise_id');
+
+        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $muscleGroupCollection = $exerciseXMuscleDb->findMuscleGroupsForExercise($exerciseId);
+
+        $content = '';
+
+        foreach ($muscleGroupCollection as $muscleGroup) {
+            $muscleGroupId = $muscleGroup->offsetGet('muscle_group_id');
+            $this->view->assign('musclesInMuscleGroupContent',
+                $this->generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId));
+            $this->view->assign($muscleGroup->toArray());
+            $content .= $this->view->render('/loops/muscle-group-row.phtml');
+        }
+        return $content;
+    }
+
+    /**
+     * @param Zend_Db_Table_Row $exercise
+     *
+     * @todo hier werden nur alle muskeln geholt, die für die übung abgelegt wurden, es müssen aber auch alle
+     *       anderen muskeln zu der muskelgruppe gezogen werden. muskeln, die zu dieser übung gehören, können
+     *       aus der übersicht gelöscht werden, gehört der jeweiligen muskelgruppe kein muskel mehr der übung an
+     *       wird die komplette muskelgruppe entfernt
+     *
+     * @return string
+     */
+    public function generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId) {
+        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $musclesInMuscleGroupForExerciseCollection = $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
+        $musclesInMuscleGroupContent = '';
+
+        foreach ($musclesInMuscleGroupForExerciseCollection as $exerciseXMuscle) {
+            $this->view->assign('name', $exerciseXMuscle->offsetGet('muscle_name'));
+            $this->view->assign('id', $exerciseXMuscle->offsetGet('muscle_id'));
+            $usePosX = -100;
+            if(0 < $exerciseXMuscle->offsetGet('exercise_x_muscle_muscle_use')) {
+                $usePosX = -100 + ($exerciseXMuscle->offsetGet('exercise_x_muscle_muscle_use') * 20);
+            }
+            $this->view->assign('usePosX', $usePosX);
+            $this->view->assign('muscleUseRatingContent', $this->view->render('loops/rating.phtml'));
+            $musclesInMuscleGroupContent .= $this->view->render('/loops/muscle-row.phtml');
+        }
+        return $musclesInMuscleGroupContent;
     }
 
     /**
@@ -72,7 +174,7 @@ class ExercisesController extends AbstractController {
             $this->view->assign('musclesInMuscleGroupContent',
                 $this->generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId));
             $this->view->assign($muscleGroup->toArray());
-            $content .= $this->view->render('/loops/muscle-group.phtml');
+            $content .= $this->view->render('/loops/muscle-group-edit.phtml');
         }
         return $content;
     }
@@ -103,7 +205,9 @@ class ExercisesController extends AbstractController {
 
         foreach ($devicesCollection as $currentDevice) {
             $this->view->assign('optionValue', $currentDevice->offsetGet('device_id'));
-            $this->view->assign('optionText', $currentDevice->offsetGet('device_name') . ' (' . $currentDevice->offsetGet('exerciseCount') . ' ' . (1 < $currentDevice->offsetGet('exerciseCount') ?  $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+            $this->view->assign('optionText', $currentDevice->offsetGet('device_name') . ' (' .
+                $currentDevice->offsetGet('exerciseCount') . ' ' . (1 < $currentDevice->offsetGet('exerciseCount') ?
+                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
 
             if ($device == $currentDevice->offsetGet('device_id')) {
                 $deviceName = $currentDevice->offsetGet('device_name');
@@ -114,7 +218,9 @@ class ExercisesController extends AbstractController {
 
         if ($exercisesWithoutDevices) {
             $this->view->assign('optionValue', 'WITHOUT');
-            $this->view->assign('optionText', $this->translate('label_exercises_without_device') . ' (' . $exercisesWithoutDevices->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutDevices->offsetGet('exerciseCount') ?  $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+            $this->view->assign('optionText', $this->translate('label_exercises_without_device') . ' (' .
+                $exercisesWithoutDevices->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutDevices->offsetGet('exerciseCount') ?
+                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
 
             if ($device == 'WITHOUT') {
                 $deviceName = $this->translate('label_exercises_without_exercise_type');
@@ -168,7 +274,9 @@ class ExercisesController extends AbstractController {
 
         if ($exercisesWithoutExerciseTypes) {
             $this->view->assign('optionValue', 'WITHOUT');
-            $this->view->assign('optionText', $this->translate('label_exercises_without_exercise_type') . ' (' . $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') ?  $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+            $this->view->assign('optionText', $this->translate('label_exercises_without_exercise_type') . ' (' .
+                $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') ?
+                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
 
             if ($exerciseType == 'WITHOUT') {
                 $exerciseTypeName = $this->translate('label_exercises_without_exercise_type');
@@ -192,10 +300,10 @@ class ExercisesController extends AbstractController {
         return $this->view->render('globals/select.phtml');
     }
 
-
     private function generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId) {
         $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
-        $musclesInMuscleGroupForExerciseCollection = $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
+        $musclesInMuscleGroupForExerciseCollection =
+            $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
         $musclesInMuscleGroupContent = '';
 
         foreach ($musclesInMuscleGroupForExerciseCollection as $exerciseXMuscle) {
@@ -984,25 +1092,6 @@ class ExercisesController extends AbstractController {
     }
 
     /**
-     * @param Zend_Db_Table_Rowset $deviceCollection
-     *
-     * @return string
-     */
-    public function generateDeviceOptionsContent($deviceCollection) {
-
-        $deviceOptionsContent = '';
-
-        /** generates option inputs for device **/
-        foreach ($deviceCollection as $deviceOption) {
-            if (0 < $deviceOption->offsetGet('device_x_device_option_device_option_fk')) {
-                $deviceOptionsContent .= $this->generateDeviceOptionEditContent($deviceOption);
-            }
-        }
-
-        return $deviceOptionsContent;
-    }
-
-    /**
      * @param Zend_Db_Table_Row $deviceOption
      *
      * @return string
@@ -1012,25 +1101,6 @@ class ExercisesController extends AbstractController {
         $this->view->assign('device_option_value', $deviceOption->offsetGet('device_x_device_option_device_option_value'));
         $this->view->assign($deviceOption->toArray());
         return $this->view->render('loops/device-option-edit.phtml');
-    }
-
-    /**
-     * @param Zend_Db_Table_Rowset $deviceCollection
-     *
-     * @return string
-     */
-    public function generateExerciseOptionsContent($deviceCollection) {
-
-        $deviceOptionsContent = '';
-
-        /** generates option inputs for device **/
-        foreach ($deviceCollection as $deviceOption) {
-            if (0 < $deviceOption->offsetGet('device_x_device_option_device_option_fk')) {
-                $deviceOptionsContent .= $this->generateExerciseOptionEditContent($deviceOption);
-            }
-        }
-
-        return $deviceOptionsContent;
     }
 
     /**

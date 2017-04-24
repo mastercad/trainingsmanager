@@ -13,6 +13,8 @@ class DevicesController extends AbstractController {
 
     public function indexAction() {
 
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+
         $devicesDb = new Model_DbTable_Devices();
         $devicesCollection = $devicesDb->findAllDevices();
         $devicesContent = 'Es konnten leider keine Geräte gefunden werden!';
@@ -20,20 +22,46 @@ class DevicesController extends AbstractController {
         if (0 < count($devicesCollection)) {
             $devicesContent = '';
             foreach ($devicesCollection as $device) {
-                $this->view->assign($device->toArray());
-                $devicesContent .= $this->view->render('loops/device.phtml');
+                $this->view->assign('name', $device->offsetGet('device_name'));
+                $this->view->assign('id', $device->offsetGet('device_id'));
+                $devicesContent .= $this->view->render('loops/device-row.phtml');
             }
         }
         $this->view->assign('devicesContent', $devicesContent);
     }
 
     public function showAction() {
+        //        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+//        $deviceContent = 'Das Gerät konnte leider nicht gefunden werden!';
+        $id = intval($this->getParam('id'));
+
+        if (0 < $id) {
+//            $deviceContent = '';
+            $devicesDb = new Model_DbTable_Devices();
+            $device = $devicesDb->findDeviceById($id);
+
+            if ($device instanceof Zend_Db_Table_Row) {
+                $this->view->assign('preview', $this->generatePreviewPictureContent($device));
+                $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($id));
+                $this->view->assign('optionLabelText', 'Geräte Optionen:');
+                $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($device));
+                $this->view->assign('previewPictureContent', $this->generatePreviewPicturesForEditContent());
+                $this->view->assign('name', $device->offsetGet('device_name'));
+                $this->view->assign('id', $device->offsetGet('device_id'));
+            }
+
+        }
+//        $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
+//        $this->view->assign('deviceContent', $deviceContent);
     }
 
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+        }
+
         $deviceContent = 'Das Gerät konnte leider nicht gefunden werden!';
 
         if (true === isset($params['id'])
@@ -47,15 +75,14 @@ class DevicesController extends AbstractController {
 
             if ($device instanceof Zend_Db_Table_Row) {
                 $this->view->assign('preview', $this->generatePreviewPictureContent($device));
-                $this->view->assign('optionLabelText', 'Geräte Optionen:');
-                $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($device));
+                $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsEditContent($device));
                 $this->view->assign('previewPictureContent', $this->generatePreviewPicturesForEditContent());
                 $this->view->assign($device->toArray());
             }
 
         }
-        $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
         $this->view->assign('deviceContent', $deviceContent);
+        $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
     }
 
     /**
@@ -89,18 +116,35 @@ class DevicesController extends AbstractController {
      */
     public function generateDeviceOptionsContent($device) {
 
-        $deviceOptionsDb = new Model_DbTable_DeviceOptions();
-        $deviceOptions = $deviceOptionsDb->findDeviceOptionsByDeviceId($device->offsetGet('device_id'));
-        $deviceOptionsContent = '';
+        //        $deviceOptionsDb = new Model_DbTable_DeviceOptions();
+        //        $deviceOptions = $deviceOptionsDb->findDeviceOptionsByDeviceId($device->offsetGet('device_id'));
+        //        $deviceOptionsContent = '';
 
         /** generates option inputs for device **/
-        foreach ($deviceOptions as $deviceOption) {
-            if (0 < $deviceOption->offsetGet('device_x_device_option_device_option_fk')) {
-                $deviceOptionsContent .= $this->generateDeviceOptionEditContent($deviceOption);
-            }
-        }
+        //        foreach ($deviceOptions as $deviceOption) {
+        //            if (0 < $deviceOption->offsetGet('device_x_device_option_device_option_fk')) {
+        //                $deviceOptionsContent .= $this->generateDeviceOptionEditContent($deviceOption);
+        //            }
+        //        }
 
-        return $deviceOptionsContent;
+        //        return $deviceOptionsContent;
+
+        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
+        return $deviceOptionsService->generate();
+    }
+
+    /**
+     * @param Zend_Db_Table_Row $device
+     *
+     * @return string
+     */
+    public function generateDeviceOptionsEditContent($device) {
+        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
+        $deviceOptionsService->setAllowEdit(true);
+        $deviceOptionsService->setConvertDropDownValues(false);
+        return $deviceOptionsService->generate();
     }
 
     /**
@@ -112,6 +156,8 @@ class DevicesController extends AbstractController {
         $content = '';
         $deviceOptions = new Model_DbTable_DeviceOptions();
         $optionsCollection = $deviceOptions->findAllOptions();
+        $this->view->assign('optionLabelText', 'Geräte Optionen:');
+        $optionSelectText = $this->translate('label_please_select');
 
         foreach ($optionsCollection as $option) {
             $this->view->assign('optionValue', $option->offsetGet('device_option_id'));
@@ -119,6 +165,7 @@ class DevicesController extends AbstractController {
             $content .= $this->view->render('loops/option.phtml');
         }
 
+        $this->view->assign('optionSelectText', $optionSelectText);
         $this->view->assign('optionsContent', $content);
         $this->view->assign('selectId', 'device_options_select');
         return $this->view->render('globals/select.phtml');
@@ -129,7 +176,7 @@ class DevicesController extends AbstractController {
      *
      * @return string
      */
-    public function generateDeviceOptionContent($deviceOption) {
+    private function generateDeviceOptionContent($deviceOption) {
 
         $optionValue = $deviceOption->offsetGet('device_x_device_option_device_option_value');
 
@@ -146,7 +193,7 @@ class DevicesController extends AbstractController {
      *
      * @return string
      */
-    public function generateDeviceOptionEditContent($deviceOption) {
+    private function generateDeviceOptionEditContent($deviceOption) {
 
         $this->view->assign('device_option_value', $deviceOption->offsetGet('device_x_device_option_device_option_value'));
         $this->view->assign($deviceOption->toArray());
@@ -316,19 +363,21 @@ class DevicesController extends AbstractController {
             if (isset($params['edited_elements']['device_options'])) {
                 $deviceXDeviceOptionCurrent = array();
 
-                $currentDeviceOptionsForDeviceInDB = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId($deviceId);
-                $countDeviceOptions = count($currentDeviceOptionsForDeviceInDB);
+                if (0 < $deviceId) {
+                    $currentDeviceOptionsForDeviceInDB = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId($deviceId);
+                    $countDeviceOptions = count($currentDeviceOptionsForDeviceInDB);
 
-                if ((is_array($currentDeviceOptionsForDeviceInDB)
-                        || $currentDeviceOptionsForDeviceInDB instanceof Zend_Db_Table_Rowset)
-                    && 0 < count($currentDeviceOptionsForDeviceInDB)
-                ) {
-                    foreach ($currentDeviceOptionsForDeviceInDB as $deviceOption) {
-                        // an die stelle der tag id wird der projekt tag id eintrag gesetzt
-                        $deviceXDeviceOptionCurrent[$deviceOption['device_x_device_option_device_option_fk']] = array(
-                            'device_x_device_option_id' => $deviceOption['device_x_device_option_id'],
-                            'device_option_id' => $deviceOption['device_x_device_option_device_option_fk'],
-                        );
+                    if ((is_array($currentDeviceOptionsForDeviceInDB)
+                            || $currentDeviceOptionsForDeviceInDB instanceof Zend_Db_Table_Rowset)
+                        && 0 < count($currentDeviceOptionsForDeviceInDB)
+                    ) {
+                        foreach ($currentDeviceOptionsForDeviceInDB as $deviceOption) {
+                            // an die stelle der tag id wird der projekt tag id eintrag gesetzt
+                            $deviceXDeviceOptionCurrent[$deviceOption['device_x_device_option_device_option_fk']] = array(
+                                'device_x_device_option_id' => $deviceOption['device_x_device_option_id'],
+                                'device_option_id' => $deviceOption['device_x_device_option_device_option_fk'],
+                            );
+                        }
                     }
                 }
 
@@ -355,7 +404,6 @@ class DevicesController extends AbstractController {
                                 'device_option_value' => base64_decode($deviceOption['value'])
                             )
                         );
-                        $countDeviceOptions++;
                     }
                 }
                 foreach ($deviceXDeviceOptionCurrent as $deviceOption) {
@@ -517,7 +565,7 @@ class DevicesController extends AbstractController {
      * hier müsste man also noch ein archiv anlegen, in das solche übungen dann verschieben werden, eventuell
      * auch geräte, damit man die pläne und tagebucheinträge trotzdem noch sauber ansehen kann
      */
-    public function deleteDeviceAction()
+    public function deleteAction()
     {
         $params = $this->getRequest()->getParams();
         $messages = array();

@@ -12,21 +12,54 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 class DeviceGroupsController extends AbstractController
 {
     public function indexAction() {
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+
         $deviceGroupsDb = new Model_DbTable_DeviceGroups();
-        $deviceXDeviceGroupDb = new Model_DbTable_DeviceXDeviceGroup();
 
         $deviceGroupsCollection = $deviceGroupsDb->findAllDeviceGroups()->toArray();
+        $deviceGroupsContent = "Es wurden leider keine Gerätegruppen gefunden!";
 
-        foreach($deviceGroupsCollection as &$a_geraetegruppe) {
-            $a_geraetegruppe_geraete = $deviceXDeviceGroupDb->findDevicesByDeviceGroupId($a_geraetegruppe['device_group_id']);
-            $a_geraetegruppe['a_geraetegruppe_geraete'] = $a_geraetegruppe_geraete;
+        if (0 < count($deviceGroupsCollection)) {
+            $deviceGroupsContent = '';
+            foreach ($deviceGroupsCollection as $deviceGroup) {
+
+                $this->view->assign('name', $deviceGroup['device_group_name']);
+                $this->view->assign('id', $deviceGroup['device_group_id']);
+                $deviceGroupsContent .= $this->view->render('/loops/item-row.phtml');
+            }
         }
-        $this->view->assign('a_geraetegruppen', $deviceGroupsCollection);
+        $this->view->assign('deviceGroupsContent', $deviceGroupsContent);
     }
 
-    public function showAction()
-    {
+    public function showAction() {
 
+        $id = intval($this->getParam('id'));
+        if (0 < $id) {
+            $deviceGroupDb = new Model_DbTable_DeviceGroups();
+            $deviceGroup = $deviceGroupDb->findDeviceGroup($id);
+
+            if ($deviceGroup instanceof Zend_Db_Table_Row_Abstract) {
+                $this->view->assign('devicesContent', $this->generateDevicesContent($id));
+                $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($id));
+                $this->view->assign('name', $deviceGroup->offsetGet('device_group_name'));
+                $this->view->assign('id',  $deviceGroup->offsetGet('device_group_id'));
+            }
+        }
+    }
+
+    private function generateDevicesContent($id) {
+        $content = '';
+
+        $devicesDb = new Model_DbTable_Devices();
+        $devicesCollection = $devicesDb->findAllDevicesByDeviceGroupId($id);
+
+        foreach ($devicesCollection as $device) {
+            $this->view->assign('name', $device->offsetGet('device_name'));
+            $this->view->assign('id', $device->offsetGet('device_id'));
+            $content .= $this->view->render('loops/device-row.phtml');
+        }
+
+        return $content;
     }
 
     public function editAction() {

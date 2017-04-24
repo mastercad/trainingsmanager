@@ -13,39 +13,62 @@ class MusclesController extends AbstractController
      * shows overview over all stored muscles in database
      */
     public function indexAction() {
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+
         $musclesDb = new Model_DbTable_Muscles();
         $musclesCollection = $musclesDb->findAllMuscles();
 
         $musclesContent = $this->getTranslator()->translate('label_no_muscles_found');
 
-        if ((is_array($musclesCollection)
-            || $musclesCollection instanceof Zend_Db_Table_Rowset)
+        if ($musclesCollection instanceof Zend_Db_Table_Rowset
             && 0 < count($musclesCollection)
         ) {
             $musclesContent = '';
             foreach($musclesCollection as $muscle)
             {
-                if ($muscle instanceof Zend_Db_Table_Row) {
-                    $muscle = $muscle->toArray();
-                }
-                $this->view->assign($muscle);
-                $musclesContent .= $this->view->render('loops/muscle.phtml');
+                $this->view->assign('name', $muscle->offsetGet('muscle_name'));
+                $this->view->assign('id', $muscle->offsetGet('muscle_id'));
+                $musclesContent .= $this->view->render('loops/muscle-row.phtml');
             }
         }
 
         $this->view->assign('musclesContent', $musclesContent);
     }
-    
-    public function showAction()
-    {
-        
+
+    public function showAction() {
+
+        $id = intval($this->getParam('id'));
+        if (0 < $id) {
+            $musclesDb = new Model_DbTable_Muscles();
+            $muscle = $musclesDb->findMuscle($id);
+            if ($muscle instanceof Zend_Db_Table_Row_Abstract) {
+                $this->view->assign('name', $muscle->offsetGet('muscle_name'));
+                $this->view->assign('id',  $muscle->offsetGet('muscle_id'));
+                $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($id));
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public function deleteAction() {
+
+        $id = intval($this->getParam('id'));
+        if (0 < $id) {
+            $musclesDb = new Model_DbTable_Muscles();
+            $result = $musclesDb->deleteMuscle($id);
+            echo $result;
+        }
     }
     
     public function editAction()
     {
         $params = $this->getRequest()->getParams();
-        
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
+        }
 
         if (isset($params['id'])
             && is_numeric($params['id'])

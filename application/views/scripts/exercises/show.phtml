@@ -1,7 +1,135 @@
 <?php
-
+$obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace();
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
 ?>
+    <a name="right" />
+    <div class="detail-options">
+        <?php echo $this->detailOptionsContent;?>
+    </div>
+
+    <h3>
+        <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_name);?>
+    </h3>
+
+    <?php echo $this->previewPictureContent;?>
+
+    <br class="clear-fix" style="margin-top: 15px;" />
+
+    <?php echo $this->exerciseTypeContent;?>
+
+    <br class="clear-fix" />
+
+    <h3 class=""
+        style="margin-top: 15px;">
+        <?php echo $this->translate('label_description');?>:
+    </h3>
+
+    <br class="clear-fix" />
+
+    <div class="col-md-12"
+         style="margin-top: 5px;">
+        <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_description);?>
+    </div>
+
+    <br class="clear-fix" />
+
+    <h3 class=""
+        style="margin-top: 15px;">
+        <?php echo $this->translate('label_special_features');?>:
+    </h3>
+
+    <br class="clear-fix" />
+
+    <div class="row">
+        <div class="col-md-12" style="margin-top: 5px;">
+            <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_special_features);?>
+        </div>
+    </div>
+
+    <br class="clear-fix" />
+
+    <h3 style="margin-top: 25px;">
+        <?php echo $this->translate('label_device');?>:
+    </h3>
+
+    <br class="clear-fix" />
+
+    <div class="form-group" style="margin-top: 10px;"><?php echo $this->device_name;?></div>
+
+    <br class="clear-fix" />
+
+    <?php
+    if ($this->deviceOptionsContent) {
+?>
+        <h3 class=""><?php echo $this->translate('label_device_options');?> :</h3>
+
+        <br class="clear-fix"/>
+        <div class="device-options" style="margin-top: 25px;">
+            <?php echo $this->deviceOptionsContent;?>
+        </div>
+
+        <br class="clear-fix" />
+<?php
+    }
+?>
+<?php
+    if ($this->exerciseOptionsContent) {
+?>
+        <h3 class=""><?php echo $this->translate('label_exercise_options');?> :</h3>
+
+        <br class="clear-fix"/>
+
+        <div class="exercise-options" style="margin-top: 25px;">
+            <?php echo $this->exerciseOptionsContent;?>
+        </div>
+
+        <br class="clear-fix" />
+<?php
+    }
+?>
+
+    <h3 style="float: left; display: inline; margin-top: 25px;">
+        <?php echo $this->translate('label_muscle_groups');?>:
+    </h3>
+
+    <br class="clear-fix" />
+
+    <div class="exercise-muscle-groups"
+         style="margin-top: 5px;">
+        <?php echo $this->exerciseMuscleGroupsContent;?>
+    </div>
+
+    <br class="clear-fix" />
+
+    <h3 style="margin-top: 15px;">
+        <?php echo $this->translate('label_exercise_pictures');?>:
+    </h3>
+
+    <br class="clear-fix" />
+
+    <h3 style="margin-top: 15px;">
+        <?php echo $this->translate('label_exercise_video');?>:
+    </h3>
+
+    <div id="exercise_video"
+         style="margin-top: 5px;">
+
+    </div>
+
+<br class="clear-fix" />
+
+<script type="text/javascript" language="JavaScript">
+    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+    jQuery(document).ready(function() {
+        jQuery('.detail-options .edit-button').unbind('click').click(function() {
+            loadEditContent(jQuery(this).data('id'));
+        });
+        jQuery('.detail-options .delete-button').unbind('click').click(function() {
+            deleteEntry(jQuery(this).data('id'));
+        });
+    });
+</script>

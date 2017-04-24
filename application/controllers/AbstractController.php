@@ -181,4 +181,16 @@ class AbstractController extends Zend_Controller_Action {
     protected function translate($tag, $locale = null) {
         return $this->getTranslator()->translate($tag, $locale);
     }
+
+    /**
+     * @param $id
+     *
+     * @return string
+     */
+    protected function generateDetailOptionsContent($id) {
+        $content = '<div class="glyphicon glyphicon-edit edit-button" data-id="' . $id . '"></div>'.
+            '<div class="glyphicon glyphicon-trash delete-button" data-id="' . $id . '"></div>';
+
+        return $content;
+    }
 }

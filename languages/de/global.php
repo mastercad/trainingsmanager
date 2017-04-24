@@ -31,10 +31,39 @@
         'label_user_select' => 'Mitglied wählen...',
         'label_please_select' => 'Bitte wählen...',
         'label_on' => 'an',
+        'label_option-name' => 'Name',
+        'label_option_name' => 'Name',
+        'label_option_value' => 'Standard Wert',
+        'label_option-value' => 'Wert',
+
         'or' => 'oder',
         'and' => 'und',
         'of' => 'von',
         'facebook' => 'Facebook',
         'twitter' => 'Twitter',
         'alternate_preview_picture' => 'Vorschaubild nicht gefunden',
+
+        'muscle_groups_default_content' => 'Das ist die Ansicht der Muskelgruppen.<br /><br />Auf der linken Seite ' .
+            'sehen sie eine Übersicht aller bereits eingestellten Muskelgruppen.<br /><br />' .
+            'Ein einfachter Klick lädt die details der jeweiligen Muskelgruppe<br />'.
+            'Ein Doppelklick lädt die details der jeweiligen Muskelgruppe zum editieren.<br /><br />'.
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Muskelgruppe anlegen."',
+
+        'device_groups_default_content' => 'Das ist die Ansicht der Gerätegruppen.<br /><br />Auf der linken Seite ' .
+            'sehen sie eine Übersicht aller bereits eingestellten Gerätegruppen.<br /><br />' .
+            'Ein einfachter Klick lädt die details der jeweiligen Gerätegruppe<br />'.
+            'Ein Doppelklick lädt die details der jeweiligen Gerätegruppe zum editieren.<br /><br />'.
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Gerätegruppe anlegen."',
+
+        'muscles_default_content' => 'Das ist die Ansicht der Muskeln.<br /><br />Auf der linken Seite ' .
+            'sehen sie eine Übersicht aller bereits eingestellten Muskeln.<br /><br />' .
+            'Ein einfachter Klick lädt die details des jeweiligen Muskels<br />'.
+            'Ein Doppelklick lädt die details des jeweiligen Muskels zum editieren.<br /><br />'.
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie einen neuen Muskel anlegen."',
+
+        'devices_default_content' => 'Das ist die Ansicht der Geräte.<br /><br />Auf der linken Seite ' .
+            'sehen sie eine Übersicht aller bereits eingestellten Geräte.<br /><br />' .
+            'Ein einfachter Klick lädt die details des jeweiligen Gerätes<br />'.
+            'Ein Doppelklick lädt die details des jeweiligen Gerätes zum editieren.<br /><br />'.
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neues Gerät anlegen."',
     ];

@@ -1,33 +1,36 @@
-<h2>
-    <?php echo $this->translate('label_exercises');?>
-</h2>
+<div class="col-lg-6 exercises-overview" id="left">
+    <div class="col-sm-4 exercises-filter">
+        <?php echo $this->exercisesFilterContent;?>
+    </div>
+    <div class="col-sm-4">
+        <?php echo $this->deviceFilterContent;?>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-primary btn-default search">
+            <?php echo $this->translate('label_search');?>
+        </button>
+    </div>
 
-<div class="col-sm-4 exercises-filter">
-    <?php echo $this->exercisesFilterContent;?>
-</div>
-<div class="col-sm-4">
-    <?php echo $this->deviceFilterContent;?>
-</div>
-<div class="col-sm-2">
-    <button class="btn btn-primary btn-default search">
-        <?php echo $this->translate('label_search');?>
-    </button>
-</div>
-
-<div class="col-sm-12 exercises-overview">
+    <br class="clear-fix" />
 <?php
     if (is_array($this->exercisesCollection)) {
         foreach($this->exercisesCollection as $exercise) {
             $this->assign($exercise);
-            echo $this->render('loops/exercise.phtml');
+            echo $this->render('loops/exercise-row.phtml');
         }
     }
 ?>
+
+</div>
+<div class="col-lg-6" id="right">
+    <?php echo $this->translate('exercises_default_content');?>
 </div>
 
-<script type="text/javascript" src="/js/purl.js"></script>
+<!--<script type="text/javascript" src="/js/purl.js"></script>-->
 
 <script type="text/javascript">
+    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
     jQuery('document').ready(function() {
         jQuery('.exercise-delete').unbind('click').click(function() {
             if(confirm('<?php echo $this->translate('question_warning_delete_exercise');?>')) {
@@ -105,6 +108,35 @@
             location.href = newLocation;
         });
 
+        function initExercises() {
+            function singleClick(e) {
+                var id = jQuery(this).data('id');
+                loadShowContent(id);
+            }
+
+            function doubleClick(e) {
+                var id = jQuery(this).data('id');
+                loadEditContent(id);
+            }
+
+            jQuery('.exercise').unbind('click').click(function(e) {
+                var that = this;
+                setTimeout(function() {
+                    var dblclick = parseInt(jQuery(that).data('double'), 10);
+                    if (dblclick > 0) {
+                        jQuery(that).data('double', dblclick-1);
+                    } else {
+                        singleClick.call(that, e);
+                    }
+                }, 300);
+            }).dblclick(function(e) {
+                jQuery(this).data('double', 2);
+                doubleClick.call(this, e);
+            });
+        }
+
+        initExercises();
+
         /**
          * manipulate part of string
          */
@@ -127,4 +159,42 @@
             }
          */
     });
+    function showSpinner(element) {
+        var spinner = jQuery('<div class="spinner"></div>');
+        element.html(spinner);
+    }
+
+    function loadShowContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/show', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+        });
+    }
+
+    function loadEditContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/edit', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+            var obj_cad_cms = new jQuery('html').CAD_CMS(jQuery('.editable'), controller);
+            edit_init(true);
+        });
+    }
+
+    function deleteEntry(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            jQuery('#'+id).fadeOut();
+        });
+    }
+
+    function scrollToAnchor(aid){
+        var aTag = jQuery("a[name='"+ aid +"']");
+        jQuery('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    }
 </script>

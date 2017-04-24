@@ -1,8 +1,9 @@
-<div class="form-group">
+<div class="form-group" style="position: relative;">
     <label >
         <?php echo $this->device_option_name;?>
     </label>
     <input type="text"
+           class="option device-option form-control"
            id="device_option_<?php echo $this->device_option_id;?>"
            data-cad-cms-content-orig="<?php echo base64_encode($this->device_option_value);?>"
            data-device-option-id="<?php echo $this->device_option_id;?>"
@@ -12,6 +13,8 @@
            data-device-x-device-option-value="<?php echo $this->device_x_device_option_device_option_value;?>"
            data-exercise-x-device-option-value="<?php echo $this->exercise_x_device_option_device_option_value;?>"
            data-training-plan-x-device-option-value="<?php echo $this->training_plan_x_device_option_device_option_value;?>"
-           class="device-option form-control"
            value="<?php echo $this->device_option_value;?>">
+
+    <span class="option-delete glyphicon glyphicon-trash delete"
+          data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_selection');?>"></span>
 </div>

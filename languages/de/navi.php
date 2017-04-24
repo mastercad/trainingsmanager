@@ -2,6 +2,7 @@
 
     return [
         'label_manual' => 'Handbuch',
+        'label_admin' => 'Admin',
         'label_overview' => 'Übersicht',
         'label_create' => 'Anlegen',
         'label_edit' => 'Bearbeiten',

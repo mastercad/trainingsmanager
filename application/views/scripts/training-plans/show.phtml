@@ -1,12 +1,20 @@
-<a href="/training-plans/edit/id/<?php echo $this->training_plan_id;?>">
-    <button class="btn btn-primary btn-default" data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_training_plan');?>">
-        <?php echo $this->translate('label_edit_training_plan');?>
-    </button>
-</a>
-<?php
-    echo $this->trainingPlanContent;
-?>
+<a name="right" />
+<div>
+    <a href="/training-plans/edit/id/<?php echo $this->training_plan_id;?>">
+        <button class="btn btn-primary btn-default" data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_training_plan');?>">
+            <?php echo $this->translate('label_edit_training_plan');?>
+        </button>
+    </a>
+    <?php
+        echo $this->trainingPlanContent;
+    ?>
+</div>
+
 <script type="text/javascript" language="JavaScript">
+
+    jQuery(document).ready(function() {
+        jQuery('body').css('overflow', 'auto');
+    });
 
     function trainingPlanShowInit() {
 //        $(function() {
@@ -31,13 +39,14 @@
 //            );
 //        });
 
-        $('.edit').each(function(){
+        $('.edit').each(function () {
             var trainingPlanId = $(this).parent().attr('id');
             $(this).unbind('click');
-            $(this).bind('click', function(){
+            $(this).bind('click', function () {
                 location.href = '/training-plans/edit/id/' + trainingPlanId;
             });
         });
     }
+
     trainingPlanShowInit();
 </script>

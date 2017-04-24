@@ -25,12 +25,12 @@ class Model_DbTable_DeviceXDeviceOption extends Model_DbTable_Abstract {
      */
     public function findAllDeviceXDeviceOptionsByDeviceId($deviceId) {
 
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(false);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+
         try {
             $oSelect->joinInner('devices', 'device_id = ' . $deviceId)
                 ->joinInner('device_options', 'device_option_id = device_x_device_option_device_option_fk')
-                ->where('device_x_device_option_device_fk = "?"', $deviceId);
+                ->where('device_x_device_option_device_fk = ?', $deviceId);
 
             return $this->fetchAll($oSelect);
         } catch (Exception $oException) {

@@ -19,7 +19,7 @@ jQuery('document').ready(function () {
     else if (controller == "device-groups") {
         //aktualisiereGeraete();
     } else if (controller == "devices") {
-        refreshPictures();
+        //refreshPictures();
     }
 });
 
@@ -40,9 +40,9 @@ function changePreviewPicture(response) {
         if (jQuery('.preview-picture').has('.cad-cms-dummy-blaeher')) {
             jQuery('.preview-picture').removeClass('cad-cms-dummy-blaeher');
         }
-        jQuery('.preview-picture').attr("src", obj_json.html_pfad);
-        jQuery('.preview-picture').data("src", Base64.encode(obj_json.html_pfad));
-        jQuery('.preview-picture').data("file", Base64.encode(obj_json.file));
+        jQuery('.preview-picture').attr("src", obj_json.html_pfad)
+            .data("src", Base64.encode(obj_json.html_pfad))
+            .data("file", Base64.encode(obj_json.file));
     }
 
     refreshPictures();

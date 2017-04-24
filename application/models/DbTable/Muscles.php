@@ -43,6 +43,14 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
 		}
 	}
 
+    public function findAllMusclesByMuscleGroupId($id) {
+
+        $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $select->joinInner('muscle_x_muscle_group', 'muscle_x_muscle_group_muscle_fk = muscle_id AND muscle_x_muscle_group_muscle_group_fk = ' . $id);
+
+        return $this->fetchAll($select);
+    }
+
     /**
      * @param $aData
      * @return bool|mixed

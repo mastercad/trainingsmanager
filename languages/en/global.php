@@ -31,6 +31,11 @@
         'label_user_select' => 'Select Member...',
         'label_please_select' => 'Please Select...',
         'label_on' => 'on',
+        'label_option_name' => 'name',
+        'label_option-name' => 'name',
+        'label_option_value' => 'default value',
+        'label_option-value' => 'value',
+
         'or' => 'or',
         'and' => 'and',
         'of' => 'of',

@@ -1,8 +1,17 @@
+<!--<div class="col-lg-12">-->
+<div class="col-lg-6" id="left">
 <?php
     echo $this->devicesContent;
 ?>
+</div>
+<div class="col-lg-6" id="right">
+    <?php echo $this->translate('devices_default_content');?>
+</div>
+<!--</div>-->
 
 <script type="text/javascript">
+    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
     jQuery('document').ready(function() {
         jQuery('.device-delete').unbind('click').bind('click', function() {
             if(confirm('Diesen Geraet wirklich löschen?\n\nAchtung:\n' +
@@ -13,35 +22,73 @@
             }
         });
 
-        jQuery.fn.deleteDevice = function()
-        {
-            var deviceId = jQuery(this).data('device-id');
-            var that = this;
+        function singleClick(e) {
+            var deviceId = jQuery(this).data('id');
+            loadShowContent(deviceId);
+        }
 
-            if (isNumber(deviceId)
-                && 0 < deviceId
-            ) {
-                var url = "/devices/delete-device/";
-                var obj_params = {'id': deviceId, 'ajax': true};
+        function doubleClick(e) {
+            var deviceId = jQuery(this).data('id');
+            loadEditContent(deviceId);
+        }
 
-                jQuery.post(url, obj_params, function(response) {
-                    try {
-                        response = JSON.parse(response);
-                        var cad_obj_messages = new CAD.Message();
-                        cad_obj_messages.init(response);
+        function initDevices() {
 
-                        if(cad_obj_messages.open()) {
-                            jQuery(that).parent().fadeOut();
-                        }
-                    } catch(e) {
-                        alert(response);
+            jQuery('.item').unbind('click').click(function(e) {
+                var that = this;
+                setTimeout(function() {
+                    var dblclick = parseInt(jQuery(that).data('double'), 10);
+                    if (dblclick > 0) {
+                        jQuery(that).data('double', dblclick-1);
+                    } else {
+                        singleClick.call(that, e);
                     }
-                });
-            } else {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init([{'type': 'fehler', 'message': 'Fehler bei der Übergabe!<br /><br />Ich kann diesen Geraet leider nicht löschen!'}]);
-                obj_cad_messages.open();
-            }
-        };
+                }, 300);
+            }).dblclick(function(e) {
+                jQuery(this).data('double', 2);
+                doubleClick.call(this, e);
+            });
+        }
+
+        initDevices();
     });
+
+    function showSpinner(element) {
+        var spinner = jQuery('<div class="spinner"></div>');
+        element.html(spinner);
+    }
+
+    function loadShowContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/show', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+        });
+    }
+
+    function loadEditContent(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/edit', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            scrollToAnchor('right');
+            var obj_cad_cms = new jQuery('html').CAD_CMS(jQuery('.editable'), controller);
+            edit_init(true);
+        });
+    }
+
+    function deleteEntry(id) {
+        showSpinner(jQuery('#right'));
+
+        jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
+            jQuery('#right').html(response);
+            jQuery('#'+id).fadeOut();
+        });
+    }
+
+    function scrollToAnchor(aid){
+        var aTag = jQuery("a[name='"+ aid +"']");
+        jQuery('html,body').animate({scrollTop: aTag.offset().top},'slow');
+    }
 </script>

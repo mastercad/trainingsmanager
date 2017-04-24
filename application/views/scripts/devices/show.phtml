@@ -1,7 +1,45 @@
-<?php
+<a name="right" />
+<div class="detail-options">
+    <?php echo $this->detailOptionsContent;?>
+</div>
+<h2>
+    <?php echo $this->name;?>
+</h2>
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
+<br class="clear-fix" />
+
+<img src="<?php echo $this->preview?>"
+     class="preview-picture"
+     alt="<?php echo $this->translate('alternate_preview_picture');?>"
+     style="margin-top: 15px;"
+     title="<?php echo $this->translate('tooltip_click_to_upload_picture');?>"
+     id="device_preview_picture"
+     data-toggle="tooltip" data-placement="right"
+    />
+
+<br class="clear-fix" />
+
+<div class="device-options" style="margin-top: 20px;">
+    <?php echo $this->deviceOptionsContent;?>
+</div>
+
+<br class="clear-fix" />
+
+<div class="preview-pictures"
+     style="margin-top: 5px;">
+</div>
+
+<br class="clear-fix" />
+
+<script type="text/javascript" language="JavaScript">
+    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+    jQuery(document).ready(function() {
+        jQuery('.detail-options .edit-button').unbind('click').click(function() {
+            loadEditContent(jQuery(this).data('id'));
+        });
+        jQuery('.detail-options .delete-button').unbind('click').click(function() {
+            deleteEntry(jQuery(this).data('id'));
+        });
+    });
+</script>
