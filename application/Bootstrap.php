@@ -172,14 +172,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         /** @var Zend_View $view */
         $view = $this->getResource('view');
 
-        $user_agent = NULL;
-        $obj_device = NULL;
+//        $user_agent = NULL;
+//        $obj_device = NULL;
 
-        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
-            $user_agent = $_SERVER['HTTP_USER_AGENT'];
-            $obj_user_agent = $view->userAgent();
-            $obj_device = $obj_user_agent->getDevice();
-        }
+//        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+//            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+//            $obj_user_agent = $view->userAgent();
+//            $obj_device = $obj_user_agent->getDevice();
+//        }
 
         /** @var Zend_View_Helper_HeadScript $view->headScript() */
 //        $view->headScript()->prependFile($view->baseUrl() . '/js/default.js', 'text/javascript');
@@ -218,14 +218,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $view = Zend_Registry::get('view');
 
-        $user_agent = NULL;
-        $obj_device = NULL;
+//        $user_agent = NULL;
+//        $obj_device = NULL;
 
-        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
-            $user_agent = $_SERVER['HTTP_USER_AGENT'];
-            $obj_user_agent = $view->userAgent();
-            $obj_device = $obj_user_agent->getDevice();
-        }
+//        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+//            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+//            $obj_user_agent = $view->userAgent();
+//            $obj_device = $obj_user_agent->getDevice();
+//        }
 
         $view->headLink()->appendAlternate($view->baseUrl() . 'http://gmpg.org/xfn/11', 'text/html', true, array('rel' => 'profile', 'title' => 'XFN Profile Version for Meta Markup'));
 //      $view->headLink()->appendAlternate($view->baseUrl() . 'https://plus.google.com/100952657106943880213', 'text/html', true, array( 'rel' => 'publisher', 'title' => 'Herausgeber dieser Webseite'));

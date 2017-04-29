@@ -30,6 +30,10 @@ body, html {
     margin: 0;
 }
 
+#mobile {
+    display: none;
+}
+
 @media (min-width: 768px){
     body, html {
         margin: 0;
@@ -53,6 +57,12 @@ body, html {
         right: 0;
         overflow-y: scroll;
         /*width: 25%;*/
+    }
+}
+
+@media (max-width: 767px) {
+    #mobile {
+        display: block;
     }
 }
 
@@ -901,6 +911,10 @@ input.option-input {
     background: url('/images/content/statisch/grafiken/ajax-loader_black_trans.gif');
 }
 
+.spinner:before {
+    padding: 25px;
+}
+
 .detail-options {
     padding: 5px;
     position: absolute;
@@ -913,10 +927,19 @@ input.option-input {
     cursor: pointer;
 }
 
-#left span.item,
+#left .item,
 #left .exercise,
 div span.device {
     cursor: pointer;
+}
+
+.selected {
+    font-weight: bold;
+}
+
+.item-content {
+    position: relative;
+    display: none;
 }
 
 /* ]]> */

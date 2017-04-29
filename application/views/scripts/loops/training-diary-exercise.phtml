@@ -8,7 +8,7 @@
 
 ?>
 
-<div class="training-diary-exercise col-lg-12 item <?php echo $this->exerciseActive;?>"
+<div class="training-diary-exercise col-sm-12 item <?php echo $this->exerciseActive;?>"
      data-id="<?php echo $this->trainingDiaryXTrainingPlanExerciseId;?>"
      data-training-plan-exercise-id="<?php echo $this->trainingPlanXExerciseId;?>"
      data-finished="<?php echo $this->exerciseFinished;?>"
@@ -53,17 +53,17 @@
 
     <br class="clear-fix" />
 
-    <div class="col-md-12">
+    <div class="col-sm-12">
         <h3>
             <?php echo $this->exercise_name;?>
         </h3>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-sm-6">
         <img class="preview-picture" src="<?php echo '/images/content/dynamisch/exercises/' . $this->exercise_id . '/' . $this->exercise_preview_picture.'.resized.jpg';?>" />
     </div>
 
-    <div class="col-md-6">
+    <div class="col-sm-6">
         <strong>
             <?php echo $this->translate('label_description');?>:
         </strong>
@@ -78,17 +78,17 @@
         </p>
     </div>
 
-    <div class="col-md-12 device-options">
+    <div class="col-sm-12 device-options">
         <?php echo $this->deviceOptionsContent;?>
     </div>
 
-    <div class="col-md-12 exercise-options">
+    <div class="col-sm-12 exercise-options">
         <?php echo $this->exerciseOptionsContent;?>
     </div>
 
     <br class="cleafix" />
 
-    <div class="col-md-12 text-right">
+    <div class="col-sm-12 text-right">
         <?php echo $this->translate('label_exercise');?> <?php echo $this->currentExerciseNumber;?> <?php echo $this->translate('of');?> <?php echo $this->exerciseSum;?>
     </div>
 </div>

@@ -1,9 +1,9 @@
 <div class="muscle" data-id="<?php echo $this->id;?>" >
-     <span class="item" data-id="<?php echo $this->id;?>" style="margin-top: 5px;">
+    <div id="<?php echo $this->id;?>" class="<?php echo $this->type;?> item" data-id="<?php echo $this->id;?>">
         <?php echo $this->name;?>
-    </span>
+    </div>
 
     <?php echo $this->muscleUseRatingContent;?>
 
-    <br class="clear-fix" />
+    <div id="content_<?php echo $this->id;?>" class="item-content"></div>
 </div>

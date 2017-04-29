@@ -11,6 +11,7 @@
         <script src="/js/utils.js"></script>
         <link rel="stylesheet" href="/css/tether-theme-arrows.min.css" />
         <link rel="stylesheet" href="/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/jquery-ui.min.css">
 <!--        <link rel="stylesheet" href="/css/jquery.smartmenus.bootstrap.css">-->
         <link rel="stylesheet" href="/css/login-form.css">
 
@@ -297,18 +298,319 @@
         <br class="clear-fix" />
     </div>
 
-        <?php echo $this->inlineScript(); ?>
+    <?php echo $this->inlineScript(); ?>
 
-        <script src="/js/tether.min.js"></script>
-        <script src="/js/bootstrap.min.js"></script>
-        <script type="text/javascript">
+    <script src="/js/tether.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+        var isMobile = true;
+        var caller = null;
+        var tempIsMobile = null;
+        var targetId = null;
+        var tempCaller = null;
+
+        jQuery(document).ready(function() {
+            var previousSelected = null;
+
+            function checkIsMobile() {
+                isMobile = ('none' !== jQuery('#mobile').css('display'));
+
+                if (tempIsMobile != isMobile) {
+                    tempIsMobile = isMobile;
+                    considerMobile();
+                }
+
+                if (targetId === null
+                    && caller !== null
+                ) {
+                    refreshTargetId();
+                }
+            }
+
+            function refreshTargetId() {
+                if (isMobile
+                    && caller
+                ) {
+                    targetId = jQuery(caller).next().prop('id');
+                } else {
+                    targetId = 'right';
+                }
+            }
+
+            function considerMobile() {
+                var accordion = jQuery("#accordion");
+                var accordionHeaderClasses = 'ui-accordion-header ui-corner-top ui-accordion-header-collapsed ui-corner-all ui-state-default ui-accordion-icons';
+                var accordionContentClasses = 'ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content';
+                var accordionActiveHeaderClasses = 'ui-accordion-header-active ui-state-active';
+                var accordionActiveContainerClasses = 'ui-accordion-content-active';
+                if (true === isMobile) {
+
+                    jQuery('#accordion').addClass('ui-accordion ui-widget ui-helper-reset');
+                    jQuery('#accordion .item').addClass(accordionHeaderClasses);
+                    jQuery('#accordion .item-content').addClass(accordionContentClasses);
+
+                    if (null !== caller) {
+                        var rightPanel = jQuery('#right');
+                        jQuery(caller).addClass(accordionActiveHeaderClasses);
+                        jQuery(caller).next()
+                            .html(rightPanel.html())
+                            .delay(1000)
+                            .css('height', 'auto')
+                            .css('display', 'block')
+                            .addClass(accordionActiveContainerClasses);
+                        rightPanel.html('');
+                        scrollToAnchor(jQuery(caller).prop('id'));
+                    }
+                } else {
+                    jQuery('#accordion').removeClass('ui-accordion ui-widget ui-helper-reset');
+                    jQuery('#accordion .item').removeClass(accordionHeaderClasses).removeClass(accordionActiveHeaderClasses);
+                    jQuery('#accordion .item-content').removeClass(accordionContentClasses).removeClass(accordionActiveContainerClasses);
+                    if (null !== caller) {
+                        jQuery('#right').html(jQuery(caller).next().html());
+                        jQuery(caller).next().html('').css('display', 'none').hide().fadeOut();
+                        scrollToAnchor(jQuery(caller).prop('id'));
+                    }
+                }
+                refreshTargetId();
+            }
+
+            jQuery(window).resize(function() {
+                checkIsMobile();
+            });
+
+            function singleClick(e) {
+                console.log('singleClick called');
+                var id = jQuery(this).data('id');
+                loadShowContent(id);
+            }
+
+            function doubleClick(e) {
+                console.log('doubleClick called');
+                var id = jQuery(this).data('id');
+                loadEditContent(id);
+            }
+
+            function initItems() {
+//                jQuery('.item').unbind('click').click(function(e) {
+//
+//                    var that = this;
+//
+//                    console.log(jQuery(this).data('status'));
+//
+//                    if (caller
+//                        && caller != this
+//                    ) {
+//                        console.log('remove content because other element clicked!');
+//                        jQuery(caller).data('status', null);
+////                            jQuery(caller).data('double', 0);
+//                        tempCaller = caller;
+//                        caller = this;
+//                        removeContent();
+//                    }
+//
+//                    if ('show' == jQuery(this).data('status')
+//                        || 'edit' == jQuery(this).data('status')
+//                    ) {
+//                        console.log('remove content!');
+//                        jQuery(this).data('status', null);
+////                            jQuery(this).data('double', 0);
+//                        tempCaller = this;
+//                        caller = null;
+//                        removeContent();
+//                    } else {
+//
+//                        console.log('single click');
+//
+//                        setTimeout(function () {
+//                            console.log("In Click Timeout!");
+//                            var dblclick = parseInt(jQuery(that).data('double'), 10);
+//                            if (dblclick > 0) {
+//                                jQuery(that).data('double', dblclick - 1);
+//                            } else {
+//                                caller = that;
+//                                singleClick.call(that, e);
+//                            }
+//                        }, 300);
+//                    }
+//                }).unbind('dblclick').dblclick(function(e) {
+//                    caller = this;
+//                    console.log('double click');
+//                    jQuery(this).data('double', 2);
+//                    doubleClick.call(this, e);
+//                });
+
+                var touchTime = new Date().getTime();
+
+                jQuery('.item').unbind('click').click(function(e) {
+
+                    var that = this;
+
+                    console.log(jQuery(this).data('status'));
+
+                    if (caller
+                        && caller != this
+                    ) {
+                        console.log('remove content because other element clicked!');
+                        jQuery(caller).data('status', null);
+//                            jQuery(caller).data('double', 0);
+                        tempCaller = caller;
+                        caller = this;
+                        removeContent();
+                    }
+
+                    //compare first click to this click and see if they occurred within double click threshold
+                    if (((new Date().getTime()) - touchTime) < 800) {
+                        //double click occurred
+                        caller = this;
+                        console.log('double click');
+                        doubleClick.call(this, e);
+                        touchTime = new Date().getTime();
+                    } else {
+                        //not a double click so set as a new first click
+                        console.log('single click');
+                        touchTime = new Date().getTime();
+
+                        if ('show' == jQuery(this).data('status')
+                            || 'edit' == jQuery(this).data('status')
+                        ) {
+                            console.log('remove content!');
+                            jQuery(this).data('status', null);
+                            tempCaller = this;
+                            caller = null;
+                            removeContent();
+                        } else {
+                            caller = this;
+                            singleClick.call(that, e);
+                        }
+                    }
+                });
+            }
+
             initAuth();
             jQuery(function () {
                 jQuery('[data-toggle="tooltip"]').tooltip()
-            })
+            });
+
+            document.addEventListener('mousedown', function (event) {
+                if (event.detail > 1) {
+                    event.preventDefault();
+                }
+            }, false);
+
+            checkIsMobile();
+            initItems();
+        });
+
+        function showSpinner(element) {
+            jQuery('#'+targetId).html(jQuery('<div class="spinner"></div>'));
+        }
+
+        function loadShowContent(id) {
+            showSpinner(jQuery('#'+targetId));
+
+            jQuery.post('/'+controller+'/show', {id: id, ajax: true}, function(response) {
+                jQuery(caller).data('status', 'show');
+                addContent(response);
+            });
+        }
+
+        function loadEditContent(id) {
+            showSpinner(jQuery('#'+targetId));
+
+            jQuery.post('/'+controller+'/edit', {id: id, ajax: true}, function(response) {
+                jQuery(caller).data('status', 'edit');
+                addContent(response);
+            });
+        }
+
+        function deleteEntry(id) {
+            showSpinner(jQuery('#'+targetId));
+
+            jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
+                jQuery('#'+targetId).html(response);
+                jQuery('#'+id).fadeOut();
+            });
+        }
+
+        function scrollToAnchor(id){
+            console.log('ID : ' + id);
+            var element = jQuery("#"+id);
+            console.log(element);
+            if (element !== undefined) {
+                jQuery('html,body').stop().animate({scrollTop: element.offset().top}, 'slow');
+            }
+        }
+
+        /* Function to animate height: auto */
+        function autoHeightAnimate(element, time){
+            element.animate({height: 'toggle', opacity: 0}, 0, function() {
+                element.css("display", "none");
+            });
+            var curHeight = element.height(), // Get Default Height
+                autoHeight = element.css('height', 'auto').height(); // Get Auto Height
+            element.height(curHeight); // Reset to Default Height
+            element.animate({height: autoHeight, opacity: 1}, time, function() {
+                element.css("display", "block");
+            }); // Animate to Auto Height
+        }
+
+        function addContent(content) {
+            console.log('addContent');
+            if (isMobile) {
+                console.log("Add Content for Mobile");
+                var container = jQuery(caller).next();
+                container.animate({height: 0, opacity: 0}, 0);
+                jQuery(caller).addClass('selected ui-accordion-header-active ui-state-active');
+
+                container
+                    .stop()
+                    .height(0)
+                    .html(content)
+                    .show()
+                    .delay(1000)
+                    .animate({height: 1000, opacity: 1}, 1000, function() {
+                        container.css("display", "block")
+                            .css('height', 'auto').prop('height', null)
+                            .addClass('ui-accordion-content-active');
+                        scrollToAnchor(jQuery(caller).prop('id'));
+                    });
+            } else {
+                jQuery('#'+targetId).html(content);
+                jQuery(caller).addClass('selected');
+                scrollToAnchor(targetId);
+            }
+        }
+
+        function removeContent() {
+            console.log("Remove Content");
+            if (isMobile) {
+                console.log("Remove Content for Mobile");
+                var container = jQuery(tempCaller).next();
+                container
+                    .stop()
+                    .animate({height: 0, opacity: 0}, 1000, function() {
+                        container.css("display", "none")
+                            .html('')
+                            .hide()
+                            .removeClass('ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active');
+                        jQuery(tempCaller).removeClass('selected ui-accordion-header-active ui-state-active');
+                        scrollToAnchor(jQuery(tempCaller).prop('id'));
+//                        tempCaller = null;
+                    })
+                ;
+            } else {
+                console.log('Remove desktop content!');
+                jQuery('#'+targetId).html('');
+                jQuery(tempCaller).removeClass('selected');
+                scrollToAnchor(targetId);
+            }
+        }
         </script>
 <!--        <script src="/js/jquery.smartmenus.js"></script>-->
 <!--        <script src="/js/jquery.smartmenus.bootstrap.js"></script>-->
 
+        <div id="mobile"></div>
     </body>
 </html>

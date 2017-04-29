@@ -9,13 +9,10 @@
 <div>
     <h3>
         <?php echo $this->translate('label_exercise_name');?>:
-        <span
-            class="editable col-md-12"
-            style="margin-left: 20px; border-bottom: 1px dotted gray;"
-            id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>"
-            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_exercise_name');?>"
-		><?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_name);?>
-        </span>
+        <input type="text"
+            class="editable form-control"
+            value="<?php echo $this->exercise_name;?>"
+            id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>" />
     </h3>
 
     <?php echo $this->previewPictureContent;?>
@@ -33,32 +30,20 @@
     
     <br class="clear-fix" />
     
-    <div class="editable beschreibung col-md-12"
+    <textarea class="editable beschreibung form-control" rows="5"
          id="exercise_description"
-         style="margin-top: 5px; border-bottom: 1px dotted gray;"
-         data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_description');?>"
-         data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_description);?>" >
-        <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_description);?>
-    </div>
-    
-    <br class="clear-fix" />
-    
+         data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_description);?>" ><?php echo $this->exercise_description;?></textarea>
+
     <h3 class="besonderheit-ueberschrift"
         style="margin-top: 15px;">
         <?php echo $this->translate('label_special_features');?>:
     </h3>
-    
+
     <br class="clear-fix" />
 
-    <div class="row">
-        <div class="editable beschreibung col-md-12"
-            id="exercise_special_features"
-            style="margin-top: 5px; border-bottom: 1px dotted gray;"
-            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_special_features');?>"
-            data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_special_features);?>" >
-            <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_special_features);?>
-        </div>
-    </div>
+    <textarea class="editable beschreibung form-control" rows="5"
+        id="exercise_special_features"
+        data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_special_features);?>" ><?php echo $this->exercise_special_features;?></textarea>
 
     <br class="clear-fix" />
 
@@ -169,6 +154,8 @@
     <?php echo $this->translate('label_save');?>
 </button>
 
+<script type="text/javascript" src="/js/jquery.filedrop.js"></script>
+
 <script type="text/javascript">
 	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
 
@@ -176,8 +163,9 @@
         var hasErrors = false;
         var messages = [];
         var i = 0;
+        var saveData = {};
 
-        if (!trim(jQuery('#exercise_name').html()).length) {
+        if (!trim(jQuery('#exercise_name').val()).length) {
             hasErrors = true;
             messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_exercise_needs_name');?>'});
         }
@@ -256,16 +244,30 @@
         }
 
         if (!hasErrors) {
-            jQuery().setEditedElements('exercise_muscle_groups', muscleGroups);
-            jQuery().setEditedElements('exercise_preview_picture', jQuery('#exercise_preview_picture').data('file'));
-            jQuery().setEditedElements('exercise_type_id', jQuery('#right .exercise-type-select').attr('data-value'));
-            jQuery().setEditedElements('exercise_options', exerciseOptions);
-            jQuery().setEditedElements('exercise_device_options', deviceOptions);
-            jQuery().setEditedElements('exercise_id', jQuery('#exercise_id').val());
-            jQuery().setEditedElements('exercise_device_fk', jQuery('#exercise_device_name').data('exercise-device-id'));
-            jQuery().setAjax(true);
+            var typeSelect = jQuery('#right .exercise-type-select').attr('data-value');
 
-            CADEditSave();
+            if (!typeSelect) {
+                typeSelect = jQuery(caller).next().find('.exercise-type-select').attr('data-value');
+            }
+
+            saveData.exercise_name = Base64.encode(jQuery('#exercise_name').val());
+            saveData.exercise_description = Base64.encode(jQuery('#exercise_description').val());
+            saveData.exercise_special_features = Base64.encode(jQuery('#exercise_special_features').val());
+            saveData.exercise_muscle_groups = muscleGroups;
+            saveData.exercise_preview_picture = jQuery('#exercise_preview_picture').data('file');
+            saveData.exercise_type_id = typeSelect;
+            saveData.exercise_options = exerciseOptions;
+            saveData.exercise_device_options = deviceOptions;
+            saveData.exercise_id = jQuery('#exercise_id').val();
+            saveData.exercise_device_fk = jQuery('#exercise_device_name').data('exercise-device-id');
+            saveData.ajax = true;
+
+            jQuery.post('/'+controller+'/save', saveData, function(response) {
+                var obj_cad_messages = new CAD.Message();
+                obj_cad_messages.init(response);
+                obj_cad_messages.open();
+            });
+//            CADEditSave();
         } else {
             var obj_cad_messages = new CAD.Message();
             obj_cad_messages.init(messages);
@@ -518,5 +520,16 @@
         initMuscleRating();
         initMuscleGroups();
         initOptions();
+
+        jQuery('#exercise_preview_picture').filedrop({
+            fallback_id: 'upload_button',
+            fallback_dropzoneClick : true,
+            url: '/'+controller+'/upload-picture',
+            paramname: 'user-file',
+            data: {
+                ajax: true
+            },
+            withCredentials: true
+        });
     });
 </script>

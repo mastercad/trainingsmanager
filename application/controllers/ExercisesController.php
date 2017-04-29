@@ -493,13 +493,13 @@ class ExercisesController extends AbstractController {
     }
 
     public function uploadPictureAction() {
-        if (true === isset($_FILES['cad-cms-image-file'])) {
+        if (true === isset($_FILES['user-file'])) {
             $temp_bild_pfad = getcwd() . '/tmp/exercises/';
 
             $obj_file = new CAD_File();
             $obj_file->setDestPath($temp_bild_pfad);
             $obj_file->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'svg', 'gif'));
-            $obj_file->setUploadedFiles($_FILES['cad-cms-image-file']);
+            $obj_file->setUploadedFiles($_FILES['user-file']);
             $obj_file->moveUploadedFiles();
 
             $a_files = $obj_file->getDestFiles();
@@ -609,7 +609,7 @@ class ExercisesController extends AbstractController {
             $userId = $user->user_id;
         }
 
-        if (true === isset($params['edited_elements'])) {
+        if ($this->getRequest()->isPost()) {
             $exercisesDb = new Model_DbTable_Exercises();
 
             $exerciseName = '';
@@ -618,41 +618,40 @@ class ExercisesController extends AbstractController {
             $exerciseXMuscleUpdates = array();
             $exerciseXMuscleInserts = array();
 
-            $exerciseTypeId = null;
             $exercisePreviewPicture = '';
             $exerciseDescription = '';
             $exerciseSpecialFeatures = '';
             $exerciseId = 0;
             $hasErrors = false;
-            $messages = array();
+            $messages = [];
             $data = array();
 
-            if (true === isset($params['edited_elements']['exercise_name'])
-                && 0 < strlen(trim($params['edited_elements']['exercise_name']))
+            if (true === isset($params['exercise_name'])
+                && 0 < strlen(trim($params['exercise_name']))
             ) {
-                $exerciseName = base64_decode($params['edited_elements']['exercise_name']);
+                $exerciseName = base64_decode($params['exercise_name']);
             }
 
-            if (true === isset($params['edited_elements']['exercise_description'])
-                && 0 < strlen(trim($params['edited_elements']['exercise_description']))
+            if (true === isset($params['exercise_description'])
+                && 0 < strlen(trim($params['exercise_description']))
             ) {
-                $exerciseDescription = base64_decode($params['edited_elements']['exercise_description']);
+                $exerciseDescription = base64_decode($params['exercise_description']);
             }
             
-            if (true === isset($params['edited_elements']['exercise_special_features'])
-                && 0 < strlen(trim($params['edited_elements']['exercise_special_features']))
+            if (true === isset($params['exercise_special_features'])
+                && 0 < strlen(trim($params['exercise_special_features']))
             ) {
-                $exerciseSpecialFeatures = base64_decode($params['edited_elements']['exercise_special_features']);
+                $exerciseSpecialFeatures = base64_decode($params['exercise_special_features']);
             }
             
-            if (true === isset($params['edited_elements']['exercise_preview_picture'])
-                && 0 < strlen(trim($params['edited_elements']['exercise_preview_picture']))
+            if (true === isset($params['exercise_preview_picture'])
+                && 0 < strlen(trim($params['exercise_preview_picture']))
             ) {
-                $exercisePreviewPicture = base64_decode($params['edited_elements']['exercise_preview_picture']);
+                $exercisePreviewPicture = base64_decode($params['exercise_preview_picture']);
             }
 
-            if (true === isset($params['edited_elements']['exercise_id'])){
-                $exerciseId = $params['edited_elements']['exercise_id'];
+            if (true === isset($params['exercise_id'])){
+                $exerciseId = $params['exercise_id'];
             }
             
             if (0 == strlen(trim($exerciseName))
@@ -663,7 +662,7 @@ class ExercisesController extends AbstractController {
             } else if (0 < strlen(trim($exerciseName))) {
                 $data['exercise_name'] = $exerciseName;
             }
-            
+
             if (0 < strlen(trim($exercisePreviewPicture))) {
                 $data['exercise_preview_picture'] = $exercisePreviewPicture;
             }
@@ -757,7 +756,7 @@ class ExercisesController extends AbstractController {
                     && 0 == count($exerciseXMuscleUpdates)
                     && 0 == count($exerciseXMuscleDeletes)
                 ) {
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde nicht geändert!', 'result' => true, 'id' => $exerciseId));
+                    array_push($messages, array('type' => 'meldung', 'message' => 'Die beanspruchten Muskeln für diese Übung wurden nicht geändert!', 'result' => true, 'id' => $exerciseId));
                 }
                 if (0 < count($exerciseXMuscleInserts)
                     || 0 < count($exerciseXMuscleUpdates)
@@ -797,7 +796,7 @@ class ExercisesController extends AbstractController {
 
     private function processExerciseXDevice($params, $exerciseId)
     {
-        $exerciseXDeviceId = $params['edited_elements']['exercise_device_fk'];
+        $exerciseXDeviceId = $params['exercise_device_fk'];
 
         $exerciseXDeviceDb = new Model_DbTable_ExerciseXDevice();
 
@@ -839,8 +838,8 @@ class ExercisesController extends AbstractController {
      * @param $exerciseId
      */
     private function saveExerciseXMuscle($params, $exerciseId) {
-        if (array_key_exists('exercise_muscle_groups', $params['edited_elements'])
-            && is_array($params['edited_elements']['exercise_muscle_groups'])
+        if (array_key_exists('exercise_muscle_groups', $params)
+            && is_array($params['exercise_muscle_groups'])
         ) {
             $userId = 1;
             $user = Zend_Auth::getInstance()->getIdentity();
@@ -859,7 +858,7 @@ class ExercisesController extends AbstractController {
                 $musclesCollection[$muscle->exercise_x_muscle_muscle_fk] = $muscle;
             }
 
-            foreach ($params['edited_elements']['exercise_muscle_groups'] as $muscleGroup) {
+            foreach ($params['exercise_muscle_groups'] as $muscleGroup) {
                 $muscleGroupId = $muscleGroup['id'];
 
                 if (0 < $muscleGroupId
@@ -918,8 +917,8 @@ class ExercisesController extends AbstractController {
      */
     private function saveExerciseXDeviceOptions($params, $exerciseId)
     {
-        if (array_key_exists('exercise_device_options', $params['edited_elements'])
-            && is_array($params['edited_elements']['exercise_device_options'])
+        if (array_key_exists('exercise_device_options', $params)
+            && is_array($params['exercise_device_options'])
         ) {
             $userId = 1;
             $user = Zend_Auth::getInstance()->getIdentity();
@@ -936,7 +935,7 @@ class ExercisesController extends AbstractController {
                 $deviceOptionsCollection[$deviceOption->exercise_x_device_option_id] = $deviceOption;
             }
 
-            foreach ($params['edited_elements']['exercise_device_options'] as $deviceOption) {
+            foreach ($params['exercise_device_options'] as $deviceOption) {
                 // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
                 if (true === array_key_exists($deviceOption['exerciseXDeviceOptionId'], $deviceOptionsCollection)
 //                    && ! empty($deviceOption['deviceXDeviceOptionId'])
@@ -981,8 +980,8 @@ class ExercisesController extends AbstractController {
      */
     private function saveExerciseXExerciseOptions($params, $exerciseId)
     {
-        if (array_key_exists('exercise_options', $params['edited_elements'])
-            && is_array($params['edited_elements']['exercise_options'])
+        if (array_key_exists('exercise_options', $params)
+            && is_array($params['exercise_options'])
         ) {
             $userId = 1;
             $user = Zend_Auth::getInstance()->getIdentity();
@@ -999,7 +998,7 @@ class ExercisesController extends AbstractController {
                 $exerciseOptionsCollection[$exerciseOption->exercise_x_exercise_option_id] = $exerciseOption;
             }
 
-            foreach ($params['edited_elements']['exercise_options'] as $exerciseOption) {
+            foreach ($params['exercise_options'] as $exerciseOption) {
                 // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
                 if (true === array_key_exists($exerciseOption['exerciseXExerciseOptionId'], $exerciseOptionsCollection)) {
                     // checken ob der aktuelle muskel keine beanspruchung, dann löschen
@@ -1045,7 +1044,7 @@ class ExercisesController extends AbstractController {
     private function processExerciseXExerciseType($params, $exerciseId) {
         $exerciseXExerciseTypeDb = new Model_DbTable_ExerciseXExerciseType();
         $exerciseXExerciseType = $exerciseXExerciseTypeDb->findExerciseTypeForExercise($exerciseId);
-        $exerciseTypeId = $params['edited_elements']['exercise_type_id'];
+        $exerciseTypeId = $params['exercise_type_id'];
 
         if (! empty($exerciseTypeId)
             && empty($exerciseXExerciseType)

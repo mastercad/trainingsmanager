@@ -33,9 +33,9 @@ class ErrorController extends AbstractController {
         
         // Log exception, if logger available
         if ($log = $this->getLog()) {
-            $log->log($this->view->message, $priority, print_r($errors->exception, true));
-            $log->log('Request Parameters', $priority, print_r($errors->request->getParams()));
-            $log->log('Parameters', $priority, print_r($errors));
+            $log->log($this->view->message . ' : ' . print_r($errors->exception, true), $priority, print_r($errors->exception, true));
+            $log->log('Request Parameters : ' . print_r($errors->request->getParams(), true), $priority, print_r($errors->request->getParams(), true));
+            $log->log('Parameters : ' . print_r($errors, true), $priority, print_r($errors, true));
         }
         
         // conditionally display exceptions

@@ -1,83 +1,10 @@
-<div class="col-lg-6" id="left">
+<div class="col-sm-3" id="left">
+    <div id="accordion">
 <?php
     echo $this->deviceGroupsContent;
 ?>
+    </div>
 </div>
-<div class="col-lg-6" id="right">
+<div class="col-sm-9" id="right">
     <?php echo $this->translate('device_groups_default_content');?> :
 </div>
-
-<script type="text/javascript">
-    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
-
-    jQuery('document').ready(function() {
-
-        function initItems() {
-            function singleClick(e) {
-                var id = jQuery(this).data('id');
-                loadShowContent(id);
-            }
-
-            function doubleClick(e) {
-                var id = jQuery(this).data('id');
-                loadEditContent(id);
-            }
-
-            jQuery('span.item').unbind('click').click(function(e) {
-                var that = this;
-                setTimeout(function() {
-                    var dblclick = parseInt(jQuery(that).data('double'), 10);
-                    if (dblclick > 0) {
-                        jQuery(that).data('double', dblclick-1);
-                    } else {
-                        singleClick.call(that, e);
-                    }
-                }, 300);
-            }).dblclick(function(e) {
-                jQuery(this).data('double', 2);
-                doubleClick.call(this, e);
-            });
-        }
-
-        initItems();
-    });
-
-    function showSpinner(element) {
-        var spinner = jQuery('<div class="spinner"></div>');
-        element.html(spinner);
-    }
-
-    function loadShowContent(id) {
-        showSpinner(jQuery('#right'));
-
-        jQuery.post('/'+controller+'/show', {id: id, ajax: true}, function(response) {
-            jQuery('#right').html(response);
-            scrollToAnchor('right');
-        });
-    }
-
-    function loadEditContent(id) {
-        showSpinner(jQuery('#right'));
-
-        jQuery.post('/'+controller+'/edit', {id: id, ajax: true}, function(response) {
-            jQuery('#right').html(response);
-            scrollToAnchor('right');
-            var obj_cad_cms = new jQuery('html').CAD_CMS(jQuery('.editable'), controller);
-            edit_init(true);
-        });
-    }
-
-    function deleteEntry(id) {
-        showSpinner(jQuery('#right'));
-
-        jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
-            jQuery('#right').html(response);
-            jQuery('#'+id).fadeOut();
-        });
-    }
-
-    function scrollToAnchor(aid){
-        var aTag = jQuery("a[name='"+ aid +"']");
-        jQuery('html,body').animate({scrollTop: aTag.offset().top},'slow');
-    }
-</script>

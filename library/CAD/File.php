@@ -405,51 +405,14 @@
 			{
 				$a_files = $this->getUploadedFiles();
 				$a_moved_files = array();
-				$count_moved_files = 0;
-				
-				foreach($a_files['tmp_name'] as $key => $tmp_name)
-				{
-					if(file_exists($tmp_name) &&
-					   is_file($tmp_name) &&
-					   is_readable($tmp_name))
-					{
-						$orig_name	 = $a_files['name'][$key];
-						$type		 = $a_files['type'][$key];
-						
-						$a_fileinformation = pathinfo($orig_name);
-						$extension = strtolower($a_fileinformation['extension']);
-						$file_name = strtolower($a_fileinformation['filename']);
-						
-						if(!count($this->getAllowedExtensions()) ||
-						   in_array($extension, $this->getAllowedExtensions()))
-						{
-							if(move_uploaded_file($tmp_name, $this->getDestPath() . $orig_name))
-							{
-								$count_moved_files = count($a_moved_files);
-								
-								$a_moved_files[$count_moved_files][self::SYS_PFAD] = $this->getDestPath() . $orig_name;
-								$a_moved_files[$count_moved_files][self::HTML_PFAD] = 'http://' . $_SERVER['HTTP_HOST'] . str_replace(getcwd(), '', $this->getDestPath()) . $orig_name;
-								$a_moved_files[$count_moved_files][self::FILE] = $orig_name;
-// 								$a_moved_files[$count_moved_files] = $this->getDestPath() . $orig_name;
-							}
-							else
-							{
-								echo "Fehler! Konnte Datei " . $orig_name . "/" .
-								 	 $tmp_name . " nicht verschieben!<br />";
-							}
-						}
-						else
-						{
-							echo 'Fehler! ' . $orig_name . ' Es können nur Dateien hochgeladen 
-								  werden, die sich in AllowedExtensions befinden!<br />';
-						}
-					}
-					else
-					{
-						echo "Fehler! " . $tmp_name . " ist nicht vorhanden, kein 
-							  File oder nicht lesebar!<br />";
-					}
-				}
+
+                if (is_array($a_files['tmp_name'])) {
+                    foreach($a_files['tmp_name'] as $key => $tmp_name) {
+                        $a_moved_files[] = $this->moveUploadedFile($tmp_name, $a_files, $key);
+                    }
+                } else {
+                    $a_moved_files[] = $this->moveUploadedFile($a_files['tmp_name'], $a_files);
+                }
 				$this->setDestFiles($a_moved_files);
 			}
 			else
@@ -458,6 +421,55 @@
 				return false;
 			}
 		}
+
+        private function moveUploadedFile($tmp_name, $a_files, $key = null) {
+
+            if(file_exists($tmp_name) &&
+                is_file($tmp_name) &&
+                is_readable($tmp_name))
+            {
+                $orig_name	 = 'UNKNOWN';
+
+                if (is_null($key)) {
+                    $orig_name	 = $a_files['name'];
+
+                } else {
+                    $orig_name	 = $a_files['name'][$key];
+
+                }
+                $a_moved_file = [];
+
+                $a_fileinformation = pathinfo($orig_name);
+                $extension = strtolower($a_fileinformation['extension']);
+
+                if(!count($this->getAllowedExtensions()) ||
+                    in_array($extension, $this->getAllowedExtensions()))
+                {
+                    if(move_uploaded_file($tmp_name, $this->getDestPath() . $orig_name)) {
+
+                        $a_moved_file[self::SYS_PFAD] = $this->getDestPath() . $orig_name;
+                        $a_moved_file[self::HTML_PFAD] = 'http://' . $_SERVER['HTTP_HOST'] . str_replace(getcwd(), '', $this->getDestPath()) . $orig_name;
+                        $a_moved_file[self::FILE] = $orig_name;
+
+                        return $a_moved_file;
+                    }
+                    else
+                    {
+                        echo "Fehler! Konnte Datei " . $orig_name . "/" .
+                            $tmp_name . " nicht verschieben!<br />";
+                    }
+                } else {
+                    echo 'Fehler! ' . $orig_name . ' Es können nur Dateien hochgeladen
+								  werden, die sich in AllowedExtensions befinden!<br />';
+                }
+            }
+            else
+            {
+                echo "Fehler! " . $tmp_name . " ist nicht vorhanden, kein
+							  File oder nicht lesebar!<br />";
+            }
+            return false;
+        }
 		
 		/** 
 		 * funktion zum verschieben von source_path nach dest_path

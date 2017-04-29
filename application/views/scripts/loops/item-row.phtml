@@ -1,9 +1,4 @@
-<div class="item <?php echo $this->type;?>"
-    id="<?php echo $this->id;?>">
-    <span class="item"
-       data-toggle="tooltip"
-       data-placement="right"
-       data-id="<?php echo $this->id;?>"
-       title="<?php echo $this->translate('tooltip_click_to_edit');?>"
-    ><?php echo $this->name;?></span>
+<div id="<?php echo $this->id;?>" class="<?php echo $this->type;?> item" data-id="<?php echo $this->id;?>">
+    <?php echo $this->name;?>
 </div>
+<div id="content_<?php echo $this->id;?>" class="item-content"></div>
