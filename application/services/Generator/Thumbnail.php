@@ -66,6 +66,15 @@ class Service_Generator_Thumbnail {
         'gif'
     ];
 
+    /**
+     * generates thumb as image
+     *
+     * @param null $params
+     *
+     * @return $this
+     *
+     * @throws \Exception
+     */
     public function generate($params = null) {
 
         return $this->parseParams($params)
@@ -81,15 +90,16 @@ class Service_Generator_Thumbnail {
             ->generateThumbnail();
     }
 
+    /**
+     * generates thumb as string
+     *
+     * @param null $params
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
     public function generateImageString($params = null) {
-
-//        $path = 'myfolder/myimage.png';
-//        $type = pathinfo($path, PATHINFO_EXTENSION);
-//        $data = file_get_contents($path);
-//        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
-        ob_start();
-
         $this->setDefineHeader(false)
             ->parseParams($params)
             ->prepareSourceImageData()
@@ -100,11 +110,11 @@ class Service_Generator_Thumbnail {
             ->calculateFactorHeight()
             ->calculateFactorWidth()
             ->calculateDestinationImageDimensions()
-            ->calculateDestinationStartPoints()
-            ->generateThumbnail();
+            ->calculateDestinationStartPoints();
 
+        ob_start();
+        $this->generateThumbnail();
         $imageString = ob_get_clean();
-
         ob_end_clean();
 
         $sourceImageType = pathinfo($this->getSourceFilePathName(), PATHINFO_EXTENSION);
@@ -271,7 +281,7 @@ class Service_Generator_Thumbnail {
         $black = imagecolorallocate($this->getDestinationImage(), 0, 0, 0);
         imagecolortransparent($this->getDestinationImage(), $black);
 
-        $img_src = @imagecreatefrompng($this->getSourceFilePathName());
+        $img_src = imagecreatefrompng($this->getSourceFilePathName());
         imagealphablending($img_src, false);
         imagesavealpha($img_src, true);
 
@@ -301,7 +311,7 @@ class Service_Generator_Thumbnail {
             header('Content-Type: image/jpeg');
         }
 
-        $img_src = @imagecreatefromjpeg($this->getSourceFilePathName());
+        $img_src = imagecreatefromjpeg($this->getSourceFilePathName());
 
         imagecopyresampled(
             $this->getDestinationImage(),
@@ -337,7 +347,7 @@ class Service_Generator_Thumbnail {
         $black = imagecolorallocate($this->getDestinationImage(), 0, 0, 0);
         imagecolortransparent($this->getDestinationImage(), $black);
 
-        $img_src = @imagecreatefromgif($this->getSourceFilePathName());
+        $img_src = imagecreatefromgif($this->getSourceFilePathName());
 
         /* eventuelle transparenz des originals beibehalten */
         $transparent_index = imagecolortransparent($img_src);

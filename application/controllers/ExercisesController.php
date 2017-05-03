@@ -67,7 +67,7 @@ class ExercisesController extends AbstractController {
             $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
             $this->view->assign('exerciseOptionsDropDownContent', $this->generateExerciseOptionsDropDownContent());
         } else {
-            echo "Keine rechte zum bearbeiten!";
+            echo "Keine Rechte zum Bearbeiten!";
         }
     }
 
@@ -463,9 +463,6 @@ class ExercisesController extends AbstractController {
     {
         $this->view->assign('previewPictureId', 'exercise_preview_picture');
         $previewPicturePath = $this->generatePreviewPicturePath($exercise);
-        list($width, $height, $type, $sizeString, $bits, $mime) = getimagesize(APPLICATION_PATH.'/../public/'.$previewPicturePath);
-
-
         $this->view->assign('dropZoneBackgroundImage', $previewPicturePath);
 
         return $this->view->render('loops/preview-picture-for-edit.phtml');
