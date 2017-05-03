@@ -59,11 +59,11 @@ class Auth_RegisterController extends AbstractController
                 && $b_email_exists
             ) {
                 $b_all_valid = false;
-                Service_GlobalMessageHandler::appendMessage('Diese E-Mail Adresse ist bereits registriert!', Model_Entity_Message::STATUS_ERROR);
+                Service_GlobalMessageHandler::appendMessage($this->translate('error_email_already_registered'), Model_Entity_Message::STATUS_ERROR);
             // nicht valid
             } else if(!$b_valid_email) {
                 $b_all_valid = false;
-                Service_GlobalMessageHandler::appendMessage('Bitte geben Sie eine gültige E-Mail Adresse ein!', Model_Entity_Message::STATUS_ERROR);
+                Service_GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Model_Entity_Message::STATUS_ERROR);
             }
 
             if(strlen(trim($str_register_vorname)) > 0) {
@@ -76,42 +76,45 @@ class Auth_RegisterController extends AbstractController
 
             if( true === $b_all_valid) {
                 $obj_tools = new CAD_Tools();
-                $a_data['user_password'] = $obj_tools->generatePasswort();
+                $password = $obj_tools->generatePasswort();
+                $a_data['user_password'] = md5($password);
                 $a_data['user_state_fk'] = 1;
                 $a_data['user_right_group_fk'] = 2;
 
                 $result = $obj_db_users->saveUser($a_data);
 
                 if ($result) {
-                    Service_GlobalMessageHandler::appendMessage('Ihr Login wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
+                    Service_GlobalMessageHandler::appendMessage($this->translate('login_successfully_created'), Model_Entity_Message::STATUS_OK);
 
                     $str_user_name = $str_register_email;
-                    if(strlen(trim($str_register_vorname)))
-                    {
+                    if(strlen(trim($str_register_vorname))){
                         $str_user_name = $str_register_vorname . " ";
                     }
-                    if(strlen(trim($str_register_nachname)))
-                    {
+                    if(strlen(trim($str_register_nachname))){
                         $str_user_name .= $str_register_nachname;
                     }
 
-                    $str_message = "Hallo " . $str_user_name . ",<br /><br />";
-                    $str_message .= "Sie haben sich erfolgreich auf " . PROJECT_NAME;
-                    $str_message .= "registriert! Vielen Dank für Ihr Vertrauen!<br /><br />";
-                    $str_message .= '<a href="' . PROJECT_URL . '">Klicken Sie hier, um sich gleich anzumelden.</a><br /><br />';
-                    $str_message .= 'Mit freundlichen Grüßen und einen angenehmen Tag<br />';
-                    $str_message .= 'Ihr Team von ' . PROJECT_NAME . '.';
+                    $replacements = [
+                        'USER_NAME' => $str_user_name,
+                        'PROJECT_NAME' => PROJECT_NAME,
+                        'PROJECT_URL' => PROJECT_URL,
+                        'PASSWORD' => $password
+                    ];
+
+                    $templateReplacer = new CAD_Tool_TemplateHandler();
+                    $mailContent = $this->translate('text_registration_success');
+                    $mailContent = $templateReplacer->replace($replacements, $mailContent);
 
                     $obj_mail = new Zend_Mail("UTF-8");
                     $obj_mail->addTo($str_register_email, $str_user_name);
-                    $obj_mail->setBodyHtml($str_message);
+                    $obj_mail->setBodyHtml($mailContent);
                     $obj_mail->addBcc('andreas.kempe@byte-artist.de');
-                    $obj_mail->setFrom("webservice@byte-artist.de", "Webservice von " . PROJECT_NAME);
-                    $obj_mail->setSubject('Ihre Registrierung auf ' . PROJECT_NAME);
+                    $obj_mail->setFrom("webservice@byte-artist.de", "Webservice " . $this->translate('of') . ' '. PROJECT_NAME);
+                    $obj_mail->setSubject($this->translate('subject_registration_success') . ' ' . PROJECT_NAME);
 
-//                    $result = $obj_mail->send();
+                    $result = $obj_mail->send();
                 } else {
-                    Service_GlobalMessageHandler::appendMessage('Beim Anlegen Ihres Login ist ein Fehler aufgetreten!', Model_Entity_Message::STATUS_ERROR);
+                    Service_GlobalMessageHandler::appendMessage($this->translate('unknown_error_while_create_login'), Model_Entity_Message::STATUS_ERROR);
                 }
             }
         }

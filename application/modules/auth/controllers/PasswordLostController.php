@@ -31,7 +31,7 @@ class Auth_PasswordLostController extends AbstractController
                 $user = $obj_db_users->getUserByEmail($str_email);
                 if ($user instanceof Zend_Db_Table_Row_Abstract) {
                     $obj_tools = new CAD_Tools();
-                    $str_new_passwort = $obj_tools->generatePasswort();
+                    $password = $obj_tools->generatePasswort();
 
                     $str_user_name = $str_email;
                     if ($user->offsetGet('user_first_name')
@@ -45,43 +45,46 @@ class Auth_PasswordLostController extends AbstractController
                         $str_user_name .= $user->offsetGet('user_last_name');
                     }
 
-                    $str_message = "Hallo " . $str_user_name . ",<br /><br />";
-                    $str_message .= "Sie haben ein neues Paswort für den Login-Bereich ";
-                    $str_message .= "auf " . PROJECT_NAME . " angefordert.<br /><br />";
-                    $str_message .= "Es wurde erfolgreich geändert und lautet <strong>" . $str_new_passwort . "</strong><br /><br />";
-                    $str_message .= '<a href="' . PROJECT_URL . '">Klicken Sie hier, um sich gleich anzumelden.</a><br /><br />';
-                    $str_message .= 'Mit freundlichen Grüßen und einen angenehmen Tag<br />';
-                    $str_message .= 'Ihr Team von ' . PROJECT_NAME . '.';
+                    $replacements = [
+                        'USER_NAME' => $str_user_name,
+                        'PROJECT_NAME' => PROJECT_NAME,
+                        'PROJECT_URL' => PROJECT_URL,
+                        'PASSWORD' => $password
+                    ];
+
+                    $templateReplacer = new CAD_Tool_TemplateHandler();
+                    $mailContent = $this->translate('text_password_changed_success');
+                    $mailContent = $templateReplacer->replace($replacements, $mailContent);
 
                     $obj_mail = new Zend_Mail("UTF-8");
                     $obj_mail->addBcc('andreas.kempe@byte-artist.de');
                     $obj_mail->addTo($str_email, $str_user_name);
-                    $obj_mail->setBodyHtml($str_message);
-                    $obj_mail->setFrom("webservice@byte-artist.de", "Webservice von " . PROJECT_NAME);
-                    $obj_mail->setSubject('Ihr neues Passwort für ' . PROJECT_NAME);
+                    $obj_mail->setBodyHtml($mailContent);
+                    $obj_mail->setFrom("webservice@byte-artist.de", "Webservice " . $this->translate('of') . ' '. PROJECT_NAME);
+                    $obj_mail->setSubject($this->translate('subject_password_changed') .' ' . PROJECT_NAME);
 
                     $result = $obj_mail->send();
 
                     if ($result) {
                         $a_data = array();
-                        $a_data['user_password'] = md5($str_new_passwort);
+                        $a_data['user_password'] = md5($password);
 
                         if ($obj_db_users->updateUser($a_data, $user->offsetGet('user_id'))) {
-                            Service_GlobalMessageHandler::appendMessage('Das Passwort wurde erfolgreich geändert und Ihnen per E-Mail zugesandt!', Model_Entity_Message::STATUS_OK);
+                            Service_GlobalMessageHandler::appendMessage($this->translate('password_successfully_changed_and_send'), Model_Entity_Message::STATUS_OK);
                         } else {
-                            Service_GlobalMessageHandler::appendMessage('Es trat ein interner Fehler auf, bitte versuchen Sie es erneut!', Model_Entity_Message::STATUS_ERROR);
+                            Service_GlobalMessageHandler::appendMessage($this->translate('internal_error_please_try_again_later'), Model_Entity_Message::STATUS_ERROR);
                         }
                     } else {
-                        Service_GlobalMessageHandler::appendMessage('Die E-Mail mit dem neuen Passwort konnte leider nicht versendet werden!', Model_Entity_Message::STATUS_ERROR);
+                        Service_GlobalMessageHandler::appendMessage($this->translate('send_mail_with_new_password_failed'), Model_Entity_Message::STATUS_ERROR);
                     }
                 } else {
-                    Service_GlobalMessageHandler::appendMessage('Die angegebene E-Mail Adresse konnte nicht gefunden werden!', Model_Entity_Message::STATUS_ERROR);
+                    Service_GlobalMessageHandler::appendMessage($this->translate('entered_email_does_not_exist'), Model_Entity_Message::STATUS_ERROR);
                 }
             } else {
-                Service_GlobalMessageHandler::appendMessage('Bitte geben Sie eine gültige E-Mail Adresse an!', Model_Entity_Message::STATUS_ERROR);
+                Service_GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage('Bitte geben Sie eine gültige E-Mail Adresse an!', Model_Entity_Message::STATUS_ERROR);
+            Service_GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Model_Entity_Message::STATUS_ERROR);
         }
     }
 }
