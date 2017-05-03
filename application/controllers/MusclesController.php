@@ -13,8 +13,6 @@ class MusclesController extends AbstractController
      * shows overview over all stored muscles in database
      */
     public function indexAction() {
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-
         $musclesDb = new Model_DbTable_Muscles();
         $musclesCollection = $musclesDb->findAllMuscles();
 
@@ -65,10 +63,6 @@ class MusclesController extends AbstractController
     public function editAction()
     {
         $params = $this->getRequest()->getParams();
-
-        if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-        }
 
         if (isset($params['id'])
             && is_numeric($params['id'])
@@ -131,14 +125,11 @@ class MusclesController extends AbstractController
 
         $userId = 1;
 
-        if (TRUE == is_object($user)) {
+        if (true == is_object($user)) {
             $userId = $user->user_id;
-//        } else {
-//            array_push($messageCollection, array('type' => 'fehler', 'message' => 'Sie müssen angemeldet sein, um diese Aktion durchführen zu können!', 'result' => false));
-//            $hasError = true;
         }
 
-        if (isset($params['edited_elements'])) {
+        if (isset($params)) {
             $musclesDb = new Model_DbTable_Muscles();
             
             $muscleName = '';
@@ -146,20 +137,20 @@ class MusclesController extends AbstractController
             $hasError = false;
             $data = array();
             
-            if (isset($params['edited_elements']['muscle_name'])
-               && 0 < strlen(trim($params['edited_elements']['muscle_name']))
+            if (isset($params['muscle_name'])
+               && 0 < strlen(trim($params['muscle_name']))
             ) {
-                $muscleName = base64_decode($params['edited_elements']['muscle_name']);
+                $muscleName = base64_decode($params['muscle_name']);
             }
             
-            if (isset($params['edited_elements']['muscle_id'])) {
-                $muscleId = $params['edited_elements']['muscle_id'];
+            if (isset($params['muscle_id'])) {
+                $muscleId = $params['muscle_id'];
             }
             
             if (0 == strlen(trim($muscleName))
                && !$muscleId
             ) {
-                array_push($messageCollection, array('type' => 'fehler', 'message' => $this->translate('tooltip_muscle_needs_name')));
+                Service_GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_needs_name'), Model_Entity_Message::STATUS_ERROR);
                 $hasError = true;
             } else if(0 < strlen(trim($muscleName))) {
                 $data['muscle_name'] = $muscleName;
@@ -173,7 +164,7 @@ class MusclesController extends AbstractController
             ) {
                 $muscleCurrent = $musclesDb->findMusclesByName($muscleName);
                 if (0 < count($muscleCurrent)) {
-                    array_push($messageCollection, array('type' => 'fehler', 'message' => $this->translate('tooltip_muscle_already_exists'), 'result' => false));
+                    Service_GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_already_exists'), Model_Entity_Message::STATUS_ERROR);
                     $hasError = true;
                 }
             }
@@ -221,7 +212,7 @@ class MusclesController extends AbstractController
                     $data['muscle_update_user_fk'] = $userId;
 
                     $musclesDb->updateMuscle($data, $muscleId);
-                    array_push($messageCollection, array('type' => 'meldung', 'message' => $this->translate('tooltip_muscle_edited_successfully'), 'result' => true, 'id' => $muscleId));
+                    Service_GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_edited_successfully'), Model_Entity_Message::STATUS_OK);
                 }
                 // neu anlegen
                 else if(count($data) > 0)
@@ -240,12 +231,12 @@ class MusclesController extends AbstractController
                     $muscleId = $musclesDb->saveMuscle($data);
 
                     if ($muscleId) {
-                        array_push($messageCollection, array('type' => 'meldung', 'message' => 'Dieser Muskel wurde erfolgreich angelegt!', 'result' => true, 'id' => $muscleId));
-                    } else {
-                        array_push($messageCollection, array('type' => 'fehler', 'message' => 'Beim Speichern des Muskels trat ein unbekannter Fehler auf!', 'result' => false, 'id' => $muscleId));
+                        Service_GlobalMessageHandler::appendMessage('Dieser Muskel wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
+//                    } else {
+//                        Service_GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Model_Entity_Message::STATUS_ERROR);
                     }
                 } else {
-                    array_push($messageCollection, array('type' => 'warnung', 'message' => 'Dieser Muskel wurde nicht geändert!', 'result' => true, 'id' => $muscleId));
+                    Service_GlobalMessageHandler::appendMessage('Dieser Muskel wurde nicht geändert!', Model_Entity_Message::STATUS_ERROR);
                 }
                 
                 if ($muscleId) {
@@ -264,13 +255,12 @@ class MusclesController extends AbstractController
                     }
                     */
                 }
-            } else {
-                array_push($messageCollection, array('type' => 'fehler', 'message' => 'Beim Speichern des Muskels trat ein unbekannter Fehler auf!', 'result' => false, 'id' => $muscleId));
+//            } else {
+//                Service_GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            array_push($messageCollection, array('type' => 'fehler', 'message' => 'Falscher Aufruf von Muskel speichern!', 'result' => false));
+            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Muskel speichern!', Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messageCollection));
     }
     
     public function deleteMuscleAction()

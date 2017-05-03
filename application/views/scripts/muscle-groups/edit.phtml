@@ -41,16 +41,134 @@
 
 <script type="text/javascript">
     jQuery('document').ready(function() {
+
+        jQuery('.muscle-add').unbind('click').bind('click', function () {
+            var url = '/muscles/get-muscle-for-edit/';
+            var obj_params = {'ajax': true};
+
+            jQuery.post(url, obj_params, function (response) {
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    jQuery('.muscles-in-muscle-group').append(Base64.decode(json.htmlContent));
+                    initMusclesEdit();
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
+            });
+        });
+
+        function initMusclesEdit() {
+
+            jQuery('.muscle-delete').unbind('click').bind('click', function () {
+                var parent = jQuery(this).parent();
+
+                if (0 < parent.find('.muscle-name').val().length) {
+                    BootstrapDialog.show({
+                        type: BootstrapDialog.TYPE_WARNING,
+                        message: 'Wollen sie diesen Muskel wirklich löschen?',
+                        buttons: [{
+                            label: 'Ok',
+                            // no title as it is optional
+                            cssClass: 'btn-primary',
+                            action: function(dialogItself){
+                                deleteMuscle(parent);
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: 'Cancel',
+                            action: function(dialogItself){
+                                dialogItself.close();
+                            }
+                        }]
+                    });
+                }
+            });
+
+            jQuery('.muscles-in-muscle-group').find('.muscle-name').each(function () {
+                var post_request = null;
+
+                jQuery(this).unbind('keyup');
+                jQuery(this).on('keyup', function (e) {
+                    var url = '/muscles/get-muscle-proposals/';
+                    var search = Base64.encode(jQuery(this).val());
+                    var self = jQuery(this);
+
+                    jQuery(self).css('background-color', 'red');
+                    jQuery(self).data('muscle-name', '');
+                    jQuery(self).data('muscle-id', '');
+
+                    if (null !== post_request) {
+                        post_request.abort();
+                    }
+
+                    if (0 == search.length) {
+                        jQuery('.muscle-proposals').fadeOut();
+                        return false;
+                    }
+
+                    post_request = jQuery.ajax({
+                        type: "POST",
+                        url: url,
+                        data: "search=" + search + "&ajax=true",
+                        success: function (response) {
+                            var json = JSON.parse(response);
+
+                            if (200 == json.state) {
+                                var offset = jQuery(self).offset();
+                                jQuery('body').append(jQuery('.proposals'));
+                                jQuery('.proposals').html(Base64.decode(json.htmlContent))
+                                    .css('left', offset.left + "px")
+                                    .css('top', offset.top + 40 + "px")
+                                    .find('.proposal')
+                                    .unbind('click')
+                                    .click(function () {
+
+                                        // check ob diese muskelgruppe bereits gesetzt wurde
+                                        var vorhandene_muskeln = jQuery('.muscles-in-muscle-group').find('.muscle');
+                                        for (var i = 0, len = vorhandene_muskeln.length; i < len; i++) {
+                                            if (jQuery(vorhandene_muskeln[i]).find('.muscle-name').data('muscle-id') == jQuery(this).data('proposal-id')) {
+                                                var a_messages = new Array({
+                                                    'type': 'fehler',
+                                                    'message': 'Dieser Muskel ist bereits gesetzt!'
+                                                });
+                                                //var obj_cad_message = new CAD.Message();
+                                                //obj_cad_message.init(a_messages);
+                                                //obj_cad_message.open();
+
+                                                return false;
+                                            }
+                                        }
+                                        jQuery(self).css('background-color', 'green');
+                                        jQuery(self).val(Base64.decode(jQuery(this).data('proposal-text')));
+                                        jQuery(self).data('muscle-name', Base64.decode(jQuery(this).data('proposal-text')));
+                                        jQuery(self).data('muscle-id', jQuery(this).data('proposal-id'));
+                                        jQuery('.proposals').fadeOut();
+                                        return false;
+                                    });
+                                jQuery('.proposals').fadeIn();
+                            } else {
+                                showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                            }
+                        }
+                    });
+                });
+            });
+        }
+
+        function deleteMuscle(element) {
+            jQuery(element).find('.muscle-name').data('muscle-name', '');
+            jQuery(element).find('.muscle-name').data('muscle-id', '');
+            jQuery(element).fadeOut();
+        }
+
         jQuery('#save').unbind('click').click(function () {
-            var hasError = false;
-            var messages = [];
+            var hasErrors = false;
+            var messages = '<ul>';
 
             if (!jQuery.trim(jQuery('#muscle_group_name').val()).length) {
-                hasError = true;
-                messages.push({
-                    'type': 'fehler',
-                    'message': '<?php echo $this->translate('tooltip_muscle_group_needs_name');?>'
-                });
+                hasErrors = true;
+                messages += '<li><?php echo $this->translate('tooltip_muscle_group_needs_name');?></li>';
             }
 
             var muscleList = jQuery('.muscles-in-muscle-group').find('.muscle');
@@ -65,22 +183,30 @@
             }
 
             if (!muscles.length) {
-                hasError = true;
-                messages.push({
-                    'type': 'fehler',
-                    'message': '<?php echo $this->translate('tooltip_muscle_group_needs_muscle');?>'
-                });
+                hasErrors = true;
+                messages += '<li><?php echo $this->translate('tooltip_muscle_group_needs_muscle');?></li>';
             }
 
-            if (!hasError) {
-                jQuery().setEditedElements('muscles_in_muscle_group', muscles);
-                jQuery().setEditedElements('muscle_group_id', jQuery('#muscle_group_id').val());
-                jQuery().setAjax(true);
+            if (!hasErrors) {
+                var data = {
+                    muscles_in_muscle_group: muscles,
+                    muscle_group_id: jQuery('#muscle_group_id').val(),
+                    muscle_group_name: Base64.encode(jQuery('#muscle_group_name').val()),
+                    ajax: true
+                };
 
+                jQuery.post('/'+controller+'/save', data, function(response) {
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
+                });
             } else {
-//                var obj_cad_messages = new CAD.Message();
-//                obj_cad_messages.init(messages);
-//                obj_cad_messages.open();
+                messages += '</ul>';
+                showDialog(messages, BootstrapDialog.TYPE_DANGER);
             }
         });
     });

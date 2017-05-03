@@ -13,8 +13,6 @@ class DevicesController extends AbstractController {
 
     public function indexAction() {
 
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-
         $devicesDb = new Model_DbTable_Devices();
         $devicesCollection = $devicesDb->findAllDevices();
         $devicesContent = 'Es konnten leider keine Geräte gefunden werden!';
@@ -42,7 +40,7 @@ class DevicesController extends AbstractController {
                 $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($id));
                 $this->view->assign('optionLabelText', 'Geräte Optionen:');
                 $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($device));
-                $this->view->assign('previewPictureContent', $this->generatePreviewPicturesForEditContent());
+                $this->view->assign('previewPictureContent', $this->generatePreviewPictureContent($device));
                 $this->view->assign('name', $device->offsetGet('device_name'));
                 $this->view->assign('id', $device->offsetGet('device_id'));
             }
@@ -53,31 +51,42 @@ class DevicesController extends AbstractController {
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
-        if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-        }
-
+        $deviceId = intval($this->getRequest()->getParam('id', null));
         $deviceContent = 'Das Gerät konnte leider nicht gefunden werden!';
+        $device = null;
 
-        if (true === isset($params['id'])
-            && true === is_numeric($params['id'])
-            && 0 < $params['id']
-        ) {
+        if (0 < $deviceId) {
             $deviceContent = '';
             $deviceId = $params['id'];
             $devicesDb = new Model_DbTable_Devices();
             $device = $devicesDb->findDeviceById($deviceId);
 
             if ($device instanceof Zend_Db_Table_Row) {
-                $this->view->assign('preview', $this->generatePreviewPictureContent($device));
                 $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsEditContent($device));
-                $this->view->assign('previewPictureContent', $this->generatePreviewPicturesForEditContent());
                 $this->view->assign($device->toArray());
             }
-
         }
+        $this->view->assign('previewPicturesContent', $this->generatePreviewPicturesForEditContent($deviceId));
+        $this->view->assign('previewPictureContent', $this->generatePreviewPictureForEditContent($device));
         $this->view->assign('deviceContent', $deviceContent);
         $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
+    }
+
+    private function generatePreviewPictureContent($device)
+    {
+        $this->view->assign('previewPictureId', 'device_preview_picture');
+        $this->view->assign('previewPicturePath', $this->generatePreviewPicturePath($device));
+
+        return $this->view->render('globals/preview-picture.phtml');
+    }
+
+    private function generatePreviewPictureForEditContent($device)
+    {
+        $this->view->assign('previewPictureId', 'exercise_preview_picture');
+        $previewPicturePath = $this->generatePreviewPicturePath($device);
+        $this->view->assign('dropZoneBackgroundImage', $previewPicturePath);
+
+        return $this->view->render('loops/preview-picture-for-edit.phtml');
     }
 
     /**
@@ -85,17 +94,24 @@ class DevicesController extends AbstractController {
      *
      * @return string
      */
-    public function generatePreviewPictureContent($device) {
-        $preview = '/images/content/statisch/grafiken/kein_bild.png';
+    private function generatePreviewPicturePath($device) {
 
-        if (0 < strlen(trim($device->offsetGet('device_preview_picture')))
-            && file_exists(getcwd() . $picturePath . $device->offsetGet('device_preview_picture'))
-            && is_file(getcwd() . $picturePath . $device->offsetGet('device_preview_picture'))
-            && is_readable(getcwd() . $picturePath . $device->offsetGet('device_preview_picture'))
-        ) {
-            $preview = $picturePath . $device->offsetGet('device_preview_picture');
+        $previewPicturePath = '/images/content/statisch/grafiken/kein_bild.png';
+        if ($device instanceof Zend_Db_Table_Row) {
+            $picturePath = '/images/content/dynamisch/devices/' . $device->offsetGet('device_id') . '/';
+            $tempPicturePath = '/tmp/devices/';
+
+            if (0 < strlen(trim($device->offsetGet('device_preview_picture')))
+                && file_exists(getcwd() . $picturePath . $device->offsetGet('device_preview_picture'))
+                && is_file(getcwd() . $picturePath . $device->offsetGet('device_preview_picture'))
+                && is_readable(getcwd() . $picturePath . $device->offsetGet('device_preview_picture'))
+            ) {
+                $previewPicturePath = $picturePath . $device->offsetGet('device_preview_picture');
+            }
+            $this->view->assign('picturePath', $picturePath);
+            $this->view->assign('pictureTempPath', $tempPicturePath);
         }
-        return $preview;
+        return $previewPicturePath;
     }
 
     /**
@@ -104,20 +120,6 @@ class DevicesController extends AbstractController {
      * @return string
      */
     public function generateDeviceOptionsContent($device) {
-
-        //        $deviceOptionsDb = new Model_DbTable_DeviceOptions();
-        //        $deviceOptions = $deviceOptionsDb->findDeviceOptionsByDeviceId($device->offsetGet('device_id'));
-        //        $deviceOptionsContent = '';
-
-        /** generates option inputs for device **/
-        //        foreach ($deviceOptions as $deviceOption) {
-        //            if (0 < $deviceOption->offsetGet('device_x_device_option_device_option_fk')) {
-        //                $deviceOptionsContent .= $this->generateDeviceOptionEditContent($deviceOption);
-        //            }
-        //        }
-
-        //        return $deviceOptionsContent;
-
         $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
         $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
         return $deviceOptionsService->generate();
@@ -160,93 +162,52 @@ class DevicesController extends AbstractController {
         return $this->view->render('globals/select.phtml');
     }
 
-    /**
-     * @param Zend_Db_Table_Row $deviceOption
-     *
-     * @return string
-     */
-    private function generateDeviceOptionContent($deviceOption) {
-
-        $optionValue = $deviceOption->offsetGet('device_x_device_option_device_option_value');
-
-        if (preg_match('/\|/', $optionValue)) {
-            $optionValue = explode('|', $optionValue);
-        }
-        $this->view->assign('optionValue', $optionValue);
-        $this->view->assign($deviceOption->toArray());
-        return $this->view->render('loops/device-option.phtml');
-    }
-
-    /**
-     * @param Zend_Db_Table_Row $deviceOption
-     *
-     * @return string
-     */
-    private function generateDeviceOptionEditContent($deviceOption) {
-
-        $this->view->assign('device_option_value', $deviceOption->offsetGet('device_x_device_option_device_option_value'));
-        $this->view->assign($deviceOption->toArray());
-        return $this->view->render('loops/device-option-edit.phtml');
-    }
-
     public function uploadPictureAction() {
-
-        if (true === isset($_FILES['cad-cms-image-file'])) {
+        $this->view->layout()->disableLayout();
+        $result = [];
+        if (true === isset($_FILES['file'])) {
             $temp_bild_pfad = getcwd() . '/tmp/devices/';
 
             $obj_file = new CAD_File();
             $obj_file->setDestPath($temp_bild_pfad);
             $obj_file->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'svg', 'gif'));
-            $obj_file->setUploadedFiles($_FILES['cad-cms-image-file']);
+            $obj_file->setUploadedFiles($_FILES['file']);
             $obj_file->moveUploadedFiles();
 
             $a_files = $obj_file->getDestFiles();
-
             if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
-                $a_bild_pfad = array();
-                $a_bild_pfad['html_pfad'] = $a_files[0][CAD_FILE::HTML_PFAD];
-                $a_bild_pfad['sys_pfad'] = $a_files[0][CAD_FILE::SYS_PFAD];
-                $a_bild_pfad['file'] = $a_files[0][CAD_FILE::FILE];
-
-                $this->view->assign('picturePaths', json_encode($a_bild_pfad));
+                $result['id'] = time();
+                $result['paths'] = $a_files[0];
             }
         }
+        $this->view->assign('json', json_encode($result));
     }
 
-    /**
-     * function um eine übersicht aller bilder des jeweiligen editierten
-     * projektes zurück zu erhalten und es formatiert auszugeben
-     */
-    public function getPicturesForEditAction() {
-        $this->view->assign('previewPictureContent', $this->generatePreviewPicturesForEditContent());
-    }
-
-    private function generatePreviewPicturesForEditContent()
+    private function generatePreviewPicturesForEditContent($deviceId)
     {
-        $req = $this->getRequest();
-        $params = $req->getParams();
-
-        $a_bilder = null;
-        $obj_files = new CAD_File();
-
-        $obj_files->setSourcePath(getcwd() . '/tmp/devices');
-
-        /**
-         * wenn es eine ID des projektes gibt, bilder aus dem projektordner
-         * holen und temp checken
-         */
-        if (true === isset($params['id'])) {
-            $obj_files->addSourcePath(getcwd() . "/images/content/dynamisch/devices/" . $params['id']);
-        }
-        $obj_files->holeBilderAusPfad();
-        $a_bilder = $obj_files->getDestFiles();
         $previewPictureContent = '';
+        $obj_files = new CAD_File();
+        $obj_files->setSourcePath(getcwd() . '/tmp/devices');
+        $obj_files->addSourcePath(getcwd() . "/images/content/dynamisch/devices/" . $deviceId);
+        $obj_files->holeBilderAusPfad();
 
-        foreach ($a_bilder as $bild) {
-            $this->view->assign('picture', $bild);
-            $previewPictureContent .= $this->view->render('loops/preview-picture-for-edit.phtml');
+        $previewPicturesCollection = $obj_files->getDestFiles();
+
+        foreach ($previewPicturesCollection as $previewPicture) {
+            $sysPath = APPLICATION_PATH.'/../public/'.$previewPicture['html_pfad'];
+            $thumbnailService = new Service_Generator_Thumbnail();
+            $thumbnailService->setSourceFilePathName($sysPath);
+            $thumbnailService->setThumbHeight(120);
+            $thumbnailService->setThumbWidth(120);
+            $this->view->assign('templateDisplayType', 'block');
+            $this->view->assign('previewType', 'dz-image-preview');
+            $this->view->assign('sourceData', $thumbnailService->generateImageString());
+            $this->view->assign('sourcePath', $previewPicture['html_pfad']);
+            $this->view->assign('fileName', $previewPicture['file']);
+            $this->view->assign('fileSize', $this->humanFileSize(filesize($sysPath)));
+            $previewPictureContent .= $this->view->render('loops/dropzone-preview-template.phtml');
         }
-
+        $this->view->assign('previewPicturesThumbContent', $previewPictureContent);
         return $previewPictureContent;
     }
 
@@ -307,7 +268,7 @@ class DevicesController extends AbstractController {
             $userId = $obj_user->user_id;
         }
 
-        if (isset($params['edited_elements'])) {
+        if ($this->getRequest()->isPost()) {
             $devicesDb = new Model_DbTable_Devices();
             $deviceXDeviceOptionDb = new Model_DbTable_DeviceXDeviceOption();
             $deviceName = '';
@@ -319,26 +280,26 @@ class DevicesController extends AbstractController {
             $deviceXDeviceOptionDeletes = array();
             $deviceXDeviceOptionInserts = array();
 
-            if (isset($params['edited_elements']['device_name']) &&
-                0 < strlen(trim($params['edited_elements']['device_name']))
+            if (isset($params['device_name']) &&
+                0 < strlen(trim($params['device_name']))
             ) {
-                $deviceName = base64_decode($params['edited_elements']['device_name']);
+                $deviceName = base64_decode($params['device_name']);
             }
 
-            if (isset($params['edited_elements']['device_preview_picture']) &&
-                0 < strlen(trim($params['edited_elements']['device_preview_picture']))
+            if (isset($params['device_preview_picture']) &&
+                0 < strlen(trim($params['device_preview_picture']))
             ) {
-                $devicePreviewPicture = base64_decode($params['edited_elements']['device_preview_picture']);
+                $devicePreviewPicture = basename(base64_decode($params['device_preview_picture']));
             }
 
-            if (isset($params['edited_elements']['device_id'])) {
-                $deviceId = $params['edited_elements']['device_id'];
+            if (isset($params['device_id'])) {
+                $deviceId = $params['device_id'];
             }
 
             if (0 == strlen(trim($deviceName))
                && !$deviceId
             ) {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Dieses Geraet benötigt einen Namen'));
+                Service_GlobalMessageHandler::appendMessage('Dieses Geraet benötigt einen Namen', Model_Entity_Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if(0 < strlen(trim($deviceName))) {
                 $data['device_name'] = $deviceName;
@@ -349,7 +310,7 @@ class DevicesController extends AbstractController {
             }
 
             $cadSeo = new CAD_Seo();
-            if (isset($params['edited_elements']['device_options'])) {
+            if (isset($params['device_options'])) {
                 $deviceXDeviceOptionCurrent = array();
 
                 if (0 < $deviceId) {
@@ -370,7 +331,7 @@ class DevicesController extends AbstractController {
                     }
                 }
 
-                foreach ($params['edited_elements']['device_options'] as $deviceOption) {
+                foreach ($params['device_options'] as $deviceOption) {
 
                     // es wurde eine id übergeben und diese id bestand bereits
                     if (isset($deviceOption['id'])
@@ -407,7 +368,7 @@ class DevicesController extends AbstractController {
                 if (is_array($deviceCurrent)
                     && 0 < count($deviceCurrent)
                 ) {
-                    array_push($messages, array('type' => 'fehler', 'message' => 'Geraet existiert bereits!', 'result' => false));
+                    Service_GlobalMessageHandler::appendMessage('Geraet existiert bereits!', Model_Entity_Message::STATUS_ERROR);
                     $hasErrors = true;
                 }
             }
@@ -453,7 +414,7 @@ class DevicesController extends AbstractController {
                     $data['device_update_user_fk'] = $userId;
 
                     $devicesDb->updateDevice($data, $deviceId);
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Dieses Gerät wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $deviceId));
+                    Service_GlobalMessageHandler::appendMessage('Dieses Gerät wurde erfolgreich bearbeitet!', Model_Entity_Message::STATUS_OK);
                 // neues gerät anlegen
                 } else if (0 < count($data)) {
                     $cadSeo->setLinkName($data['device_name']);
@@ -468,9 +429,9 @@ class DevicesController extends AbstractController {
                     $data['device_create_user_fk'] = $userId;
 
                     $deviceId = $devicesDb->saveDevice($data);
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Dieses Gerät wurde erfolgreich angelegt!', 'result' => true, 'id' => $deviceId));
+                    Service_GlobalMessageHandler::appendMessage('Dieses Gerät wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
                 } else {
-                    array_push($messages, array('type' => 'warnung', 'message' => 'Dieses Gerät wurde nicht geändert!', 'result' => true, 'id' => $deviceId));
+                    Service_GlobalMessageHandler::appendMessage('Dieses Gerät wurde nicht geändert!', Model_Entity_Message::STATUS_ERROR);
                 }
 
                 if ($deviceId) {
@@ -530,21 +491,17 @@ class DevicesController extends AbstractController {
                             || 0 < count($deviceXDeviceOptionUpdates)
                             || 0 < count($deviceXDeviceOptionDeletes)
                         ) {
-                            array_push($messages, array(
-                                'type' => 'meldung', 'message' => 'Die Optionen des Gerätes wurden erfolgreich geändert!',
-                                'result' => true, 'id' => $deviceId
-                            ));
+                            Service_GlobalMessageHandler::appendMessage('Die Optionen des Gerätes wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
                         }
                     }
 
                 }
             } else {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Beim Speichern des Gerätes trat ein unbekannter Fehler auf!', 'result' => false, 'id' => $deviceId));
+                Service_GlobalMessageHandler::appendMessage('Beim Speichern des Gerätes trat ein unbekannter Fehler auf!', Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            array_push($messages, array('type' => 'fehler', 'message' => 'Falscher Aufruf von Gerät speichern!', 'result' => false));
+            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Gerät speichern!', Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messages));
     }
 
     /**
@@ -612,5 +569,11 @@ class DevicesController extends AbstractController {
             $deviceOptionsContent = $this->view->render('loops/device-option-edit.phtml');
         }
         $this->view->assign('deviceOptionsContent', $deviceOptionsContent);
+    }
+
+    private function humanFileSize($bytes, $decimals = 2) {
+        $sz = 'BKMGTP';
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
     }
 }

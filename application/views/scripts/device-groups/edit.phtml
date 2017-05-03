@@ -42,43 +42,150 @@
 </button>
 
 <script type="text/javascript">
-	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+    jQuery(document).ready(function() {
+        jQuery('#save').unbind('click').click(function() {
+            var hasErrors = false;
+            var messages = '<ul>';
+            var saveData = {};
 
-	jQuery('#save').unbind('click').click(function() {
-        var hasErrors = false;
-        var a_messages = [];
-
-        if (!jQuery.trim(jQuery('#device_group_name').val()).length) {
-            hasErrors = true;
-            a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_name');?>'});
-        }
-
-        var devicesCollection = jQuery('.device-group-devices').find('.device');
-        var devices = [];
-
-        for (var i = 0, len = devicesCollection.length; i < len; i++) {
-            var device_id              = jQuery(devicesCollection[i]).find('.device-name').data('device-id');
-
-            if (device_id) {
-                devices.push({'id': device_id});
+            if (!jQuery.trim(jQuery('#device_group_name').val()).length) {
+                hasErrors = true;
+                messages += '<li><?php echo $this->translate('tooltip_device_group_needs_name');?></li>';
             }
+
+            var devicesCollection = jQuery('.device-group-devices').find('.device');
+            var devices = [];
+
+            for (var i = 0, len = devicesCollection.length; i < len; i++) {
+                var device_id = jQuery(devicesCollection[i]).find('.device-name').data('device-id');
+
+                if (device_id) {
+                    devices.push({'id': device_id});
+                }
+            }
+
+            if (!devices.length) {
+                hasErrors = true;
+                messages += '<li><?php echo $this->translate('tooltip_device_group_needs_device');?></li>';
+            }
+
+            if (!hasErrors) {
+                saveData.device_group_devices = devices;
+                saveData.device_group_id = jQuery('#device_group_id').val();
+                saveData.ajax = true;
+
+                jQuery.post('/'+controller+'/save', saveData, function(response) {
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
+                });
+            } else {
+                messages += '</ul>';
+                showDialog(messages, BootstrapDialog.TYPE_DANGER);
+            }
+        });
+
+        function initDeviceGroupsEdit() {
+            jQuery('.device-group-devices').find('.device-name').each(function () {
+                var post_request = null;
+
+                jQuery(this).unbind('keyup');
+                jQuery(this).on('keyup', function (e) {
+                    var url = '/devices/get-device-proposals/';
+                    var search = Base64.encode(jQuery(this).val());
+                    var self = jQuery(this);
+
+                    jQuery(self).css('background-color', 'red');
+                    jQuery(self).data('device-name', '');
+                    jQuery(self).data('device-id', '');
+
+                    if (null !== post_request) {
+                        post_request.abort();
+                    }
+
+                    post_request = jQuery.ajax({
+                        type: "POST",
+                        url: url,
+                        data: "search=" + search + "&ajax=true",
+                        success: function (response) {
+                            var offset = jQuery(self).offset();
+                            jQuery('body').append(jQuery('.proposals'));
+                            jQuery('.proposals')
+                                .html(response)
+                                .css('left', offset.left + "px")
+                                .css('top', offset.top + 40 + "px")
+                                .find('.proposal')
+                                .unbind('click')
+                                .bind('click', function () {
+                                    // check ob diese geraetegruppe bereits gesetzt wurde
+                                    var currentDevices = jQuery('.device-group-devices').find('.device');
+                                    for (var i = 0, len = currentDevices.length; i < len; i++) {
+                                        if (jQuery(currentDevices[i]).find('.device-name').data('device-id') == jQuery(this).data('proposal-id')) {
+                                            showDialog('Dieses Gerät ist bereits gesetzt!', BootstrapDialog.TYPE_DANGER);
+                                            return false;
+                                        }
+                                    }
+                                    jQuery(self).css('background-color', 'green');
+                                    jQuery(self).val(Base64.decode(jQuery(this).data('proposal-text')));
+                                    jQuery(self).data('device-name', Base64.decode(jQuery(this).data('proposal-text')));
+                                    jQuery(self).data('device-id', jQuery(this).data('proposal-id'));
+                                    jQuery('.proposals').fadeOut();
+                                    return false;
+                                }).parent().parent().fadeIn('normal', function() {initDeviceGroupsEdit();});
+                        }
+                    });
+                });
+            });
+
+            jQuery('.device-add').unbind('click').bind('click', function () {
+                jQuery.post('/devices/get-devices-for-edit/', {'ajax': true}, function (response) {
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        jQuery('.device-group-devices').append(Base64.decode(json.htmlContent));
+                        initDeviceGroupsEdit();
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
+                });
+            });
+
+            jQuery('.device-delete').unbind('click').bind('click', function () {
+                var parent = jQuery(this).parent();
+
+                if (0 < parent.find('.device-name').val().length) {
+                    BootstrapDialog.show({
+                        type: BootstrapDialog.TYPE_WARNING,
+                        message: 'Wollen sie dieses Gerät wirklich löschen?',
+                        buttons: [{
+                            label: 'Ok',
+                            // no title as it is optional
+                            cssClass: 'btn-primary',
+                            action: function(dialogItself){
+                                deleteDevice(parent);
+                                dialogItself.close();
+                            }
+                        }, {
+                            label: 'Cancel',
+                            action: function(dialogItself){
+                                dialogItself.close();
+                            }
+                        }]
+                    });
+                }
+            });
         }
 
-        if (!devices.length) {
-            hasErrors = true;
-            a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_device');?>'});
+        function deleteDevice(element) {
+            jQuery(element).find('.device-name').data('device-name', '');
+            jQuery(element).find('.device-name').data('device-id', '');
+            jQuery(element).fadeOut();
         }
 
-        if (!hasErrors) {
-            jQuery().setEditedElements('device_group_devices',   devices);
-            jQuery().setEditedElements('device_group_id',        jQuery('#device_group_id').val());
-            jQuery().setAjax(true);
-
-            CADEditSave();
-        } else {
-//                var obj_cad_messages = new CAD.Message();
-//                obj_cad_messages.init(a_messages);
-//                obj_cad_messages.open();
-        }
+        initDeviceGroupsEdit();
     });
 </script>

@@ -10,8 +10,6 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 class ExercisesController extends AbstractController {
     
     public function indexAction() {
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-
         $exercisesDb = new Model_DbTable_Exercises();
         $exerciseType = $this->getParam('exercise-type', null);
         $device = $this->getParam('device', null);
@@ -359,7 +357,8 @@ class ExercisesController extends AbstractController {
         $deviceOptionCollection = [];
 
         if ($exercise->offsetGet('exercise_x_device_device_fk')) {
-            $deviceXDeviceOptionCollection = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId($exercise->offsetGet('exercise_x_device_device_fk'))->toArray();
+            $deviceXDeviceOptionCollection = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId(
+                $exercise->offsetGet('exercise_x_device_device_fk'))->toArray();
 
             /** unify DeviceOptions */
             foreach ($deviceXDeviceOptionCollection as $deviceOption) {
@@ -657,7 +656,7 @@ class ExercisesController extends AbstractController {
             if (true === isset($params['exercise_preview_picture'])
                 && 0 < strlen(trim($params['exercise_preview_picture']))
             ) {
-                $exercisePreviewPicture = base64_decode($params['exercise_preview_picture']);
+                $exercisePreviewPicture = basename(base64_decode($params['exercise_preview_picture']));
             }
 
             if (true === isset($params['exercise_id'])){
@@ -667,7 +666,7 @@ class ExercisesController extends AbstractController {
             if (0 == strlen(trim($exerciseName))
                 && true === empty($exerciseId)
             ) {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Diese Übung benötigt einen Namen'));
+                Service_GlobalMessageHandler::appendMessage('Diese Übung benötigt einen Namen', Model_Entity_Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if (0 < strlen(trim($exerciseName))) {
                 $data['exercise_name'] = $exerciseName;
@@ -684,7 +683,7 @@ class ExercisesController extends AbstractController {
             if (0 == strlen(trim($exerciseDescription))
                 && true === empty($exerciseId)
             ) {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Diese Übung benötigt eine Beschreibung'));
+                Service_GlobalMessageHandler::appendMessage('Diese Übung benötigt eine Beschreibung', Model_Entity_Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if (0 < strlen(trim($exerciseDescription))) {
                 $data['exercise_description'] = $exerciseDescription;
@@ -697,7 +696,7 @@ class ExercisesController extends AbstractController {
             ) {
                 $currentExercise = $exercisesDb->findExercisesByName($exerciseName);
                 if (! $currentExercise instanceof Zend_Db_Table_Row) {
-                    array_push($messages, array('type' => 'fehler', 'message' => 'Übung "' . $exerciseName . '" existiert bereits!', 'result' => false));
+                    Service_GlobalMessageHandler::appendMessage('Übung "' . $exerciseName . '" existiert bereits!', Model_Entity_Message::STATUS_ERROR);
                     $hasErrors = true;
                 }
             }
@@ -744,7 +743,7 @@ class ExercisesController extends AbstractController {
                     $data['exercise_update_user_fk'] = $userId;
 
                     $exercisesDb->updateExercise($data, $exerciseId);
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $exerciseId));
+                    Service_GlobalMessageHandler::appendMessage('Diese Übung wurde erfolgreich bearbeitet!', Model_Entity_Message::STATUS_OK);
                 // neu anlegen
                 } else if (is_array($data)
                     && 0 < count($data)
@@ -761,18 +760,18 @@ class ExercisesController extends AbstractController {
                     $data['exercise_create_user_fk'] = $userId;
 
                     $exerciseId = $exercisesDb->saveExercise($data);
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Diese Übung wurde erfolgreich angelegt!', 'result' => true, 'id' => $exerciseId));
+                    Service_GlobalMessageHandler::appendMessage('Diese Übung wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
                 } else if (0 == count($exerciseXMuscleInserts)
                     && 0 == count($exerciseXMuscleUpdates)
                     && 0 == count($exerciseXMuscleDeletes)
                 ) {
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Die beanspruchten Muskeln für diese Übung wurden nicht geändert!', 'result' => true, 'id' => $exerciseId));
+                    Service_GlobalMessageHandler::appendMessage('Die beanspruchten Muskeln für diese Übung wurden nicht geändert!', Model_Entity_Message::STATUS_OK);
                 }
                 if (0 < count($exerciseXMuscleInserts)
                     || 0 < count($exerciseXMuscleUpdates)
                     || 0 < count($exerciseXMuscleDeletes)
                 ) {
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Die Muskeln der Übung wurden erfolgreich geändert!', 'result' => true, 'id' => $exerciseId));
+                    Service_GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
                 }
                 
                 if ($exerciseId) {
@@ -796,12 +795,11 @@ class ExercisesController extends AbstractController {
                     $this->processExerciseXExerciseType($params, $exerciseId);
                 }
             } else {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Es gabe einen Fehler beim speichern der Übung!', 'result' => false));
+                Service_GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
             }
         } else {
-            array_push($messages, array('type' => 'fehler', 'message' => 'Falscher Aufruf von Übung speichern!', 'result' => false));
+            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Übung speichern!', Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messages));
     }
 
     private function processExerciseXDevice($params, $exerciseId)

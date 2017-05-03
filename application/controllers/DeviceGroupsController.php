@@ -12,8 +12,6 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 class DeviceGroupsController extends AbstractController
 {
     public function indexAction() {
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-
         $deviceGroupsDb = new Model_DbTable_DeviceGroups();
 
         $deviceGroupsCollection = $deviceGroupsDb->findAllDeviceGroups()->toArray();
@@ -64,8 +62,6 @@ class DeviceGroupsController extends AbstractController
 
     public function editAction() {
         $params = $this->getRequest()->getParams();
-
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
 
         if(isset($params['id']) &&
             is_numeric($params['id']) &&
@@ -158,7 +154,7 @@ class DeviceGroupsController extends AbstractController
             $userId = $user->user_id;
         }
 
-        if (isset($params['edited_elements'])) {
+        if (isset($params)) {
             $deviceGroupsDb = new Model_DbTable_DeviceGroups();
             $deviceXDeviceGroupDb = new Model_DbTable_DeviceXDeviceGroup();
 
@@ -168,17 +164,16 @@ class DeviceGroupsController extends AbstractController
             $deviceGroupDevicesInserts = array();
             $countDevicesInDeviceGroup = 0;
             $hasErrors = false;
-            $messages = array();
             $data = array();
 
-            if (isset($params['edited_elements']['device_group_name'])
-                && 0 < strlen(trim($params['edited_elements']['device_group_name']))
+            if (isset($params['device_group_name'])
+                && 0 < strlen(trim($params['device_group_name']))
             ) {
-                $deviceGroupName = base64_decode($params['edited_elements']['device_group_name']);
+                $deviceGroupName = base64_decode($params['device_group_name']);
             }
 
-            if (isset($params['edited_elements']['device_group_id'])) {
-                $deviceGroupId = $params['edited_elements']['device_group_id'];
+            if (isset($params['device_group_id'])) {
+                $deviceGroupId = $params['device_group_id'];
             }
 
             /**
@@ -186,7 +181,7 @@ class DeviceGroupsController extends AbstractController
              * übergebenen devices für die geraetegruppe zu validieren und
              * zu checken, ob wenigstens eine am ende erhalten bleibt
              */
-            if (isset($params['edited_elements']['device_group_devices'])) {
+            if (isset($params['device_group_devices'])) {
                 $deviceGroupDevicesCurrent = array();
                 $devicesInDeviceGroupInDb = $deviceXDeviceGroupDb->findDevicesByDeviceGroupId($deviceGroupId);
                 $countDevicesInDeviceGroup = count($devicesInDeviceGroupInDb);
@@ -204,7 +199,7 @@ class DeviceGroupsController extends AbstractController
                     $deviceGroupDevicesDeletes = $deviceGroupDevicesCurrent;
                 }
 
-                foreach ($params['edited_elements']['device_group_devices'] as $device) {
+                foreach ($params['device_group_devices'] as $device) {
                     // es wurde eine id übergeben und diese id bestand bereits
                     if(isset($device['id'])
                         && 0 < $device['id']
@@ -227,7 +222,7 @@ class DeviceGroupsController extends AbstractController
             if (0 == strlen(trim($deviceGroupName))
                 && !$deviceGroupId
             ) {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Diese Geraetegruppe benötigt einen Namen'));
+                Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe benötigt einen Namen', Model_Entity_Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if (0 < strlen(trim($deviceGroupName))
                 && !$deviceGroupId
@@ -236,7 +231,7 @@ class DeviceGroupsController extends AbstractController
             }
 
             if ($countDevicesInDeviceGroup <= 0) {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Diese Geraetegruppe benötigt mindestens ein Geraet'));
+                Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe benötigt mindestens ein Geraet', Model_Entity_Message::STATUS_ERROR);
                 $hasErrors = true;
             }
 
@@ -249,7 +244,7 @@ class DeviceGroupsController extends AbstractController
                 if (is_array($deviceGroupDevicesCurrent)
                     && 0 < count($deviceGroupDevicesCurrent)
                 ) {
-                    array_push($messages, array('type' => 'fehler', 'message' => 'Geraetegruppe "' . $deviceGroupName . '" existiert bereits!', 'result' => false));
+                    Service_GlobalMessageHandler::appendMessage('Geraetegruppe "' . $deviceGroupName . '" existiert bereits!', Model_Entity_Message::STATUS_ERROR);
                     $hasErrors = true;
                 }
             }
@@ -297,7 +292,7 @@ class DeviceGroupsController extends AbstractController
                     $data['device_group_update_user_fk'] = $userId;
 
                     $deviceGroupsDb->updateDeviceGroup($data, $deviceGroupId);
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde erfolgreich bearbeitet!', 'result' => true, 'id' => $deviceGroupId));
+                    Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde erfolgreich bearbeitet!', Model_Entity_Message::STATUS_OK);
                 // neu anlegen
                 } else if (is_array($data)
                     && 0 < count($data)
@@ -314,14 +309,14 @@ class DeviceGroupsController extends AbstractController
                     $data['device_group_create_user_fk'] = $userId;
 
                     $deviceGroupId = $deviceGroupsDb->saveDeviceGroup($data);
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde erfolgreich angelegt!', 'result' => true, 'id' => $deviceGroupId));
+                    Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
                 }
 
                 if (0 == count($deviceGroupDevicesInserts)
                     && 0 == count($deviceGroupDevicesDeletes)
                     && 0 < $deviceGroupId
                 ) {
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Diese Geraetegruppe wurde nicht geändert!', 'result' => true, 'id' => $deviceGroupId));
+                    Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde nicht geändert!', Model_Entity_Message::STATUS_ERROR);
                 }
 
                 if ($deviceGroupId > 0 &&
@@ -329,26 +324,10 @@ class DeviceGroupsController extends AbstractController
                         count($deviceGroupDevicesInserts) > 0 ||
                         count($deviceGroupDevicesDeletes) > 0)
                 ) {
-                    array_push($messages, array('type' => 'meldung', 'message' => 'Die Geraete der Geraetegruppen wurden erfolgreich geändert!', 'result' => true, 'id' => $deviceGroupId));
+                    Service_GlobalMessageHandler::appendMessage('Die Geraete der Geraetegruppen wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
                 }
 
                 if ($deviceGroupId) {
-                    /* bilder verschieben */
-                    /*
-                    $obj_files = new CAD_File();
-//                    $str_src_path = getcwd() . '/tmp/device-groups/';
-//                    $str_dest_path = getcwd() . '/images/content/dynamisch/device-groups/' . $i_geraetegruppe_id . '/';
-
-                    if($obj_files->checkAndCreateDir($str_dest_path))
-                    {
-                        $obj_files->setSourcePath($str_src_path);
-                        $obj_files->setDestPath($str_dest_path);
-                        $obj_files->setAllowedExtensions(array('jpg', 'png', 'gif', 'svg'));
-                        $obj_files->verschiebeFiles();
-                    }
-                    */
-                    /* device-groups bearbeiten */
-
                     foreach ($deviceGroupDevicesInserts as $device) {
                         $data = array();
                         $data['device_x_device_group_device_fk'] = $device['device_id'];
@@ -364,11 +343,10 @@ class DeviceGroupsController extends AbstractController
                     }
                 }
             } else {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Es gabe einen Fehler bei Geraetegruppe speichern!', 'result' => false));
+                Service_GlobalMessageHandler::appendMessage('Es gabe einen Fehler bei Geraetegruppe speichern!', Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            array_push($messages, array('type' => 'fehler', 'message' => 'Falscher Aufruf von Geraetegruppe speichern!', 'result' => false));
+            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Geraetegruppe speichern!', Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messages));
     }
 }

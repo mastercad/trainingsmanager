@@ -21,8 +21,6 @@ abstract class OptionsController extends AbstractController {
     protected abstract function useOptionsStorage();
 
     public function indexAction() {
-
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
         $optionsCollection = $this->useOptionsStorage()->findAllOptions();
         $optionsContent = 'Es konnten leider keine optionen gefunden werden!';
 
@@ -96,7 +94,7 @@ abstract class OptionsController extends AbstractController {
             $messages = [];
 
             if (!$optionName) {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Es muss ein name angegeben werden', 'result' => false, 'id' => $optionId));
+                Service_GlobalMessageHandler::appendMessage('Es muss ein name angegeben werden', Model_Entity_Message::STATUS_ERROR);
                 $this->view->assign('json_string', json_encode($messages));
                 return false;
             }
@@ -113,11 +111,10 @@ abstract class OptionsController extends AbstractController {
             } else {
                 $optionId = $this->useOptionsStorage()->insertOption($data);
             }
-            array_push($messages, array('type' => 'meldung', 'message' => 'Übungsoption erfolgreich gespeichert', 'result' => true, 'id' => $optionId));
+            Service_GlobalMessageHandler::appendMessage('Übungsoption erfolgreich gespeichert', Model_Entity_Message::STATUS_OK);
         } else {
-            array_push($messages, array('type' => 'fehler', 'message' => 'Falscher Aufruf dieser Seite', 'result' => false));
+            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf dieser Seite', Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messages));
     }
 
     public function deleteAction() {

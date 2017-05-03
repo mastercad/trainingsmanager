@@ -22,26 +22,31 @@
 <script type="text/javascript">
     jQuery('#save').unbind('click').click(function() {
         var hasErrors = false;
-        var messages = [];
+        var messages = '<ul>';
 
         if (!jQuery.trim(jQuery('#muscle_name').val()).length) {
             hasErrors = true;
-            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_muscle_needs_name');?>'});
+            messages += '<li><?php echo $this->translate('tooltip_muscle_needs_name');?></li>';
         }
 
         if (!hasErrors) {
             var data = {
                 muscle_id: jQuery('#muscle_id').val(),
+                muscle_name: Base64.encode(jQuery('#muscle_name').val()),
                 ajax: true
             };
-            jQuery.post('/'+controller+'/save', data, function() {
+            jQuery.post('/'+controller+'/save', data, function(response) {
+                var json = JSON.parse(response);
 
+                if (200 == json.state) {
+                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_CRITICAL);
+                }
             });
         } else {
-            alert("HABE FEHLER!");
-//            var obj_cad_messages = new CAD.Message();
-//            obj_cad_messages.init(a_messages);
-//            obj_cad_messages.open();
+            messages += '</ul>';
+            showDialog(messages, BootstrapDialog.TYPE_CRITICAL);
         }
     });
 </script>

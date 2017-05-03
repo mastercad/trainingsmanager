@@ -119,6 +119,7 @@
 <!--         style="margin-top: 5px;">-->
 <!--    </div>-->
 
+    <input type="hidden" name="exercise-preview-picture" id="exercise_preview_picture" value="" />
     <input type="hidden" class="id" name="exercise_id" id="exercise_id" value="<?php echo $this->exercise_id;?>" />
 </div>
 
@@ -132,7 +133,7 @@
      style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
             background-color: #FFFFFF; opacity: 0.9; box-shadow: 5px 5px 5px #111111;" ></div>
 
-<button class="save button btn btn-primary btn-block">
+<button id="save" class="save button btn btn-primary btn-block">
     <?php echo $this->translate('label_save');?>
 </button>
 
@@ -196,12 +197,12 @@
             var i = 0;
             var saveData = {};
 
-            if (!trim(jQuery('#exercise_name').val()).length) {
+            if (!jQuery.trim(jQuery('#exercise_name').val()).length) {
                 hasErrors = true;
                 messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_exercise_needs_name');?>'});
             }
 
-            if (!trim(jQuery('#exercise_description').html()).length) {
+            if (!jQuery.trim(jQuery('#exercise_description').html()).length) {
                 hasErrors = true;
                 messages.push({'type': 'fehler', 'message': 'Die Beschreibung der Übung fehlt!'});
             }
@@ -285,7 +286,7 @@
                 saveData.exercise_description = Base64.encode(jQuery('#exercise_description').val());
                 saveData.exercise_special_features = Base64.encode(jQuery('#exercise_special_features').val());
                 saveData.exercise_muscle_groups = muscleGroups;
-                saveData.exercise_preview_picture = jQuery('#exercise_preview_picture').data('file');
+                saveData.exercise_preview_picture = Base64.encode(jQuery('#exercise_preview_picture').val());
                 saveData.exercise_type_id = typeSelect;
                 saveData.exercise_options = exerciseOptions;
                 saveData.exercise_device_options = deviceOptions;
@@ -294,28 +295,18 @@
                 saveData.ajax = true;
 
                 jQuery.post('/'+controller+'/save', saveData, function(response) {
-//                var obj_cad_messages = new CAD.Message();
-//                obj_cad_messages.init(response);
-//                obj_cad_messages.open();
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
                 });
-//            CADEditSave();
             } else {
-//            var obj_cad_messages = new CAD.Message();
-//            obj_cad_messages.init(messages);
-//            obj_cad_messages.open();
+                showDialog(messages, BootstrapDialog.TYPE_DANGER);
             }
         }
-
-//        jQuery('.exercise-type-select .option-add').unbind('click').bind('click', function() {
-//            var selectedOption = jQuery(this).data('value');
-//            var selectedOptionName = jQuery(this).html();
-//            var caretContent = '<span class="caret"></span>';
-//
-//            jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
-//            jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
-//
-//            return false;
-//        });
 
         jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
             var selectedOption = jQuery(this).data('value');
@@ -338,16 +329,9 @@
                 var option_id = jQuery(currentOptionsList[i]).data('device-option-id');
 
                 if (option_id == selectedOption) {
-//                    var obj_cad_messages = new CAD.Message();
-//                    obj_cad_messages.init([
-//                        {
-//                            'type': 'fehler',
-//                            'message': '<?php //echo $this->translate('tooltip_selected_option_already_set');?>//',
-//                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
-//                        }
-//                    ]);
-//                    obj_cad_messages.open();
-
+                    showDialog('<?php echo $this->translate('tooltip_selected_option_already_set');?>', BootstrapDialog.TYPE_DANGER);
+                    console.log(jQuery(currentOptionsList[i]));
+                    jQuery(currentOptionsList[i]).effect('highlight', {}, 5000);
                     return false;
                 }
             }
@@ -355,8 +339,14 @@
             jQuery(this).parent().parent().parent().find('.dropdown-toggle').dropdown('toggle');
 
             jQuery.post('/devices/get-device-option-edit', {ajax: true, device_option_id: selectedOption}, function(response) {
-                jQuery('.device-options').append(response);
-                initOptions();
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    jQuery('.device-options').append(Base64.decode(json.htmlContent));
+                    initOptions();
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
             });
             return false;
         });
@@ -371,16 +361,8 @@
                 var option_id = jQuery(currentOptionsList[i]).data('exercise-option-id');
 
                 if (option_id == selectedOption) {
-//                    var obj_cad_messages = new CAD.Message();
-//                    obj_cad_messages.init([
-//                        {
-//                            'type': 'fehler',
-//                            'message': '<?php //echo $this->translate('tooltip_selected_option_already_set');?>//',
-//                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
-//                        }
-//                    ]);
-//                    obj_cad_messages.open();
-
+                    showDialog('<?php echo $this->translate('tooltip_selected_option_already_set');?>', BootstrapDialog.TYPE_DANGER);
+                    jQuery(currentOptionsList[i]).effect('highlight', {}, 5000);
                     return false;
                 }
             }
@@ -392,8 +374,14 @@
                 exercise_option_id: selectedOption,
                 exercise_id: jQuery('#exercise_id').val()
             }, function (response) {
-                jQuery('.exercise-options').append(response);
-                initOptions();
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    jQuery('.exercise-options').append(Base64.decode(json.htmlContent));
+                    initOptions();
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
             });
             return false;
         });
@@ -433,14 +421,7 @@
                                 if (jQuery(vorhandene_muskelgruppen[i]).find('.muscle-group-name').data('muscle-group-id') ==
                                     jQuery(this).data('proposal-id')
                                 ) {
-                                    var a_messages = new Array({
-                                        'type': 'fehler',
-                                        'message': 'Diese Muskelgruppe ist bereits gesetzt!'
-                                    });
-//                                    var obj_cad_message = new CAD.Message();
-//                                    obj_cad_message.init(a_messages);
-//                                    obj_cad_message.open();
-
+                                    showDialog('Diese Muskelgruppe ist bereits gesetzt!', BootstrapDialog.TYPE_DANGER);
                                     return false;
                                 }
                             }
@@ -461,9 +442,15 @@
                 url: '/exercises/get-muscle-group-for-exercise-edit/',
                 data: "muscle_group_id=" + muscleGroupId + "&exercise_id=" + exerciseId + "&ajax=true",
                 success: function (response) {
-                    jQuery('.exercise-muscle-groups').append(response);
-                    initMuscleRating();
-                    initMuscleGroups();
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        jQuery('.exercise-muscle-groups').append(Base64.decode(json.htmlContent));
+                        initMuscleRating();
+                        initMuscleGroups();
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
                 }
             });
         }
@@ -604,16 +591,15 @@
                             type: 'POST',
                             success: function (data) {
                                 if (data.NotificationType === "Error") {
-                                    //                                toastr.error(data.Message);
+                                    showDialog(data.Message, BootstrapDialog.TYPE_DANGER);
                                 } else {
                                     jQuery(that).parent().fadeOut(500, function () {
                                         jQuery(that).remove();
                                     });
-                                    //                                toastr.success(data.Message);
                                 }
                             },
                             error: function (data) {
-                                //                            toastr.error(data.Message);
+                                showDialog(data, BootstrapDialog.TYPE_DANGER);
                             }
                         })
                     });
@@ -657,6 +643,7 @@
             if (newCreated) {
                 jQuery('#upload').append(bgImg);
             }
+            jQuery('#exercise_preview_picture').val(url);
             bgImg.attr('src', url);
         }
 
@@ -669,5 +656,9 @@
         if (!dropzone) {
             initDropZone();
         }
+
+        jQuery('#save').unbind('click').click(function() {
+            save();
+        });
     });
 </script>
