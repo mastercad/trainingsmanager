@@ -1,2 +1,60 @@
-<?php
-	echo $this->json_string;
+<div id="pwdModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h1 class="text-center">Password forgotten?</h1>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="text-center">
+
+                                <p>If you have forgotten your password you can reset it here.</p>
+                                <div class="panel-body">
+                                    <fieldset>
+                                        <div class="form-group">
+                                            <input class="form-control input-lg" placeholder="E-mail Address" id="email" name="email" type="email">
+                                        </div>
+                                        <input id="send_new_password" class="btn btn-lg btn-primary btn-block" value="Send My Password" type="submit">
+                                    </fieldset>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="col-md-12">
+                    <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('#send_new_password').unbind('click').click(function() {
+           jQuery.post('/auth/password-lost/reset-password', {
+               ajax: true,
+               password_lost_email: Base64.encode(jQuery('#email').val())
+           }, function(response) {
+               var json = JSON.parse(response);
+
+               if (200 == json.state) {
+                   window.modal.modal('toggle');
+//                   window.modal = jQuery(Base64.decode(json.htmlContent));
+//                   window.modal.modal();
+//                   window.modal.on('hidden.bs.modal', function() {
+//                       jQuery(this).remove();
+//                   });
+                   showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+               } else {
+                   showDialog(json.message, BootstrapDialog.TYPE_WARNING);
+               }
+           });
+        });
+    });
+</script>

@@ -39,38 +39,42 @@ var Base64 = {
 
     // public method for decoding
     decode : function (input) {
-        var output = "";
-        var chr1, chr2, chr3;
-        var enc1, enc2, enc3, enc4;
-        var i = 0;
 
-        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+        if (input != undefined) {
+            var output = "";
+            var chr1, chr2, chr3;
+            var enc1, enc2, enc3, enc4;
+            var i = 0;
 
-        while (i < input.length) {
+            input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
-            enc1 = this._keyStr.indexOf(input.charAt(i++));
-            enc2 = this._keyStr.indexOf(input.charAt(i++));
-            enc3 = this._keyStr.indexOf(input.charAt(i++));
-            enc4 = this._keyStr.indexOf(input.charAt(i++));
+            while (i < input.length) {
 
-            chr1 = (enc1 << 2) | (enc2 >> 4);
-            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-            chr3 = ((enc3 & 3) << 6) | enc4;
+                enc1 = this._keyStr.indexOf(input.charAt(i++));
+                enc2 = this._keyStr.indexOf(input.charAt(i++));
+                enc3 = this._keyStr.indexOf(input.charAt(i++));
+                enc4 = this._keyStr.indexOf(input.charAt(i++));
 
-            output = output + String.fromCharCode(chr1);
+                chr1 = (enc1 << 2) | (enc2 >> 4);
+                chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+                chr3 = ((enc3 & 3) << 6) | enc4;
 
-            if (enc3 != 64) {
-                output = output + String.fromCharCode(chr2);
+                output = output + String.fromCharCode(chr1);
+
+                if (enc3 != 64) {
+                    output = output + String.fromCharCode(chr2);
+                }
+                if (enc4 != 64) {
+                    output = output + String.fromCharCode(chr3);
+                }
+
             }
-            if (enc4 != 64) {
-                output = output + String.fromCharCode(chr3);
-            }
 
+            output = Base64._utf8_decode(output);
+
+            return output;
         }
-
-        output = Base64._utf8_decode(output);
-
-        return output;
+        return input;
 
     },
 

@@ -625,7 +625,7 @@
         }
 
         function refreshPreviewPicture(element) {
-            console.log("REFRESH!");
+//            console.log("REFRESH!");
             jQuery('#upload').css('background-image', 'url('+jQuery(element).data('source-path')+')');
             jQuery('.dz-details').data('current-picture', false).removeClass('active-preview-picture');
             jQuery(element).data('current-picture', true).addClass('active-preview-picture');
@@ -652,7 +652,7 @@
                 var newHeight = height * ratio;
                 jQuery('#upload').css('background-size', parseInt(dropZoneWidth) + 'px ' + parseInt(newHeight) + 'px')
                     .height(newHeight);
-                jQuery('#dropzone_previews').height(newHeight - 108);
+                jQuery('#dropzone_previews').height(newHeight);
             });
             if (newCreated) {
                 jQuery('#upload').append(bgImg);

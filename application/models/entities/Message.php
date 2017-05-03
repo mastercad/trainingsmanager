@@ -23,7 +23,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return string
      */
     public function getState() {
-//        return $this->status;
         return $this->get('state');
     }
 
@@ -33,7 +32,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return $this;
      */
     public function setState($state) {
-//        $this->status = $status;
         return $this->set('state', $state);
     }
 
@@ -41,7 +39,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return string
      */
     public function getMessage() {
-//        return $this->message;
         return $this->get('message');
     }
 
@@ -51,7 +48,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return $this
      */
     public function setMessage($message) {
-//        $this->message = $message;
         return $this->set('message', $message);
     }
 
@@ -59,7 +55,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return string|null
      */
     public function getJsCallBack() {
-//        return $this->jsCallBack;
         return $this->get('jsCallBack');
     }
 
@@ -69,7 +64,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return $this
      */
     public function setJsCallBack($jsCallBack) {
-//        $this->jsCallBack = $jsCallBack;
         return $this->get('jsCallBack');
     }
 
@@ -77,7 +71,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return string
      */
     public function getHtmlContent() {
-//        return $this->htmlContent;
         return $this->get('htmlContent');
     }
 
@@ -87,7 +80,6 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return $this
      */
     public function setHtmlContent($htmlContent) {
-//        $this->htmlContent = $htmlContent;
         return $this->set('htmlContent', $htmlContent);
     }
 

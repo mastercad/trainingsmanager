@@ -6,8 +6,8 @@
  * Time: 23:46
  */
 
-define("PROJECT_NAME", "rezepte.byte-artist.de");
-define("PROJECT_URL", "http://rezepte.byte-artist.de");
+define("PROJECT_NAME", "trainingsmanager.byte-artist.de");
+define("PROJECT_URL", "http://trainingsmanager.byte-artist.de");
 
 class Auth_Bootstrap extends Zend_Application_Module_Bootstrap
 {

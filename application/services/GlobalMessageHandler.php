@@ -47,4 +47,13 @@ class Service_GlobalMessageHandler {
         static::init();
         static::$messageEntity = $messageEntity;
     }
+
+    public static function appendMessage($message, $state = Model_Entity_Message::STATUS_OK) {
+        $messageEntity = static::getMessageEntity();
+        $messageEntity->setMessage($messageEntity->getMessage().$message);
+
+        if ($state > $messageEntity->getState()) {
+            $messageEntity->setState($state);
+        }
+    }
 }

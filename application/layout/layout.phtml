@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/jquery-ui.min.css">
         <link rel="stylesheet" href="/css/login-form.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/css/bootstrap-dialog.min.css">
 
         <?php echo $this->headLink();?>
 
@@ -177,7 +178,7 @@
                                             </label >
                                             <input type="password" class="form-control" id="user_login_password" placeholder="<?php echo $this->translate('label_password');?>" required >
                                             <div class="help-block text-right" >
-                                                <a href = "" >
+                                                <a id="password_forgotten" href="/auth/password-lost/" >
                                                     <?php echo $this->translate('label_forgotten_password');?>
                                                 </a ></div >
                                         </div >
@@ -193,7 +194,7 @@
                                 </div >
                                 <div class="col-md-12 bottom text-center">
                                    <?php echo $this->translate('label_new_here');?>
-                                   <a href="#">
+                                   <a id="register" href="/auth/register">
                                        <b>
                                            <?php echo $this->translate('label_join_us');?>
                                        </b>
@@ -268,8 +269,13 @@
 
     <script src="/js/tether.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
+
     <script type="text/javascript">
-        controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+
+        window.modal = null;
+
+        var controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
 
         var isMobile = true;
         var caller = null;
@@ -279,7 +285,6 @@
         var accordionAjaxRequest = null;
 
         jQuery(document).ready(function() {
-            var previousSelected = null;
 
             function checkIsMobile() {
                 isMobile = ('none' !== jQuery('#mobile').css('display'));
@@ -312,15 +317,15 @@
                 var accordionContentClasses = 'ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content';
                 var accordionActiveHeaderClasses = 'ui-accordion-header-active ui-state-active';
                 var accordionActiveContainerClasses = 'ui-accordion-content-active';
-                console.log('considerMobile');
+//                console.log('considerMobile');
                 if (true === isMobile) {
-                    console.log('isMobile!');
+//                    console.log('isMobile!');
                     jQuery('#accordion').addClass('ui-accordion ui-widget ui-helper-reset');
                     jQuery('#accordion .item').addClass(accordionHeaderClasses);
                     jQuery('#accordion .item-content').addClass(accordionContentClasses);
 
                     if (null !== caller) {
-                        console.log("Caller exist!");
+//                        console.log("Caller exist!");
                         var rightPanel = jQuery('#right');
                         jQuery(caller).addClass(accordionActiveHeaderClasses);
                         jQuery(caller).next()
@@ -333,7 +338,7 @@
                         scrollToAnchor(jQuery(caller).prop('id'));
                     }
                 } else {
-                    console.log("isNotMobile!");
+//                    console.log("isNotMobile!");
                     jQuery('#accordion').removeClass('ui-accordion ui-widget ui-helper-reset');
                     jQuery('#accordion .item').removeClass(accordionHeaderClasses).removeClass(accordionActiveHeaderClasses);
                     jQuery('#accordion .item-content').removeClass(accordionContentClasses).removeClass(accordionActiveContainerClasses);
@@ -351,30 +356,33 @@
             });
 
             function singleClick(e) {
-                console.log('singleClick called');
+//                console.log('singleClick called');
                 var id = jQuery(this).data('id');
                 loadShowContent(id);
             }
 
             function doubleClick(e) {
-                console.log('doubleClick called');
+//                console.log('doubleClick called');
                 var id = jQuery(this).data('id');
                 loadEditContent(id);
             }
 
             function initItems() {
+                var previousCaller = null;
                 var touchTime = new Date().getTime();
 
-                jQuery('.item').unbind('click').click(function(e) {
+                jQuery('.item').unbind('click').click(function(event) {
 
                     var that = this;
 
-                    console.log(jQuery(this).data('status'));
+//                    console.log("Status : " + jQuery(this).data('status'));
+//                    console.log("Previous Caller:");
+//                    console.log(previousCaller);
 
                     if (caller
                         && caller != this
                     ) {
-                        console.log('remove content because other element clicked!');
+//                        console.log('remove content because other element clicked!');
                         jQuery(caller).data('status', null);
                         tempCaller = caller;
                         caller = this;
@@ -382,28 +390,31 @@
                     }
 
                     //compare first click to this click and see if they occurred within double click threshold
-                    if (((new Date().getTime()) - touchTime) < 800) {
+                    if (((new Date().getTime()) - touchTime) < 800
+                        && previousCaller == caller
+                    ) {
                         //double click occurred
                         caller = this;
-                        console.log('double click');
-                        doubleClick.call(this, e);
+//                        console.log('double click');
+                        doubleClick.call(this, event);
                         touchTime = new Date().getTime();
                     } else {
                         //not a double click so set as a new first click
-                        console.log('single click');
+//                        console.log('single click');
+                        previousCaller = this;
                         touchTime = new Date().getTime();
 
                         if ('show' == jQuery(this).data('status')
                             || 'edit' == jQuery(this).data('status')
                         ) {
-                            console.log('remove content!');
+//                            console.log('remove content!');
                             jQuery(this).data('status', null);
                             tempCaller = this;
                             caller = null;
                             removeContent();
                         } else {
                             caller = this;
-                            singleClick.call(that, e);
+                            singleClick.call(that, event);
                         }
                     }
                 });
@@ -419,6 +430,76 @@
                     event.preventDefault();
                 }
             }, false);
+
+            jQuery('#password_forgotten').unbind('click').click(function(event) {
+                event.preventDefault();
+                jQuery.post('/auth/password-lost', {ajax: true}, function(response) {
+                    var json = JSON.parse(response);
+                    json.htmlContent = Base64.decode(json.htmlContent);
+
+                    generateModalFromContent(json.htmlContent);
+                });
+            });
+
+            jQuery('#register').unbind('click').click(function(event) {
+                event.preventDefault();
+                jQuery.post('/auth/register', {ajax: true}, function(response) {
+                    var json = JSON.parse(response);
+                    json.htmlContent = Base64.decode(json.htmlContent);
+
+                    generateModalFromContent(json.htmlContent);
+                });
+            });
+
+            function generateModalFromContent(content) {
+                var script = undefined;
+                var js = extractScriptsFromContent(content);
+                content = removeScriptsFromContent(content);
+
+//                if (js) {
+                    script = generateScriptFromString(js);
+//                }
+
+                window.modal = jQuery(content);
+
+                window.modal.modal();
+
+                window.modal.on('shown.bs.modal', function(){
+                    jQuery("head").append(script);
+                });
+
+                window.modal.on('hidden.bs.modal', function() {
+                    jQuery(this).remove();
+//                    if (undefined != script) {
+                        jQuery(script).remove();
+//                    }
+                });
+            }
+
+            function extractScriptsFromContent(content) {
+
+                // get all scripts from given html content
+                var regEx = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
+                var match;
+                var js = '';
+                while (match = regEx.exec(content)) {
+                    js += match[1];
+                }
+                return js;
+            }
+
+            function removeScriptsFromContent(content) {
+                return content.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/g, "");
+            }
+
+            function generateScriptFromString(js) {
+
+                var script = document.createElement("script");
+                script.type = "text/javascript";
+                script.innerHTML = js;
+
+                return script;
+            }
 
             checkIsMobile();
             initItems();
@@ -480,9 +561,9 @@
         }
 
         function scrollToAnchor(id){
-            console.log('ID : ' + id);
+//            console.log('ID : ' + id);
             var element = jQuery("#"+id);
-            console.log(element);
+//            console.log(element);
             if (element !== undefined) {
                 jQuery('html,body').stop().animate({scrollTop: element.offset().top}, 'slow');
             }
@@ -502,9 +583,9 @@
         }
 
         function addContent(content) {
-            console.log('addContent');
+//            console.log('addContent');
             if (isMobile) {
-                console.log("Add Content for Mobile");
+//                console.log("Add Content for Mobile");
                 var container = jQuery(caller).next();
                 container.animate({height: 0, opacity: 0}, 0);
                 jQuery(caller).addClass('selected ui-accordion-header-active ui-state-active');
@@ -565,9 +646,9 @@
         });
 
         function removeContent() {
-            console.log("Remove Content");
+//            console.log("Remove Content");
             if (isMobile) {
-                console.log("Remove Content for Mobile");
+//                console.log("Remove Content for Mobile");
                 var container = jQuery(tempCaller).next();
                 container
                     .stop()
@@ -581,12 +662,33 @@
                     })
                 ;
             } else {
-                console.log('Remove desktop content!');
+//                console.log('Remove desktop content!');
                 jQuery('#'+targetId).html('');
                 jQuery(tempCaller).removeClass('selected');
                 scrollToAnchor(targetId);
             }
         }
+
+        function showDialog(message, state) {
+            BootstrapDialog.show({
+                message: message,
+                type: state,
+                buttons: [{
+                    label: 'Close',
+                    action: function(dialogItself){
+                        dialogItself.close();
+                    }
+                }]
+            });
+        }
+
+//        BootstrapDialog.TYPE_DEFAULT,
+//        BootstrapDialog.TYPE_INFO,
+//        BootstrapDialog.TYPE_PRIMARY,
+//        BootstrapDialog.TYPE_SUCCESS,
+//        BootstrapDialog.TYPE_WARNING,
+//        BootstrapDialog.TYPE_DANGER
+
         </script>
         <div id="mobile"></div>
     </body>

@@ -70,7 +70,7 @@
     function trainingsplanShowInit() {
         $('#swipe').swipe({
             swipe:function(event, direction, distance, duration, fingerCount) {
-                console.log('Max : ' + iMaxInSplit + " - Pos : " + iPositionInSplit + " - Prev : " + iPrevTrainingsplanId + " - Next : " + iNextTrainingsplanId);
+//                console.log('Max : ' + iMaxInSplit + " - Pos : " + iPositionInSplit + " - Prev : " + iPrevTrainingsplanId + " - Next : " + iNextTrainingsplanId);
                 if ('left' == direction) {
                     ladeNaechstenPlanEinesSplits($(this));
                 } else if ('right' == direction) {

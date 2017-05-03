@@ -71,21 +71,12 @@ class Auth_Model_DbTable_Users extends Zend_Db_Table_Abstract
 		}
 	}
 	
-	public function setUser($a_data) {
+	public function saveUser($a_data) {
 		try {
-			$ergebnis = $this->insert( $a_data);
-	
-			if(!$ergebnis)
-			{
-				throw new Exception("Fehler beim Anlegen des Users?");
-			}
-			return $ergebnis;
+			return $this->insert( $a_data);
 		} catch( Exception $exception) {
 			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
 			echo "Meldung : " . $exception->getMessage() . "<br />";
-			echo "<pre>";
-			print_r($a_data);
-			echo "</pre>";
 			return false;
 		}
 	}

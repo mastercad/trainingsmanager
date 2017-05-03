@@ -13,6 +13,14 @@ class MessageHelper extends Zend_Controller_Action_Helper_Abstract {
             $messageEntity = Service_GlobalMessageHandler::getMessageEntity();
             if (empty($messageEntity->getState())) {
                 $messageEntity->setState($this->getResponse()->getHttpResponseCode());
+            } else {
+                $state = $messageEntity->getState();
+                if (1 == $state) {
+                    $state = 200;
+                } else {
+                    $state *= 100;
+                }
+                $messageEntity->setState($state);
             }
             $messageEntity->setHtmlContent(base64_encode($this->getResponse()->getBody()));
             $this->getResponse()->clearBody();
