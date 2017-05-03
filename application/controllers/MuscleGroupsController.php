@@ -63,7 +63,7 @@ class MuscleGroupsController extends AbstractController {
     /**
      *
      */
-    public function deleteAction() {
+    public function deleteMuscleAction() {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
@@ -111,7 +111,7 @@ class MuscleGroupsController extends AbstractController {
         }
     }
 
-    public function deleteMuscleGroupAction() {
+    public function deleteAction() {
         $a_params = $this->getRequest()->getParams();
         $messagesCollection = array();
 

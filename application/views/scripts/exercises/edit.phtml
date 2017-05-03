@@ -1,19 +1,12 @@
 <a name="right" />
-<?php
-    $obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace();
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
 <div>
     <h3>
         <?php echo $this->translate('label_exercise_name');?>:
-        <input type="text"
-            class="editable form-control"
-            value="<?php echo $this->exercise_name;?>"
-            id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>" />
     </h3>
+    <input type="text"
+           class="editable form-control"
+           value="<?php echo $this->exercise_name;?>"
+           id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>" />
 
     <?php echo $this->previewPictureContent;?>
 
@@ -119,24 +112,13 @@
     <br class="clear-fix" />
     
     <h3 style="margin-top: 15px;">
-        <?php echo $this->translate('label_exercise_pictures');?>:
-    </h3>
-    
-    <div class="preview-pictures"
-         style="margin-top: 5px;">
-        <?php echo $this->previewPicturesContent;?>
-    </div>
-    
-    <br class="clear-fix" />
-    
-    <h3 style="margin-top: 15px;">
         <?php echo $this->translate('label_exercise_video');?>:
     </h3>
     
-    <div id="exercise_video"
-         style="margin-top: 5px;">
-        
-    </div>
+<!--    <div id="exercise_video"-->
+<!--         style="margin-top: 5px;">-->
+<!--    </div>-->
+
     <input type="hidden" class="id" name="exercise_id" id="exercise_id" value="<?php echo $this->exercise_id;?>" />
 </div>
 
@@ -154,128 +136,176 @@
     <?php echo $this->translate('label_save');?>
 </button>
 
-<script type="text/javascript" src="/js/jquery.filedrop.js"></script>
+<div id="preview-template" style="display: none;">
+
+    <div class="dz-preview dz-file-preview">
+        <div class="dz-image"><img data-dz-thumbnail /></div>
+
+        <div class="dz-details">
+            <div class="dz-size"><span data-dz-size></span></div>
+            <div class="dz-filename"><span data-dz-name></span></div>
+        </div>
+        <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+        <div class="dz-error-message"><span data-dz-errormessage></span></div>
+
+        <div class="dz-success-mark">
+
+            <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                <!-- Generator: Sketch 3.2.1 (9971) - http://www.bohemiancoding.com/sketch -->
+                <title>Check</title>
+                <desc>Created with Sketch.</desc>
+                <defs></defs>
+                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                    <path d="M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" id="Oval-2" stroke-opacity="0.198794158" stroke="#747474" fill-opacity="0.816519475" fill="#FFFFFF" sketch:type="MSShapeGroup"></path>
+                </g>
+            </svg>
+
+        </div>
+        <div class="dz-error-mark">
+
+            <svg width="54px" height="54px" viewBox="0 0 54 54" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                <!-- Generator: Sketch 3.2.1 (9971) - http://www.bohemiancoding.com/sketch -->
+                <title>error</title>
+                <desc>Created with Sketch.</desc>
+                <defs></defs>
+                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                    <g id="Check-+-Oval-2" sketch:type="MSLayerGroup" stroke="#747474" stroke-opacity="0.198794158" fill="#FFFFFF" fill-opacity="0.816519475">
+                        <path d="M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z" id="Oval-2" sketch:type="MSShapeGroup"></path>
+                    </g>
+                </g>
+            </svg>
+
+        </div>
+<!--        <div><img src="removebutton.png" alt="Click me to remove the file." data-dz-remove /></div>-->
+<!--        <div><span data-dz-remove> Click me to remove the file.</span></div>-->
+
+    </div>
+</div>
+
+<!--<script type="text/javascript" src="/js/jquery.filedrop.js"></script>-->
+<script type="text/javascript" src="/js/dropzone.js"></script>
 
 <script type="text/javascript">
-	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
-
-	function save() {
-        var hasErrors = false;
-        var messages = [];
-        var i = 0;
-        var saveData = {};
-
-        if (!trim(jQuery('#exercise_name').val()).length) {
-            hasErrors = true;
-            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_exercise_needs_name');?>'});
-        }
-
-        if (!trim(jQuery('#exercise_description').html()).length) {
-            hasErrors = true;
-            messages.push({'type': 'fehler', 'message': 'Die Beschreibung der Übung fehlt!'});
-        }
-
-        var currentMuscleGroups = jQuery('.exercise-muscle-groups').find('.muscle-group');
-        var muscleGroups = [];
-
-        // alle muskelgruppen durchlaufen
-        for (i = 0, len = currentMuscleGroups.length; i < len; i++) {
-            var muscles = [];
-            var muscleGroupId = jQuery(currentMuscleGroups[i]).data('muscle-group-id');
-            var currentMusclesInMuscleGroup = jQuery(currentMuscleGroups[i]).find('.muscle');
-
-            for (var k = 0; k < currentMusclesInMuscleGroup.length; k++) {
-                var muscleId = jQuery(currentMusclesInMuscleGroup[k]).data('muscle-id');
-                var muscleUse = jQuery(currentMusclesInMuscleGroup[k]).find('.muscle-use').data('muscle-use');
-                if (muscleId) {
-                    muscles.push({'id': muscleId, 'muscle_use': muscleUse});
-                }
-            }
-            if (muscleGroupId) {
-                muscleGroups.push({'id': muscleGroupId, 'muscles': muscles});
-            }
-        }
-
-        if (!muscleGroups.length) {
-            hasErrors = true;
-            messages.push({'type': 'fehler', 'message': 'Es muss mindestens eine Muskelgruppe für diese Übung vollständig ausgefüllt sein!'});
-        }
-
-        var currentDeviceOptions = jQuery('.device-options').find('.device-option');
-        var deviceOptions = [];
-
-        for (i = 0, len = currentDeviceOptions.length; i < len; i++) {
-            var deviceOptionValue = jQuery(currentDeviceOptions[i]).val();
-            var deviceOptionId = jQuery(currentDeviceOptions[i]).data('device-option-id');
-            var deviceXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('device-x-device-option-id');
-            var exerciseXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('exercise-x-device-option-id');
-            var trainingPlanXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('training-plan-x-device-option-id');
-            var trainingDiaryXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('training-diary-x-device-option-id');
-
-            if (deviceOptionId) {
-                deviceOptions.push({
-                    deviceOptionId: deviceOptionId,
-                    deviceXDeviceOptionId: deviceXDeviceOptionId,
-                    exerciseXDeviceOptionId: exerciseXDeviceOptionId,
-                    trainingPlanXDeviceOptionId: trainingPlanXDeviceOptionId,
-                    trainingDiaryXDeviceOptionId: trainingDiaryXDeviceOptionId,
-                    value: deviceOptionValue});
-            }
-        }
-
-        var currentExerciseOptions = jQuery('.exercise-options').find('.exercise-option');
-        var exerciseOptions = [];
-
-        for (i = 0, len = currentExerciseOptions.length; i < len; i++) {
-            var exerciseOptionValue = jQuery(currentExerciseOptions[i]).val();
-            var exerciseOptionId = jQuery(currentExerciseOptions[i]).data('exercise-option-id');
-            var exerciseXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('exercise-x-exercise-option-id');
-            var trainingDiaryXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-diary-x-exercise-option-id');
-            var trainingPlanXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-plan-x-exercise-option-id');
-
-            if (exerciseOptionId) {
-                exerciseOptions.push({
-                    exerciseOptionId: exerciseOptionId,
-                    exerciseXExerciseOptionId: exerciseXExerciseOptionId,
-                    trainingPlanXExerciseOptionId: trainingPlanXExerciseOptionId,
-                    trainingDiaryXExerciseOptionId: trainingDiaryXExerciseOptionId,
-                    value: exerciseOptionValue});
-            }
-        }
-
-        if (!hasErrors) {
-            var typeSelect = jQuery('#right .exercise-type-select').attr('data-value');
-
-            if (!typeSelect) {
-                typeSelect = jQuery(caller).next().find('.exercise-type-select').attr('data-value');
-            }
-
-            saveData.exercise_name = Base64.encode(jQuery('#exercise_name').val());
-            saveData.exercise_description = Base64.encode(jQuery('#exercise_description').val());
-            saveData.exercise_special_features = Base64.encode(jQuery('#exercise_special_features').val());
-            saveData.exercise_muscle_groups = muscleGroups;
-            saveData.exercise_preview_picture = jQuery('#exercise_preview_picture').data('file');
-            saveData.exercise_type_id = typeSelect;
-            saveData.exercise_options = exerciseOptions;
-            saveData.exercise_device_options = deviceOptions;
-            saveData.exercise_id = jQuery('#exercise_id').val();
-            saveData.exercise_device_fk = jQuery('#exercise_device_name').data('exercise-device-id');
-            saveData.ajax = true;
-
-            jQuery.post('/'+controller+'/save', saveData, function(response) {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init(response);
-                obj_cad_messages.open();
-            });
-//            CADEditSave();
-        } else {
-            var obj_cad_messages = new CAD.Message();
-            obj_cad_messages.init(messages);
-            obj_cad_messages.open();
-        }
-    }
 
     jQuery(document).ready(function() {
+        var dropzone = null;
+
+        function save() {
+            var hasErrors = false;
+            var messages = [];
+            var i = 0;
+            var saveData = {};
+
+            if (!trim(jQuery('#exercise_name').val()).length) {
+                hasErrors = true;
+                messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_exercise_needs_name');?>'});
+            }
+
+            if (!trim(jQuery('#exercise_description').html()).length) {
+                hasErrors = true;
+                messages.push({'type': 'fehler', 'message': 'Die Beschreibung der Übung fehlt!'});
+            }
+
+            var currentMuscleGroups = jQuery('.exercise-muscle-groups').find('.muscle-group');
+            var muscleGroups = [];
+
+            // alle muskelgruppen durchlaufen
+            for (i = 0, len = currentMuscleGroups.length; i < len; i++) {
+                var muscles = [];
+                var muscleGroupId = jQuery(currentMuscleGroups[i]).data('muscle-group-id');
+                var currentMusclesInMuscleGroup = jQuery(currentMuscleGroups[i]).find('.muscle');
+
+                for (var k = 0; k < currentMusclesInMuscleGroup.length; k++) {
+                    var muscleId = jQuery(currentMusclesInMuscleGroup[k]).data('muscle-id');
+                    var muscleUse = jQuery(currentMusclesInMuscleGroup[k]).find('.muscle-use').data('muscle-use');
+                    if (muscleId) {
+                        muscles.push({'id': muscleId, 'muscle_use': muscleUse});
+                    }
+                }
+                if (muscleGroupId) {
+                    muscleGroups.push({'id': muscleGroupId, 'muscles': muscles});
+                }
+            }
+
+            if (!muscleGroups.length) {
+                hasErrors = true;
+                messages.push({'type': 'fehler', 'message': 'Es muss mindestens eine Muskelgruppe für diese Übung vollständig ausgefüllt sein!'});
+            }
+
+            var currentDeviceOptions = jQuery('.device-options').find('.device-option');
+            var deviceOptions = [];
+
+            for (i = 0, len = currentDeviceOptions.length; i < len; i++) {
+                var deviceOptionValue = jQuery(currentDeviceOptions[i]).val();
+                var deviceOptionId = jQuery(currentDeviceOptions[i]).data('device-option-id');
+                var deviceXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('device-x-device-option-id');
+                var exerciseXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('exercise-x-device-option-id');
+                var trainingPlanXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('training-plan-x-device-option-id');
+                var trainingDiaryXDeviceOptionId = jQuery(currentDeviceOptions[i]).data('training-diary-x-device-option-id');
+
+                if (deviceOptionId) {
+                    deviceOptions.push({
+                        deviceOptionId: deviceOptionId,
+                        deviceXDeviceOptionId: deviceXDeviceOptionId,
+                        exerciseXDeviceOptionId: exerciseXDeviceOptionId,
+                        trainingPlanXDeviceOptionId: trainingPlanXDeviceOptionId,
+                        trainingDiaryXDeviceOptionId: trainingDiaryXDeviceOptionId,
+                        value: deviceOptionValue});
+                }
+            }
+
+            var currentExerciseOptions = jQuery('.exercise-options').find('.exercise-option');
+            var exerciseOptions = [];
+
+            for (i = 0, len = currentExerciseOptions.length; i < len; i++) {
+                var exerciseOptionValue = jQuery(currentExerciseOptions[i]).val();
+                var exerciseOptionId = jQuery(currentExerciseOptions[i]).data('exercise-option-id');
+                var exerciseXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('exercise-x-exercise-option-id');
+                var trainingDiaryXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-diary-x-exercise-option-id');
+                var trainingPlanXExerciseOptionId = jQuery(currentExerciseOptions[i]).data('training-plan-x-exercise-option-id');
+
+                if (exerciseOptionId) {
+                    exerciseOptions.push({
+                        exerciseOptionId: exerciseOptionId,
+                        exerciseXExerciseOptionId: exerciseXExerciseOptionId,
+                        trainingPlanXExerciseOptionId: trainingPlanXExerciseOptionId,
+                        trainingDiaryXExerciseOptionId: trainingDiaryXExerciseOptionId,
+                        value: exerciseOptionValue});
+                }
+            }
+
+            if (!hasErrors) {
+                var typeSelect = jQuery('#right .exercise-type-select').attr('data-value');
+
+                if (!typeSelect) {
+                    typeSelect = jQuery(caller).next().find('.exercise-type-select').attr('data-value');
+                }
+
+                saveData.exercise_name = Base64.encode(jQuery('#exercise_name').val());
+                saveData.exercise_description = Base64.encode(jQuery('#exercise_description').val());
+                saveData.exercise_special_features = Base64.encode(jQuery('#exercise_special_features').val());
+                saveData.exercise_muscle_groups = muscleGroups;
+                saveData.exercise_preview_picture = jQuery('#exercise_preview_picture').data('file');
+                saveData.exercise_type_id = typeSelect;
+                saveData.exercise_options = exerciseOptions;
+                saveData.exercise_device_options = deviceOptions;
+                saveData.exercise_id = jQuery('#exercise_id').val();
+                saveData.exercise_device_fk = jQuery('#exercise_device_name').data('exercise-device-id');
+                saveData.ajax = true;
+
+                jQuery.post('/'+controller+'/save', saveData, function(response) {
+//                var obj_cad_messages = new CAD.Message();
+//                obj_cad_messages.init(response);
+//                obj_cad_messages.open();
+                });
+//            CADEditSave();
+            } else {
+//            var obj_cad_messages = new CAD.Message();
+//            obj_cad_messages.init(messages);
+//            obj_cad_messages.open();
+            }
+        }
+
 //        jQuery('.exercise-type-select .option-add').unbind('click').bind('click', function() {
 //            var selectedOption = jQuery(this).data('value');
 //            var selectedOptionName = jQuery(this).html();
@@ -308,15 +338,15 @@
                 var option_id = jQuery(currentOptionsList[i]).data('device-option-id');
 
                 if (option_id == selectedOption) {
-                    var obj_cad_messages = new CAD.Message();
-                    obj_cad_messages.init([
-                        {
-                            'type': 'fehler',
-                            'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
-                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
-                        }
-                    ]);
-                    obj_cad_messages.open();
+//                    var obj_cad_messages = new CAD.Message();
+//                    obj_cad_messages.init([
+//                        {
+//                            'type': 'fehler',
+//                            'message': '<?php //echo $this->translate('tooltip_selected_option_already_set');?>//',
+//                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
+//                        }
+//                    ]);
+//                    obj_cad_messages.open();
 
                     return false;
                 }
@@ -341,15 +371,15 @@
                 var option_id = jQuery(currentOptionsList[i]).data('exercise-option-id');
 
                 if (option_id == selectedOption) {
-                    var obj_cad_messages = new CAD.Message();
-                    obj_cad_messages.init([
-                        {
-                            'type': 'fehler',
-                            'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
-                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
-                        }
-                    ]);
-                    obj_cad_messages.open();
+//                    var obj_cad_messages = new CAD.Message();
+//                    obj_cad_messages.init([
+//                        {
+//                            'type': 'fehler',
+//                            'message': '<?php //echo $this->translate('tooltip_selected_option_already_set');?>//',
+//                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
+//                        }
+//                    ]);
+//                    obj_cad_messages.open();
 
                     return false;
                 }
@@ -407,9 +437,9 @@
                                         'type': 'fehler',
                                         'message': 'Diese Muskelgruppe ist bereits gesetzt!'
                                     });
-                                    var obj_cad_message = new CAD.Message();
-                                    obj_cad_message.init(a_messages);
-                                    obj_cad_message.open();
+//                                    var obj_cad_message = new CAD.Message();
+//                                    obj_cad_message.init(a_messages);
+//                                    obj_cad_message.open();
 
                                     return false;
                                 }
@@ -515,21 +545,129 @@
             });
         }
 
-        edit_init(true);
-        initDevicesEdit();
         initMuscleRating();
         initMuscleGroups();
         initOptions();
 
-        jQuery('#exercise_preview_picture').filedrop({
-            fallback_id: 'upload_button',
-            fallback_dropzoneClick : true,
-            url: '/'+controller+'/upload-picture',
-            paramname: 'user-file',
-            data: {
-                ajax: true
-            },
-            withCredentials: true
+        function initDropZone() {
+            dropzone = new Dropzone('#upload', {
+                url: '/' + controller + '/upload-picture',
+                previewTemplate: document.querySelector('#preview-template').innerHTML,
+                parallelUploads: 2,
+                thumbnailHeight: 120,
+                thumbnailWidth: 120,
+                maxFilesize: 3,
+                filesizeBase: 1000,
+                previewsContainer: '#dropzone_previews',
+                addRemoveLinks: true,
+                thumbnail: function (file, dataUrl) {
+                    if (file.previewElement) {
+                        file.previewElement.classList.remove("dz-file-preview");
+                        var images = file.previewElement.querySelectorAll("[data-dz-thumbnail]");
+                        for (var i = 0; i < images.length; i++) {
+                            var thumbnailElement = images[i];
+                            thumbnailElement.alt = file.name;
+                            thumbnailElement.src = dataUrl;
+                        }
+                        setTimeout(function () {
+                            file.previewElement.classList.add("dz-image-preview");
+                        }, 1);
+                    }
+                },
+                init: function () {
+                    this.on("success", function (file, response) {
+                        var json = JSON.parse(response);
+                        file.serverId = json.id;
+                        jQuery(file.previewElement).find('.dz-details').data('source-path', json.paths.html_pfad)
+                            .unbind('click')
+                            .click(function () {
+                                refreshPreviewPicture(jQuery(this));
+                            }
+                        );
+                    });
+                    this.on("removedfile", function (file) {
+                        // The file hasn't been uploaded
+                        if (!file.serverId) {
+                            return;
+                        }
+                        jQuery.post('/' + controller + '/delete-picture/?id=' + file.serverId); // Send the file id along
+                    });
+                    jQuery(".dz-remove").on("click", function (e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        var imageId = jQuery(this).parent().find(".dz-filename > span").text();
+                        var that = this;
+                        jQuery.ajax({
+                            url: "/" + controller + "/delete/",
+                            data: {id: imageId},
+                            type: 'POST',
+                            success: function (data) {
+                                if (data.NotificationType === "Error") {
+                                    //                                toastr.error(data.Message);
+                                } else {
+                                    jQuery(that).parent().fadeOut(500, function () {
+                                        jQuery(that).remove();
+                                    });
+                                    //                                toastr.success(data.Message);
+                                }
+                            },
+                            error: function (data) {
+                                //                            toastr.error(data.Message);
+                            }
+                        })
+                    });
+                    jQuery(".dz-details").on("click", function (e) {
+                        refreshPreviewPicture(jQuery(this));
+                    });
+                }
+            });
+        }
+
+        function refreshPreviewPicture(element) {
+            console.log("REFRESH!");
+            jQuery('#upload').css('background-image', 'url('+jQuery(element).data('source-path')+')');
+            jQuery('.dz-details').data('current-picture', false).removeClass('active-preview-picture');
+            jQuery(element).data('current-picture', true).addClass('active-preview-picture');
+            considerDropZoneBackgroundDimensions();
+        }
+
+        function considerDropZoneBackgroundDimensions() {
+
+            var url = jQuery('#upload').css('background-image').replace('url(', '').replace(')', '').replace("'", '').replace('"', '').replace('"', '');
+            var dropZoneWidth = jQuery('#upload').outerWidth();
+            var dropZoneHeight = jQuery('#upload').outerHeight();
+            var newCreated = false;
+
+            var bgImg = jQuery('#load_dummy');
+            if (0 == bgImg.length) {
+                newCreated = true;
+                bgImg = jQuery('<img id="load_dummy" />');
+            }
+            bgImg.hide();
+            bgImg.bind('load', function() {
+                var height = jQuery(this).height();
+                var width = jQuery(this).width();
+                var ratio = dropZoneWidth / width;
+                var newHeight = height * ratio;
+                jQuery('#upload').css('background-size', parseInt(dropZoneWidth) + 'px ' + parseInt(newHeight) + 'px')
+                    .height(newHeight);
+                jQuery('#dropzone_previews').height(newHeight - 108);
+            });
+            if (newCreated) {
+                jQuery('#upload').append(bgImg);
+            }
+            bgImg.attr('src', url);
+        }
+
+        considerDropZoneBackgroundDimensions();
+
+        jQuery(window).resize(function() {
+            considerDropZoneBackgroundDimensions();
         });
+
+        if (!dropzone) {
+            initDropZone();
+        }
     });
 </script>

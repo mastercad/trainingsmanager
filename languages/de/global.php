@@ -43,6 +43,8 @@
         'twitter' => 'Twitter',
         'alternate_preview_picture' => 'Vorschaubild nicht gefunden',
 
+        'text_needed_permissions' => 'Sie besitzen nicht die notwendigen Rechte, um diese Seite angezeigt zu bekommen!',
+
         'muscle_groups_default_content' => 'Das ist die Ansicht der Muskelgruppen.<br /><br />Auf der linken Seite ' .
             'sehen sie eine Übersicht aller bereits eingestellten Muskelgruppen.<br /><br />' .
             'Ein einfachter Klick lädt die details der jeweiligen Muskelgruppe<br />'.

@@ -86,6 +86,37 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Db_Table_Abstract::setDefaultAdapter($dbAdapter);
     }
 
+    /**
+     *
+     */
+    protected function _initCache()
+    {
+        $frontend = array(
+            'lifetime' => 7200,
+            'automatic_serialization' => true
+        );
+
+        $backend = array(
+            'cache_dir' => APPLICATION_PATH . '/../public/tmp/',
+        );
+
+        $cache = Zend_Cache::factory(
+            'core',
+            'File',
+            $frontend,
+            $backend
+        );
+        Zend_Registry::set('cache', $cache);
+    }
+
+    /**
+     *
+     */
+    protected function _initCoreSession()
+    {
+        $this->bootstrap('session');
+    }
+
     protected function _initView()
     {
         $view = new Zend_View();
@@ -94,10 +125,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headTitle()->setSeparator(' | ');
 
         $view->setEncoding('UTF-8');
-
-//      $view->headMeta()->appendHttpEquiv(
-//          'Content-Type', 'charset=utf-8'
-// 	);
         $view->env = APPLICATION_ENV;
 
         $view_renderer = Zend_Controller_Action_HelperBroker::getStaticHelper( 'ViewRenderer');
@@ -106,20 +133,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         Zend_Registry::set('view', $view);
 
         return $view;
-    }
-
-    protected function _initAuth()
-    {
-        $this->bootstrap('frontController');
-        $auth = CAD_Auth::getInstance();
-
-//        $authAdapter = new CAD_Auth_Adapter_DbTable(Zend_Registry::get('db'), 'users', 'user_login', 'user_password', 'MD5(?)');
-
-        $acl = new Plugin_Auth_Acl();
-        Zend_Registry::set('acl', $acl);
-
-        $this->getResource('frontController')->registerPlugin(new Plugin_Auth_AccessControl($auth, $acl))->setParam('auth', $auth);
-
     }
 
     protected function _initLogger()
@@ -153,7 +166,6 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $view = $this->getResource('view');
         $view->doctype('HTML5');
-//          $view->doctype(Zend_View_Helper_Doctype::XHTML1_RDFA);
     }
 
     protected function _initMeta()
@@ -172,28 +184,20 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         /** @var Zend_View $view */
         $view = $this->getResource('view');
 
-//        $user_agent = NULL;
-//        $obj_device = NULL;
-
-//        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
-//            $user_agent = $_SERVER['HTTP_USER_AGENT'];
-//            $obj_user_agent = $view->userAgent();
-//            $obj_device = $obj_user_agent->getDevice();
-//        }
-
         /** @var Zend_View_Helper_HeadScript $view->headScript() */
 //        $view->headScript()->prependFile($view->baseUrl() . '/js/default.js', 'text/javascript');
-//        $view->headScript()->prependFile($view->baseUrl() . '/js/auth.js', 'text/javascript');
         $view->headScript()->offsetSetFile(1, $view->baseUrl() . '/js/jquery-3.2.0.min.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(5, $view->baseUrl() . '/js/jquery-ui.min.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(6, $view->baseUrl() . '/js/tether.min.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(2, $view->baseUrl() . '/js/base64.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(3, $view->baseUrl() . '/js/auth.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(5, $view->baseUrl() . '/js/jquery-ui.min.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(6, $view->baseUrl() . '/js/tether.min.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.sharrre-1.3.4.min.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery_counts.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen.min.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(10, $view->baseUrl() . '/js/funktionen.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(10, $view->baseUrl() . '/js/funktionen.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen_jquery.min.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(15, $view->baseUrl() . '/js/funktionen_jquery.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(20, $view->baseUrl() . '/js/default.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(15, $view->baseUrl() . '/js/funktionen_jquery.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(20, $view->baseUrl() . '/js/default.js', 'text/javascript');
 
 //        if(TRUE === is_object($obj_device)
 //            && $obj_device->getType() == "desktop"
@@ -201,15 +205,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 //            $view->headScript()->appendFile($view->baseUrl() . '/js/blur.js', 'text/javascript');
 //        }
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.snippet.min.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(25, $view->baseUrl() . '/js/cad.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(30, $view->baseUrl() . '/js/cad_wrapper.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(35, $view->baseUrl() . '/js/cad_catch_esc.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(40, $view->baseUrl() . '/js/cad_cms.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(45, $view->baseUrl() . '/js/cad_sperre.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(50, $view->baseUrl() . '/js/cad_message.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(55, $view->baseUrl() . '/js/cad_loader.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(25, $view->baseUrl() . '/js/cad.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(30, $view->baseUrl() . '/js/cad_wrapper.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(35, $view->baseUrl() . '/js/cad_catch_esc.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(40, $view->baseUrl() . '/js/cad_cms.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(45, $view->baseUrl() . '/js/cad_sperre.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(50, $view->baseUrl() . '/js/cad_message.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(55, $view->baseUrl() . '/js/cad_loader.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery-ui-1.10.1.custom.min.js', 'text/javascript');
-        $view->headScript()->offsetSetFile(60, $view->baseUrl() . '/js/auth.js', 'text/javascript');
+//        $view->headScript()->offsetSetFile(60, $view->baseUrl() . '/js/auth.js', 'text/javascript');
         $view->headScript()->offsetSetFile(100, $view->baseUrl() . '/js/html5.js', 'text/javascript', ['conditional' => 'lt IE 9']);
 //      $view->headScript()->appendFile('https://apis.google.com/js/plusone.js', 'text/javascript');
     }
@@ -218,93 +222,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $view = Zend_Registry::get('view');
 
-//        $user_agent = NULL;
-//        $obj_device = NULL;
-
-//        if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
-//            $user_agent = $_SERVER['HTTP_USER_AGENT'];
-//            $obj_user_agent = $view->userAgent();
-//            $obj_device = $obj_user_agent->getDevice();
-//        }
-
         $view->headLink()->appendAlternate($view->baseUrl() . 'http://gmpg.org/xfn/11', 'text/html', true, array('rel' => 'profile', 'title' => 'XFN Profile Version for Meta Markup'));
-//      $view->headLink()->appendAlternate($view->baseUrl() . 'https://plus.google.com/100952657106943880213', 'text/html', true, array( 'rel' => 'publisher', 'title' => 'Herausgeber dieser Webseite'));
         $view->headLink()->appendAlternate($view->baseUrl() . '/feed-rss', 'application/rss+xml', 'News-Feed im RSS Format');
         $view->headLink()->appendAlternate($view->baseUrl() . '/feed-atom', 'application/atom+xml', 'News-Feed im Atom Format');
 
         $view->headLink()->prependStylesheet($view->baseUrl() . '/css/global.css', 'screen', true);
-/*
-        if(TRUE === is_object($obj_device)
-            && $obj_device->getType() == "desktop"
-        ) {
-            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/normal.css', 'screen', true, array('title' => 'normal'));
-        }
-        else if(TRUE === is_object($obj_device)
-            && $obj_device->getType() == "mobile"
-        ) {
-            $view->headLink()->prependStylesheet($view->baseUrl() . '/css/mobile.global.css', 'screen', true);
-        }
-//        $view->headLink()->appendStylesheet($view->baseUrl() . '/css/grau.css', 'screen', true, array('title' => 'grau', 'rel' => 'alternate stylesheet'));
-
-        // wenn eine extension wie firephp installiert ist, rutscht der browser
-        // name eins weiter
-        if(preg_match('/.*?(firefox)\/([0-9\+\.\,]*).*?/i', $user_agent, $a_treffer))
-        {
-            $browser = $a_treffer[1];
-            $version = $a_treffer[2];
-
-            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/mozilla.css', 'screen', true);
-        }
-        else if(preg_match('/.*?(rekonq)\/([0-9\+\.\,]*).*?/i', $user_agent, $a_treffer))
-        {
-            $browser = $a_treffer[1];
-            $version = $a_treffer[2];
-
-            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/ubuntu_konqueror.css', 'screen', true);
-        }
-        else if(preg_match('/.*?(konqueror)\/([0-9\+\.\,]*).*?/i', $user_agent, $a_treffer))
-        {
-            $browser = $a_treffer[1];
-            $version = $a_treffer[2];
-
-            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/konqueror.css', 'screen', true);
-        }
-        else if(preg_match('/.*?(chrome)\/([0-9\+\.\,]*).*?/i', $user_agent, $a_treffer))
-        {
-            $browser = $a_treffer[1];
-            $version = round($a_treffer[2]);
-
-            if(10 <= $version)
-            {
-                $view->headLink()->appendStylesheet($view->baseUrl() . '/css/chrome_ab_10.css', 'screen', true);
-            }
-            else
-            {
-                $view->headLink()->appendStylesheet($view->baseUrl() . '/css/chrome_ab_2.css', 'screen', true);
-            }
-        }
-        else if(preg_match('/.*?(opera)\/([0-9\+\.\,]*).*?/i', $user_agent, $a_treffer))
-        {
-            $browser = $a_treffer[1];
-            $version = $a_treffer[2];
-
-            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/opera.css', 'screen', true);
-        }
-        else if(preg_match('/.*?(MSIE)\/([0-9\+\.\,]*).*?/i', $user_agent, $a_treffer))
-        {
-            $browser = $a_treffer[1];
-            $version = $a_treffer[2];
-
-            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/opera.css', 'screen', true);
-        }
-        elseif (true === is_object($obj_device)
-            && $obj_device->getType() !== 'mobile'
-        ) {
-            $view->headLink()->appendStylesheet($view->baseUrl() . '/css/effekte.css', 'screen', true);
-        }
-*/
     }
 
+    /*
     protected function _initInlineScripts()
     {
         $view = Zend_Registry::get('view');
@@ -322,6 +247,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             })();")
           ->appendScript('init();');
     }
+    */
 
     protected function _initFavIcon()
     {
@@ -391,42 +317,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
             )
         );
         $router->addRoute('feed-atom', $route);
+    }
 
-        $route = new Zend_Controller_Router_Route_Regex(
-            'blog/(\d{4})/(\d{2})/(\d{2})/([a-zA-Z0-9-_]*)/*(.*)',
-            array(
-                'controller' => 'blog',
-                'action' => 'show'
-            ),
-            array(
-                1 => 'jahr',
-                2 => 'monat',
-                3 => 'tag',
-                4 => 'seo_link',
-                5 => 'params'
-            )
-        );
+    public function _initHelpers() {
+//        Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH . '/controllers/helpers', 'Action_Helper');
+        Zend_Controller_Action_HelperBroker::addHelper(new MessageHelper());
+        Zend_Controller_Action_HelperBroker::getStack()->offsetSet(-100, new MessageHelper($this));
+    }
 
-        /*
-        $route = new Zend_Controller_Router_Route_Regex(
-            'blog/:jahr/:monat/:tag/:title/*',
-            array(
-                            'controller' => 'blog',
-                            'action' => 'show',
-                            'jahr' => date("Y"),
-                            'monat' => date("m"),
-                            'tag' => date("d")
-            ),
-            array(
-                            'jahr' => '\d{4}',
-                            'monat' => '\d{2}',
-                            'tag' => '\d{2}',
-                            'title' => '[a-zA-Z0-9-_]+',
-                            'params' => '(.*)'
-            )
-        );
-        */
-        $router->addRoute('blog-show', $route);
+    public function _initTranslation() {
+        $translationService = new Service_Translator();
+        Zend_Registry::set('Zend_Translate', $translationService->getTranslation());
     }
 }
 

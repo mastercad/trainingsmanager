@@ -10,10 +10,27 @@ abstract class Model_Entity_AbstractEntity {
 
     protected $map = [];
 
+    private $data = [];
+
+    private $countSetVariables = 0;
+
     public function __construct($message = null) {
         if (!empty($message)) {
             $this->setData($message);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString() {
+        $content = [];
+        foreach ($this->data as $key => $value) {
+            if ($value) {
+                $content[$key] = $value;
+            }
+        }
+        return json_encode($content);
     }
 
     protected function setData($message) {
@@ -53,5 +70,26 @@ abstract class Model_Entity_AbstractEntity {
             return call_user_func([$object, $getter]);
         }
         throw new BadMethodCallException(get_class($object) . ' ha no method ' . $getter);
+    }
+
+    public function set($key, $value) {
+        if (false == is_null($value)) {
+            ++$this->countSetVariables;
+        } else {
+            --$this->countSetVariables;
+        }
+        $this->data[$key] = $value;
+        return $this;
+    }
+
+    public function get($key) {
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
+        }
+        return null;
+    }
+
+    public function isEmpty() {
+        return $this->countSetVariables > 0;
     }
 }

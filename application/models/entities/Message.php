@@ -15,73 +15,80 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
     const STATUS_CRITICAL = 5;
 
     protected $map = [
-        'state' => 'status',
+        'state' => 'state',
         'text' => 'message'
     ];
-
-    /** @var string status of message */
-    private $status = null;
-
-    private $message = null;
-
-    private $jsCallBack = null;
-
-    private $htmlContent = null;
 
     /**
      * @return string
      */
-    public function getStatus() {
-        return $this->status;
+    public function getState() {
+//        return $this->status;
+        return $this->get('state');
     }
 
     /**
-     * @param string $status
+     * @param string $state
+     *
+     * @return $this;
      */
-    public function setStatus($status) {
-        $this->status = $status;
+    public function setState($state) {
+//        $this->status = $status;
+        return $this->set('state', $state);
     }
 
     /**
-     * @return null
+     * @return string
      */
     public function getMessage() {
-        return $this->message;
+//        return $this->message;
+        return $this->get('message');
     }
 
     /**
-     * @param null $message
+     * @param string $message
+     *
+     * @return $this
      */
     public function setMessage($message) {
-        $this->message = $message;
+//        $this->message = $message;
+        return $this->set('message', $message);
     }
 
     /**
-     * @return null
+     * @return string|null
      */
     public function getJsCallBack() {
-        return $this->jsCallBack;
+//        return $this->jsCallBack;
+        return $this->get('jsCallBack');
     }
 
     /**
-     * @param null $jsCallBack
+     * @param string $jsCallBack
+     *
+     * @return $this
      */
     public function setJsCallBack($jsCallBack) {
-        $this->jsCallBack = $jsCallBack;
+//        $this->jsCallBack = $jsCallBack;
+        return $this->get('jsCallBack');
     }
 
     /**
-     * @return null
+     * @return string
      */
     public function getHtmlContent() {
-        return $this->htmlContent;
+//        return $this->htmlContent;
+        return $this->get('htmlContent');
     }
 
     /**
-     * @param null $htmlContent
+     * @param string $htmlContent
+     *
+     * @return $this
      */
     public function setHtmlContent($htmlContent) {
-        $this->htmlContent = $htmlContent;
+//        $this->htmlContent = $htmlContent;
+        return $this->set('htmlContent', $htmlContent);
     }
 
 

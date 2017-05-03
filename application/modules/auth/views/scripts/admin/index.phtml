@@ -1,0 +1,88 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 30.04.15
+ * Time: 20:31
+ */
+?>
+
+<form method="post" action="" onchange="submit();">
+    <label for="user_rechte_gruppe_id">
+        Rechte Gruppe:
+    </label>
+    <select id="user_right_group_id" name="user_right_group_id">
+        <option value="">Bitte wählen</option>
+        <option value="1" <?php if ($this->iUserRechteGruppeId == 1) {echo ' selected ';}?>>Gast</option>
+        <option value="2" <?php if ($this->iUserRechteGruppeId == 2) {echo ' selected ';}?>>User</option>
+        <option value="3" <?php if ($this->iUserRechteGruppeId == 3) {echo ' selected ';}?>>Admin</option>
+        <option value="4" <?php if ($this->iUserRechteGruppeId == 4) {echo ' selected ';}?>>Superadmin</option>
+    </select>
+</form>
+
+<br />
+
+<form method="post" action="">
+    <?php echo $this->sContent;?>
+    <input type="hidden" name="user_right_group_id" value="<?php echo $this->iUserRechteGruppeId;?>" />
+    <input type="submit" name="save" value="speichern" />
+</form>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('.controller').each(function() {
+            // höhe der Inputs anpassen!
+            var iMaxHeight = 0;
+            var oActionContainer = jQuery(this).find('.action-container');
+            oActionContainer.each(function() {
+                jQuery(this).find('.rotate').each(function() {
+                    console.log(jQuery(this).width());
+                    if (jQuery(this).width() > iMaxHeight) {
+                        iMaxHeight = jQuery(this).width();
+                    }
+                });
+            });
+            iMaxHeight += 50;
+            oActionContainer.each(function() {
+                jQuery(this).height(iMaxHeight + "px");
+                jQuery(this).find('.rotate').width(20 + "px");
+                jQuery(this).find('.rotate').css('top', iMaxHeight - 55 + "px");
+                jQuery(this).find('.rotate').next().css('top', iMaxHeight - 55 + "px");
+            });
+            jQuery(this).height(iMaxHeight + "px");
+
+            var bChecked = jQuery(this).find('input[type=checkbox].global-check').is(':checked');
+
+            if (true == bChecked) {
+                jQuery(this).find('.action-container').hide();
+                jQuery(this).height(20 + "px");
+            }
+
+            jQuery(this).find('input[type=checkbox].global-check').unbind('click');
+            jQuery(this).find('input[type=checkbox].global-check').bind('click', function() {
+               if (true == jQuery(this).is(':checked')) {
+                   jQuery(this).parent().height(20 + "px");
+                   jQuery(this).parent().find('.action-container').fadeOut();
+               } else {
+                   jQuery(this).parent().removeStyle('height');
+                   jQuery(this).parent().find('.action-container').fadeIn();
+               }
+            });
+        });
+    });
+
+    (function(jQuery)
+    {
+        jQuery.fn.removeStyle = function(style)
+        {
+            var search = new RegExp(style + '[^;]+;?', 'g');
+
+            return this.each(function()
+            {
+                jQuery(this).attr('style', function(i, style) {
+                    return style.replace(search, '');
+                });
+            });
+        };
+    }(jQuery));
+</script>

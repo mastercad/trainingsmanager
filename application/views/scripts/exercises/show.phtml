@@ -1,17 +1,10 @@
-<?php
-$obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace();
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-?>
     <a name="right" />
     <div class="detail-options">
         <?php echo $this->detailOptionsContent;?>
     </div>
 
     <h3>
-        <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_name);?>
+        <?php echo $this->exercise_name;?>
     </h3>
 
     <?php echo $this->previewPictureContent;?>
@@ -31,7 +24,7 @@ $obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace();
 
     <div class="col-sm-12"
          style="margin-top: 5px;">
-        <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_description);?>
+        <?php echo $this->exercise_description;?>
     </div>
 
     <br class="clear-fix" />
@@ -45,7 +38,7 @@ $obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace();
 
     <div class="row">
         <div class="col-sm-12" style="margin-top: 5px;">
-            <?php echo $obj_cad_filter_ubb_replace->filter($this->exercise_special_features);?>
+            <?php echo $this->exercise_special_features;?>
         </div>
     </div>
 
@@ -91,35 +84,41 @@ $obj_cad_filter_ubb_replace = new CAD_Filter_UbbReplace();
     }
 ?>
 
-    <h3 style="float: left; display: inline; margin-top: 25px;">
-        <?php echo $this->translate('label_muscle_groups');?>:
-    </h3>
+<?php
+    if ($this->exerciseMuscleGroupsContent) {
+?>
+        <h3 style="float: left; display: inline; margin-top: 25px;">
+            <?php echo $this->translate('label_muscle_groups'); ?>:
+        </h3>
 
-    <br class="clear-fix" />
+        <br class="clear-fix"/>
 
-    <div class="exercise-muscle-groups"
-         style="margin-top: 5px;">
-        <?php echo $this->exerciseMuscleGroupsContent;?>
-    </div>
+        <div class="exercise-muscle-groups"
+             style="margin-top: 5px;">
+            <?php echo $this->exerciseMuscleGroupsContent; ?>
+        </div>
 
-    <br class="clear-fix" />
+        <br class="clear-fix"/>
 
-    <h3 style="margin-top: 15px;">
-        <?php echo $this->translate('label_exercise_pictures');?>:
-    </h3>
+<?php
+    }
+?>
 
-    <br class="clear-fix" />
+<!--    <h3 style="margin-top: 15px;">-->
+<!--        --><?php //echo $this->translate('label_exercise_pictures');?><!--:-->
+<!--    </h3>-->
 
-    <h3 style="margin-top: 15px;">
-        <?php echo $this->translate('label_exercise_video');?>:
-    </h3>
+<!--    <br class="clear-fix" />-->
 
-    <div id="exercise_video"
-         style="margin-top: 5px;">
+<!--    <h3 style="margin-top: 15px;">-->
+<!--        --><?php //echo $this->translate('label_exercise_video');?><!--:-->
+<!--    </h3>-->
 
-    </div>
+<!--    <div id="exercise_video"-->
+<!--         style="margin-top: 5px;">-->
+<!--    </div>-->
 
-<br class="clear-fix" />
+<!--    <br class="clear-fix" />-->
 
 <script type="text/javascript" language="JavaScript">
     controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';

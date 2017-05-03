@@ -24,19 +24,16 @@ class DevicesController extends AbstractController {
             foreach ($devicesCollection as $device) {
                 $this->view->assign('name', $device->offsetGet('device_name'));
                 $this->view->assign('id', $device->offsetGet('device_id'));
-                $devicesContent .= $this->view->render('loops/device-row.phtml');
+                $devicesContent .= $this->view->render('loops/item-row.phtml');
             }
         }
         $this->view->assign('devicesContent', $devicesContent);
     }
 
     public function showAction() {
-        //        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/edit.js', 'text/javascript');
-//        $deviceContent = 'Das Gerät konnte leider nicht gefunden werden!';
         $id = intval($this->getParam('id'));
 
         if (0 < $id) {
-//            $deviceContent = '';
             $devicesDb = new Model_DbTable_Devices();
             $device = $devicesDb->findDeviceById($id);
 
@@ -51,8 +48,6 @@ class DevicesController extends AbstractController {
             }
 
         }
-//        $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
-//        $this->view->assign('deviceContent', $deviceContent);
     }
 
     public function editAction() {
@@ -91,12 +86,6 @@ class DevicesController extends AbstractController {
      * @return string
      */
     public function generatePreviewPictureContent($device) {
-
-        $ubbFilter = new CAD_Filter_UbbReplace();
-        $picturePath = '/images/content/dynamisch/devices/' . $device->offsetGet('device_id') . '/';
-        $tempPicturePath = '/tmp/devices/';
-        $ubbFilter->setBilderPfad($picturePath);
-        $ubbFilter->setTempBilderPfad($tempPicturePath);
         $preview = '/images/content/statisch/grafiken/kein_bild.png';
 
         if (0 < strlen(trim($device->offsetGet('device_preview_picture')))

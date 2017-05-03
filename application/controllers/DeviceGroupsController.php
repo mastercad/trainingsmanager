@@ -91,7 +91,7 @@ class DeviceGroupsController extends AbstractController
         }
     }
 
-    public function deleteDeviceGroupAction() {
+    public function deleteAction() {
         $params = $this->getRequest()->getParams();
         $messages = array();
 

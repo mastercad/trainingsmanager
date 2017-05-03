@@ -1,0 +1,21 @@
+<form method="post" action="" id="login_form">
+	<h3 style="margin-bottom: 10px;">
+		Login auf <?php echo PROJECT_NAME;?>
+	</h3>
+	<input type="text" data-default="Ihre Login" name="user_login_name" id="user_login_name" value="" />
+	<br class="clearfix" />
+	<input type="password" class="password" data-default="Ihr Passwort" title="Ihr Password" style="margin: 5px 0;" name="user_login_passwort" id="user_login_passwort" value="" />
+	<br class="clearfix" />
+	<input type="submit" class="button" style="margin: 5px 0;" value=" einloggen " />
+</form>
+<div id="login-form-fail-options" >
+	<a href="/modules/auth/views/scripts/auth/passwort-vergessen-form" id="passwort-vergessen" class="link" style="display: none; margin-top: 5px; clear: both; float: left;" >
+		Passwort vergessen?
+	</a>
+	<a href="/modules/auth/views/scripts/auth/register-form" id="registrieren" class="link" style="margin-top: 5px; clear: both; float: left; display: inline;" >
+		noch nicht Registriert?
+	</a>
+</div>
+<br class="clear-fix" />
+
+<script type="text/javascript" src="/js/auth.js"></script>

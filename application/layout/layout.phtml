@@ -12,7 +12,6 @@
         <link rel="stylesheet" href="/css/tether-theme-arrows.min.css" />
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/jquery-ui.min.css">
-<!--        <link rel="stylesheet" href="/css/jquery.smartmenus.bootstrap.css">-->
         <link rel="stylesheet" href="/css/login-form.css">
 
         <?php echo $this->headLink();?>
@@ -23,9 +22,14 @@
 <?php
 	$user = Zend_Auth::getInstance()->getIdentity();
 
-	$userRightsService = new Plugin_CheckeRecht();
+    $iUserRechteGruppe = 0;
 
-    ?>
+    if ('guest' == $user->user_right_group_name) {
+        unset($user);
+    }
+
+
+?>
     <div class="navbar navbar-default">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
@@ -57,92 +61,37 @@
                         <li class="<?php if($this->controller == "muscles"){ echo 'active';}?>">
                             <a href="/muscles/" >
                                 <?php echo $this->translate('label_muscles');?>
-<!--                                <span class="caret"></span>-->
                             </a>
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li class="--><?php //if($this->controller == "muscles" && $this->action == "index"){ echo 'active';}?><!--"><a href="/muscles/">--><?php //echo $this->translate('label_overview');?><!--</a></li>-->
-<!--                                <li class="--><?php //if($this->controller == "muscles" && $this->action == "edit"){ echo 'active';}?><!--"><a href="/muscles/edit">--><?php //echo $this->translate('label_create');?><!--</a></li>-->
-                                <!--                                    <li><a href="#">One more separated link <span class="caret"></span></a>-->
-                                <!--                                        <ul class="dropdown-menu">-->
-                                <!--                                            <li><a href="#">Action</a></li>-->
-                                <!--                                        </ul>-->
-                                <!--                                    </li>-->
-                                <!--                                    <li><a href="#">Something else here</a></li>-->
-                                <!--                                    <li role="separator" class="divider"></li>-->
-                                <!--                                    <li><a href="#">Separated link</a></li>-->
-                                <!--                                    <li role="separator" class="divider"></li>-->
-                                <!--                                    <li><a href="#">One more separated link</a></li>-->
-<!--                            </ul>-->
                         </li>
                         <li class="<?php if($this->controller == "muscle-groups"){ echo 'active';}?>">
                             <a href="/muscle-groups/" >
                                 <?php echo $this->translate('label_muscle_groups');?>
                                 <!--                                <span class="caret"></span>-->
                             </a>
-<!--                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                --><?php //echo $this->translate('label_muscle_groups');?>
-<!--                                <span class="caret"></span>-->
-<!--                            </a>-->
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li class="--><?php //if($this->controller == "muscle-groups" && $this->action == "index"){ echo 'active';}?><!--"><a href="/muscle-groups/">--><?php //echo $this->translate('label_overview');?><!--</a></li>-->
-<!--                                <li class="--><?php //if($this->controller == "muscle-groups" && $this->action == "edit"){ echo 'active';}?><!--"><a href="/muscle-groups/edit">--><?php //echo $this->translate('label_create');?><!--</a></li>-->
-<!--                            </ul>-->
                         </li>
                         <li class="<?php if($this->controller == "devices"){ echo 'active';}?>">
                             <a href="/devices/" >
                                 <?php echo $this->translate('label_devices');?>
                                 <!--                                <span class="caret"></span>-->
                             </a>
-<!--                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                --><?php //echo $this->translate('label_devices');?>
-<!--                                <span class="caret"></span>-->
-<!--                            </a>-->
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li class="--><?php //if($this->controller == "devices" && $this->action == "index"){ echo 'active';}?><!--"><a href="/devices/">--><?php //echo $this->translate('label_overview');?><!--</a></li>-->
-<!--                                <li class="--><?php //if($this->controller == "devices" && $this->action == "edit"){ echo 'active';}?><!--"><a href="/devices/edit">--><?php //echo $this->translate('label_create');?><!--</a></li>-->
-<!--                            </ul>-->
                         </li>
                         <li class="<?php if($this->controller == "device-options"){ echo 'active';}?>">
                             <a href="/device-options/" >
                                 <?php echo $this->translate('label_device_options');?>
                                 <!--                                <span class="caret"></span>-->
                             </a>
-<!--                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                --><?php //echo $this->translate('label_device_options');?>
-<!--                                <span class="caret"></span>-->
-<!--                            </a>-->
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li class="--><?php //if($this->controller == "device-options" && $this->action == "index"){ echo 'active';}?><!--"><a href="/device-options/">--><?php //echo $this->translate('label_overview');?><!--</a></li>-->
-<!--                                <li class="--><?php //if($this->controller == "device-options" && $this->action == "edit"){ echo 'active';}?><!--"><a href="/device-options/edit">--><?php //echo $this->translate('label_create');?><!--</a></li>-->
-<!--                            </ul>-->
                         </li>
                         <li class="<?php if($this->controller == "device-groups"){ echo 'active';}?>">
                             <a href="/device-groups/" >
                                 <?php echo $this->translate('label_device_groups');?>
                                 <!--                                <span class="caret"></span>-->
                             </a>
-<!--                            <a href="#" class="dropdown-toggle --><?php //if($this->controller == "device-groups"){ echo 'active';}?><!--" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                --><?php //echo $this->translate('label_device_groups');?>
-<!--                                <span class="caret"></span>-->
-<!--                            </a>-->
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li class="--><?php //if($this->controller == "device-groups" && $this->action == "index"){ echo 'active';}?><!--"><a href="/device-groups/">--><?php //echo $this->translate('label_overview');?><!--</a></li>-->
-<!--                                <li class="--><?php //if($this->controller == "device-groups" && $this->action == "edit"){ echo 'active';}?><!--"><a href="/device-groups/edit">--><?php //echo $this->translate('label_create');?><!--</a></li>-->
-<!--                            </ul>-->
                         </li>
                         <li class="<?php if($this->controller == "exercise-options"){ echo 'active';}?>">
                             <a href="/exercise-options/" >
                                 <?php echo $this->translate('label_exercise_options');?>
                                 <!--                                <span class="caret"></span>-->
                             </a>
-<!--                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                --><?php //echo $this->translate('label_exercise_options');?>
-<!--                                <span class="caret"></span>-->
-<!--                            </a>-->
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li class="--><?php //if($this->controller == "exercise-options" && $this->action == "index"){ echo 'active';}?><!--"><a href="/exercise-options/">--><?php //echo $this->translate('label_overview');?><!--</a></li>-->
-<!--                                <li class="--><?php //if($this->controller == "exercise-options" && $this->action == "edit"){ echo 'active';}?><!--"><a href="/exercise-options/edit">--><?php //echo $this->translate('label_create');?><!--</a></li>-->
-<!--                            </ul>-->
                         </li>
                     </ul>
                 </li>
@@ -187,7 +136,7 @@
                         <span>
                             <?php
 
-                            if (! isset($user)) {
+                            if (!isset($user)) {
                                 echo $this->translate('label_have_account');
                             }
                             ?>
@@ -196,7 +145,7 @@
                 </li>
                 <li class="">
 <?php
-                    if (!isset($user)) {
+        if (!isset($user)) {
 ?>
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_login');?></b> <span class="caret"></span></a>
                     <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
@@ -298,6 +247,23 @@
         <br class="clear-fix" />
     </div>
 
+    <div id="modal" class="modal fade" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"></h4>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="modal_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" id="modal_save" class="btn btn-primary">Save changes</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <?php echo $this->inlineScript(); ?>
 
     <script src="/js/tether.min.js"></script>
@@ -310,6 +276,7 @@
         var tempIsMobile = null;
         var targetId = null;
         var tempCaller = null;
+        var accordionAjaxRequest = null;
 
         jQuery(document).ready(function() {
             var previousSelected = null;
@@ -345,13 +312,15 @@
                 var accordionContentClasses = 'ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content';
                 var accordionActiveHeaderClasses = 'ui-accordion-header-active ui-state-active';
                 var accordionActiveContainerClasses = 'ui-accordion-content-active';
+                console.log('considerMobile');
                 if (true === isMobile) {
-
+                    console.log('isMobile!');
                     jQuery('#accordion').addClass('ui-accordion ui-widget ui-helper-reset');
                     jQuery('#accordion .item').addClass(accordionHeaderClasses);
                     jQuery('#accordion .item-content').addClass(accordionContentClasses);
 
                     if (null !== caller) {
+                        console.log("Caller exist!");
                         var rightPanel = jQuery('#right');
                         jQuery(caller).addClass(accordionActiveHeaderClasses);
                         jQuery(caller).next()
@@ -364,6 +333,7 @@
                         scrollToAnchor(jQuery(caller).prop('id'));
                     }
                 } else {
+                    console.log("isNotMobile!");
                     jQuery('#accordion').removeClass('ui-accordion ui-widget ui-helper-reset');
                     jQuery('#accordion .item').removeClass(accordionHeaderClasses).removeClass(accordionActiveHeaderClasses);
                     jQuery('#accordion .item-content').removeClass(accordionContentClasses).removeClass(accordionActiveContainerClasses);
@@ -393,54 +363,6 @@
             }
 
             function initItems() {
-//                jQuery('.item').unbind('click').click(function(e) {
-//
-//                    var that = this;
-//
-//                    console.log(jQuery(this).data('status'));
-//
-//                    if (caller
-//                        && caller != this
-//                    ) {
-//                        console.log('remove content because other element clicked!');
-//                        jQuery(caller).data('status', null);
-////                            jQuery(caller).data('double', 0);
-//                        tempCaller = caller;
-//                        caller = this;
-//                        removeContent();
-//                    }
-//
-//                    if ('show' == jQuery(this).data('status')
-//                        || 'edit' == jQuery(this).data('status')
-//                    ) {
-//                        console.log('remove content!');
-//                        jQuery(this).data('status', null);
-////                            jQuery(this).data('double', 0);
-//                        tempCaller = this;
-//                        caller = null;
-//                        removeContent();
-//                    } else {
-//
-//                        console.log('single click');
-//
-//                        setTimeout(function () {
-//                            console.log("In Click Timeout!");
-//                            var dblclick = parseInt(jQuery(that).data('double'), 10);
-//                            if (dblclick > 0) {
-//                                jQuery(that).data('double', dblclick - 1);
-//                            } else {
-//                                caller = that;
-//                                singleClick.call(that, e);
-//                            }
-//                        }, 300);
-//                    }
-//                }).unbind('dblclick').dblclick(function(e) {
-//                    caller = this;
-//                    console.log('double click');
-//                    jQuery(this).data('double', 2);
-//                    doubleClick.call(this, e);
-//                });
-
                 var touchTime = new Date().getTime();
 
                 jQuery('.item').unbind('click').click(function(e) {
@@ -454,7 +376,6 @@
                     ) {
                         console.log('remove content because other element clicked!');
                         jQuery(caller).data('status', null);
-//                            jQuery(caller).data('double', 0);
                         tempCaller = caller;
                         caller = this;
                         removeContent();
@@ -503,35 +424,59 @@
             initItems();
         });
 
+        function requestAction(id, action) {
+            if (isMobile) {
+                targetId = jQuery('#'+id).next().prop('id');
+            }
+
+            if (accordionAjaxRequest) {
+                accordionAjaxRequest.abort();
+                jQuery('.item').removeClass('selected ui-accordion-header-active ui-state-active')
+                    .next().removeClass('ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active');
+            }
+
+            accordionAjaxRequest = jQuery.ajax({
+                url: '/'+controller+'/'+action,
+                data: {
+                    id: id,
+                    ajax: true,
+                    format: 'json'
+                },
+                beforeSend: function() {
+                    showSpinner(jQuery('#'+targetId));
+                },
+                error: function() {
+//                    alert('<p>An error has occurred</p>');
+                },
+//                dataType: 'json',
+//                dataType: 'jsonp',
+                success: function(response) {
+                    jQuery(caller).data('status', action);
+                    considerResponse(response);
+                },
+                always: function() {
+                    accordionAjaxRequest = null;
+                },
+                type: 'POST'
+            });
+        }
+
         function showSpinner(element) {
             jQuery('#'+targetId).html(jQuery('<div class="spinner"></div>'));
         }
 
         function loadShowContent(id) {
-            showSpinner(jQuery('#'+targetId));
-
-            jQuery.post('/'+controller+'/show', {id: id, ajax: true}, function(response) {
-                jQuery(caller).data('status', 'show');
-                addContent(response);
-            });
+            requestAction(id, 'show');
         }
 
         function loadEditContent(id) {
-            showSpinner(jQuery('#'+targetId));
-
-            jQuery.post('/'+controller+'/edit', {id: id, ajax: true}, function(response) {
-                jQuery(caller).data('status', 'edit');
-                addContent(response);
-            });
+            requestAction(id, 'edit')
         }
 
         function deleteEntry(id) {
-            showSpinner(jQuery('#'+targetId));
-
-            jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
-                jQuery('#'+targetId).html(response);
-                jQuery('#'+id).fadeOut();
-            });
+            if (confirm('Entry '+jQuery('#'+id).html()+' realy delete?')) {
+                requestAction(id, 'delete');
+            }
         }
 
         function scrollToAnchor(id){
@@ -566,10 +511,9 @@
 
                 container
                     .stop()
-                    .height(0)
                     .html(content)
+                    .height(0)
                     .show()
-                    .delay(1000)
                     .animate({height: 1000, opacity: 1}, 1000, function() {
                         container.css("display", "block")
                             .css('height', 'auto').prop('height', null)
@@ -582,6 +526,43 @@
                 scrollToAnchor(targetId);
             }
         }
+
+        function considerResponse(response) {
+            try {
+                var json = JSON.parse(response);
+                if (200 == json.state) {
+                    addContent(Base64.decode(json.htmlContent));
+                } else {
+                    var modal = jQuery('#modal');
+                    considerResponseCodeForModal(json.state);
+                    jQuery('#modal_save').hide();
+                    jQuery('.modal-body').html('<p>'+json.message+'</p>');
+                    modal.modal();
+                }
+            } catch (exception) {
+                alert(exception);
+            }
+        }
+
+        function considerResponseCodeForModal(code) {
+            var title = 'Notice:';
+            switch (code) {
+                case 404:
+                case 400:
+                case 500:
+                case 401:
+                case 300:
+                {
+                    title = 'Error:';
+                    break;
+                }
+            }
+            jQuery('.modal-title').html(title);
+        }
+
+        jQuery('#modal').on('hide.bs.modal', function () {
+            jQuery('.spinner').fadeOut('slow').remove();
+        });
 
         function removeContent() {
             console.log("Remove Content");
@@ -597,7 +578,6 @@
                             .removeClass('ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active');
                         jQuery(tempCaller).removeClass('selected ui-accordion-header-active ui-state-active');
                         scrollToAnchor(jQuery(tempCaller).prop('id'));
-//                        tempCaller = null;
                     })
                 ;
             } else {
@@ -608,9 +588,6 @@
             }
         }
         </script>
-<!--        <script src="/js/jquery.smartmenus.js"></script>-->
-<!--        <script src="/js/jquery.smartmenus.bootstrap.js"></script>-->
-
         <div id="mobile"></div>
     </body>
 </html>

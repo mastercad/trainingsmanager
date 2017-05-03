@@ -43,27 +43,32 @@ class ExercisesController extends AbstractController {
     }
     
     public function editAction() {
-        $exerciseId = intval($this->getRequest()->getParam('id', null));
-        $exercise = null;
+        if (true) {
+            $exerciseId = intval($this->getRequest()->getParam('id', null));
+            $exercise = null;
 
-        if (0 < $exerciseId) {
-            $exerciseDb = new Model_DbTable_Exercises();
-            $exercise = $exerciseDb->findExerciseById($exerciseId);
-            
-            if ($exercise instanceof Zend_Db_Table_Row) {
-                $this->view->assign($exercise->toArray());
-                $this->view->assign('exerciseMuscleGroupsContent', $this->generateExerciseMuscleGroupsEditContent($exercise));
-                $this->view->assign('exerciseOptionsContent', $this->generateExerciseOptionsEditContent($exercise));
-                $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsEditContent($exercise));
-            } else {
-                echo "Übung konte nicht geladen werden!";
+            if (0 < $exerciseId) {
+                $exerciseDb = new Model_DbTable_Exercises();
+                $exercise = $exerciseDb->findExerciseById($exerciseId);
+
+                if ($exercise instanceof Zend_Db_Table_Row) {
+                    $this->view->assign($exercise->toArray());
+                    $this->view->assign('exerciseMuscleGroupsContent',
+                        $this->generateExerciseMuscleGroupsEditContent($exercise));
+                    $this->view->assign('exerciseOptionsContent', $this->generateExerciseOptionsEditContent($exercise));
+                    $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsEditContent($exercise));
+                } else {
+                    echo "Übung konte nicht geladen werden!";
+                }
             }
+            $this->view->assign('previewPicturesContent', $this->generatePreviewPicturesForEditContent($exerciseId));
+            $this->view->assign('previewPictureContent', $this->generatePreviewPictureForEditContent($exercise));
+            $this->view->assign('exerciseTypeSelectContent', $this->generateExerciseTypeContent($exercise));
+            $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
+            $this->view->assign('exerciseOptionsDropDownContent', $this->generateExerciseOptionsDropDownContent());
+        } else {
+            echo "Keine rechte zum bearbeiten!";
         }
-        $this->view->assign('previewPicturesContent', $this->generatePreviewPicturesForEditContent($exerciseId));
-        $this->view->assign('previewPictureContent', $this->generatePreviewPictureContent($exercise));
-        $this->view->assign('exerciseTypeSelectContent', $this->generateExerciseTypeContent($exercise));
-        $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
-        $this->view->assign('exerciseOptionsDropDownContent', $this->generateExerciseOptionsDropDownContent());
     }
 
     /**
@@ -341,11 +346,6 @@ class ExercisesController extends AbstractController {
                 $deviceOption['exercise_x_device_option_device_option_value'] ?
                     $deviceOption['exercise_x_device_option_device_option_value'] :
                     $deviceOption['device_x_device_option_device_option_value']);
-            //            $optionValue = $deviceOption->offsetGet('device_x_device_option_device_option_value');
-            //            if (preg_match('/\|/', $optionValue)) {
-            //                $optionValue = explode('|', $optionValue);
-            //            }
-            //            $this->view->assign('optionValue', $optionValue);
             $content .= $this->view->render('/loops/device-option-edit.phtml');
         }
         return $content;
@@ -411,11 +411,6 @@ class ExercisesController extends AbstractController {
         foreach ($exerciseXExerciseOptionCollection as $exerciseOption) {
             $this->view->assign($exerciseOption->toArray());
             $this->view->assign('exercise_option_value', $exerciseOption->offsetGet('exercise_x_exercise_option_exercise_option_value'));
-            //            $optionValue = $deviceOption->offsetGet('device_x_device_option_device_option_value');
-            //            if (preg_match('/\|/', $optionValue)) {
-            //                $optionValue = explode('|', $optionValue);
-            //            }
-            //            $this->view->assign('optionValue', $optionValue);
             $content .= $this->view->render('/loops/exercise-option-edit.phtml');
         }
         return $content;
@@ -464,6 +459,18 @@ class ExercisesController extends AbstractController {
         return $this->view->render('globals/preview-picture.phtml');
     }
 
+    private function generatePreviewPictureForEditContent($exercise)
+    {
+        $this->view->assign('previewPictureId', 'exercise_preview_picture');
+        $previewPicturePath = $this->generatePreviewPicturePath($exercise);
+        list($width, $height, $type, $sizeString, $bits, $mime) = getimagesize(APPLICATION_PATH.'/../public/'.$previewPicturePath);
+
+
+        $this->view->assign('dropZoneBackgroundImage', $previewPicturePath);
+
+        return $this->view->render('loops/preview-picture-for-edit.phtml');
+    }
+
     /**
      * @param Zend_Db_Table_Row $exercise
      *
@@ -473,11 +480,8 @@ class ExercisesController extends AbstractController {
 
         $previewPicturePath = '/images/content/statisch/grafiken/kein_bild.png';
         if ($exercise instanceof Zend_Db_Table_Row) {
-            $ubbFilter = new CAD_Filter_UbbReplace();
             $picturePath = '/images/content/dynamisch/exercises/' . $exercise->offsetGet('exercise_id') . '/';
             $tempPicturePath = '/tmp/exercises/';
-            $ubbFilter->setBilderPfad($picturePath);
-            $ubbFilter->setTempBilderPfad($tempPicturePath);
 
             if (0 < strlen(trim($exercise->offsetGet('exercise_preview_picture')))
                 && file_exists(getcwd() . $picturePath . $exercise->offsetGet('exercise_preview_picture'))
@@ -493,21 +497,24 @@ class ExercisesController extends AbstractController {
     }
 
     public function uploadPictureAction() {
-        if (true === isset($_FILES['user-file'])) {
+        $this->view->layout()->disableLayout();
+        $result = [];
+        if (true === isset($_FILES['file'])) {
             $temp_bild_pfad = getcwd() . '/tmp/exercises/';
 
             $obj_file = new CAD_File();
             $obj_file->setDestPath($temp_bild_pfad);
             $obj_file->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'svg', 'gif'));
-            $obj_file->setUploadedFiles($_FILES['user-file']);
+            $obj_file->setUploadedFiles($_FILES['file']);
             $obj_file->moveUploadedFiles();
 
             $a_files = $obj_file->getDestFiles();
-
             if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
-                $this->view->assign('picturePaths', json_encode($a_files[0]));
+                $result['id'] = time();
+                $result['paths'] = $a_files[0];
             }
         }
+        $this->view->assign('json', json_encode($result));
     }
 
     /**
@@ -519,29 +526,35 @@ class ExercisesController extends AbstractController {
         $params = $req->getParams();
 
         $this->view->assign('previewPicturesForEditContent', $this->generatePreviewPicturesForEditContent($params['id']));
+        $this->view->assign('templateDisplayType', 'none');
     }
 
     private function generatePreviewPicturesForEditContent($exerciseId)
     {
         $previewPictureContent = '';
-//        if (0 < $exerciseId) {
-            $a_bilder = null;
-            $obj_files = new CAD_File();
+        $obj_files = new CAD_File();
+        $obj_files->setSourcePath(getcwd() . '/tmp/exercises');
+        $obj_files->addSourcePath(getcwd() . "/images/content/dynamisch/exercises/" . $exerciseId);
+        $obj_files->holeBilderAusPfad();
 
-            $obj_files->setSourcePath(getcwd() . '/tmp/exercises');
-            $obj_files->addSourcePath(getcwd() . "/images/content/dynamisch/exercises/" . $exerciseId);
+        $previewPicturesCollection = $obj_files->getDestFiles();
 
-            $obj_files->holeBilderAusPfad();
-            $a_bilder = $obj_files->getDestFiles();
-
-            foreach ($a_bilder as $bild) {
-                $this->view->assign('picture', $bild);
-                $previewPictureContent .= $this->view->render('loops/preview-picture-for-edit.phtml');
-            }
-//        }
-        $this->view->assign('previewPictureContent', $previewPictureContent);
-
-        return $this->view->render('/globals/preview-pictures-for-edit.phtml');
+        foreach ($previewPicturesCollection as $previewPicture) {
+            $sysPath = APPLICATION_PATH.'/../public/'.$previewPicture['html_pfad'];
+            $thumbnailService = new Service_Generator_Thumbnail();
+            $thumbnailService->setSourceFilePathName($sysPath);
+            $thumbnailService->setThumbHeight(120);
+            $thumbnailService->setThumbWidth(120);
+            $this->view->assign('templateDisplayType', 'block');
+            $this->view->assign('previewType', 'dz-image-preview');
+            $this->view->assign('sourceData', $thumbnailService->generateImageString());
+            $this->view->assign('sourcePath', $previewPicture['html_pfad']);
+            $this->view->assign('fileName', $previewPicture['file']);
+            $this->view->assign('fileSize', $this->humanFileSize(filesize($sysPath)));
+            $previewPictureContent .= $this->view->render('loops/dropzone-preview-template.phtml');
+        }
+        $this->view->assign('previewPicturesThumbContent', $previewPictureContent);
+        return $previewPictureContent;
     }
 
     public function deletePictureAction() {
@@ -564,7 +577,7 @@ class ExercisesController extends AbstractController {
         }
     }
 
-    public function deleteExerciseAction() {
+    public function deleteAction() {
         $params = $this->getRequest()->getParams();
         $messages = array();
 
@@ -1132,5 +1145,11 @@ class ExercisesController extends AbstractController {
     public function generateExerciseOptionsDropDownContent() {
         $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
         return $exerciseOptionsService->generateExerciseOptionsSelectContent();
+    }
+
+    private function humanFileSize($bytes, $decimals = 2) {
+        $sz = 'BKMGTP';
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];
     }
 }

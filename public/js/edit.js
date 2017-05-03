@@ -3,7 +3,7 @@ var obj_ref = null;
 var init_func = null;
 
 jQuery('document').ready(function () {
-    var obj_cad_cms = new jQuery('html').CAD_CMS(jQuery('.editable'), controller);
+    //var obj_cad_cms = new jQuery('html').CAD_CMS(jQuery('.editable'), controller);
 
     jQuery.noConflict();
 
@@ -143,9 +143,9 @@ function initDeviceGroupsEdit() {
                                         'type': 'fehler',
                                         'message': 'Dieses Geraet ist bereits gesetzt!'
                                     });
-                                    var obj_cad_message = new CAD.Message();
-                                    obj_cad_message.init(a_messages);
-                                    obj_cad_message.open();
+                                    //var obj_cad_message = new CAD.Message();
+                                    //obj_cad_message.init(a_messages);
+                                    //obj_cad_message.open();
 
                                     return false;
                                 }
@@ -164,8 +164,8 @@ function initDeviceGroupsEdit() {
     });
 
     jQuery('.device-add').unbind('click').bind('click', function () {
-        var obj_cad_loader = new CAD.Loader();
-        obj_cad_loader.open();
+        //var obj_cad_loader = new CAD.Loader();
+        //obj_cad_loader.open();
 
         var url = '/devices/get-devices-for-edit/';
         var obj_params = {'ajax': true};
@@ -173,7 +173,7 @@ function initDeviceGroupsEdit() {
         jQuery.post(url, obj_params, function (response) {
 //                    jQuery(self).replaceWith(response);
             jQuery('.device-group-devices').append(response);
-            obj_cad_loader.close(true);
+            //obj_cad_loader.close(true);
             initDeviceGroupsEdit();
         });
     });
@@ -183,7 +183,7 @@ function initDeviceGroupsEdit() {
         obj_ref = jQuery(this).parent();
 
         if (obj_ref.find('.device-name').val()) {
-            obj_cad_messages = new CAD.Message();
+            //obj_cad_messages = new CAD.Message();
             a_messages.push(
                 {
                     'type': 'warnung',
@@ -193,8 +193,8 @@ function initDeviceGroupsEdit() {
                     'confirm_func': 'deleteDevice()'
                 });
 
-            obj_cad_messages.init(a_messages);
-            obj_cad_messages.open();
+            //obj_cad_messages.init(a_messages);
+            //obj_cad_messages.open();
         } else {
             deleteDevice();
         }
@@ -238,9 +238,9 @@ function initDevicesEdit() {
                                     'type': 'fehler',
                                     'message': 'Dieser Geraet ist bereits gesetzt!'
                                 });
-                                var obj_cad_message = new CAD.Message();
-                                obj_cad_message.init(a_messages);
-                                obj_cad_message.open();
+                                //var obj_cad_message = new CAD.Message();
+                                //obj_cad_message.init(a_messages);
+                                //obj_cad_message.open();
 
                                 return false;
                             }
@@ -259,8 +259,8 @@ function initDevicesEdit() {
     });
 
     jQuery('.device-add').unbind('click').bind('click', function () {
-        var obj_cad_loader = new CAD.Loader();
-        obj_cad_loader.open();
+        //var obj_cad_loader = new CAD.Loader();
+        //obj_cad_loader.open();
 
         var url = '/devices/get-devices-for-edit/';
         var obj_params = {'ajax': true};
@@ -268,41 +268,41 @@ function initDevicesEdit() {
         jQuery.post(url, obj_params, function (response) {
 //                    jQuery(self).replaceWith(response);
             jQuery('.device-group-devices').append(response);
-            obj_cad_loader.close(true);
+            //obj_cad_loader.close(true);
             initDevicesEdit();
         });
     });
 
     jQuery('.device-delete').unbind('click').bind('click', function () {
-        var a_messages = [];
-        obj_ref = jQuery(this).parent();
-        obj_cad_messages = new CAD.Message();
-        a_messages.push(
-            {
-                'type': 'warnung',
-                'message': 'Wollen Sie Dieses Geraet wirklich löschen?',
-                'confirm': true,
-                'confirm_func': 'deleteDevice()'
-            });
+        //var a_messages = [];
+        //obj_ref = jQuery(this).parent();
+        //obj_cad_messages = new CAD.Message();
+        //a_messages.push(
+        //    {
+        //        'type': 'warnung',
+        //        'message': 'Wollen Sie Dieses Geraet wirklich löschen?',
+        //        'confirm': true,
+        //        'confirm_func': 'deleteDevice()'
+        //    });
 
-        obj_cad_messages.init(a_messages);
-        obj_cad_messages.open();
+        //obj_cad_messages.init(a_messages);
+        //obj_cad_messages.open();
     });
 
     jQuery('.device-group-delete').unbind('click').bind('click', function () {
-        var a_messages = [];
-        obj_ref = jQuery(this).parent();
-        obj_cad_messages = new CAD.Message();
-        a_messages.push(
-            {
-                'type': 'warnung',
-                'message': 'Wollen Sie Diese Geraetegruppe wirklich löschen?',
-                'confirm': true,
-                'confirm_func': 'deleteDeviceGroup()'
-            });
-
-        obj_cad_messages.init(a_messages);
-        obj_cad_messages.open();
+        //var a_messages = [];
+        //obj_ref = jQuery(this).parent();
+        //obj_cad_messages = new CAD.Message();
+        //a_messages.push(
+        //    {
+        //        'type': 'warnung',
+        //        'message': 'Wollen Sie Diese Geraetegruppe wirklich löschen?',
+        //        'confirm': true,
+        //        'confirm_func': 'deleteDeviceGroup()'
+        //    });
+        //
+        //obj_cad_messages.init(a_messages);
+        //obj_cad_messages.open();
     });
 }
 
@@ -365,9 +365,9 @@ function initMuskelgruppenEdit() {
                                     'type': 'fehler',
                                     'message': 'Diese Muskelgruppe ist bereits gesetzt!'
                                 });
-                                var obj_cad_message = new CAD.Message();
-                                obj_cad_message.init(a_messages);
-                                obj_cad_message.open();
+                                //var obj_cad_message = new CAD.Message();
+                                //obj_cad_message.init(a_messages);
+                                //obj_cad_message.open();
 
                                 return false;
                             }
@@ -389,22 +389,22 @@ function initMuskelgruppenEdit() {
     });
 
     function addMuskelGruppe(iMuskelGruppeId) {
-        var obj_cad_loader = new CAD.Loader();
-        obj_cad_loader.open();
+        //var obj_cad_loader = new CAD.Loader();
+        //obj_cad_loader.open();
 
         var url = '/muscle-groups/get-muscle-group-for-edit/';
         var obj_params = {'ajax': true, 'id': iMuskelGruppeId};
 
         jQuery.post(url, obj_params, function (response) {
             jQuery('.exercise-muscle-groups').append(response);
-            obj_cad_loader.close(true);
+            //obj_cad_loader.close(true);
             initMuskelgruppenEdit();
         });
     }
 
     jQuery('.muscle-group-add').unbind('click').bind('click', function () {
-        var obj_cad_loader = new CAD.Loader();
-        obj_cad_loader.open();
+        //var obj_cad_loader = new CAD.Loader();
+        //obj_cad_loader.open();
 
         var url = '/muscle-groups/get-muscle-group-for-edit/';
         var obj_params = {'ajax': true};
@@ -412,7 +412,7 @@ function initMuskelgruppenEdit() {
         jQuery.post(url, obj_params, function (response) {
             //jQuery(self).replaceWith(response);
             jQuery('.exercise-muscle-groups').append(response);
-            obj_cad_loader.close(true);
+            //obj_cad_loader.close(true);
             initMuskelgruppenEdit();
         });
     });
@@ -519,9 +519,9 @@ function initMusclesEdit() {
                                         'type': 'fehler',
                                         'message': 'Dieser Muskel ist bereits gesetzt!'
                                     });
-                                    var obj_cad_message = new CAD.Message();
-                                    obj_cad_message.init(a_messages);
-                                    obj_cad_message.open();
+                                    //var obj_cad_message = new CAD.Message();
+                                    //obj_cad_message.init(a_messages);
+                                    //obj_cad_message.open();
 
                                     return false;
                                 }
@@ -540,8 +540,8 @@ function initMusclesEdit() {
     });
 
     jQuery('.muscle-add').unbind('click').bind('click', function () {
-        var obj_cad_loader = new CAD.Loader();
-        obj_cad_loader.open();
+        //var obj_cad_loader = new CAD.Loader();
+        //obj_cad_loader.open();
 
         var url = '/muscles/get-muscle-for-edit/';
         var obj_params = {'ajax': true};
@@ -549,30 +549,30 @@ function initMusclesEdit() {
         jQuery.post(url, obj_params, function (response) {
 //                    jQuery(self).replaceWith(response);
             jQuery('.muscles-in-muscle-group').append(response);
-            obj_cad_loader.close(true);
+            //obj_cad_loader.close(true);
             initMusclesEdit();
         });
     });
 
     jQuery('.muscle-delete').unbind('click').bind('click', function () {
-        var a_messages = [];
-        obj_ref = jQuery(this).parent();
+        //var a_messages = [];
+        //obj_ref = jQuery(this).parent();
 
-        if (0 < obj_ref.find('.muscle-name').val().length) {
-            obj_cad_messages = new CAD.Message();
-            a_messages.push({
-                'type': 'warnung',
-                'message': 'Wollen Sie Dieser Muskel wirklich löschen?',
-                'confirm': true,
-                //                    'confirm_func': 'self.loescheMuskelgruppe()'
-                'confirm_func': 'deleteMuscle()'
-            });
+        //if (0 < obj_ref.find('.muscle-name').val().length) {
+            //obj_cad_messages = new CAD.Message();
+            //a_messages.push({
+            //    'type': 'warnung',
+            //    'message': 'Wollen Sie Dieser Muskel wirklich löschen?',
+            //    'confirm': true,
+            //                        'confirm_func': 'self.loescheMuskelgruppe()'
+                //'confirm_func': 'deleteMuscle()'
+            //});
 
-            obj_cad_messages.init(a_messages);
-            obj_cad_messages.open();
-        } else {
-            deleteMuscle();
-        }
+            //obj_cad_messages.init(a_messages);
+            //obj_cad_messages.open();
+        //} else {
+        //    deleteMuscle();
+        //}
     });
 }
 
@@ -597,8 +597,8 @@ function deleteMuscle() {
 }
 
 function CADEditSave() {
-    var obj_cad_loader = new CAD.Loader();
-    obj_cad_loader.open();
+    //var obj_cad_loader = new CAD.Loader();
+    //obj_cad_loader.open();
 
     var edited_elements = jQuery().getEditedElements();
 
@@ -606,21 +606,21 @@ function CADEditSave() {
 
     jQuery.post(url, edited_elements, function (response) {
         try {
-            obj_cad_loader.close();
+            //obj_cad_loader.close();
             var obj_json = JSON.parse(response);
 
             if (undefined != obj_json[0].type
                 && undefined != obj_json[0].message
             ) {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init(obj_json);
-                obj_cad_messages.open();
+                //var obj_cad_messages = new CAD.Message();
+                //obj_cad_messages.init(obj_json);
+                //obj_cad_messages.open();
             }
             if (obj_json.id) {
                 jQuery('.id').val(obj_json.id);
             }
         } catch (e) {
-            obj_cad_loader.close();
+            //obj_cad_loader.close();
             alert(response);
         }
     });
@@ -659,9 +659,9 @@ function edit_init(b_lade_spezials) {
                 jQuery('.preview-picture').attr("src", '')
                     .addClass("cad-cms-dummy-blaeher");
             }
-            var obj_cad_messages = new CAD.Message();
-            obj_cad_messages.init(response);
-            obj_cad_messages.open();
+            //var obj_cad_messages = new CAD.Message();
+            //obj_cad_messages.init(response);
+            //obj_cad_messages.open();
 
             refreshPictures();
         });
@@ -751,8 +751,8 @@ function edit_init(b_lade_spezials) {
     });
 
     jQuery('.muscle-group-add').unbind('click').bind('click', function () {
-        var obj_cad_loader = new CAD.Loader();
-        obj_cad_loader.open();
+        //var obj_cad_loader = new CAD.Loader();
+        //obj_cad_loader.open();
 
         var url = '/muscle-groups/get-muscle-group-for-edit/';
         var obj_params = {'ajax': true};
@@ -760,26 +760,26 @@ function edit_init(b_lade_spezials) {
         jQuery.post(url, obj_params, function (response) {
 //                    jQuery(self).replaceWith(response);
             jQuery('.exercise-muscle-groups').append(response);
-            obj_cad_loader.close(true);
+            //obj_cad_loader.close(true);
             initMuskelgruppenEdit();
         });
     });
 
     jQuery('.muscle-group-delete').unbind('click').bind('click', function () {
-        var a_messages = [];
-        obj_ref = jQuery(this).parent();
-        obj_cad_messages = new CAD.Message();
-        a_messages.push(
-            {
-                'type': 'warnung',
-                'message': 'Wollen Sie Diese Muskelgruppe wirklich löschen?',
-                'confirm': true,
+        //var a_messages = [];
+        //obj_ref = jQuery(this).parent();
+        //obj_cad_messages = new CAD.Message();
+        //a_messages.push(
+        //    {
+        //        'type': 'warnung',
+        //        'message': 'Wollen Sie Diese Muskelgruppe wirklich löschen?',
+        //        'confirm': true,
 //                    'confirm_func': 'self.loescheMuskelgruppe()'
-                'confirm_func': 'deleteMuscleGroup()'
-            });
+//                'confirm_func': 'deleteMuscleGroup()'
+//            });
 
-        obj_cad_messages.init(a_messages);
-        obj_cad_messages.open();
+//        obj_cad_messages.init(a_messages);
+//        obj_cad_messages.open();
     });
 
     jQuery('.save').unbind('click').click(function () {

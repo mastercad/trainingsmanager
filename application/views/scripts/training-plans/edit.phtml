@@ -106,8 +106,8 @@
         });
 
         $('#new_split_plan').unbind('click').bind('click', function() {
-            var obj_cad_loader = new CAD.Loader();
-            obj_cad_loader.open();
+//            var obj_cad_loader = new CAD.Loader();
+//            obj_cad_loader.open();
             var sUrl = '/training-plans/get-training-plan-for-split';
             var oParams =
             {
@@ -116,20 +116,20 @@
                 'ajax': 1
             };
             $.post(sUrl, oParams, function(response) {
-                obj_cad_loader.close();
+//                obj_cad_loader.close();
                 try {
                     var obj_json = JSON.parse(response);
 
-                    if(undefined != obj_json[0].type &&
-                        undefined != obj_json[0].message)
+                    if(undefined != obj_json[0].type
+                        && undefined != obj_json[0].message)
                     {
-                        var obj_cad_messages = new CAD.Message();
-                        obj_cad_messages.init(obj_json);
-                        obj_cad_messages.open();
+//                        var obj_cad_messages = new CAD.Message();
+//                        obj_cad_messages.init(obj_json);
+//                        obj_cad_messages.open();
                     }
                 } catch (e) {
                     $('.training-plans').append(response);
-                    CAD.Sperre().close();
+//                    CAD.Sperre().close();
                     trainingPlanEditInit();
                 }
             });
@@ -197,9 +197,9 @@
                                 'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
                                 'confirm_func': "jQuery('#" + jQuery(this).attr('id') + "').effect('highlight', {}, 5000);"
                             });
-                            var obj_cad_message = new CAD.Message();
-                            obj_cad_message.init(a_messages);
-                            obj_cad_message.open();
+//                            var obj_cad_message = new CAD.Message();
+//                            obj_cad_message.init(a_messages);
+//                            obj_cad_message.open();
                         }
                         return false;
                     }
@@ -246,9 +246,9 @@
                                 'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
                                 'confirm_func': "jQuery('#" + jQuery(this).attr('id') + "').effect('highlight', {}, 5000);"
                             });
-                            var obj_cad_message = new CAD.Message();
-                            obj_cad_message.init(a_messages);
-                            obj_cad_message.open();
+//                            var obj_cad_message = new CAD.Message();
+//                            obj_cad_message.init(a_messages);
+//                            obj_cad_message.open();
                         }
                         return false;
                     }
@@ -289,9 +289,9 @@
                     if (undefined != obj_json[0].type &&
                         undefined != obj_json[0].message
                     ) {
-                        var obj_cad_messages = new CAD.Message();
-                        obj_cad_messages.init(obj_json);
-                        obj_cad_messages.open();
+//                        var obj_cad_messages = new CAD.Message();
+//                        obj_cad_messages.init(obj_json);
+//                        obj_cad_messages.open();
                     }
                     // is not a json object -> paste content
                 } catch (e) {

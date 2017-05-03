@@ -53,20 +53,20 @@
                 jQuery.post(url, obj_params, function(response) {
                     try {
                         response = JSON.parse(response);
-                        var cad_obj_messages = new CAD.Message();
-                        cad_obj_messages.init(response);
+//                        var cad_obj_messages = new CAD.Message();
+//                        cad_obj_messages.init(response);
                         
-                        if(cad_obj_messages.open()) {
-                            jQuery(that).parent().fadeOut();
-                        }
+//                        if(cad_obj_messages.open()) {
+//                            jQuery(that).parent().fadeOut();
+//                        }
                     } catch(e) {
                         alert(response);
                     }
                 });
             } else {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init([{'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_cant_delete_exercise');?>'}]);
-                obj_cad_messages.open();
+//                var obj_cad_messages = new CAD.Message();
+//                obj_cad_messages.init([{'type': 'fehler', 'message': '<?php //echo $this->translate('tooltip_cant_delete_exercise');?>//'}]);
+//                obj_cad_messages.open();
             }
         };
 

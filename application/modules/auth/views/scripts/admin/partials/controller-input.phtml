@@ -1,0 +1,61 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 01.05.15
+ * Time: 13:09
+ */
+?>
+
+<div style="padding: 20px; clear: both;"
+     class="controller"
+     data-controller-name="<?php echo $this->sControllerName;?>" >
+    <span >Controller: </span>
+    <label for="<?php echo $this->sModuleName . '_' . $this->sControllerName;?>"
+        style="font-weight: bold; font-size: 16px;">
+        <?php echo $this->sControllerName;?>
+    </label>
+
+    <input class="global-check"
+           name="user_right_group_right_active[<?php echo $this->iInputCount;?>]"
+           style="margin-left: 20px;"
+           id="<?php echo $this->sModuleName . '_' . $this->sControllerName;?>"
+           title="<?php echo $this->sGlobalControllerTitle;?>"
+           type="checkbox"
+        <?php if (true === $this->bGlobalControllerChecked) {echo ' checked ';}?>
+           data-orig="<?php if (true === $this->bGlobalControllerChecked) {echo ' checked ';}?>"
+        <?php if (true === $this->bGlobalControllerRightInherited) {echo ' disabled ';}?> />
+
+    <input class="global-check"
+           name="user_right_group_right_active_orig[<?php echo $this->iInputCount;?>]"
+           style="margin-left: 20px; display: none;"
+           id="<?php echo $this->sModuleName . '_' . $this->sControllerName;?>"
+           title="<?php echo $this->sGlobalControllerTitle;?>"
+           type="checkbox"
+        <?php if (true === $this->bGlobalControllerChecked) {echo ' checked ';}?>
+           data-orig="<?php if (true === $this->bGlobalControllerChecked) {echo ' checked ';}?>"
+        <?php if (true === $this->bGlobalControllerRightInherited) {echo ' disabled ';}?> />
+
+    <input type="hidden"
+           name="user_right_group_right_id[<?php echo $this->iInputCount;?>]"
+           value="<?php echo $this->iGlobalUserGruppenRechtId;?>" />
+
+    <input type="hidden"
+           name="user_right_group_right[<?php echo $this->iInputCount;?>]"
+           value="<?php echo $this->sModuleName . ':' . $this->sControllerName . ':*';?>" />
+
+    <br />
+
+    <p>
+        Actions:
+    </p>
+
+    <div style="margin-left: 30px;">
+        <?php
+            echo $this->sControllerContent;
+        ?>
+    </div>
+    <br class="clear-fix" />
+</div>
+
+<br class="clear-fix" />

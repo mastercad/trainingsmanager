@@ -60,49 +60,47 @@
 </button>
 
 <script type="text/javascript">
-	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
-
-	function save() {
-        var hasErrors = false;
-        var messages = [];
+    jQuery(document).ready(function() {
+        jQuery('#save').unbind('click').click(function() {
+            var hasErrors = false;
+            var messages = [];
 
 //        if(!jQuery.trim(jQuery('#device_name').html()).length) {
-        if(!jQuery.trim(jQuery('#device_name').val()).length) {
-            hasErrors = true;
-            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_needs_name');?>'});
-        }
-
-        var optionsList = jQuery('.device-options').find('.device-option');
-        var options = [];
-
-        for (var i = 0, len = optionsList.length; i < len; i++) {
-            var option_id = jQuery(optionsList[i]).data('device-option-id');
-            var option_value = jQuery(optionsList[i]).val();
-
-            if (option_id
-                && option_value
-            ) {
-                options.push({'id': option_id, 'value': Base64.encode(option_value)});
+            if(!jQuery.trim(jQuery('#device_name').val()).length) {
+                hasErrors = true;
+                messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_needs_name');?>'});
             }
-        }
 
-        if (!hasErrors) {
-            jQuery().setEditedElements('device_name', Base64.encode(jQuery('#device_name').val()));
-            jQuery().setEditedElements('device_id', jQuery('#device_id').val());
-            jQuery().setEditedElements('device_preview_picture', jQuery('#device_preview_picture').data('file'));
-            jQuery().setEditedElements('device_options', options);
+            var optionsList = jQuery('.device-options').find('.device-option');
+            var options = [];
 
-            jQuery().setAjax(true);
+            for (var i = 0, len = optionsList.length; i < len; i++) {
+                var option_id = jQuery(optionsList[i]).data('device-option-id');
+                var option_value = jQuery(optionsList[i]).val();
 
-            CADEditSave();
-        } else {
-            var obj_cad_messages = new CAD.Message();
-            obj_cad_messages.init(messages);
-            obj_cad_messages.open();
-        }
-    }
+                if (option_id
+                    && option_value
+                ) {
+                    options.push({'id': option_id, 'value': Base64.encode(option_value)});
+                }
+            }
 
-    jQuery(document).ready(function() {
+            if (!hasErrors) {
+                jQuery().setEditedElements('device_name', Base64.encode(jQuery('#device_name').val()));
+                jQuery().setEditedElements('device_id', jQuery('#device_id').val());
+                jQuery().setEditedElements('device_preview_picture', jQuery('#device_preview_picture').data('file'));
+                jQuery().setEditedElements('device_options', options);
+
+                jQuery().setAjax(true);
+
+//            CADEditSave();
+            } else {
+//            var obj_cad_messages = new CAD.Message();
+//            obj_cad_messages.init(messages);
+//            obj_cad_messages.open();
+            }
+        });
+
         jQuery('.option-add').unbind('click').bind('click', function() {
 
             // check if selected option already exists
@@ -113,15 +111,15 @@
                 var option_id = jQuery(currentOptionsList[i]).data('device-option-id');
 
                 if (option_id == selectedOption) {
-                    var obj_cad_messages = new CAD.Message();
-                    obj_cad_messages.init([
-                        {
-                            'type': 'fehler',
-                            'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
-                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
-                        }
-                    ]);
-                    obj_cad_messages.open();
+//                    var obj_cad_messages = new CAD.Message();
+//                    obj_cad_messages.init([
+//                        {
+//                            'type': 'fehler',
+//                            'message': '<?php //echo $this->translate('tooltip_selected_option_already_set');?>//',
+//                            'confirm_func': "jQuery('#" + jQuery(currentOptionsList[i]).attr('id') + "').effect('highlight', {}, 5000)"
+//                        }
+//                    ]);
+//                    obj_cad_messages.open();
 
                     return false;
                 }
@@ -137,8 +135,6 @@
             });
             return false;
         });
-        edit_init(true);
-        initDevicesEdit();
         initOptions();
     });
 

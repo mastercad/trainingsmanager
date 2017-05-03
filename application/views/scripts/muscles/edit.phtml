@@ -1,12 +1,12 @@
 <a name="right" />
 <div>
     <h3>
-        <?php echo $this->translate('label_muscle_name');?>:<span
-            class="editable"
-            id="muscle_name" data-cad-cms-content-orig="<?php echo base64_encode($this->muscle_name); ?>"
-            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_muscle_name');?>"
-            ><?php echo $this->muscle_name; ?></span>
+        <?php echo $this->translate('label_muscle_name');?>:
     </h3>
+    <input type="text"
+           class="form-control"
+           value="<?php echo $this->muscle_name;?>"
+           id="muscle_name" data-cad-cms-content-orig="<?php echo base64_encode($this->muscle_name);?>" />
 
     <br class="clear-fix"/>
 
@@ -15,33 +15,33 @@
 
 <br class="clear-fix"/>
 
-<button class="save btn btn-primary btn-block">
+<button id="save" class="save btn btn-primary btn-block">
     <?php echo $this->translate('label_save');?>
 </button>
 
 <script type="text/javascript">
-    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
+    jQuery('#save').unbind('click').click(function() {
+        var hasErrors = false;
+        var messages = [];
 
-    function save() {
-        var b_fehler = false;
-        var a_messages = [];
-
-        if (!trim(jQuery('#muscle_name').html()).length) {
-            b_fehler = true;
-            a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_muscle_needs_name');?>'});
+        if (!jQuery.trim(jQuery('#muscle_name').val()).length) {
+            hasErrors = true;
+            messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_muscle_needs_name');?>'});
         }
 
-        if (!b_fehler) {
-            jQuery().setEditedElements('muscle_id', jQuery('#muscle_id').val());
-            jQuery().setAjax(true);
+        if (!hasErrors) {
+            var data = {
+                muscle_id: jQuery('#muscle_id').val(),
+                ajax: true
+            };
+            jQuery.post('/'+controller+'/save', data, function() {
 
-            CADEditSave();
+            });
         } else {
-            var obj_cad_messages = new CAD.Message();
-            obj_cad_messages.init(a_messages);
-            obj_cad_messages.open();
+            alert("HABE FEHLER!");
+//            var obj_cad_messages = new CAD.Message();
+//            obj_cad_messages.init(a_messages);
+//            obj_cad_messages.open();
         }
-    }
-    edit_init(false);
-    initMusclesEdit();
+    });
 </script>

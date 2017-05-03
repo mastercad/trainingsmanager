@@ -1,0 +1,67 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 01.05.15
+ * Time: 13:16
+ *
+ * Version: 5.4
+ */
+
+?>
+
+<div class="action-container" style="float: left; width: 20px; position: relative;
+              margin-top: 0;">
+    <label class="rotate" style="
+              float:left;
+              position: relative;
+              border-style: none;
+              margin-left: 4px;
+              -webkit-transform: rotate(270deg);
+              -moz-transform: rotate(270deg);
+              -ms-transform: rotate(270deg);
+              -o-transform: rotate(270deg);
+              transform: rotate(270deg);
+              writing-mode: lr-tb;
+              filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+              white-space:nowrap;"
+        for="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName;?>"
+    ><?php echo $this->sActionName;?></label>
+
+    <input type="checkbox"
+           name="user_right_group_right_active[<?php echo $this->iInputCount;?>]"
+           id="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName;?>"
+           style="
+           /*position: absolute; bottom: 0; left: 4px;*/
+           position: relative;
+           float: left;"
+<?php
+if (true === $this->bActionChecked) {
+    echo ' checked ';
+}
+if (true === $this->bActionRightInherited) {
+    echo ' disabled ';
+}
+?>
+           title="<?php echo $this->sTitle;?>" />
+
+    <input type="checkbox"
+           name="user_right_group_right_active_orig[<?php echo $this->iInputCount;?>]"
+           id="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName;?>"
+           style="position: absolute; bottom: 0; left: 4px; display: none;"
+        <?php
+        if (true === $this->bActionChecked) {echo ' checked ';}
+        if (true === $this->bActionRightInherited) { echo ' disabled ';}
+        ?>
+           title="<?php echo $this->sTitle;?>" />
+
+    <input type="hidden"
+           name="user_right_group_right_id[<?php echo $this->iInputCount;?>]"
+           value="<?php echo $this->iUserRechteGruppenRechtId;?>" />
+
+    <input type="hidden"
+           name="user_right_group_right[<?php echo $this->iInputCount;?>]"
+           value="<?php echo $this->sModuleName . ':' . $this->sControllerName . ':' . $this->sActionName;?>" />
+
+    <br class="clearfix" />
+</div>

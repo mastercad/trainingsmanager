@@ -1,0 +1,50 @@
+<div>
+	<form method="post" action="" id="password-lost-form" >
+		<label>
+			Bitte geben Sie die E-Mail Adresse ein, mit der Sie sich auf <?php echo PROJECT_NAME;?>
+			registriert haben.
+		</label>
+		<br />
+		<input type="text" style="width: 200px; margin-top: 5px;" id="password_lost_email" name="password_lost_email" value="" />
+		<br />
+		<input type="submit" style="margin-top: 5px;" id="password_lost_submit" value=" Neues Passwort anfordern " />
+	</form>
+</div>
+
+<script type="text/javascript">
+	function password_lost_init() {
+//		jQuery('#password-lost-form').submit(function(e) {
+        jQuery('#password_lost_submit').unbind('click').click(function(e) {
+			e.preventDefault();
+			
+			var password_lost_email = jQuery('#password-lost-form #password_lost_email').val() != jQuery('#password-lost-form #password_lost_email').data('default') ? jQuery('#password-lost-form #password_lost_email').val() : '';
+
+			if(trim(password_lost_email).length > 0) {
+				var url = '/auth/password-lost/';
+				var obj_params = {
+                    'password_lost_email': Base64.encode(password_lost_email),
+                    'ajax': true
+                };
+	
+				jQuery.post(url, obj_params, function(response) {
+//					var obj_cad_message = new CAD.Message();
+//					obj_cad_message.init(response);
+
+					// wenn daten erfolgreich gespeichert wurden
+//					if(obj_cad_message.open()) {
+//					}
+					return false;
+				});
+			} else {
+//				var obj_cad_message = new CAD.Message();
+//				obj_cad_message.init([{'type': 'fehler', 'message': 'Bitte geben Sie eine E-Mail Adresse an!'}]);
+//				obj_cad_message.open();
+			}
+		});
+
+		prepareInputs();
+	}
+
+	password_lost_init();
+	
+</script>

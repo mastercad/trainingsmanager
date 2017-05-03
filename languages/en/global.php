@@ -36,6 +36,8 @@
         'label_option_value' => 'default value',
         'label_option-value' => 'value',
 
+        'text_needed_permissions' => 'You are not allowed to see this site',
+
         'or' => 'or',
         'and' => 'and',
         'of' => 'of',

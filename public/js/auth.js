@@ -15,14 +15,14 @@ function initAuth() {
         };
 
 		jQuery.post(url, obj_params, function(response) {
-			var obj_cad_message = new CAD.Message();
-			obj_cad_message.init(response);
-			
-			if(obj_cad_message.open()) {
+			//var obj_cad_message = new CAD.Message();
+			//obj_cad_message.init(response);
+			//
+			//if(obj_cad_message.open()) {
 				location.href = location.href;
-			} else {
-				jQuery('#login_form_fail_options #password_forgotten').fadeIn();
-			}
+			//} else {
+			//	jQuery('#login_form_fail_options #password_forgotten').fadeIn();
+			//}
 			return false;
 		});
 	});
@@ -33,12 +33,12 @@ function initAuth() {
 		var obj_params = {'ajax': true};
 		
 		jQuery.post(url, obj_params, function(response ){
-			var obj_cad_message = new CAD.Message();
-			obj_cad_message.init(response);
-			
-			if(obj_cad_message.open()) {
-				
-			}
+			//var obj_cad_message = new CAD.Message();
+			//obj_cad_message.init(response);
+
+			//if(obj_cad_message.open()) {
+
+			//}
 		});
 	});
 	
@@ -48,18 +48,18 @@ function initAuth() {
 		var obj_params = {'ajax': true};
 		
 		jQuery.post(url, obj_params, function(response){
-			var obj_cad_message = new CAD.Message();
-			obj_cad_message.init(response);
+			//var obj_cad_message = new CAD.Message();
+			//obj_cad_message.init(response);
 			
-			if(obj_cad_message.open())
-			{
+			//if(obj_cad_message.open())
+			//{
 				
-			}
+			//}
 			
 		});
 	});
 	auth_init = true;
-	prepareInputs();
+	//prepareInputs();
 }
 
-initAuth();
+//initAuth();

@@ -26,6 +26,14 @@ function customAutoload($class) {
             'Model' => 'models',
         ];
 
+        if (false !== (strpos($class, 'Helper'))) {
+            $classFilePathName = APPLICATION_PATH.'/controllers/helpers/'.$class.'.php';
+            if (is_readable($classFilePathName)) {
+                require_once $classFilePathName;
+                return true;
+            }
+        }
+
         $path = preg_split('/\_/', $class);
         $replacedPath = APPLICATION_PATH;
 
@@ -40,7 +48,7 @@ function customAutoload($class) {
         $replacedPath .= '.php';
 
         if (is_readable($replacedPath)) {
-            require_once($replacedPath);
+            require_once $replacedPath;
             return true;
         }
 
@@ -60,5 +68,9 @@ $application = new Zend_Application(
     APPLICATION_ENV,
     APPLICATION_PATH . '/configs/application.ini'
 );
-$application->bootstrap()
-            ->run();
+
+try {
+    $application->bootstrap()->run();
+} catch (Exception $exception) {
+    echo $exception->getMessage();
+}

@@ -1,13 +1,12 @@
 <a name="right" />
 <div>
     <h3>
-        <?php echo $this->translate('label_device_group_name');?>:<span
-            class="editable" 
-            style="margin-left: 20px; border-bottom: 1px dotted gray;"
-            id="device_group_name" data-cad-cms-content-orig="<?php echo base64_encode($this->device_group_name);?>"
-            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_click_to_edit_device_group_name');?>"
-		><?php echo $this->device_group_name;?></span>
+        <?php echo $this->translate('label_device_group_name');?>:
     </h3>
+    <input type="text"
+           class="form-control"
+           value="<?php echo $this->device_group_name;?>"
+           id="device_group_name" data-cad-cms-content-orig="<?php echo base64_encode($this->device_group_name);?>" />
     
     <br class="clear-fix" />
     
@@ -38,50 +37,48 @@
             background-color: #FFFFFF; opacity: 0.9; 
             box-shadow: 5px 5px 5px #111111;" ></div>
 
-<button class="save btn btn-primary btn-block">
+<button id="save" class="save btn btn-primary btn-block">
     <?php echo $this->translate('label_save');?>
 </button>
 
 <script type="text/javascript">
 	controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
 
-	function save() {
-            var hasErrors = false;
-            var a_messages = [];
-            
-            if (!jQuery.trim(jQuery('#device_group_name').html()).length) {
-                hasErrors = true;
-                a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_name');?>'});
-            }
-            
-            var devicesCollection = jQuery('.device-group-devices').find('.device');
-            var devices = [];
+	jQuery('#save').unbind('click').click(function() {
+        var hasErrors = false;
+        var a_messages = [];
 
-            for (var i = 0, len = devicesCollection.length; i < len; i++) {
-                var device_id              = jQuery(devicesCollection[i]).find('.device-name').data('device-id');
-                
-                if (device_id) {
-                    devices.push({'id': device_id});
-                }
-            }
-            
-            if (!devices.length) {
-                hasErrors = true;
-                a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_device');?>'});
-            }
-            
-            if (!hasErrors) {
-                jQuery().setEditedElements('device_group_devices',   devices);
-                jQuery().setEditedElements('device_group_id',        jQuery('#device_group_id').val());
-                jQuery().setAjax(true);
+        if (!jQuery.trim(jQuery('#device_group_name').val()).length) {
+            hasErrors = true;
+            a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_name');?>'});
+        }
 
-                CADEditSave();
-            } else {
-                var obj_cad_messages = new CAD.Message();
-                obj_cad_messages.init(a_messages);
-                obj_cad_messages.open();
+        var devicesCollection = jQuery('.device-group-devices').find('.device');
+        var devices = [];
+
+        for (var i = 0, len = devicesCollection.length; i < len; i++) {
+            var device_id              = jQuery(devicesCollection[i]).find('.device-name').data('device-id');
+
+            if (device_id) {
+                devices.push({'id': device_id});
             }
         }
-        edit_init(false);
-        initDeviceGroupsEdit();
+
+        if (!devices.length) {
+            hasErrors = true;
+            a_messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_device_group_needs_device');?>'});
+        }
+
+        if (!hasErrors) {
+            jQuery().setEditedElements('device_group_devices',   devices);
+            jQuery().setEditedElements('device_group_id',        jQuery('#device_group_id').val());
+            jQuery().setAjax(true);
+
+            CADEditSave();
+        } else {
+//                var obj_cad_messages = new CAD.Message();
+//                obj_cad_messages.init(a_messages);
+//                obj_cad_messages.open();
+        }
+    });
 </script>

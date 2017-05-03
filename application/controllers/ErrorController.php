@@ -46,8 +46,20 @@ class ErrorController extends AbstractController {
         $this->view->request = $errors->request;
     }
 
-    public function loginFailAction() {
-        echo "Login fehlgeschlagen!";
+    public function noAccessAction()
+    {
+        $a_params = $this->getRequest()->getParams();
+
+//        echo "<pre>";
+//        var_dump($a_params);
+//        echo "</pre>";
+    }
+
+    public function loginFailAction()
+    {
+        $a_params = $this->getRequest()->getParams();
+
+        echo "Login fehlgeschlagen!<br />";
     }
 
     public function getLog() {

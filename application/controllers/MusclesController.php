@@ -18,7 +18,7 @@ class MusclesController extends AbstractController
         $musclesDb = new Model_DbTable_Muscles();
         $musclesCollection = $musclesDb->findAllMuscles();
 
-        $musclesContent = $this->getTranslator()->translate('label_no_muscles_found');
+        $musclesContent = $this->translate('label_no_muscles_found');
 
         if ($musclesCollection instanceof Zend_Db_Table_Rowset
             && 0 < count($musclesCollection)
@@ -28,7 +28,7 @@ class MusclesController extends AbstractController
             {
                 $this->view->assign('name', $muscle->offsetGet('muscle_name'));
                 $this->view->assign('id', $muscle->offsetGet('muscle_id'));
-                $musclesContent .= $this->view->render('loops/muscle-row.phtml');
+                $musclesContent .= $this->view->render('loops/item-row.phtml');
             }
         }
 
@@ -159,7 +159,7 @@ class MusclesController extends AbstractController
             if (0 == strlen(trim($muscleName))
                && !$muscleId
             ) {
-                array_push($messageCollection, array('type' => 'fehler', 'message' => $this->getTranslator()->translate('tooltip_muscle_needs_name')));
+                array_push($messageCollection, array('type' => 'fehler', 'message' => $this->translate('tooltip_muscle_needs_name')));
                 $hasError = true;
             } else if(0 < strlen(trim($muscleName))) {
                 $data['muscle_name'] = $muscleName;
@@ -173,7 +173,7 @@ class MusclesController extends AbstractController
             ) {
                 $muscleCurrent = $musclesDb->findMusclesByName($muscleName);
                 if (0 < count($muscleCurrent)) {
-                    array_push($messageCollection, array('type' => 'fehler', 'message' => $this->getTranslator()->translate('tooltip_muscle_already_exists'), 'result' => false));
+                    array_push($messageCollection, array('type' => 'fehler', 'message' => $this->translate('tooltip_muscle_already_exists'), 'result' => false));
                     $hasError = true;
                 }
             }
@@ -221,7 +221,7 @@ class MusclesController extends AbstractController
                     $data['muscle_update_user_fk'] = $userId;
 
                     $musclesDb->updateMuscle($data, $muscleId);
-                    array_push($messageCollection, array('type' => 'meldung', 'message' => $this->getTranslator()->translate('tooltip_muscle_edited_successfully'), 'result' => true, 'id' => $muscleId));
+                    array_push($messageCollection, array('type' => 'meldung', 'message' => $this->translate('tooltip_muscle_edited_successfully'), 'result' => true, 'id' => $muscleId));
                 }
                 // neu anlegen
                 else if(count($data) > 0)

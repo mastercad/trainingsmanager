@@ -58,27 +58,27 @@
 								};
 	
 				jQuery.post(url, obj_params, function(response) {
-					var obj_cad_message = new CAD.Message();
-					obj_cad_message.init(response);
+//					var obj_cad_message = new CAD.Message();
+//					obj_cad_message.init(response);
 
 					// wenn daten erfolgreich gespeichert wurden
-					if(obj_cad_message.open()) {
-						jQuery('#login_form #user_login_name').val(registerEmail);
-						jQuery('#login_form #user_login_password').val(registerPassword);
-					}
+//					if(obj_cad_message.open()) {
+//						jQuery('#login_form #user_login_name').val(registerEmail);
+//						jQuery('#login_form #user_login_password').val(registerPassword);
+//					}
 					return false;
 				});
 			}
 			else if (0 == trim(registerEmail).length
                 || 0 == trim(registerPassword).length
             ) {
-				var obj_cad_message = new CAD.Message();
-				obj_cad_message.init([{'type': 'fehler', 'message': 'Bitte füllen Sie alle mit "*" markierten Felder aus!'}]);
-				obj_cad_message.open();
+//				var obj_cad_message = new CAD.Message();
+//				obj_cad_message.init([{'type': 'fehler', 'message': 'Bitte füllen Sie alle mit "*" markierten Felder aus!'}]);
+//				obj_cad_message.open();
 			} else if (8 < trim(registerPassword).length) {
-				var obj_cad_message = new CAD.Message();
-				obj_cad_message.init([{'type': 'fehler', 'message': 'das Passwort muss aus mindestens 8 Zeichen bestehen!'}]);
-				obj_cad_message.open();
+//				var obj_cad_message = new CAD.Message();
+//				obj_cad_message.init([{'type': 'fehler', 'message': 'das Passwort muss aus mindestens 8 Zeichen bestehen!'}]);
+//				obj_cad_message.open();
 			}
 		});
 
