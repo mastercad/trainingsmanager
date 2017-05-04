@@ -44,91 +44,14 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-            <ul class="nav navbar-nav">
-                <li class="<?php if($this->controller == "manual"){ echo 'active';}?>">
-                    <a href="/downloads/Rundumfit.pdf" target="_blank">
-                        <?php echo $this->translate('label_manual');?>
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $this->translate('label_admin');?>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="<?php if($this->controller == "muscles"){ echo 'active';}?>">
-                            <a href="/muscles/" >
-                                <?php echo $this->translate('label_muscles');?>
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "muscle-groups"){ echo 'active';}?>">
-                            <a href="/muscle-groups/" >
-                                <?php echo $this->translate('label_muscle_groups');?>
-                                <!--                                <span class="caret"></span>-->
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "devices"){ echo 'active';}?>">
-                            <a href="/devices/" >
-                                <?php echo $this->translate('label_devices');?>
-                                <!--                                <span class="caret"></span>-->
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "device-options"){ echo 'active';}?>">
-                            <a href="/device-options/" >
-                                <?php echo $this->translate('label_device_options');?>
-                                <!--                                <span class="caret"></span>-->
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "device-groups"){ echo 'active';}?>">
-                            <a href="/device-groups/" >
-                                <?php echo $this->translate('label_device_groups');?>
-                                <!--                                <span class="caret"></span>-->
-                            </a>
-                        </li>
-                        <li class="<?php if($this->controller == "exercise-options"){ echo 'active';}?>">
-                            <a href="/exercise-options/" >
-                                <?php echo $this->translate('label_exercise_options');?>
-                                <!--                                <span class="caret"></span>-->
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "exercises"){ echo 'active';}?>">
-                    <a href="#" class="dropdown-toggle <?php if($this->controller == "exercises"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $this->translate('label_exercises');?>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="<?php if($this->controller == "exercises" && $this->action == "index"){ echo 'active';}?>"><a href="/exercises/"><?php echo $this->translate('label_overview');?></a></li>
-                        <li class="<?php if($this->controller == "exercises" && $this->action == "edit"){ echo 'active';}?>"><a href="/exercises/edit"><?php echo $this->translate('label_create');?></a></li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "training-plans"){ echo 'active';}?>">
-                    <a href="#" class="dropdown-toggle <?php if($this->controller == "training-plans"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $this->translate('label_training_plans');?>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="<?php if($this->controller == "training-plans" && $this->action == "index"){ echo 'active';}?>"><a href="/training-plans/"><?php echo $this->translate('label_overview');?></a></li>
-                        <li class="<?php if($this->controller == "training-plans" && $this->action == "select-layout"){ echo 'active';}?>"><a href="/training-plans/select-layout"><?php echo $this->translate('label_create');?></a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="<?php if($this->controller == "training-plans" && $this->action == "archive"){ echo 'active';}?>"><a href="/training-plans/archive"><?php echo $this->translate('label_archive');?></a></li>
-                    </ul>
-                </li>
-                <li class="<?php if($this->controller == "training-diaries"){ echo 'active';}?>">
-                    <a href="#" class="dropdown-toggle <?php if($this->controller == "training-diaries"){ echo 'active';}?>" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $this->translate('label_training_diaries');?>
-                        <span class="caret"></span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li class="<?php if($this->controller == "training-diaries" && $this->action == "index"){ echo 'active';}?>"><a href="/training-diaries/"><?php echo $this->translate('label_overview');?></a></li>
-                        <li class="<?php if($this->controller == "training-diaries" && $this->action == "edit"){ echo 'active';}?>"><a href="/training-diaries/edit"><?php echo $this->translate('label_create');?></a></li>
-                        <li role="separator" class="divider"></li>
-                        <li class="<?php if($this->controller == "training-diaries" && $this->action == "archive"){ echo 'active';}?>"><a href="/training-diaries/archive"><?php echo $this->translate('label_archive');?></a></li>
-                    </ul>
-                </li>
-            </ul>
+<?php
+            echo $this->navigation(Zend_Registry::get('navigation'))
+                ->setRole(Auth_Service_Auth::getInstance()->getIdentity()->user_right_group_name)
+                ->setAcl(Zend_Registry::get('acl'))
+                //            ->setFormatOutput(true)
+                ->menu()
+                ->renderPartial(null, 'navigation/menu.phtml');
+?>
             <ul class="nav navbar-nav navbar-right">
                 <li>
                     <p class="navbar-text">

@@ -1,0 +1,62 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 18.04.15
+ * Time: 16:04
+ */
+
+if (false == isset($this->iLevel)) {
+    $this->iLevel = 0;
+}
+?>
+<ul <?php if ($this->iLevel == 0) {?>id="nav" class="nav navbar-nav level" <?php } else { echo 'class="dropdown-menu level' . $this->iLevel . '"';}?> >
+<?php
+    foreach ($this->container as $page) {
+        /** @var $page Zend_Navigation_Page_Mvc */
+        if ($this->navigation()->accept($page)) {
+?>
+            <li class="<?php echo $page->getClass(); echo ' ' . $page->getLabel();?>">
+                <a
+<?php
+                    if ('#' != $page->getHref()) {
+                        echo 'href="' . $page->getHref() . '"';
+                    }
+                    echo ' class="';
+                    if (TRUE === $page->isActive(true)) {
+                        echo ' active ';
+                    }
+                    if ($page->hasChildren()) {
+                        echo ' dropdown-toggle ';
+                    }
+                    echo '"';
+
+                    if ($page->hasChildren()) {
+                        echo ' data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" ';
+                    }
+?>
+                    >
+                    <?php
+                        echo $page->getLabel();
+
+                    if ($page->hasChildren()) {
+?>
+                        <span class="caret"></span>
+<?php
+                    }
+                    ?>
+                </a>
+<?php
+                if ($page->hasChildren()) {
+                    $this->iLevel++;
+                    $this->assign('container', $page);
+                    echo $this->render('navigation/menu.phtml');
+                    --$this->iLevel;
+                }
+?>
+            </li>
+<?php
+        }
+    }
+?>
+</ul>

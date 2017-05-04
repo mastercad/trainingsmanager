@@ -329,5 +329,234 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $translationService = new Service_Translator();
         Zend_Registry::set('Zend_Translate', $translationService->getTranslation());
     }
+
+    /**
+     *
+     */
+    protected function _initNavigation()
+    {
+        /** @var Zend_Translate_Adapter $translator */
+        $translator = Zend_Registry::get('Zend_Translate')->getAdapter();
+        $structure = array(
+            array(
+                'label' => $translator->translate('label_admin'),
+                'title' => $translator->translate('label_admin'),
+                'module' => 'auth',
+                'controller' => 'admin',
+                'action' => 'index',
+                'order' => 90,
+                'resource' => 'auth:admin',
+                'privilege' => 'index',
+                'pages' => array(
+                    array(
+                        'label' => $translator->translate('label_muscles'),
+                        'title' => $translator->translate('label_muscles'),
+                        'module' => 'default',
+                        'controller' => 'muscles',
+                        'action' => 'index',
+                        'resource' => 'default:muscles',
+                        'privilege' => 'index',
+                    ),
+                    array(
+                        'label' => $translator->translate('label_muscle_groups'),
+                        'title' => $translator->translate('label_muscle_groups'),
+                        'module' => 'default',
+                        'controller' => 'muscle-groups',
+                        'action' => 'index',
+                        'resource' => 'default:muscle-groups',
+                        'privilege' => 'index'
+                    ),
+                    array(
+                        'label' => $translator->translate('label_devices'),
+                        'title' => $translator->translate('label_devices'),
+                        'module' => 'default',
+                        'controller' => 'devices',
+                        'action' => 'index',
+                        'resource' => 'default:devices',
+                        'privilege' => 'index'
+                    ),
+                    array(
+                        'label' => $translator->translate('label_device_groups'),
+                        'title' => $translator->translate('label_device_groups'),
+                        'module' => 'default',
+                        'controller' => 'device-groups',
+                        'action' => 'index',
+                        'resource' => 'default:device-groups',
+                        'privilege' => 'index'
+                    ),
+                    array(
+                        'label' => $translator->translate('label_device_options'),
+                        'title' => $translator->translate('label_device_options'),
+                        'module' => 'default',
+                        'controller' => 'device-options',
+                        'action' => 'index',
+                        'resource' => 'default:device-options',
+                        'privilege' => 'index'
+                    ),
+                    array(
+                        'label' => $translator->translate('label_exercise_options'),
+                        'title' => $translator->translate('label_exercise_options'),
+                        'module' => 'default',
+                        'controller' => 'exercise-options',
+                        'action' => 'index',
+                        'resource' => 'default:exercise-options',
+                        'privilege' => 'index'
+                    )
+                )
+            ),
+            array(
+                'label' => $translator->translate('label_exercises'),
+                'title' => $translator->translate('label_exercises'),
+                'module' => 'default',
+                'controller' => 'exercises',
+                'action' => 'index',
+                'resource' => 'default:exercises',
+                'privilege' => 'index',
+                'pages' => array(
+                    array(
+                        'label' => $translator->translate('label_overview'),
+                        'title' => $translator->translate('label_overview'),
+                        'module' => 'default',
+                        'controller' => 'exercises',
+                        'action' => 'index',
+                        'resource' => 'default:exercises',
+                        'privilege' => 'index',
+                    ),
+//                    array(
+//                        'label' => $translator->translate('label_edit'),
+//                        'title' => $translator->translate('label_edit'),
+//                        'module' => 'default',
+//                        'controller' => 'exercises',
+//                        'action' => 'edit',
+//                        'resource' => 'default:exercises',
+//                        'privilege' => 'edit'
+//                    ),
+                ),
+            ),
+            array(
+                'label' => $translator->translate('label_training_plans'),
+                'title' => $translator->translate('label_training_plans'),
+                'module' => 'default',
+                'controller' => 'training-plans',
+                'action' => 'index',
+                'resource' => 'default:training-plans',
+                'privilege' => 'index',
+                'pages' => array(
+                    array(
+                        'label' => $translator->translate('label_overview'),
+                        'title' => $translator->translate('label_overview'),
+                        'module' => 'default',
+                        'controller' => 'training-plans',
+                        'action' => 'index',
+                        'resource' => 'default:training-plans',
+                        'privilege' => 'index',
+                    ),
+                    array(
+                        'label' => $translator->translate('label_edit'),
+                        'title' => $translator->translate('label_edit'),
+                        'module' => 'default',
+                        'controller' => 'training-plans',
+                        'action' => 'select-layout',
+                        'resource' => 'default:training-plans',
+                        'privilege' => 'select-layout'
+                    ),
+                    array(
+                        'label' => 'divider',
+                        'uri' => '#',
+                        'class' => 'divider'
+                    ),
+                    array(
+                        'label' => $translator->translate('label_archive'),
+                        'title' => $translator->translate('label_archive'),
+                        'module' => 'default',
+                        'controller' => 'training-plans',
+                        'action' => 'archive',
+                        'resource' => 'default:training-plans',
+                        'privilege' => 'archive'
+                    ),
+                ),
+            ),
+            array(
+                'label' => $translator->translate('label_training_diaries'),
+                'title' => $translator->translate('label_training_diaries'),
+                'module' => 'default',
+                'controller' => 'training-diaries',
+                'action' => 'index',
+                'resource' => 'default:training-diaries',
+                'privilege' => 'index',
+                'pages' => array(
+                    array(
+                        'label' => $translator->translate('label_overview'),
+                        'title' => $translator->translate('label_overview'),
+                        'module' => 'default',
+                        'controller' => 'training-diaries',
+                        'action' => 'index',
+                        'resource' => 'default:training-diaries',
+                        'privilege' => 'index',
+                    ),
+                    array(
+                        'label' => $translator->translate('label_edit'),
+                        'title' => $translator->translate('label_edit'),
+                        'module' => 'default',
+                        'controller' => 'training-diaries',
+                        'action' => 'edit',
+                        'resource' => 'default:training-diaries',
+                        'privilege' => 'edit'
+                    ),
+                    array(
+                        'label' => 'divider',
+                        'uri' => '#',
+                        'class' => 'divider'
+                    ),
+                    array(
+                        'label' => $translator->translate('label_archive'),
+                        'title' => $translator->translate('label_archive'),
+                        'module' => 'default',
+                        'controller' => 'training-plans',
+                        'action' => 'archive',
+                        'resource' => 'default:training-plans',
+                        'privilege' => 'archive'
+                    ),
+                ),
+            ),
+            /*
+            array(
+                'label' => 'Profil',
+                'title' => 'Profil',
+                'module' => 'default',
+                'controller' => 'profil',
+                'action' => 'index',
+//                'resource' => 'default:profil',
+//                'privilege' => 'index',
+                'pages' => array(
+                    array(
+                        'label' => 'Ernährungsplan',
+                        'title' => 'Ernährungsplan',
+                        'module' => 'default',
+                        'controller' => 'meal-plan',
+                        'action' => 'index',
+//                        'resource' => 'default:meal-plan',
+//                        'privilege' => 'index',
+                        'pages' => array(
+                            array(
+                                'label' => 'Hinzufügen',
+                                'title' => 'Ernährungsplan hinzufügen',
+                                'module' => 'default',
+                                'controller' => 'meal-plan',
+                                'action' => 'edit',
+//                                'resource' => 'default:meal-plan',
+//                                'privilege' => 'edit',
+                            ),
+                        )
+                    ),
+                ),
+            ),
+            */
+        );
+
+        $navigation = new Zend_Navigation($structure);
+
+        Zend_Registry::set('navigation', $navigation);
+    }
 }
 
