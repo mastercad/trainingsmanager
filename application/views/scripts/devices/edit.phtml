@@ -241,8 +241,8 @@
 
                                 if (200 == json.state) {
                                     showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
-                                    jQuery(that).parent().fadeOut(500, function () {
-                                        jQuery(that).remove();
+                                    jQuery(that).parent().parent().fadeOut(500, function () {
+                                        jQuery(that).parent().parent().remove();
                                     });
                                 } else {
                                     showDialog(json.message, BootstrapDialog.TYPE_DANGER);

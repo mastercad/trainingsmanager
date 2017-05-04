@@ -218,7 +218,7 @@ class DevicesController extends AbstractController {
             $thumbnailService->setSourceFilePathName($sysPath);
             $thumbnailService->setThumbHeight(120);
             $thumbnailService->setThumbWidth(120);
-            $this->view->assign('templateDisplayType', 'block');
+            $this->view->assign('templateDisplayType', 'inline-block');
             $this->view->assign('previewType', 'dz-image-preview');
             $this->view->assign('sourceData', $thumbnailService->generateImageString());
             $this->view->assign('sourcePath', $previewPicture['html_pfad']);
