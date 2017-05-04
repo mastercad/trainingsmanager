@@ -5,6 +5,8 @@
     <input type="text"
            class="option device-option form-control"
            id="device_option_<?php echo $this->device_option_id;?>"
+           data-device-option="<?php echo $this->device_option_id;?>"
+           data-option-id="<?php echo $this->device_option_id;?>"
            data-cad-cms-content-orig="<?php echo base64_encode($this->device_option_value);?>"
            data-device-option-id="<?php echo $this->device_option_id;?>"
            data-device-x-device-option-id="<?php echo $this->device_x_device_option_id;?>"

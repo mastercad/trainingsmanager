@@ -48,10 +48,9 @@
         });
 
         jQuery('.save').unbind('click').click(function() {
-
             jQuery.post(
                 '/training-diaries/save', {
-                    trainingDiaryExerciseInformation: collectionTrainingDiaryExerciseInformation(),
+                    trainingDiaryExerciseInformation: collectCurrentTrainingDiaryExerciseInformation(),
                     ajax: true
                 },
                 function(response) {
@@ -89,7 +88,7 @@
             return false;
         });
 
-        jQuery('input.option-input').unbind('change').change(function() {
+        jQuery('input.option').unbind('change').change(function() {
             var SelectOptionWrapper = jQuery(this);
             var selectedOption = jQuery.trim(jQuery(this).val());
             var baseValue = SelectOptionWrapper.data('base-value');
@@ -105,7 +104,7 @@
         });
     }
 
-    function collectionTrainingDiaryExerciseInformation() {
+    function collectCurrentTrainingDiaryExerciseInformation() {
         var exerciseOptionCount = 0;
         var deviceOptionCount = 0;
         var exerciseOptions = {};
@@ -117,7 +116,6 @@
             var optionValue = jQuery('#' + jQuery(this).attr('id')).val();
 
             if (jQuery(this).hasClass('custom-drop-down')) {
-//                optionValue = jQuery(this).data('value');
                 optionValue = jQuery(this).attr('data-value');
             }
 
@@ -134,10 +132,7 @@
             var optionValue = jQuery('#' + jQuery(this).attr('id')).val();
 
             if (jQuery(this).hasClass('custom-drop-down')) {
-//                optionValue = jQuery(this).data('value');
                 optionValue = jQuery(this).attr('data-value');
-//                console.log(jQuery(this).attr('data-value'));
-//                console.log(jQuery(this).data('value'));
             }
 
             deviceOptions[deviceOptionCount] = {
@@ -159,24 +154,13 @@
     }
 
     function deactivateOptionInputs() {
-        jQuery('.training-diary-exercise.active .device-options .device-option').each(function() {
-
+        jQuery('.training-diary-exercise.active .option').each(function() {
             var optionValue = jQuery('#' + jQuery(this).attr('id')).val();
             if (jQuery(this).hasClass('custom-drop-down')) {
                 optionValue = jQuery(this).attr('data-value');
             }
-            var optionName = jQuery(this).find('label').html();
-            jQuery(this).html('<label>' + optionName + ':</label> ' + optionValue);
-        });
-
-        jQuery('.training-diary-exercise.active .exercise-options .exercise-option').each(function() {
-
-            var optionValue = jQuery('#' + jQuery(this).attr('id')).val();
-            if (jQuery(this).hasClass('custom-drop-down')) {
-                optionValue = jQuery(this).attr('data-value');
-            }
-            var optionName = jQuery(this).find('label').html();
-            jQuery(this).html('<label>' + optionName + ':</label> ' + optionValue);
+            var optionName = jQuery(this).parent().find('label').html();
+            jQuery(this).parent().html('<label>' + optionName + ':</label> ' + optionValue);
         });
 
         jQuery('.training-diary-exercise.active').attr('data-finished', true);

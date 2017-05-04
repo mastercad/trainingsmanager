@@ -506,7 +506,7 @@ class ExercisesController extends AbstractController {
 
             $a_files = $obj_file->getDestFiles();
             if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
-                $result['id'] = time();
+                $result['id'] = $a_files[0][CAD_FILE::FILE];
                 $result['paths'] = $a_files[0];
             }
         }
@@ -541,7 +541,7 @@ class ExercisesController extends AbstractController {
             $thumbnailService->setSourceFilePathName($sysPath);
             $thumbnailService->setThumbHeight(120);
             $thumbnailService->setThumbWidth(120);
-            $this->view->assign('templateDisplayType', 'block');
+            $this->view->assign('templateDisplayType', 'inline-block');
             $this->view->assign('previewType', 'dz-image-preview');
             $this->view->assign('sourceData', $thumbnailService->generateImageString());
             $this->view->assign('sourcePath', $previewPicture['html_pfad']);
@@ -554,28 +554,38 @@ class ExercisesController extends AbstractController {
     }
 
     public function deletePictureAction() {
-        $req = $this->getRequest();
-        $params = $req->getParams();
+        $exerciseId = intval($this->getParam('exerciseId'));
+        $picture = base64_decode($this->getParam('id'));
 
-        if (true === isset($params['bild'])) {
-            $bild_pfad = getcwd() . base64_decode($params['bild']);
+        if (0 < $exerciseId
+            && $picture
+        ) {
+            $deleted = false;
+            $exercisePicturePath = getcwd() . '/images/content/dynamisch/exercises/'.$exerciseId.'/'.$picture;
+            $tempPicturePath = getcwd() . '/tmp/exercises/'.$picture;
 
-            if (true === file_exists($bild_pfad)
-                && true === is_file($bild_pfad)
-                && true === is_readable($bild_pfad)
+            if (true === is_readable($exercisePicturePath)
+                && @unlink($exercisePicturePath)
             ) {
-                if (true === @unlink($bild_pfad)) {
-                    echo "Bild erfolgreich gelöscht!<br />";
-                }
+                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                $deleted = true;
+            } else if (true === is_readable($tempPicturePath)
+                && @unlink($tempPicturePath)
+            ) {
+                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                $deleted = true;
+            }
+
+            if (!$deleted) {
+                Service_GlobalMessageHandler::appendMessage("Bild konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            echo "Es wurde kein Bild übergeben!<br />";
+            Service_GlobalMessageHandler::appendMessage("Es wurde kein Bild übergeben!", Model_Entity_Message::STATUS_ERROR);
         }
     }
 
     public function deleteAction() {
         $params = $this->getRequest()->getParams();
-        $messages = array();
 
         if (true === isset($params['id'])
             && true === is_numeric($params['id'])
@@ -584,28 +594,18 @@ class ExercisesController extends AbstractController {
             $exerciseId = $params['id'];
             $exercisesDb = new Model_DbTable_Exercises();
             if ($exercisesDb->deleteExercise($exerciseId)) {
-                $i_count_message = count($messages);
-                $messages[$i_count_message]['type'] = "meldung";
-                $messages[$i_count_message]['message'] = "Übung erfolgreich gelöscht!";
-                $messages[$i_count_message]['result'] = true;
+                Service_GlobalMessageHandler::appendMessage("Übung erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
                 
                 $bilder_pfad = getcwd() . '/images/content/dynamisch/exercises/' . $exerciseId . '/';
                 
                 $obj_file = new CAD_File();
                 $obj_file->cleanDirRek($bilder_pfad, 2);
             } else {
-                $i_count_message = count($messages);
-                $messages[$i_count_message]['type'] = "fehler";
-                $messages[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
-                $messages[$i_count_message]['result'] = false;
+                Service_GlobalMessageHandler::appendMessage("Übung konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            $i_count_message = count($messages);
-            $messages[$i_count_message]['type'] = "fehler";
-            $messages[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
-            $messages[$i_count_message]['result'] = false;
+            Service_GlobalMessageHandler::appendMessage("Falscher Aufruf!", Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messages));
     }
     
     public function saveAction() {

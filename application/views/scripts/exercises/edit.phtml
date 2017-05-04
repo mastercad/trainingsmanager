@@ -409,18 +409,23 @@
                     success: function (response) {
                         var offset = jQuery(self).offset();
                         jQuery('body').append(jQuery('.proposals'));
-                        jQuery('.proposals').html(response)
-                            .css('left', offset.left + "px")
-                            .css('top', offset.top + 40 + "px");
+
+                        var json = JSON.parse(response);
+
+                        if (200 == json.state) {
+                            jQuery('.proposals').html(Base64.decode(json.htmlContent))
+                                .css('left', offset.left + "px")
+                                .css('top', offset.top + 40 + "px");
+                        } else {
+                            showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                        }
 
                         jQuery('.proposals').find('.proposal').unbind('click').bind('click', function () {
                             // check ob diese muskelgruppe bereits gesetzt wurde
                             var vorhandene_muskelgruppen = jQuery('.exercise-muscle-groups').find('.muscle-group');
 
                             for (var i = 0, len = vorhandene_muskelgruppen.length; i < len; i++) {
-                                if (jQuery(vorhandene_muskelgruppen[i]).find('.muscle-group-name').data('muscle-group-id') ==
-                                    jQuery(this).data('proposal-id')
-                                ) {
+                                if (jQuery(vorhandene_muskelgruppen[i]).data('muscle-group-id') == jQuery(this).data('proposal-id')) {
                                     showDialog('Diese Muskelgruppe ist bereits gesetzt!', BootstrapDialog.TYPE_DANGER);
                                     return false;
                                 }
@@ -577,7 +582,27 @@
                         if (!file.serverId) {
                             return;
                         }
-                        jQuery.post('/' + controller + '/delete-picture/?id=' + file.serverId); // Send the file id along
+                        jQuery.ajax({
+                            url: "/" + controller + "/delete-picture/",
+                            data: {
+                                id: Base64.encode(file.serverId),
+                                exerciseId: jQuery('#exercise_id').val(),
+                                ajax: true
+                            },
+                            type: 'POST',
+                            success: function (response) {
+                                var json = JSON.parse(response);
+
+                                if (200 == json.state) {
+                                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                                } else {
+                                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                                }
+                            },
+                            error: function (data) {
+                                showDialog(data, BootstrapDialog.TYPE_DANGER);
+                            }
+                        });
                     });
                     jQuery(".dz-remove").on("click", function (e) {
                         e.preventDefault();
@@ -586,22 +611,29 @@
                         var imageId = jQuery(this).parent().find(".dz-filename > span").text();
                         var that = this;
                         jQuery.ajax({
-                            url: "/" + controller + "/delete/",
-                            data: {id: imageId},
+                            url: "/" + controller + "/delete-picture/",
+                            data: {
+                                id: Base64.encode(imageId),
+                                exerciseId: jQuery('#exercise_id').val(),
+                                ajax: true
+                            },
                             type: 'POST',
-                            success: function (data) {
-                                if (data.NotificationType === "Error") {
-                                    showDialog(data.Message, BootstrapDialog.TYPE_DANGER);
-                                } else {
+                            success: function (response) {
+                                var json = JSON.parse(response);
+
+                                if (200 == json.state) {
+                                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
                                     jQuery(that).parent().fadeOut(500, function () {
                                         jQuery(that).remove();
                                     });
+                                } else {
+                                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                                 }
                             },
                             error: function (data) {
                                 showDialog(data, BootstrapDialog.TYPE_DANGER);
                             }
-                        })
+                        });
                     });
                     jQuery(".dz-details").on("click", function (e) {
                         refreshPreviewPicture(jQuery(this));

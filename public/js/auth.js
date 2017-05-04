@@ -19,7 +19,7 @@ function initAuth() {
 			//obj_cad_message.init(response);
 			//
 			//if(obj_cad_message.open()) {
-				location.href = location.href;
+				location.reload();
 			//} else {
 			//	jQuery('#login_form_fail_options #password_forgotten').fadeIn();
 			//}
@@ -59,7 +59,4 @@ function initAuth() {
 		});
 	});
 	auth_init = true;
-	//prepareInputs();
 }
-
-//initAuth();

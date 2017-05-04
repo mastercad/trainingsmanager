@@ -1,9 +1,11 @@
-<div class="form-group" style="float: left; display: inline">
+<!--<div class="form-group" style="float: left; display: inline">-->
+<div class="form-group" style="position: relative;">
 <!--    <label style="clear: none; float: left; display: inline; margin-right: 15px;">-->
     <label class="control-label">
         <?php echo $this->optionLabelText;?>
     </label>
-    <input class="<?php echo $this->optionClassName;?> <?php echo $this->selectClass;?> form-control option-input" type="text" id="<?php echo $this->optionInputId;?>"
+    <input class="<?php echo $this->optionClassName;?> <?php echo $this->selectClass;?> form-control option" type="text"
+           id="<?php echo $this->optionInputId;?>"
            data-option-id="<?php echo $this->optionId;?>"
             <?php echo $this->additionalDataInformation;?>
            data-value-orig="<?php echo $this->optionSelectText;?>"
@@ -15,7 +17,8 @@
 <?php
     if ($this->optionDeleteShow) {
 ?>
-        <img class="option-delete" style="float: left; display: inline; margin-top: 0; margin-left: -25px" src="/images/content/statisch/grafiken/delete.gif" alt="Delete Option"/>
+        <span class="option-delete glyphicon glyphicon-trash delete"
+              data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_delete_selection');?>"></span>
 <?php
     }
 ?>

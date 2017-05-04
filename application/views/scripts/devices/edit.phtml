@@ -135,7 +135,7 @@
             var currentOptionsList = jQuery('.device-options').find('.device-option');
 
             for (var i = 0, len = currentOptionsList.length; i < len; i++) {
-                var option_id = jQuery(currentOptionsList[i]).data('device-option-id');
+                var option_id = jQuery(currentOptionsList[i]).data('option-id');
 
                 if (option_id == selectedOption) {
                     showDialog('<?php echo $this->translate('tooltip_selected_option_already_set');?>', BootstrapDialog.TYPE_DANGER);
@@ -200,7 +200,27 @@
                         if (!file.serverId) {
                             return;
                         }
-                        jQuery.post('/' + controller + '/delete-picture/?id=' + file.serverId); // Send the file id along
+                        jQuery.ajax({
+                            url: "/" + controller + "/delete-picture/",
+                            data: {
+                                id: Base64.encode(file.serverId),
+                                deviceId: jQuery('#device_id').val(),
+                                ajax: true
+                            },
+                            type: 'POST',
+                            success: function (response) {
+                                var json = JSON.parse(response);
+
+                                if (200 == json.state) {
+                                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                                } else {
+                                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                                }
+                            },
+                            error: function (data) {
+                                showDialog(data, BootstrapDialog.TYPE_DANGER);
+                            }
+                        });
                     });
                     jQuery(".dz-remove").on("click", function (e) {
                         e.preventDefault();
@@ -209,22 +229,29 @@
                         var imageId = jQuery(this).parent().find(".dz-filename > span").text();
                         var that = this;
                         jQuery.ajax({
-                            url: "/" + controller + "/delete/",
-                            data: {id: imageId},
+                            url: "/" + controller + "/delete-picture/",
+                            data: {
+                                id: Base64.encode(imageId),
+                                deviceId: jQuery('#device_id').val(),
+                                ajax: true
+                            },
                             type: 'POST',
-                            success: function (data) {
-                                if (data.NotificationType === "Error") {
-                                    showDialog(data.Message, BootstrapDialog.TYPE_DANGER);
-                                } else {
+                            success: function (response) {
+                                var json = JSON.parse(response);
+
+                                if (200 == json.state) {
+                                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
                                     jQuery(that).parent().fadeOut(500, function () {
                                         jQuery(that).remove();
                                     });
+                                } else {
+                                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                                 }
                             },
                             error: function (data) {
                                 showDialog(data, BootstrapDialog.TYPE_DANGER);
                             }
-                        })
+                        });
                     });
                     jQuery(".dz-details").on("click", function (e) {
                         refreshPreviewPicture(jQuery(this));

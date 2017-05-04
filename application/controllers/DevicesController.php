@@ -135,8 +135,26 @@ class DevicesController extends AbstractController {
         $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
         $deviceOptionsService->setAllowEdit(true);
         $deviceOptionsService->setConvertDropDownValues(false);
+        $deviceOptionsService->setShowDelete(true);
         return $deviceOptionsService->generate();
     }
+
+    /**
+     * @param Zend_Db_Table_Row $exercise
+     */
+//    public function generateDeviceOptionsEditContent($exercise) {
+//        $content = '';
+//
+//        foreach ($this->collectDeviceOptions($exercise) as $deviceOptionId => $deviceOption) {
+//            $this->view->assign($deviceOption);
+//            $this->view->assign('device_option_value',
+//                $deviceOption['exercise_x_device_option_device_option_value'] ?
+//                    $deviceOption['exercise_x_device_option_device_option_value'] :
+//                    $deviceOption['device_x_device_option_device_option_value']);
+//            $content .= $this->view->render('/loops/device-option-edit.phtml');
+//        }
+//        return $content;
+//    }
 
     /**
      * generates drop down from all possible options in database
@@ -159,6 +177,7 @@ class DevicesController extends AbstractController {
         $this->view->assign('optionSelectText', $optionSelectText);
         $this->view->assign('optionsContent', $content);
         $this->view->assign('selectId', 'device_options_select');
+        $this->view->assign('optionDeleteShow', false);
         return $this->view->render('globals/select.phtml');
     }
 
@@ -212,22 +231,33 @@ class DevicesController extends AbstractController {
     }
 
     public function deletePictureAction() {
-        $req = $this->getRequest();
-        $params = $req->getParams();
+        $deviceId = intval($this->getParam('deviceId'));
+        $picture = base64_decode($this->getParam('id'));
 
-        if (true ===isset($params['bild'])) {
-            $bild_pfad = getcwd() . base64_decode($params['bild']);
+        if (0 < $deviceId
+            && $picture
+        ) {
+            $deleted = false;
+            $exercisePicturePath = getcwd() . '/images/content/dynamisch/devices/'.$deviceId.'/'.$picture;
+            $tempPicturePath = getcwd() . '/tmp/devices/'.$picture;
 
-            if (true === file_exists($bild_pfad)
-                && true === is_file($bild_pfad)
-                && true === is_readable($bild_pfad)
+            if (true === is_readable($exercisePicturePath)
+                && @unlink($exercisePicturePath)
             ) {
-                if (true === @unlink($bild_pfad)) {
-                    echo "Bild erfolgreich gelöscht!<br />";
-                }
+                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                $deleted = true;
+            } else if (true === is_readable($tempPicturePath)
+                && @unlink($tempPicturePath)
+            ) {
+                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                $deleted = true;
+            }
+
+            if (!$deleted) {
+                Service_GlobalMessageHandler::appendMessage("Bild konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            echo "Es wurde kein Bild übergeben!<br />";
+            Service_GlobalMessageHandler::appendMessage("Es wurde kein Bild übergeben!", Model_Entity_Message::STATUS_ERROR);
         }
     }
 
@@ -514,7 +544,6 @@ class DevicesController extends AbstractController {
     public function deleteAction()
     {
         $params = $this->getRequest()->getParams();
-        $messages = array();
 
         if (isset($params['id'])
             && is_numeric($params['id'])
@@ -530,9 +559,9 @@ class DevicesController extends AbstractController {
             $exerciseXDeviceDb = new Model_DbTable_ExerciseXDevice();
 
             if ($devicesDb->deleteDevice($deviceId)) {
-                array_push($messages, array('type' => 'meldung', 'message' => 'Geraet erfolgreich gelöscht!', 'result' => true));
+                Service_GlobalMessageHandler::appendMessage('Geraet erfolgreich gelöscht!', Model_Entity_Message::STATUS_OK);
             } else {
-                array_push($messages, array('type' => 'fehler', 'message' => 'Geraet konnte leider nicht gelöscht werden!', 'result' => false));
+                Service_GlobalMessageHandler::appendMessage('Geraet konnte leider nicht gelöscht werden!', Model_Entity_Message::STATUS_ERROR);
                 $hasErrors = true;
             }
 
@@ -550,9 +579,8 @@ class DevicesController extends AbstractController {
 
             $deviceXDeviceGroupDb->deleteAllDeviceGroupDevicesByDeviceId($deviceId);
         } else {
-            array_push($messages, array('type' => 'meldung', 'message' => 'Geraet konnte leider nicht gelöscht werden! (Falsche Übergabe!)', 'result' => false));
+            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf!', Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messages));
     }
 
     public function getDeviceOptionEditAction() {

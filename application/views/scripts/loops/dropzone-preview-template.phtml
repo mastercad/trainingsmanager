@@ -1,4 +1,4 @@
-<div class="dz-preview" <?php if('block' != $this->templateDisplayType) {?>id="preview-template"<?php } ?> style="display: <?php echo $this->templateDisplayType ?: 'none';?>;">
+<div class="dz-preview" <?php if('none' == $this->templateDisplayType) {?>id="preview-template"<?php } ?> style="display: <?php echo $this->templateDisplayType ?: 'none';?>;">
 
     <div class="dz-preview <?php echo $this->previewType ?: 'dz-file-preview';?>">
         <div class="dz-image">
@@ -9,7 +9,7 @@
             <div class="dz-size"><span data-dz-size><?php echo $this->fileSize;?></span></div>
             <div class="dz-filename"><span data-dz-name><?php echo $this->fileName;?></span></div>
         </div>
-        <div class="dz-progress" style="display: <?php echo 'block' != $this->templateDisplayType ?: 'none';?>;"><span class="dz-upload" data-dz-uploadprogress></span></div>
+        <div class="dz-progress" style="display: none;"><span class="dz-upload" data-dz-uploadprogress></span></div>
         <div class="dz-error-message"><span data-dz-errormessage></span></div>
 
         <div class="dz-success-mark">
@@ -40,7 +40,7 @@
             </svg>
         </div>
 <?php
-    if ('block' == $this->templateDisplayType) {
+    if ('none' != $this->templateDisplayType) {
 ?>
         <a href="#" class="dz-remove" >Remove</a>
 <?php

@@ -89,7 +89,6 @@ class DeviceGroupsController extends AbstractController
 
     public function deleteAction() {
         $params = $this->getRequest()->getParams();
-        $messages = array();
 
         if (isset($params['id'])
            && is_numeric($params['id'])
@@ -121,28 +120,18 @@ class DeviceGroupsController extends AbstractController
 
                 $obj_db_geraetegruppen_geraete->deleteAllDeviceGroupDevicesByDeviceGroupId($i_geraetegruppe_id);
 
-                $i_count_message = count($messages);
-                $messages[$i_count_message]['type'] = "meldung";
-                $messages[$i_count_message]['message'] = "Geraetegruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!";
-                $messages[$i_count_message]['result'] = true;
+                Service_GlobalMessageHandler::appendMessage("Geraetegruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
 
                 $bilder_pfad = getcwd() . '/images/content/dynamisch/device-groups/' . $i_geraetegruppe_id . '/';
 
                 $obj_file = new CAD_File();
                 $obj_file->cleanDirRek($bilder_pfad, 2);
             } else {
-                $i_count_message = count($messages);
-                $messages[$i_count_message]['type'] = "fehler";
-                $messages[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
-                $messages[$i_count_message]['result'] = false;
+                Service_GlobalMessageHandler::appendMessage("Gerätegruppe konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
             }
         } else {
-            $i_count_message = count($messages);
-            $messages[$i_count_message]['type'] = "fehler";
-            $messages[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
-            $messages[$i_count_message]['result'] = false;
+            Service_GlobalMessageHandler::appendMessage("Falscher Aufruf!", Model_Entity_Message::STATUS_ERROR);
         }
-        $this->view->assign('json_string', json_encode($messages));
     }
 
     public function saveAction() {
