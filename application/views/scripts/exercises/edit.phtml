@@ -330,7 +330,6 @@
 
                 if (option_id == selectedOption) {
                     showDialog('<?php echo $this->translate('tooltip_selected_option_already_set');?>', BootstrapDialog.TYPE_DANGER);
-                    console.log(jQuery(currentOptionsList[i]));
                     jQuery(currentOptionsList[i]).effect('highlight', {}, 5000);
                     return false;
                 }

@@ -1,4 +1,3 @@
-
 <div class="form-group">
     <label>
 <!--<form method="post" action="/training-plans/save" target="upload_target" id="training_plan_edit">-->
@@ -46,13 +45,12 @@
 
 <script language="JavaScript">
     jQuery('document').ready(function(){
-        jQuery('body').css('overflow', 'auto');
 
         jQuery('#new_exercise').bind('keyup', function(e) {
 
             var post_request = null;
 
-            var url = '/training-plans/get-exercise-proposals/';
+            var url = '/'+controller+'/get-exercise-proposals/';
             var search = Base64.encode(jQuery(this).val());
             var self = jQuery(this);
 
@@ -69,45 +67,49 @@
                 url: url,
                 data: "search=" + search + "&ajax=true",
                 success: function(response){
-                    var exerciseProposals = jQuery('.proposals');
-                    var offset = jQuery(self).offset();
-                    jQuery('body').append(exerciseProposals);
+                    var json = JSON.parse(response);
 
-                    exerciseProposals.html(response)
-                        .css('left', offset.left + "px")
-                        .css('top', offset.top + 40 + "px")
-                        .find('.proposal').unbind('click') .bind('click', function() {
+                    if (200 == json.state) {
+                        var exerciseProposals = jQuery('.proposals');
+                        var offset = jQuery(self).offset();
+                        jQuery('body').append(exerciseProposals);
 
-//                        var currentProposal = jQuery(this);
-//                        jQuery('#training_plan_edit').find('.exercise').each(function() {
-//                            if (jQuery(this).find('.exercise-name').data('exercise-id') ==
-//                                jQuery(currentProposal).data('proposal-id')
-//                            ) {
-//                                var a_messages = new Array({
-//                                    'type': 'fehler',
-//                                    'message': 'Diese Uebung ist für diesen Trainingsplan bereits gesetzt!'
-//                                });
-//                                var obj_cad_message = new CAD.Message();
-//                                obj_cad_message.init(a_messages);
-//                                obj_cad_message.open();
+                        exerciseProposals.html(Base64.decode(json.htmlContent))
+                            .css('left', offset.left + "px")
+                            .css('top', offset.top + 40 + "px")
+                            .find('.proposal').unbind('click').bind('click', function () {
+
+//                                var currentProposal = jQuery(this);
+//                                jQuery('#training_plan_edit').find('.exercise').each(function() {
+//                                    if (jQuery(this).find('.exercise-name').data('exercise-id') ==
+//                                        jQuery(currentProposal).data('proposal-id')
+//                                    ) {
+//                                        var a_messages = new Array({
+//                                            'type': 'fehler',
+//                                            'message': 'Diese Uebung ist für diesen Trainingsplan bereits gesetzt!'
+//                                        });
+//                                        var obj_cad_message = new CAD.Message();
+//                                        obj_cad_message.init(a_messages);
+//                                        obj_cad_message.open();
 //
-//                                return false;
-//                            }
-//                        });
-                        jQuery(self).val('');
-                        var count = countExercises();
-                        addExercise(jQuery(this).data('proposal-id'), count);
-                        jQuery('.proposals').fadeOut();
-                        return false;
-                    });
-                    exerciseProposals.fadeIn();
+//                                        return false;
+//                                    }
+//                                });
+                                jQuery(self).val('');
+                                var count = countExercises();
+                                addExercise(jQuery(this).data('proposal-id'), count);
+                                jQuery('.proposals').fadeOut();
+                                return false;
+                            });
+                        exerciseProposals.fadeIn();
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
                 }
             });
         });
 
         $('#new_split_plan').unbind('click').bind('click', function() {
-//            var obj_cad_loader = new CAD.Loader();
-//            obj_cad_loader.open();
             var sUrl = '/training-plans/get-training-plan-for-split';
             var oParams =
             {
@@ -116,27 +118,34 @@
                 'ajax': 1
             };
             $.post(sUrl, oParams, function(response) {
-//                obj_cad_loader.close();
                 try {
-                    var obj_json = JSON.parse(response);
+                    var json = JSON.parse(response);
 
-                    if(undefined != obj_json[0].type
-                        && undefined != obj_json[0].message)
-                    {
-//                        var obj_cad_messages = new CAD.Message();
-//                        obj_cad_messages.init(obj_json);
-//                        obj_cad_messages.open();
+                    if (200 == json.state) {
+                        jQuery('.training-plans').append(Base64.decode(json.htmlContent));
+                        trainingPlanEditInit();
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                     }
                 } catch (e) {
-                    $('.training-plans').append(response);
-//                    CAD.Sperre().close();
-                    trainingPlanEditInit();
+
                 }
             });
         });
 
         jQuery('.save').unbind('click').click(function() {
-            save();
+            var trainingPlanCollection = collectionTrainingPlanInformation();
+
+            jQuery.post('/'+controller+'/save', {trainingPlanCollection: trainingPlanCollection, ajax: true}, function(response) {
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
+            });
+            return false;
         });
 
         function trainingPlanEditInit() {
@@ -165,7 +174,6 @@
             });
 
             jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
-//            var selectedOption = jQuery(this).data('value');
                 var selectedOption = jQuery.trim(jQuery(this).html());
                 var selectedOptionName = jQuery(this).html();
                 var caretContent = '<span class="caret"></span>';
@@ -179,27 +187,21 @@
             jQuery('.device-option-select .option-add').unbind('click').click(function() {
                 var self = jQuery(this);
                 var parent = jQuery(this).parent().parent().parent().parent().parent();
-
-//            var selectedDeviceOptionId = self.parent().find('.device-option-select').val();
                 var selectedOption = jQuery(this).data('value');
                 var optionAlreadySet = false;
 
                 parent.find('.device-options .device-option').each(function() {
                     if (jQuery(this).data('option-id') == selectedOption) {
                         optionAlreadySet = true;
+                        // deleted?
                         if (jQuery(this).hasClass('deleted')) {
                             jQuery(this).parent().fadeIn();
                             jQuery(this).removeClass('deleted');
                             jQuery(this).focus();
+                        //
                         } else {
-                            var a_messages = new Array({
-                                'type': 'fehler',
-                                'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
-                                'confirm_func': "jQuery('#" + jQuery(this).attr('id') + "').effect('highlight', {}, 5000);"
-                            });
-//                            var obj_cad_message = new CAD.Message();
-//                            obj_cad_message.init(a_messages);
-//                            obj_cad_message.open();
+                            showDialog('<?php echo $this->translate('tooltip_selected_option_already_set');?>', BootstrapDialog.TYPE_DANGER);
+                            jQuery(this).effect('highlight', {}, 5000);
                         }
                         return false;
                     }
@@ -209,7 +211,7 @@
 
                 if (false == optionAlreadySet) {
                     jQuery.post(
-                        '/training-plans/get-device-option', {
+                        '/'+controller+'/get-device-option', {
                             ajax: true,
                             trainingPlanExerciseId: parent.data('training-plan-exercise-id'),
                             deviceId: parent.find('.device').data('device-id'),
@@ -217,9 +219,14 @@
                             deviceOptionId: selectedOption
                         },
                         function (response) {
-                            var newOption = jQuery(response);
-                            parent.find('.device-options').append(response).find('.device-option:last').focus();
-                            trainingPlanEditInit();
+                            var json = JSON.parse(response);
+
+                            if (200 == json.state) {
+                                parent.find('.device-options').append(Base64.decode(json.htmlContent)).find('.device-option:last').focus();
+                                trainingPlanEditInit();
+                            } else {
+                                showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                            }
                         }
                     );
                 }
@@ -229,8 +236,6 @@
             jQuery('.exercise-option-select .option-add').unbind('click').click(function() {
                 var self = jQuery(this);
                 var parent = jQuery(this).parent().parent().parent().parent().parent();
-
-//            var selectedExerciseOptionId = self.parent().find('.exercise-option-select').val();
                 var selectedOption = jQuery(this).data('value');
                 var optionAlreadySet = false;
                 parent.find('.exercise-option').each(function() {
@@ -241,14 +246,8 @@
                             jQuery(this).removeClass('deleted');
                             jQuery(this).focus();
                         } else {
-                            var a_messages = new Array({
-                                'type': 'fehler',
-                                'message': '<?php echo $this->translate('tooltip_selected_option_already_set');?>',
-                                'confirm_func': "jQuery('#" + jQuery(this).attr('id') + "').effect('highlight', {}, 5000);"
-                            });
-//                            var obj_cad_message = new CAD.Message();
-//                            obj_cad_message.init(a_messages);
-//                            obj_cad_message.open();
+                            showDialog('<?php echo $this->translate('tooltip_selected_option_already_set');?>', BootstrapDialog.TYPE_DANGER);
+                            jQuery(this).effect('highlight', {}, 5000);
                         }
                         return false;
                     }
@@ -258,7 +257,7 @@
 
                 if (false == optionAlreadySet) {
                     jQuery.post(
-                        '/training-plans/get-exercise-option',
+                        '/'+controller+'/get-exercise-option',
                         {
                             ajax: true,
                             trainingPlanExerciseId: parent.data('training-plan-exercise-id'),
@@ -266,8 +265,14 @@
                             exerciseOptionId: selectedOption
                         },
                         function (response) {
-                            parent.find('.exercise-options').append(response).find('.device-option:last').focus();
-                            trainingPlanEditInit();
+                            var json = JSON.parse(response);
+
+                            if (200 == json.state) {
+                                parent.find('.exercise-options').append(Base64.decode(json.htmlContent)).find('.exercise-option:last').focus();
+                                trainingPlanEditInit();
+                            } else {
+                                showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                            }
                         }
                     );
                 }
@@ -284,20 +289,17 @@
             var oData = {'id': exerciseId, 'ajax': true, 'counter': count};
             jQuery.post(sUrl, oData, function(response) {
                 try {
-                    var obj_json = JSON.parse(response);
+                    var json = JSON.parse(response);
 
-                    if (undefined != obj_json[0].type &&
-                        undefined != obj_json[0].message
-                    ) {
-//                        var obj_cad_messages = new CAD.Message();
-//                        obj_cad_messages.init(obj_json);
-//                        obj_cad_messages.open();
+                    if (200 == json.state) {
+                        jQuery('ol.training-plan:last').append(Base64.decode(json.htmlContent)).find('.exercise:last').effect('highlight', {}, 3000);
+                        trainingPlanEditInit();
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                     }
                     // is not a json object -> paste content
                 } catch (e) {
-                    jQuery('ol.training-plan:last').append(response).find('.exercise:last').effect('highlight', {}, 3000);
-//                connectExerciseToParentTrainingPlan(jQuery('#exercises ol:last .exercise:last-child'));
-                    trainingPlanEditInit();
+                    showDialog(e, BootstrapDialog.TYPE_DANGER);
                 }
             });
         }
@@ -310,14 +312,6 @@
                 }
             });
             return parseInt(count) + 1;
-        }
-
-        function save() {
-            var trainingPlanCollection = collectionTrainingPlanInformation();
-
-            jQuery.post('/training-plans/save', {trainingPlanCollection: trainingPlanCollection, ajax: true}, function(response) {
-            });
-            return false;
         }
 
         function collectionTrainingPlanInformation() {

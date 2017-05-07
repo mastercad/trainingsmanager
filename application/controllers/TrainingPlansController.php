@@ -167,7 +167,12 @@ class TrainingPlansController extends AbstractController {
         }
 
         $this->view->assign('exercisesContent', $content);
-        $this->view->assign('trainingPlanOptionsContent', $this->generateDetailOptionsContent($trainingPlan->offsetGet('training_plan_id')));
+
+        if (1 == $trainingPlan->offsetGet('training_plan_active')) {
+            $this->view->assign('trainingPlanOptionsContent', $this->generateDetailOptionsContent($trainingPlan->offsetGet('training_plan_id')));
+        } else {
+            $this->view->assign('trainingPlanOptionsContent', '');
+        }
         return $this->view->render('loops/training-plan-split-exercise-row.phtml');
     }
 
@@ -175,7 +180,7 @@ class TrainingPlansController extends AbstractController {
         $previewPicture = '/images/content/dynamisch/exercises/' . $exercise->offsetGet('exercise_id') . '/' . $exercise->offsetGet('exercise_preview_picture');
         $previewPictureSource = '/images/content/statisch/grafiken/kein_bild.png';
 
-        if (is_file(is_readable(getcwd() . '/' . $previewPicture))
+        if (is_file(getcwd() . '/' . $previewPicture)
             && is_readable(getcwd() . '/' . $previewPicture)
         ) {
             $thumbnailService = new Service_Generator_Thumbnail();

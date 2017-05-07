@@ -17,6 +17,11 @@ jQuery(document).ready(function() {
     function initItems() {
 
         jQuery('#current_training_plan .item').unbind('click').click(function() {
+            if (isMobile) {
+                showSpinner(jQuery('#mobile_content_old_training_plan'));
+            } else {
+                showSpinner(jQuery('#right'));
+            }
             var that = this;
             jQuery.post('/'+controller+'/get-training-plan', {id: jQuery(this).data('id'), ajax: true}, function(response) {
                 var json = JSON.parse(response);
@@ -36,6 +41,11 @@ jQuery(document).ready(function() {
         });
 
         jQuery('#accordion_old_training_plans .item').unbind('click').click(function() {
+            if (isMobile) {
+                showSpinner(jQuery('#mobile_content_old_training_plan'));
+            } else {
+                showSpinner(jQuery('#right'));
+            }
 
             var id = jQuery(this).data('value');
             var that = this;
@@ -57,6 +67,10 @@ jQuery(document).ready(function() {
                     }
                 });
             }
+        });
+
+        jQuery(document).on('shown.bs.tab', function() {
+            refreshImageProperties();
         });
     }
 
@@ -84,6 +98,7 @@ function addTrainingPlanContent(content) {
     } else {
         jQuery('#right').html(content);
     }
+    refreshImageProperties();
     initOptions();
 }
 
@@ -113,9 +128,13 @@ function considerMobile() {
 }
 
 function refreshImageProperties() {
-    jQuery('.tab-pane.active').find('img').each(function() {
-        jQuery(this).width(jQuery(this).parent().outerWidth());
+    jQuery('.tab-pane.active img').each(function() {
+        jQuery(this).width(jQuery(this).parent().outerWidth() - 30);
     });
+}
+
+function showSpinner(element) {
+    jQuery(element).html(jQuery('<div class="spinner"></div>'));
 }
 
 function requestAction(id, action) {
@@ -168,13 +187,3 @@ function loadShowContent(id) {
 function loadEditContent(id) {
     requestAction(id, 'edit')
 }
-
-function showSpinner(element) {
-    if (isMobile) {
-        jQuery('#mobile_content_old_training_plan').html(jQuery('<div class="spinner"></div>'));
-    } else {
-        jQuery('#right').html(jQuery('<div class="spinner"></div>'));
-    }
-}
-
-
