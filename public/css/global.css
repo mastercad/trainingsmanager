@@ -543,6 +543,22 @@ pre {
     position: relative;
 }
 
+#right .tab-content .exercise {
+    margin: 15px 0;
+    border: 1px solid var(--el-border-color);
+    border-radius: 5px;
+    position: relative;
+}
+
+#right .tab-content .exercise img {
+    width: 100%;
+}
+
+#right .tab-content {
+    position: relative;
+    padding-top: 30px;
+}
+
 button.save {
     margin-top: 25px;
 }
@@ -651,6 +667,14 @@ input.option-input {
 .detail-options div {
     margin-left: 10px;
     cursor: pointer;
+}
+
+#accordion .item {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
 }
 
 #left .item{

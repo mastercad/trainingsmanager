@@ -35,6 +35,7 @@
         'label_option_name' => 'Name',
         'label_option_value' => 'Standard Wert',
         'label_option-value' => 'Wert',
+        'label_day' => 'Tag',
 
         'or' => 'oder',
         'and' => 'und',

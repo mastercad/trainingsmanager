@@ -9,7 +9,7 @@
 class Auth_Model_Resource_DeviceGroups extends Auth_Model_Resource_Abstract {
 
     /** @var string ID der aktuellen Resource in der ACL */
-    protected $_sResourceId = 'default:device-groups';
+    protected $resourceId = 'default:device-groups';
 
     protected function _prepareData($oRow)
     {

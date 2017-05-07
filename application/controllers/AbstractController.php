@@ -35,7 +35,6 @@ class AbstractController extends Zend_Controller_Action {
         $this->view->headMeta()->appendName('keywords', $this->keywords);
         $this->view->headMeta()->appendName('description', $this->description);
         $this->view->assign('breadcrumb', $this->breadcrumb);
-//        $this->view->assign('translation', $this->translation);
     }
 
     /**
@@ -69,7 +68,16 @@ class AbstractController extends Zend_Controller_Action {
         return $content;
     }
 
-    private function convertControllerName($controllerName) {
+    protected function findCurrentUserId() {
+        $user = Zend_Auth::getInstance()->getIdentity();
+
+        if (true == is_object($user)) {
+            return $user->user_id;
+        }
+        return false;
+    }
+
+    protected function convertControllerName($controllerName) {
         return ucFirst(preg_replace_callback('/(\-[a-z]{1})/', function(array $piece) {
             return ucfirst(str_replace('-', '', $piece[1]));
         }, $controllerName));

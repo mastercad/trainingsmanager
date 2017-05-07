@@ -9,7 +9,7 @@
 class Auth_Model_Resource_Muscles extends Auth_Model_Resource_Abstract {
 
     /** @var string ID der aktuellen Resource in der ACL */
-    protected $_sResourceId = 'default:muscles';
+    protected $resourceId = 'default:muscles';
 
     protected function _prepareData($oRow)
     {

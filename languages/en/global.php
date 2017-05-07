@@ -35,6 +35,7 @@
         'label_option-name' => 'name',
         'label_option_value' => 'default value',
         'label_option-value' => 'value',
+        'label_day' => 'Day',
 
         'text_needed_permissions' => 'You are not allowed to see this site',
 

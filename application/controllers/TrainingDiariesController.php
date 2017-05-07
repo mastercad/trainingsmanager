@@ -14,6 +14,15 @@ class TrainingDiariesController extends AbstractController {
     protected $_iMaxBeanspruchterMuskel = null;
     protected $_aBeanspruchteMuskeln = array();
 
+    public function init() {
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_training_plan_accordion.js',
+                'text/javascript');
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript');
+        }
+    }
+
     public function indexAction() {
     }
 
@@ -34,7 +43,7 @@ class TrainingDiariesController extends AbstractController {
         // ist das der fall, wir dieser training-plans ab dem stand geladen, wo er abgebrochen wurde,
         // wenn nicht, wird der alte abgeschlossen und ein neuer begonnen
         $aParams = $this->getAllParams();
-        $iUserId = 22;
+        $iUserId = $this->findCurrentUserId();
 
         if (array_key_exists('id', $aParams)) {
             $trainingPlanId = $aParams['id'];
@@ -64,7 +73,8 @@ class TrainingDiariesController extends AbstractController {
                     /** @todo ausformulieren */
 
                     // checken ob der training-plans fortgesetzt werden soll oder neu angelegt
-                    $oAktuellesTrainingstagebuch = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlan($trainingPlanId);
+                    $oAktuellesTrainingstagebuch =
+                        $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId($trainingPlanId, $iUserId);
 
                     // keine tagebucheinträge vorhanden
                     if (! $oAktuellesTrainingstagebuch->count()) {
@@ -91,10 +101,9 @@ class TrainingDiariesController extends AbstractController {
                             $trainingDiaryId
                         );
 
-                        $oAktuellesTrainingstagebuch = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlan($trainingPlanId);
-                        $this->redirect('/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_plan_x_exercise_exercise_fk,
-                            $aParams);
-                        //                        $this->redirect('/trainingstagebuch/show/id/' . $iTrainingsplanId, $aParams);
+                        $oAktuellesTrainingstagebuch = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId($trainingPlanId, $iUserId);
+                        $this->redirect(
+                            '/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_plan_x_exercise_exercise_fk, $aParams);
 
                         // habe einen offenen training-plans gefunden, leite an die übersicht der übungen weiter
                     } elseif (1 <= $oAktuellesTrainingstagebuch->count()) {

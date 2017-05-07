@@ -43,11 +43,19 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
 
         $select->order('training_plan_create_date DESC')
             ->where('training_plan_user_fk = ?', $userId)
-//            ->where('training_plan_parent_fk IS NULL')
         ;
 
         return $this->fetchAll($select);
+    }
 
+    public function findActiveTrainingPlan($userId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+
+        $select->where('training_plan_active = 1')
+            ->where('training_plan_user_fk = ?', $userId)
+            ->order(['training_plan_parent_fk', 'training_plan_order', 'training_plan_create_date']);
+
+        return $this->fetchAll($select);
     }
 
     public function findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId) {
@@ -56,34 +64,20 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
             ['training_plan_parent_fk', 'training_plan_order']);
     }
 
+    public function findAllTrainingPlansInArchive($userId) {
+        return $this->fetchAll(
+            'training_plan_user_fk = ' . $userId . ' AND (training_plan_active = 0 OR training_plan_active IS NULL) AND (' .
+                'training_plan_parent_fk IS NULL OR training_plan_parent_fk = 0)',
+            ['training_plan_create_date']
+        );
+    }
+
     /**
      * @param $iParentTrainingPlanId
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findChildTrainingPlans($iParentTrainingPlanId) {
         return $this->fetchAll('training_plan_parent_fk = ' . $iParentTrainingPlanId, 'training_plan_order');
-    }
-
-    /**
-     * @FIXME diese funktion sieht mir doch noch ein klein wenig unfertig aus ...
-     *
-     * @param $iParentTrainingPlanId
-     */
-    public function getChildTrainingPlansWithExercises($iParentTrainingPlanId) {
-        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(FALSE);
-
-//        $oSelect->join
-    }
-
-    /**
-     * @FIXME diese funktion sieht mir doch noch ein klein wenig unfertig aus ...
-     *
-     * @param $iTrainingPlanId
-     */
-    public function findChildTrainingPlanIdsForTrainingPlan($iTrainingPlanId)
-    {
-
     }
 
     /**

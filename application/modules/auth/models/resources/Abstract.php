@@ -8,10 +8,14 @@
 
 abstract class Auth_Model_Resource_Abstract implements Zend_Acl_Resource_Interface {
 
-    private $_iMemberId = null;
+    /** @var int|null  */
+    private $memberId = null;
+
+    /** @var array|int|null */
+    private $alternativeMemberId = null;
 
     /** @var string ID der aktuellen Resource in der ACL */
-    protected $_sResourceId = null;
+    protected $resourceId = null;
 
     public function __construct($oRow = null) {
         if (null !== $oRow) {
@@ -29,15 +33,35 @@ abstract class Auth_Model_Resource_Abstract implements Zend_Acl_Resource_Interfa
      */
     public function getMemberId()
     {
-        return $this->_iMemberId;
+        return $this->memberId;
     }
 
     /**
-     * @param null $iMemberId
+     * @param int $memberId
+     *
+     * @return $this
      */
-    public function setMemberId($iMemberId)
+    public function setMemberId($memberId)
     {
-        $this->_iMemberId = $iMemberId;
+        $this->memberId = $memberId;
+        return $this;
+    }
+
+    /**
+     * @return array|int|null
+     */
+    public function getAlternativeMemberId() {
+        return $this->alternativeMemberId;
+    }
+
+    /**
+     * @param array|int|null $alternativeMemberId
+     *
+     * @return $this
+     */
+    public function setAlternativeMemberId($alternativeMemberId) {
+        $this->alternativeMemberId = $alternativeMemberId;
+        return $this;
     }
 
     /**
@@ -45,14 +69,17 @@ abstract class Auth_Model_Resource_Abstract implements Zend_Acl_Resource_Interfa
      */
     public function getResourceId()
     {
-        return $this->_sResourceId;
+        return $this->resourceId;
     }
 
     /**
-     * @param string $sResourceId
+     * @param string $resourceId
+     *
+     * @return $this
      */
-    public function setResourceId($sResourceId)
+    public function setResourceId($resourceId)
     {
-        $this->_sResourceId = $sResourceId;
+        $this->resourceId = $resourceId;
+        return $this;
     }
 }

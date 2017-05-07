@@ -1,2 +1,24 @@
-<?php
-    echo $this->sContent;
+<div class="col-sm-3" id="left">
+    <h4>
+        <?php echo $this->translate('label_current_training_plan');?>:
+    </h4>
+    <div id="current_training_plan">
+        <?php echo $this->currentTrainingPlan;?>
+    </div>
+
+    <hr />
+
+    <div id="accordion_old_training_plans" style="margin-top: 15px;">
+        <?php
+            echo $this->oldTrainingPlans;
+        ?>
+    </div>
+    <div id="mobile_content_old_training_plan"></div>
+</div>
+<div class="col-sm-9" id="right">
+    <?php echo $this->trainingPlanContent;?>
+</div>
+
+<script type="text/javascript">
+    var archivePlanLoaded = '<?php echo $this->archivePlanLoaded;?>';
+</script>

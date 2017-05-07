@@ -463,7 +463,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     array(
                         'label' => 'divider',
                         'uri' => '#',
-                        'class' => 'divider'
+                        'class' => 'divider',
+                        'resource' => 'default:training-plans',
+                        'privilege' => 'archive'
                     ),
                     array(
                         'label' => $translator->translate('label_archive'),
@@ -506,7 +508,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     array(
                         'label' => 'divider',
                         'uri' => '#',
-                        'class' => 'divider'
+                        'class' => 'divider',
+                        'resource' => 'default:training-plans',
+                        'privilege' => 'archive'
                     ),
                     array(
                         'label' => $translator->translate('label_archive'),

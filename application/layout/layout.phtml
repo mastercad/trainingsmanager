@@ -29,21 +29,21 @@
         unset($user);
     }
 ?>
-    <div class="navbar navbar-default">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">
-                Trainingsmanager
-            </a>
-        </div>
+        <div class="navbar navbar-default">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">
+                    Trainingsmanager
+                </a>
+            </div>
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 <?php
             echo $this->navigation(Zend_Registry::get('navigation'))
                 ->setRole(Auth_Service_Auth::getInstance()->getIdentity()->user_right_group_name)
@@ -52,564 +52,150 @@
                 ->menu()
                 ->renderPartial(null, 'navigation/menu.phtml');
 ?>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <p class="navbar-text">
-                        <span>
-                            <?php
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <p class="navbar-text">
+                            <span>
+                                <?php
 
-                            if (!isset($user)) {
-                                echo $this->translate('label_have_account');
-                            }
-                            ?>
-                        </span>
-                    </p>
-                </li>
-                <li class="">
+                                if (!isset($user)) {
+                                    echo $this->translate('label_have_account');
+                                }
+                                ?>
+                            </span>
+                        </p>
+                    </li>
+                    <li class="">
 <?php
         if (!isset($user)) {
 ?>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_login');?></b> <span class="caret"></span></a>
-                    <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
-                        <li>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <?php echo $this->translate('label_login_via');?>
-                                     <div class="social-buttons">
-                                        <a href = "#" class="btn btn-fb">
-                                            <i class="fa fa-facebook" ></i >
-                                            <?php echo $this->translate('facebook');?>
-                                        </a >
-                                        <a href = "#" class="btn btn-tw" >
-                                            <i class="fa fa-twitter" ></i >
-                                            <?php echo $this->translate('twitter');?>
-                                        </a >
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_login');?></b> <span class="caret"></span></a>
+                        <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <?php echo $this->translate('label_login_via');?>
+                                         <div class="social-buttons">
+                                            <a href = "#" class="btn btn-fb">
+                                                <i class="fa fa-facebook" ></i >
+                                                <?php echo $this->translate('facebook');?>
+                                            </a >
+                                            <a href = "#" class="btn btn-tw" >
+                                                <i class="fa fa-twitter" ></i >
+                                                <?php echo $this->translate('twitter');?>
+                                            </a >
+                                        </div >
+                                        <?php echo $this->translate('or');?>
+                                        <form class="form" role="form" method="post" action="/auth/login" accept-charset="UTF-8" id="login_form" >
+                                            <div class="form-group" >
+                                                <label class="sr-only" for="user_login_name" >
+                                                    <?php echo $this->translate('label_email');?>
+                                                </label >
+                                                <input type="email" class="form-control" id="user_login_name" placeholder="<?php echo $this->translate('label_email');?>" required >
+                                            </div >
+                                            <div class="form-group" >
+                                                <label class="sr-only" for="user_login_password" >
+                                                    <?php echo $this->translate('label_password');?>
+                                                </label >
+                                                <input type="password" class="form-control" id="user_login_password" placeholder="<?php echo $this->translate('label_password');?>" required >
+                                                <div class="help-block text-right" >
+                                                    <a id="password_forgotten" href="/auth/password-lost/" >
+                                                        <?php echo $this->translate('label_forgotten_password');?>
+                                                    </a ></div >
+                                            </div >
+                                            <div class="form-group" >
+                                                <button type="submit" class="btn btn-primary btn-block" > <?php echo $this->translate('label_login');?> </button >
+                                            </div >
+                                            <div class="checkbox" >
+                                                <label >
+                                                    <input type="checkbox" > <?php echo $this->translate('label_keep_logged_in');?>
+                                                </label >
+                                            </div >
+                                        </form >
                                     </div >
-                                    <?php echo $this->translate('or');?>
-                                    <form class="form" role="form" method="post" action="/auth/login" accept-charset="UTF-8" id="login_form" >
-                                        <div class="form-group" >
-                                            <label class="sr-only" for="user_login_name" >
-                                                <?php echo $this->translate('label_email');?>
-                                            </label >
-                                            <input type="email" class="form-control" id="user_login_name" placeholder="<?php echo $this->translate('label_email');?>" required >
-                                        </div >
-                                        <div class="form-group" >
-                                            <label class="sr-only" for="user_login_password" >
-                                                <?php echo $this->translate('label_password');?>
-                                            </label >
-                                            <input type="password" class="form-control" id="user_login_password" placeholder="<?php echo $this->translate('label_password');?>" required >
-                                            <div class="help-block text-right" >
-                                                <a id="password_forgotten" href="/auth/password-lost/" >
-                                                    <?php echo $this->translate('label_forgotten_password');?>
-                                                </a ></div >
-                                        </div >
-                                        <div class="form-group" >
-                                            <button type="submit" class="btn btn-primary btn-block" > <?php echo $this->translate('label_login');?> </button >
-                                        </div >
-                                        <div class="checkbox" >
-                                            <label >
-                                                <input type="checkbox" > <?php echo $this->translate('label_keep_logged_in');?>
-                                            </label >
-                                        </div >
-                                    </form >
-                                </div >
-                                <div class="col-md-12 bottom text-center">
-                                   <?php echo $this->translate('label_new_here');?>
-                                   <a id="register" href="/auth/register">
-                                       <b>
-                                           <?php echo $this->translate('label_join_us');?>
-                                       </b>
-                                   </a>
+                                    <div class="col-md-12 bottom text-center">
+                                       <?php echo $this->translate('label_new_here');?>
+                                       <a id="register" href="/auth/register">
+                                           <b>
+                                               <?php echo $this->translate('label_join_us');?>
+                                           </b>
+                                       </a>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
 <?php
             } else {
-?>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_welcome') . ", " . ucfirst($user->user_first_name) . ' ' . ucfirst($user->user_last_name);?></b> <span class="caret"></span></a>
-                    <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
-                        <li>
-                            <div class="row">
-                                <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login_form" >
-                                    <div class="form-group">
-                                        <input type="hidden" name="user_logout" id="user_logout" value="1" />
-                                        <input class="btn btn-primary btn-block" type="submit" id="logout-button" value="<?php echo $this->translate('label_logout');?>" />
-                                    </div>
-                                </form >
-                            </div>
-                            <a href="/profile">
-                                <b>
-                                    <?php echo $this->translate('label_profile');?>
-                                </b>
-                            </a>
+    ?>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b><?php echo $this->translate('label_welcome') . ", " . ucfirst($user->user_first_name) . ' ' . ucfirst($user->user_last_name);?></b> <span class="caret"></span></a>
+                        <ul id="login-dp" class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <div class="row">
+                                    <form class="form" role="form" method="post" action="login" accept-charset="UTF-8" id="login_form" >
+                                        <div class="form-group">
+                                            <input type="hidden" name="user_logout" id="user_logout" value="1" />
+                                            <input class="btn btn-primary btn-block" type="submit" id="logout-button" value="<?php echo $this->translate('label_logout');?>" />
+                                        </div>
+                                    </form >
+                                </div>
+                                <a href="/profile">
+                                    <b>
+                                        <?php echo $this->translate('label_profile');?>
+                                    </b>
+                                </a>
 <?php
                             }
 ?>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="<?php echo $this->translate('label_search');?>">
-                </div>
-                <button type="submit" class="btn btn-default"><?php echo $this->translate('label_submit');?></button>
-            </form>
-        </div><!-- /.navbar-collapse -->
-    </div>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="<?php echo $this->translate('label_search');?>">
+                    </div>
+                    <button type="submit" class="btn btn-default"><?php echo $this->translate('label_submit');?></button>
+                </form>
+            </div><!-- /.navbar-collapse -->
+        </div>
 
-    <div class="container-fluid">
-        <div id="content">
+        <div class="container-fluid">
+            <div id="content">
 
-            <?php  echo $this->layout()->content;?>
+                <?php  echo $this->layout()->content;?>
 
+                <br class="clear-fix" />
+            </div> <!-- /container -->
             <br class="clear-fix" />
-        </div> <!-- /container -->
-        <br class="clear-fix" />
-    </div>
+        </div>
 
-    <div id="modal" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title"></h4>
-                </div>
-                <div class="modal-body">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" id="modal_close" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" id="modal_save" class="btn btn-primary">Save changes</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+        <div id="modal" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title"></h4>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="modal_close" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" id="modal_save" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
-    <?php echo $this->inlineScript(); ?>
+        <?php echo $this->inlineScript(); ?>
 
-    <script src="/js/tether.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
+        <script src="/js/tether.min.js"></script>
+        <script src="/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap3-dialog/1.34.7/js/bootstrap-dialog.min.js"></script>
 
-    <script type="text/javascript">
-
-        window.modal = null;
-
-        var controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
-
-        var isMobile = true;
-        var caller = null;
-        var tempIsMobile = null;
-        var targetId = null;
-        var tempCaller = null;
-        var accordionAjaxRequest = null;
-
-        jQuery(document).ready(function() {
-
-            function checkIsMobile() {
-                isMobile = ('none' !== jQuery('#mobile').css('display'));
-
-                if (tempIsMobile != isMobile) {
-                    tempIsMobile = isMobile;
-                    considerMobile();
-                }
-
-                if (targetId === null
-                    && caller !== null
-                ) {
-                    refreshTargetId();
-                }
-            }
-
-            function refreshTargetId() {
-                if (isMobile
-                    && caller
-                ) {
-                    targetId = jQuery(caller).next().prop('id');
-                } else {
-                    targetId = 'right';
-                }
-            }
-
-            function considerMobile() {
-                var accordion = jQuery("#accordion");
-                var accordionHeaderClasses = 'ui-accordion-header ui-corner-top ui-accordion-header-collapsed ui-corner-all ui-state-default ui-accordion-icons';
-                var accordionContentClasses = 'ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content';
-                var accordionActiveHeaderClasses = 'ui-accordion-header-active ui-state-active';
-                var accordionActiveContainerClasses = 'ui-accordion-content-active';
-//                console.log('considerMobile');
-                if (true === isMobile) {
-//                    console.log('isMobile!');
-                    jQuery('#accordion').addClass('ui-accordion ui-widget ui-helper-reset');
-                    jQuery('#accordion .item').addClass(accordionHeaderClasses);
-                    jQuery('#accordion .item-content').addClass(accordionContentClasses);
-
-                    if (null !== caller) {
-//                        console.log("Caller exist!");
-                        var rightPanel = jQuery('#right');
-                        jQuery(caller).addClass(accordionActiveHeaderClasses);
-                        jQuery(caller).next()
-                            .html(rightPanel.html())
-                            .delay(1000)
-                            .css('height', 'auto')
-                            .css('display', 'block')
-                            .addClass(accordionActiveContainerClasses);
-                        rightPanel.html('');
-                        scrollToAnchor(jQuery(caller).prop('id'));
-                    }
-                } else {
-//                    console.log("isNotMobile!");
-                    jQuery('#accordion').removeClass('ui-accordion ui-widget ui-helper-reset');
-                    jQuery('#accordion .item').removeClass(accordionHeaderClasses).removeClass(accordionActiveHeaderClasses);
-                    jQuery('#accordion .item-content').removeClass(accordionContentClasses).removeClass(accordionActiveContainerClasses);
-                    if (null !== caller) {
-                        jQuery('#right').html(jQuery(caller).next().html());
-                        jQuery(caller).next().html('').css('display', 'none').hide().fadeOut();
-                        scrollToAnchor(jQuery(caller).prop('id'));
-                    }
-                }
-                refreshTargetId();
-            }
-
-            jQuery(window).resize(function() {
-                checkIsMobile();
-            });
-
-            function singleClick(e) {
-//                console.log('singleClick called');
-                var id = jQuery(this).data('id');
-                loadShowContent(id);
-            }
-
-            function doubleClick(e) {
-//                console.log('doubleClick called');
-                var id = jQuery(this).data('id');
-                loadEditContent(id);
-            }
-
-            function initItems() {
-                var previousCaller = null;
-                var touchTime = new Date().getTime();
-
-                jQuery('#accordion .item').unbind('click').click(function(event) {
-
-                    var that = this;
-
-//                    console.log("Status : " + jQuery(this).data('status'));
-//                    console.log("Previous Caller:");
-//                    console.log(previousCaller);
-
-                    if (caller
-                        && caller != this
-                    ) {
-//                        console.log('remove content because other element clicked!');
-                        jQuery(caller).data('status', null);
-                        tempCaller = caller;
-                        caller = this;
-                        removeContent();
-                    }
-
-                    //compare first click to this click and see if they occurred within double click threshold
-                    if (((new Date().getTime()) - touchTime) < 800
-                        && previousCaller == caller
-                    ) {
-                        //double click occurred
-                        caller = this;
-//                        console.log('double click');
-                        doubleClick.call(this, event);
-                        touchTime = new Date().getTime();
-                    } else {
-                        //not a double click so set as a new first click
-//                        console.log('single click');
-                        previousCaller = this;
-                        touchTime = new Date().getTime();
-
-                        if ('show' == jQuery(this).data('status')
-                            || 'edit' == jQuery(this).data('status')
-                        ) {
-//                            console.log('remove content!');
-                            jQuery(this).data('status', null);
-                            tempCaller = this;
-                            caller = null;
-                            removeContent();
-                        } else {
-                            caller = this;
-                            singleClick.call(that, event);
-                        }
-                    }
-                });
-            }
+        <script type="text/javascript">
+            var controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
 
             initAuth();
-            jQuery(function () {
-                jQuery('[data-toggle="tooltip"]').tooltip()
-            });
-
-            document.addEventListener('mousedown', function (event) {
-                if (event.detail > 1) {
-                    event.preventDefault();
-                }
-            }, false);
-
-            jQuery('#password_forgotten').unbind('click').click(function(event) {
-                event.preventDefault();
-                jQuery.post('/auth/password-lost', {ajax: true}, function(response) {
-                    var json = JSON.parse(response);
-                    json.htmlContent = Base64.decode(json.htmlContent);
-
-                    generateModalFromContent(json.htmlContent);
-                });
-            });
-
-            jQuery('#register').unbind('click').click(function(event) {
-                event.preventDefault();
-                jQuery.post('/auth/register', {ajax: true}, function(response) {
-                    var json = JSON.parse(response);
-                    json.htmlContent = Base64.decode(json.htmlContent);
-
-                    generateModalFromContent(json.htmlContent);
-                });
-            });
-
-            function generateModalFromContent(content) {
-                var script = undefined;
-                var js = extractScriptsFromContent(content);
-                content = removeScriptsFromContent(content);
-
-//                if (js) {
-                    script = generateScriptFromString(js);
-//                }
-
-                window.modal = jQuery(content);
-
-                window.modal.modal();
-
-                window.modal.on('shown.bs.modal', function(){
-                    jQuery("head").append(script);
-                });
-
-                window.modal.on('hidden.bs.modal', function() {
-                    jQuery(this).remove();
-//                    if (undefined != script) {
-                        jQuery(script).remove();
-//                    }
-                });
-            }
-
-            function extractScriptsFromContent(content) {
-
-                // get all scripts from given html content
-                var regEx = /<script\b[^>]*>([\s\S]*?)<\/script>/gm;
-                var match;
-                var js = '';
-                while (match = regEx.exec(content)) {
-                    js += match[1];
-                }
-                return js;
-            }
-
-            function removeScriptsFromContent(content) {
-                return content.replace(/<script[^>]*>(?:(?!<\/script>)[^])*<\/script>/g, "");
-            }
-
-            function generateScriptFromString(js) {
-
-                var script = document.createElement("script");
-                script.type = "text/javascript";
-                script.innerHTML = js;
-
-                return script;
-            }
-
-            checkIsMobile();
-            initItems();
-        });
-
-        function requestAction(id, action) {
-            if (isMobile) {
-                targetId = jQuery('#'+id).next().prop('id');
-            }
-
-            if (accordionAjaxRequest) {
-                accordionAjaxRequest.abort();
-                jQuery('.item').removeClass('selected ui-accordion-header-active ui-state-active')
-                    .next().removeClass('ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active');
-            }
-
-            accordionAjaxRequest = jQuery.ajax({
-                url: '/'+controller+'/'+action,
-                data: {
-                    id: id,
-                    ajax: true,
-                    format: 'json'
-                },
-                beforeSend: function() {
-                    showSpinner(jQuery('#'+targetId));
-                },
-                error: function() {
-//                    alert('<p>An error has occurred</p>');
-                },
-//                dataType: 'json',
-//                dataType: 'jsonp',
-                success: function(response) {
-                    jQuery(caller).data('status', action);
-                    considerResponse(response);
-                },
-                always: function() {
-                    accordionAjaxRequest = null;
-                },
-                type: 'POST'
-            });
-        }
-
-        function showSpinner(element) {
-            jQuery('#'+targetId).html(jQuery('<div class="spinner"></div>'));
-        }
-
-        function loadShowContent(id) {
-            requestAction(id, 'show');
-        }
-
-        function loadEditContent(id) {
-            requestAction(id, 'edit')
-        }
-
-        function deleteEntry(id) {
-            if (confirm('Entry '+jQuery('#'+id).html()+' realy delete?')) {
-                requestAction(id, 'delete');
-            }
-        }
-
-        function scrollToAnchor(id){
-//            console.log('ID : ' + id);
-            var element = jQuery("#"+id);
-//            console.log(element);
-            if (element !== undefined) {
-                jQuery('html,body').stop().animate({scrollTop: element.offset().top}, 'slow');
-            }
-        }
-
-        /* Function to animate height: auto */
-        function autoHeightAnimate(element, time){
-            element.animate({height: 'toggle', opacity: 0}, 0, function() {
-                element.css("display", "none");
-            });
-            var curHeight = element.height(), // Get Default Height
-                autoHeight = element.css('height', 'auto').height(); // Get Auto Height
-            element.height(curHeight); // Reset to Default Height
-            element.animate({height: autoHeight, opacity: 1}, time, function() {
-                element.css("display", "block");
-            }); // Animate to Auto Height
-        }
-
-        function addContent(content) {
-//            console.log('addContent');
-            if (isMobile) {
-//                console.log("Add Content for Mobile");
-                var container = jQuery(caller).next();
-                container.animate({height: 0, opacity: 0}, 0);
-                jQuery(caller).addClass('selected ui-accordion-header-active ui-state-active');
-
-                container
-                    .stop()
-                    .html(content)
-                    .height(0)
-                    .show()
-                    .animate({height: 1000, opacity: 1}, 1000, function() {
-                        container.css("display", "block")
-                            .css('height', 'auto').prop('height', null)
-                            .addClass('ui-accordion-content-active');
-                        scrollToAnchor(jQuery(caller).prop('id'));
-                    });
-            } else {
-                jQuery('#'+targetId).html(content);
-                jQuery(caller).addClass('selected');
-                scrollToAnchor(targetId);
-            }
-        }
-
-        function considerResponse(response) {
-            try {
-                var json = JSON.parse(response);
-                if (200 == json.state) {
-                    addContent(Base64.decode(json.htmlContent));
-                } else {
-                    var modal = jQuery('#modal');
-                    considerResponseCodeForModal(json.state);
-                    jQuery('#modal_save').hide();
-                    jQuery('.modal-body').html('<p>'+json.message+'</p>');
-                    modal.modal();
-                }
-            } catch (exception) {
-                alert(exception);
-            }
-        }
-
-        function considerResponseCodeForModal(code) {
-            var title = 'Notice:';
-            switch (code) {
-                case 404:
-                case 400:
-                case 500:
-                case 401:
-                case 300:
-                {
-                    title = 'Error:';
-                    break;
-                }
-            }
-            jQuery('.modal-title').html(title);
-        }
-
-        jQuery('#modal').on('hide.bs.modal', function () {
-            jQuery('.spinner').fadeOut('slow').remove();
-        });
-
-        function removeContent() {
-//            console.log("Remove Content");
-            if (isMobile) {
-//                console.log("Remove Content for Mobile");
-                var container = jQuery(tempCaller).next();
-                container
-                    .stop()
-                    .animate({height: 0, opacity: 0}, 1000, function() {
-                        container.css("display", "none")
-                            .html('')
-                            .hide()
-                            .removeClass('ui-accordion-content ui-corner-bottom ui-helper-reset ui-widget-content ui-accordion-content-active');
-                        jQuery(tempCaller).removeClass('selected ui-accordion-header-active ui-state-active');
-                        scrollToAnchor(jQuery(tempCaller).prop('id'));
-                    })
-                ;
-            } else {
-//                console.log('Remove desktop content!');
-                jQuery('#'+targetId).html('');
-                jQuery(tempCaller).removeClass('selected');
-                scrollToAnchor(targetId);
-            }
-        }
-
-        function showDialog(message, state) {
-            BootstrapDialog.show({
-                message: message,
-                type: state,
-                buttons: [{
-                    label: 'Close',
-                    action: function(dialogItself){
-                        dialogItself.close();
-                    }
-                }]
-            });
-        }
-
-//        BootstrapDialog.TYPE_DEFAULT,
-//        BootstrapDialog.TYPE_INFO,
-//        BootstrapDialog.TYPE_PRIMARY,
-//        BootstrapDialog.TYPE_SUCCESS,
-//        BootstrapDialog.TYPE_WARNING,
-//        BootstrapDialog.TYPE_DANGER
-
         </script>
         <div id="mobile"></div>
     </body>

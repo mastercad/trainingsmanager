@@ -9,7 +9,7 @@
 class Auth_Model_Resource_Exercises extends Auth_Model_Resource_Abstract {
 
     /** @var string ID der aktuellen Resource in der ACL */
-    protected $_sResourceId = 'default:exercises';
+    protected $resourceId = 'default:exercises';
 
     protected function _prepareData($oRow)
     {

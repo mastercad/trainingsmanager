@@ -4,14 +4,31 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
 class IndexController extends AbstractController {
 
+    public function init() {
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript');
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript');
+        }
+    }
+
     public function indexAction() {
-        $message = [
-            'state' => Model_Entity_Message::STATUS_NOTICE,
-            'text' => 'TESTTEXT'
-        ];
+        $this->view->assign('chartContent', $this->generateChartsContent());
+        $this->view->assign('activeTrainingDiary', $this->generateActiveTrainingDiaryContent());
+    }
 
-        $messageEntity = new Model_Entity_Message($message);
+    private function generateActiveTrainingDiaryContent() {
 
+        $content = 'Aktuell ist kein Trainingsplan offen!';
+        $trainingDiaryXTrainingPlanStorage = new Model_DbTable_TrainingDiaryXTrainingPlan();
+        $trainingDiary = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(12, $this->findCurrentUserId());
+//        $trainingDiary = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByUserId($this->findCurrentUserId());
+
+        return $content;
+    }
+
+    private function generateChartsContent() {
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/c3.min.js', 'text/javascript');
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/d3.min.js', 'text/javascript');
         $this->view->headLink()->prependStylesheet($this->view->baseUrl() . '/css/c3.min.css', 'screen', true);
@@ -23,7 +40,7 @@ class IndexController extends AbstractController {
         foreach ($chartDataCollection as $exerciseName => $chartData) {
             $chartContent .= $this->generateChartContent($exerciseName, $chartData);
         }
-        $this->view->assign('chartContent', $chartContent);
+        return $chartContent;
     }
 
     private function collectDataForChart() {

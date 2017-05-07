@@ -8,7 +8,16 @@
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
 class ExercisesController extends AbstractController {
-    
+
+    public function init() {
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript');
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript');
+        }
+    }
+
     public function indexAction() {
         $exercisesDb = new Model_DbTable_Exercises();
         $exerciseType = $this->getParam('exercise-type', null);

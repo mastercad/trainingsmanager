@@ -11,6 +11,15 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
 class DeviceGroupsController extends AbstractController
 {
+    public function init() {
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript');
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript');
+        }
+    }
+
     public function indexAction() {
         $deviceGroupsDb = new Model_DbTable_DeviceGroups();
 

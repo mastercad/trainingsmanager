@@ -100,6 +100,7 @@ class Service_Generator_Thumbnail {
      * @throws \Exception
      */
     public function generateImageString($params = null) {
+
         $this->setDefineHeader(false)
             ->parseParams($params)
             ->prepareSourceImageData()

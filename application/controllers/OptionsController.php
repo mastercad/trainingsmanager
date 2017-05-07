@@ -20,6 +20,15 @@ abstract class OptionsController extends AbstractController {
      */
     protected abstract function useOptionsStorage();
 
+    public function init() {
+        if (!$this->getParam('ajax')) {
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript');
+            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript');
+        }
+    }
+
     public function indexAction() {
         $optionsCollection = $this->useOptionsStorage()->findAllOptions();
         $optionsContent = 'Es konnten leider keine optionen gefunden werden!';

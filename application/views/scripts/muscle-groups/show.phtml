@@ -19,8 +19,6 @@
 </div>
 
 <script type="text/javascript" language="JavaScript">
-    controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
-
     jQuery(document).ready(function() {
         jQuery('.detail-options .edit-button').unbind('click').click(function() {
             loadEditContent(jQuery(this).data('id'));

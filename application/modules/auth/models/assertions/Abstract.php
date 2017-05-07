@@ -81,7 +81,7 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      *
      * @return boolean
      */
-    private function _considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
+    protected function _considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
         $bReturn = false;
 
         if ((null !== $oResource->getMemberId()

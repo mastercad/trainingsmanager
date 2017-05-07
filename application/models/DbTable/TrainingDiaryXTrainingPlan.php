@@ -18,13 +18,6 @@ class Model_DbTable_TrainingDiaryXTrainingPlan extends Model_DbTable_Abstract
     protected $_primary = 'training_diary_x_training_plan_id';
 
     /**
-     *
-     */
-    public function findActualTraining() {
-
-    }
-
-    /**
      * @param $iTrainingPlanExerciseId
      * @return null|Zend_Db_Table_Row_Abstract
      */
@@ -41,7 +34,7 @@ class Model_DbTable_TrainingDiaryXTrainingPlan extends Model_DbTable_Abstract
      * @param $iTrainingPlanId
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findLastOpenTrainingPlan($iTrainingPlanId) {
+    public function findLastOpenTrainingPlanByTrainingPlanIdAndUserId($iTrainingPlanId, $userId) {
         $oSelect = $this->select(Zend_Db_Table_Abstract::SELECT_WITHOUT_FROM_PART)
             ->setIntegrityCheck(FALSE);
 
@@ -54,7 +47,8 @@ class Model_DbTable_TrainingDiaryXTrainingPlan extends Model_DbTable_Abstract
 //            ->joinInner('training_diaries', 'training_diary_x_training_plan_training_plan_fk = ' . $iTrainingPlanId)
             ->where('training_diary_x_training_plan_flag_finished != 1 OR training_diary_x_training_plan_flag_finished IS NULL')
             ->where('training_diary_x_training_plan_exercise_flag_finished != 1 OR training_diary_x_training_plan_exercise_flag_finished IS NULL')
-            ->where('training_plan_id = ' . $iTrainingPlanId)
+            ->where('training_plan_id = ?', $iTrainingPlanId)
+            ->where('training_plan_user_fk = ?', $userId)
             ->order('training_plan_x_exercise_exercise_order');
 
         $sql = $oSelect->assemble();
