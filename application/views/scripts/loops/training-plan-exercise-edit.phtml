@@ -1,17 +1,4 @@
 <?php
-
-if (FALSE === function_exists('formatFloatValue')) {
-    function formatFloatValue($fValue) {
-        $iValue = number_format($fValue, 0);
-        if ($iValue != $fValue) {
-            return $fValue;
-        }
-        return $iValue;
-    }
-}
-
-//$this->trainingPlanId = $this->trainingsplan_uebung_trainingsplan_fk;
-
 /** @TODO den blödsinn mit dem count entfernen! **/
 if (TRUE === isset($this->exercise_name)) {
     $count = $this->iCount;
@@ -35,34 +22,20 @@ if (TRUE === isset($this->exercise_name)) {
     </div>
 
     <div class="col-sm-6">
-<!--        <label for="device_options" style="float: left; display: inline;">-->
-<!--            --><?php //echo $this->translate('label_device_options');?><!--:-->
-<!--        </label>-->
         <?php echo $this->deviceOptionsSelectContent;?>
     </div>
 
     <div class="col-sm-6">
-<!--        <label for="device_options" style="float: left; display: inline;">-->
-<!--            --><?php //echo $this->translate('label_exercise_options');?><!--:-->
-<!--        </label>-->
         <?php echo $this->exerciseOptionsSelectContent;?>
     </div>
 
-    <br class="clear-fix" />
-
-    <div class="device-options">
+    <div class="col-sm-12 device-options">
         <?php echo $this->deviceOptionsContent;?>
-
-<!--        <br class="clear-fix" />-->
     </div>
 
-    <div class="exercise-options">
+    <div class="col-sm-12 exercise-options">
         <?php echo $this->exerciseOptionsContent;?>
-
-<!--        <br class="clear-fix" />-->
     </div>
-
-    <br class="clear-fix" />
 
     <div class="form-group">
         <label for="training_plan_exercise_comment_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
@@ -72,10 +45,10 @@ if (TRUE === isset($this->exercise_name)) {
 
         <textarea id="training_plan_exercise_comment_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
                name="training_plan_exercise_comment[<?php echo $this->trainingPlanId;?>][<?php echo $count;?>]"
-               class="form-control exercise-comment"
+               class="ui-input-text form-control exercise-comment"
         ><?php echo $this->training_plan_x_exercise_comment;?></textarea>
     </div>
-    <br class="clear-fix" style="margin-bottom: 15px;"/>
+
 <?php
     if (TRUE === is_array($this->aBeanspruchteMuskeln)) {
         foreach ($this->aBeanspruchteMuskeln as $sMuskelName => $iBeanspruchung) {

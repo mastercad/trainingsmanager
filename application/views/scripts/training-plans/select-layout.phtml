@@ -41,6 +41,8 @@
 
 <script type="text/javascript" language="JavaScript">
     jQuery('document').ready(function(){
+        var trainingSelectAjax = null;
+
         jQuery('.member-select .option-add').unbind('click').bind('click', function() {
             var selectedOption = jQuery(this).data('value');
             var selectedOptionName = jQuery(this).html();
@@ -50,7 +52,50 @@
             jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
             jQuery(this).parent().parent().parent().find('#user_id').val(selectedOption);
 
+            refreshTrainingPlanSelect();
+
             return false;
         });
+
+        function refreshTrainingPlanSelect() {
+
+            if (trainingSelectAjax) {
+                trainingSelectAjax.abort();
+            }
+
+            var trainingPlanSelect = jQuery('.training-plan-select');
+
+            trainingSelectAjax = jQuery.ajax({
+                url: '/' + controller + '/get-training-plan-select',
+                data: {
+                    user_id: jQuery('.member-select').attr('data-value'),
+                    ajax: true,
+                    format: 'json'
+                },
+                beforeSend: function () {
+                    showSpinner(trainingPlanSelect);
+                },
+                error: function () {
+                },
+                success: function (response) {
+                    jQuery(trainingPlanSelect).html('');
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        trainingPlanSelect.replaceWith(Base64.decode(json.htmlContent));
+                    } else {
+                        var modal = jQuery('#modal');
+                        considerResponseCodeForModal(json.state);
+                        jQuery('#modal_save').hide();
+                        jQuery('.modal-body').html('<p>' + json.message + '</p>');
+                        modal.modal();
+                    }
+                },
+                always: function () {
+                    accordionAjaxRequest = null;
+                },
+                type: 'POST'
+            });
+        }
     });
 </script>

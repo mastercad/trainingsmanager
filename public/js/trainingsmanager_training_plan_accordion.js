@@ -68,10 +68,6 @@ jQuery(document).ready(function() {
                 });
             }
         });
-
-        jQuery(document).on('shown.bs.tab', function() {
-            refreshImageProperties();
-        });
     }
 
     checkIsMobile();
@@ -98,7 +94,6 @@ function addTrainingPlanContent(content) {
     } else {
         jQuery('#right').html(content);
     }
-    refreshImageProperties();
     initOptions();
 }
 
@@ -124,13 +119,6 @@ function considerMobile() {
             jQuery('#mobile_content_old_training_plan').html('');
         }
     }
-    refreshImageProperties();
-}
-
-function refreshImageProperties() {
-    jQuery('.tab-pane.active img').each(function() {
-        jQuery(this).width(jQuery(this).parent().outerWidth() - 30);
-    });
 }
 
 function showSpinner(element) {

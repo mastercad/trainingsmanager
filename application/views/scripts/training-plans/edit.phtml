@@ -1,20 +1,9 @@
-<div class="form-group">
-    <label>
-<!--<form method="post" action="/training-plans/save" target="upload_target" id="training_plan_edit">-->
-        <input type="checkbox" class="checkbox-inline" id="training_plan_flag_active" name="training-plan-flag-active"
-               value="1"
-<?php
+<a name="right" />
+<ul class="tab-droppable nav nav-tabs">
+    <?php echo $this->trainingPlansHeaderContent;?>
+</ul>
 
-            if ($this->training_plan_active) {
-                echo 'checked="checked" ';
-            }
-?>
-            />
-        <?php echo $this->translate('label_training_plan_active');?>
-    </label>
-</div>
-
-<div class="training-plans">
+<div class="training-plans tab-content">
 <?php
     echo $this->trainingPlanContent;
 ?>
@@ -31,9 +20,6 @@
            class="form-control"
            data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_type_to_get_exercise_proposals');?>"/>
 </div>
-<button class="btn btn-default btn-primary" id="new_split_plan">
-    <?php echo $this->translate('label_add_new_training_plan');?>
-</button>
 
 <div class="proposals"></div>
 
@@ -44,11 +30,11 @@
 </button>
 
 <script language="JavaScript">
+    var ajax = null;
+
     jQuery('document').ready(function(){
 
         jQuery('#new_exercise').bind('keyup', function(e) {
-
-            var post_request = null;
 
             var url = '/'+controller+'/get-exercise-proposals/';
             var search = Base64.encode(jQuery(this).val());
@@ -58,11 +44,11 @@
             //            jQuery(self).data('uebung-name', '');
             //            jQuery(self).data('uebung-id', '');
 
-            if (null !== post_request) {
-                post_request.abort();
+            if (ajax) {
+                ajax.abort();
             }
 
-            post_request = jQuery.ajax({
+            ajax = jQuery.ajax({
                 type: "POST",
                 url: url,
                 data: "search=" + search + "&ajax=true",
@@ -78,26 +64,20 @@
                             .css('left', offset.left + "px")
                             .css('top', offset.top + 40 + "px")
                             .find('.proposal').unbind('click').bind('click', function () {
-
-//                                var currentProposal = jQuery(this);
-//                                jQuery('#training_plan_edit').find('.exercise').each(function() {
-//                                    if (jQuery(this).find('.exercise-name').data('exercise-id') ==
-//                                        jQuery(currentProposal).data('proposal-id')
-//                                    ) {
-//                                        var a_messages = new Array({
-//                                            'type': 'fehler',
-//                                            'message': 'Diese Uebung ist für diesen Trainingsplan bereits gesetzt!'
-//                                        });
-//                                        var obj_cad_message = new CAD.Message();
-//                                        obj_cad_message.init(a_messages);
-//                                        obj_cad_message.open();
-//
-//                                        return false;
-//                                    }
-//                                });
+                                var found = false;
+                                var currentProposal = jQuery(this);
+                                jQuery('.tab-pane.active .training-plan .exercise').each(function() {
+                                    if (jQuery(this).data('exercise-id') == jQuery(currentProposal).data('proposal-id')) {
+                                        found = true;
+                                        showDialog('<?php echo $this->translate('text_exercise_already_set');?>', BootstrapDialog.TYPE_DANGER);
+                                        return false;
+                                    }
+                                });
                                 jQuery(self).val('');
-                                var count = countExercises();
-                                addExercise(jQuery(this).data('proposal-id'), count);
+                                if (false === found) {
+                                    var count = countExercises();
+                                    addExercise(jQuery(this).data('proposal-id'), count);
+                                }
                                 jQuery('.proposals').fadeOut();
                                 return false;
                             });
@@ -111,19 +91,27 @@
 
         $('#new_split_plan').unbind('click').bind('click', function() {
             var sUrl = '/training-plans/get-training-plan-for-split';
-            var oParams =
-            {
+            var oParams = {
                 'user_id': '<?php echo $this->userId;?>',
                 'training_plan_id': '<?php echo $this->trainingPlanId;?>',
                 'ajax': 1
             };
-            $.post(sUrl, oParams, function(response) {
+
+            if (ajax) {
+                ajax.abort();
+            }
+
+            var that = this;
+            ajax = jQuery.post(sUrl, oParams, function(response) {
                 try {
                     var json = JSON.parse(response);
 
                     if (200 == json.state) {
-                        jQuery('.training-plans').append(Base64.decode(json.htmlContent));
+                        var content = Base64.decode(json.htmlContent);
+                        jQuery(content).find("li").insertBefore(jQuery(that).parent());
+                        jQuery('.tab-content').append(jQuery(content).filter('div.tab-pane').get(0));
                         trainingPlanEditInit();
+                        initTabs();
                     } else {
                         showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                     }
@@ -136,7 +124,11 @@
         jQuery('.save').unbind('click').click(function() {
             var trainingPlanCollection = collectionTrainingPlanInformation();
 
-            jQuery.post('/'+controller+'/save', {trainingPlanCollection: trainingPlanCollection, ajax: true}, function(response) {
+            if (ajax) {
+                ajax.abort();
+            }
+
+            ajax = jQuery.post('/'+controller+'/save', {trainingPlanCollection: trainingPlanCollection, ajax: true}, function(response) {
                 var json = JSON.parse(response);
 
                 if (200 == json.state) {
@@ -148,30 +140,75 @@
             return false;
         });
 
-        function trainingPlanEditInit() {
-            $(function() {
-                $(".droppable").sortable({
-                    revert: true,
-                    connectWith: '.droppable',
-                    items: "li:not(.placeholder)",
-                    sort: function() {
-                        $(this).removeClass( "ui-state-default" );
-                    },
-                    stop: function(event, ui) {
-                        $(this).addClass( "ui-state-default" );
-//                    connectExerciseToParentTrainingPlan(ui.item);
-                    }
-                });
+        function initTabs() {
+            $('.nav-tabs').tab();
 
-                $(".droppable li").hover(
-                    function() {
-                        $(this).css({'background-color': 'lightblue', 'border': '1px solid skyblue', 'border-radius': '5px', 'cursor': 'pointer'});
-                    },
-                    function() {
-                        $(this).css({'background-color': 'gainsboro', 'border': '0px none', 'cursor': 'normal'});
-                    }
-                );
+            jQuery('.nav-tabs li a').dblclick(function() {
+                convertTabInEditMode(this);
             });
+
+            $(".tab-droppable").sortable({
+                revert: true,
+                connectWith: '.tab-droppable',
+                items: "li:not(.placeholder)",
+                sort: function() {
+//                    $(this).removeClass( "ui-state-default" );
+                    $(this).addClass( "ui-state-default" );
+                },
+                stop: function(event, ui) {
+//                    $(this).addClass( "ui-state-default" );
+                    $(this).removeClass( "ui-state-default" );
+                }
+            });
+        }
+
+        function convertTabInEditMode(object) {
+            var currentValue = jQuery.trim(jQuery(object).html());
+            var newContent = jQuery('<input type="text" value='+currentValue+' />');
+            jQuery(newContent).data('href', jQuery(object).attr('href'));
+            jQuery(object).replaceWith(newContent);
+            jQuery(newContent)
+                .focus()
+                .focusout(function() {convertTabFromEditMode(this);})
+                .keypress(function (e) {
+                    if (e.which == 13) {
+                        convertTabFromEditMode(this);
+                        return false;    //<---- Add this line
+                    }
+                })
+        }
+
+        function convertTabFromEditMode(object) {
+            var currentValue = jQuery(object).val();
+            var href = jQuery(object).data('href');
+            var newContent = jQuery('<a data-toggle="tab" href="'+href+'">'+currentValue+'</a>');
+            jQuery(object).replaceWith(newContent);
+            initTabs();
+        }
+
+        function trainingPlanEditInit() {
+
+            $(".droppable").sortable({
+                revert: true,
+                connectWith: '.droppable',
+                items: "li:not(.placeholder)",
+                sort: function() {
+                    $(this).removeClass( "ui-state-default" );
+                },
+                stop: function(event, ui) {
+                    $(this).addClass( "ui-state-default" );
+//                    connectExerciseToParentTrainingPlan(ui.item);
+                }
+            });
+
+            $(".droppable li").hover(
+                function() {
+                    $(this).css({'background-color': 'lightblue', 'border': '1px solid skyblue', 'border-radius': '5px', 'cursor': 'pointer'});
+                },
+                function() {
+                    $(this).css({'background-color': 'gainsboro', 'border': '0px none', 'cursor': 'normal'});
+                }
+            );
 
             jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
                 var selectedOption = jQuery.trim(jQuery(this).html());
@@ -210,7 +247,12 @@
                 jQuery(this).parent().parent().parent().find('.dropdown-toggle').dropdown('toggle');
 
                 if (false == optionAlreadySet) {
-                    jQuery.post(
+
+                    if (ajax) {
+                        ajax.abort();
+                    }
+
+                    ajax = jQuery.post(
                         '/'+controller+'/get-device-option', {
                             ajax: true,
                             trainingPlanExerciseId: parent.data('training-plan-exercise-id'),
@@ -256,7 +298,12 @@
                 jQuery(this).parent().parent().parent().find('.dropdown-toggle').dropdown('toggle');
 
                 if (false == optionAlreadySet) {
-                    jQuery.post(
+
+                    if (ajax) {
+                        ajax.abort();
+                    }
+
+                    ajax = jQuery.post(
                         '/'+controller+'/get-exercise-option',
                         {
                             ajax: true,
@@ -269,6 +316,7 @@
 
                             if (200 == json.state) {
                                 parent.find('.exercise-options').append(Base64.decode(json.htmlContent)).find('.exercise-option:last').focus();
+                                initTabs();
                                 trainingPlanEditInit();
                             } else {
                                 showDialog(json.message, BootstrapDialog.TYPE_DANGER);
@@ -287,12 +335,18 @@
         function addExercise(exerciseId, count) {
             var sUrl = '/training-plans/get-exercise';
             var oData = {'id': exerciseId, 'ajax': true, 'counter': count};
-            jQuery.post(sUrl, oData, function(response) {
+
+            if (ajax) {
+                ajax.abort();
+            }
+
+            ajax = jQuery.post(sUrl, oData, function(response) {
                 try {
                     var json = JSON.parse(response);
 
                     if (200 == json.state) {
-                        jQuery('ol.training-plan:last').append(Base64.decode(json.htmlContent)).find('.exercise:last').effect('highlight', {}, 3000);
+//                        jQuery('ol.training-plan:last').append(Base64.decode(json.htmlContent)).find('.exercise:last').effect('highlight', {}, 3000);
+                        jQuery('.training-plans .tab-pane.active ol').append(Base64.decode(json.htmlContent)).find('.exercise:last').effect('highlight', {}, 3000);
                         trainingPlanEditInit();
                     } else {
                         showDialog(json.message, BootstrapDialog.TYPE_DANGER);
@@ -317,10 +371,12 @@
         function collectionTrainingPlanInformation() {
             var trainingPlanCount = 0;
             var trainingPlanCollection = {};
-            jQuery('ol.training-plan').each(function() {
+            jQuery('.nav-tabs li a').each(function() {
+                var trainingTagPlanId = jQuery(this).attr('href');
+                var trainingPlanName = jQuery(this).html();
                 var exercises = {};
                 var exerciseCount = 0;
-                var currentTrainingPlan = jQuery(this);
+                var currentTrainingPlan = jQuery(trainingTagPlanId);
                 currentTrainingPlan.find('li.exercise').each(function() {
                     var exercise = {};
                     var currentExercise = jQuery(this);
@@ -388,8 +444,8 @@
                     ++exerciseCount;
                 });
                 trainingPlanCollection[trainingPlanCount] = {
-                    trainingPlanId: jQuery(currentTrainingPlan).attr('id'),
-                    trainingPlanName: jQuery(currentTrainingPlan).find('.training-plan-name').val(),
+                    trainingPlanId: jQuery(currentTrainingPlan).find('ol').attr('id'),
+                    trainingPlanName: trainingPlanName,
                     exercises: exercises
                 };
                 ++trainingPlanCount;
@@ -397,7 +453,7 @@
             trainingPlanCollection.trainingPlanId = jQuery('#training_plan_id').val();
             return trainingPlanCollection;
         }
-
+        initTabs();
         trainingPlanEditInit();
     });
 

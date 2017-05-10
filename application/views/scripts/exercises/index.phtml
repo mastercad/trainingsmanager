@@ -5,15 +5,8 @@
     <div class="col-sm-4">
         <?php echo $this->deviceFilterContent;?>
     </div>
-    <div class="col-sm-2">
-        <button class="btn btn-primary btn-default search">
-            <?php echo $this->translate('label_search');?>
-        </button>
-    </div>
 
-    <br class="clear-fix" />
-
-    <div id="accordion">
+    <div id="accordion" class="col-sm-12">
 <?php
     if (is_array($this->exercisesCollection)) {
         foreach($this->exercisesCollection as $exercise) {
@@ -97,16 +90,157 @@
             location.href = newLocation;
         });
 
-        jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
+        var exerciseType = null;
+        var otherAvailableExerciseTypes = [];
+        var device = null;
+        var otherAvailableDevices = [];
+
+        jQuery('#exercise_type_id.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
             var selectedOption = jQuery(this).data('value');
             var selectedOptionName = jQuery(this).html();
             var caretContent = '<span class="caret"></span>';
 
+            if (0 < selectedOption) {
+                exerciseType = jQuery.trim(selectedOptionName);
+            } else {
+                exerciseType = null;
+//                otherAvailableExerciseTypes = [];
+//                refreshExerciseTypesFilterDropDown();
+            }
+
             jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
             jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+            refreshExerciseList();
+            refreshDevicesFilterDropDown();
 
             return false;
         });
 
+        jQuery('#device_id.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
+            var selectedOption = jQuery(this).data('value');
+            var selectedOptionName = jQuery(this).html();
+            var caretContent = '<span class="caret"></span>';
+
+            if (0 < selectedOption) {
+                device = jQuery.trim(selectedOptionName);
+            } else {
+                device = null;
+//                otherAvailableDevices = [];
+//                refreshDevicesFilterDropDown();
+            }
+
+            jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
+            jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+            refreshExerciseList();
+            refreshExerciseTypesFilterDropDown();
+
+            return false;
+        });
+
+        function refreshExerciseList() {
+            otherAvailableDevices = [];
+            otherAvailableExerciseTypes = [];
+
+            $('#accordion .exercise').each(function() {
+                var currentExerciseType = jQuery(this).data('exercise-type');
+                var currentDevice = jQuery(this).data('exercise-device');
+                if (null !== exerciseType
+                    && null !== device
+                    && currentExerciseType == exerciseType
+                    && currentDevice == device
+                ) {
+                    jQuery(this).show();
+                    otherAvailableDevices = addCountToHash(otherAvailableDevices, currentDevice, 1);
+                    otherAvailableExerciseTypes = addCountToHash(otherAvailableExerciseTypes, currentExerciseType, 1);
+//                    otherAvailableDevices[currentDevice] += 1;
+//                    otherAvailableExerciseTypes[currentExerciseType] += 1;
+                } else if (null === exerciseType
+                    && null !== device
+                    && currentDevice == device
+                ) {
+                    jQuery(this).show();
+                    otherAvailableDevices = addCountToHash(otherAvailableDevices, currentDevice, 1);
+                    otherAvailableExerciseTypes = addCountToHash(otherAvailableExerciseTypes, currentExerciseType, 1);
+//                    otherAvailableDevices[currentDevice] += 1;
+//                    otherAvailableExerciseTypes[currentExerciseType] += 1;
+                } else if (null !== exerciseType
+                    && null == device
+                    && currentExerciseType == exerciseType
+                ) {
+                    jQuery(this).show();
+                    otherAvailableDevices = addCountToHash(otherAvailableDevices, currentDevice, 1);
+                    otherAvailableExerciseTypes = addCountToHash(otherAvailableExerciseTypes, currentExerciseType, 1);
+//                    otherAvailableDevices[currentDevice] += 1;
+//                    otherAvailableExerciseTypes[currentExerciseType] += 1;
+                } else if (null === exerciseType
+                    && null === device
+                ) {
+                    jQuery(this).show();
+                    otherAvailableDevices = addCountToHash(otherAvailableDevices, currentDevice, 1);
+                    otherAvailableExerciseTypes = addCountToHash(otherAvailableExerciseTypes, currentExerciseType, 1);
+//                    otherAvailableDevices[currentDevice] += 1;
+//                    otherAvailableExerciseTypes[currentExerciseType] += 1;
+                } else {
+                    jQuery(this).hide();
+                }
+            });
+
+            if (null === exerciseType
+                && null === device
+            ) {
+                refreshDevicesFilterDropDown();
+                refreshExerciseTypesFilterDropDown();
+            }
+        }
+
+        function refreshDevicesFilterDropDown() {
+            console.log(otherAvailableDevices);
+            if (0 < Object.size(otherAvailableDevices)) {
+                jQuery('#device_id .dropdown-menu li').hide().each(function() {
+                    var currentDevice = jQuery.trim(jQuery(this).find('a').html());
+                    var currentId = jQuery(this).find('a').data('value');
+                    if (0 >= currentId
+                        || undefined !== otherAvailableDevices[currentDevice]
+                    ) {
+                        jQuery(this).show();
+                    }
+                });
+            } else {
+                jQuery('#device_id .dropdown-menu li').show();
+            }
+        }
+
+        function refreshExerciseTypesFilterDropDown() {
+            if (0 < Object.size(otherAvailableExerciseTypes)) {
+                jQuery('#exercise_type_id .dropdown-menu li').hide().each(function() {
+                    var currentExerciseType = jQuery.trim(jQuery(this).find('a').html());
+                    var currentId = jQuery(this).find('a').data('value');
+                    if (0 >= currentId
+                        || undefined !== otherAvailableExerciseTypes[currentExerciseType]
+                    ) {
+                        jQuery(this).show();
+                    }
+                });
+            } else {
+                jQuery('#exercise_type_id .dropdown-menu li').show();
+            }
+        }
+
+        function addCountToHash(hash, key, count) {
+            if (undefined !== hash[key]) {
+                hash[key] = parseInt(hash[key]) + parseInt(count);
+            } else {
+                hash[key] = parseInt(count);
+            }
+            return hash;
+        }
+
+        Object.size = function(obj) {
+            var size = 0, key;
+            for (key in obj) {
+                if (obj.hasOwnProperty(key)) size++;
+            }
+            return size;
+        };
     });
 </script>

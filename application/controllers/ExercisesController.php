@@ -209,7 +209,8 @@ class ExercisesController extends AbstractController {
         $exercisesWithoutDevices = $exerciseXDeviceDb->findExercisesWithoutDevices();
 
         $deviceContent = '';
-        $optionSelectText = $this->translate('label_please_select');
+//        $optionSelectText = $this->translate('label_please_select');
+        $optionSelectText = $this->translate('label_device_name');
 
         $this->view->assign('optionValue', 0);
         $this->view->assign('optionText', $this->translate('label_please_select'));
@@ -217,9 +218,10 @@ class ExercisesController extends AbstractController {
 
         foreach ($devicesCollection as $currentDevice) {
             $this->view->assign('optionValue', $currentDevice->offsetGet('device_id'));
-            $this->view->assign('optionText', $currentDevice->offsetGet('device_name') . ' (' .
-                $currentDevice->offsetGet('exerciseCount') . ' ' . (1 < $currentDevice->offsetGet('exerciseCount') ?
-                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+//            $this->view->assign('optionText', $currentDevice->offsetGet('device_name') . ' (' .
+//                $currentDevice->offsetGet('exerciseCount') . ' ' . (1 < $currentDevice->offsetGet('exerciseCount') ?
+//                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+            $this->view->assign('optionText', $currentDevice->offsetGet('device_name'));
 
             if ($device == $currentDevice->offsetGet('device_id')) {
                 $deviceName = $currentDevice->offsetGet('device_name');
@@ -250,7 +252,8 @@ class ExercisesController extends AbstractController {
         $this->view->assign('optionsContent', $deviceContent);
 
         $this->view->assign('optionSelectText', $optionSelectText);
-        $this->view->assign('optionLabelText', $this->translate('label_device_name') . ':');
+//        $this->view->assign('optionLabelText', $this->translate('label_device_name') . ':');
+        $this->view->assign('optionLabelText', '');
         $this->view->assign('optionClassName', 'device-select custom-drop-down');
 
         return $this->view->render('globals/select.phtml');
@@ -266,7 +269,8 @@ class ExercisesController extends AbstractController {
         $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
 
         $exerciseTypeContent = '';
-        $optionSelectText = $this->translate('label_please_select');
+//        $optionSelectText = $this->translate('label_please_select');
+        $optionSelectText = $this->translate('label_exercise_type');
 
         $this->view->assign('optionValue', 0);
         $this->view->assign('optionText', $this->translate('label_please_select'));
@@ -306,7 +310,8 @@ class ExercisesController extends AbstractController {
         $this->view->assign('optionsContent', $exerciseTypeContent);
 
         $this->view->assign('optionSelectText', $optionSelectText);
-        $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
+//        $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
+        $this->view->assign('optionLabelText', '');
         $this->view->assign('optionClassName', 'exercise-type-select custom-drop-down');
 
         return $this->view->render('globals/select.phtml');

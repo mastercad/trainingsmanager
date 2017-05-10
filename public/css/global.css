@@ -30,6 +30,10 @@ body, html {
     margin: 0;
 }
 
+img {
+    max-width: 100%;
+}
+
 #mobile {
     display: none;
 }
@@ -514,7 +518,7 @@ pre {
     padding: 10px;
     font-size: 14px;
     color: darkslategray;
-    position: relative;
+    /*position: relative;*/
 }
 
 .training-plan .exercise-options label,

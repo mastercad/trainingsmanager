@@ -57,9 +57,12 @@ class Service_TrainingPlan {
      * @return $this
      */
     public function saveTrainingPlan($trainingPlan, $trainingPlantParentId = null) {
+        static $trainingPlanCount = 0;
+        ++$trainingPlanCount;
+
         $trainingPlanDb = new Model_DbTable_TrainingPlans();
         $trainingPlanId = intval($trainingPlan['trainingPlanId']);
-        $trainingPlanName = $trainingPlan['trainingPlanName'];
+        $trainingPlanName = trim($trainingPlan['trainingPlanName']);
 
         $userId = 1;
 
@@ -67,6 +70,7 @@ class Service_TrainingPlan {
         if (empty($trainingPlanId)) {
             $data = [
                 'training_plan_name' => $trainingPlanName,
+                'training_plan_order' => $trainingPlanCount,
                 'training_plan_parent_fk' => $trainingPlantParentId,
                 'training_plan_create_date' => date('Y-m-d H:i:s'),
                 'training_plan_create_user_fk' => $userId,
@@ -90,10 +94,14 @@ class Service_TrainingPlan {
         } else {
             $currentTrainingPlan = $trainingPlanDb->findTrainingPlan($trainingPlanId);
             $currentTrainingPlanName = $currentTrainingPlan->offsetGet('training_plan_name');
+            $currentTrainingPlanOrder = $currentTrainingPlan->offsetGet('training_plan_order');
 
-            if ($trainingPlanName != $currentTrainingPlanName) {
+            if ($trainingPlanName != $currentTrainingPlanName
+                || $currentTrainingPlanOrder != $trainingPlanCount
+            ) {
                 $data = [
                     'training_plan_name' => $trainingPlanName,
+                    'training_plan_order' => $trainingPlanCount,
                     'training_plan_update_date' => date('Y-m-d H:i:s'),
                     'training_plan_update_user_fk' => $userId
                 ];

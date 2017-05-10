@@ -4,6 +4,8 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
 class TrainingPlansController extends AbstractController {
 
+    private $trainingPlanTabHeaderContent = '';
+
     public function init() {
         if (!$this->getParam('ajax')) {
             $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_training_plan_accordion.js',
@@ -34,7 +36,7 @@ class TrainingPlansController extends AbstractController {
                 $currentTrainingPlan = false;
                 $trainingPlanContent = $this->translate('text_need_permissions_to_show_training_plan');
             }
-        } else {
+        } else if ($this->findCurrentUserId()) {
             $currentTrainingPlan = $trainingPlansDb->findActiveTrainingPlan($this->findCurrentUserId());
         }
 
@@ -87,6 +89,8 @@ class TrainingPlansController extends AbstractController {
             $this->view->assign('currentTrainingPlan', $this->generateCurrentTrainingPlanItem($trainingPlan->current()));
             $content = $this->generateSingleTrainingPlanContent($trainingPlan->current());
         }
+        $this->view->assign('trainingPlanOptionsContent', $this->generateDetailOptionsContent($trainingPlan->offsetGet(0)->offsetGet('training_plan_id')));
+
         return $content;
     }
 
@@ -118,7 +122,9 @@ class TrainingPlansController extends AbstractController {
             $trainingPlanName = $trainingPlan->offsetGet('training_plan_name');
         }
         $trainingPlanName .=  ' ' . $this->translate('of') . ' : ';
-        $content = '<span class="item selected" data-id="'.$trainingPlan->offsetGet('training_plan_id').'">'. $trainingPlanName . ' ' . date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))) . '</a>';
+        $content = '<span class="item selected" data-id="'.$trainingPlan->offsetGet('training_plan_id').'">' .
+            $trainingPlanName . ' ' . date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))) .
+            '</a>';
 
         return $content;
     }
@@ -168,11 +174,7 @@ class TrainingPlansController extends AbstractController {
 
         $this->view->assign('exercisesContent', $content);
 
-        if (1 == $trainingPlan->offsetGet('training_plan_active')) {
-            $this->view->assign('trainingPlanOptionsContent', $this->generateDetailOptionsContent($trainingPlan->offsetGet('training_plan_id')));
-        } else {
-            $this->view->assign('trainingPlanOptionsContent', '');
-        }
+        $this->view->assign('startTrainingPlanLink', '/training-diaries/start/id/' . $trainingPlan->offsetGet('training_plan_id'));
         return $this->view->render('loops/training-plan-split-exercise-row.phtml');
     }
 
@@ -261,11 +263,7 @@ class TrainingPlansController extends AbstractController {
     public function getTrainingPlanForSplitAction() {
         $aParams = $this->getAllParams();
 
-        $user = Zend_Auth::getInstance()->getIdentity();
-
-        if (true === is_object($user)) {
-            $userId = $user->user_id;
-
+        if ($userId = $this->findCurrentUserId()) {
             if (is_numeric($userId)
                 && 0 < $userId
                 && true === array_key_exists('user_id', $aParams)
@@ -284,11 +282,14 @@ class TrainingPlansController extends AbstractController {
                 $sContent = '';
 
                 try {
-                    $trainingPlanService = new Service_TrainingPlan();
-                    $trainingPlanId = $trainingPlanService->createTrainingPlan($aData);
-                    $this->view->assign('trainingPlanId', $trainingPlanId);
-                    $this->view->assign('training_plan_id', $trainingPlanId);
-                    $sContent = $this->view->render('loops/training-plan-edit.phtml');
+//                    $trainingPlanService = new Service_TrainingPlan();
+//                    $trainingPlanId = $trainingPlanService->createTrainingPlan($aData);
+//                    $this->view->assign('trainingPlanId', $trainingPlanId);
+//                    $this->view->assign('training_plan_id', $trainingPlanId);
+                    $currentName = 'NewPlan'.time();
+                    $this->view->assign('name', $currentName);
+                    $sContent = '<ul class="nav nav-tabs"><li><a data-toggle="tab" href="#'.$currentName.'">New Plan</a></li></ul>';
+                    $sContent .= $this->view->render('loops/training-plan-edit.phtml');
                 } catch (Exception $oException) {
                     $sContent = $oException->getMessage();
                 }
@@ -347,6 +348,7 @@ class TrainingPlansController extends AbstractController {
             $this->view->assign('count', $count);
             $this->view->assign($exercise->toArray());
 
+//            $this->view->assign('exerciseContent', $this->view->render('loops/training-plan-exercise-edit.phtml'));
             $this->view->assign('exerciseContent', $this->view->render('loops/training-plan-exercise-edit.phtml'));
         }
     }
@@ -419,28 +421,23 @@ class TrainingPlansController extends AbstractController {
      *
      */
     public function editAction() {
-        $params = $this->getAllParams();
+        $trainingPlanId = intval($this->getParam('id'));
 
         // wenn ein vorhandener training-plans abgerufen werden soll
-        if (array_key_exists('id', $params)
-            && is_numeric($params['id'])
-            && 0 < $params['id']
-        ) {
-            $user = Zend_Auth::getInstance()->getIdentity();
-            $userId = null;
-            if (true === is_object($user)) {
-                $userId = $user->user_id;
-            }
-            $trainingPlanId = $params['id'];
+        if (0 < $trainingPlanId) {
             $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
             $trainingPlanService = new Service_Generator_View_TrainingPlan($this->view);
             $this->view->assign('deviceOptionsSelectContent', $deviceOptionsService->generateDeviceOptionsSelectContent());
             $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
             $this->view->assign('exerciseOptionsSelectContent', $exerciseOptionsService->generateExerciseOptionsSelectContent());
             $this->view->assign('trainingPlanContent', $trainingPlanService->generateTrainingPlanForEditContent($trainingPlanId));
+
+            $trainingPlanTabHeaderContent = $trainingPlanService->getTrainingPlanTabHeaderContent();
+            $trainingPlanTabHeaderContent .= '<li><span id="new_split_plan" class="glyphicon glyphicon-plus-sign add"></span></li>';
+
+            $this->view->assign('trainingPlansHeaderContent', $trainingPlanTabHeaderContent);
             $this->view->assign('trainingPlanId', $trainingPlanId);
-            $this->view->assign('userId', $userId);
-        } else {
+            $this->view->assign('userId', $this->findCurrentUserId());
         }
     }
 
@@ -501,23 +498,47 @@ class TrainingPlansController extends AbstractController {
         return $content;
     }
 
-    private function generateTrainingPlanSelectContent()
+    private function generateTrainingPlanSelectContent($userId = null)
     {
         $trainingPlanSelectContent = '';
-        $user = Zend_Auth::getInstance()->getIdentity();
-        $userId = null;
-        if (true === is_object($user)) {
-            $userId = $user->user_id;
+        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $userTrainingPlansFound = false;
+        if (0 < $userId) {
+            $trainingPlanCollection = $trainingPlansDb->findAllSingleOrParentTrainingPlansForUser($userId);
+
+            foreach ($trainingPlanCollection as $trainingPlan) {
+                $userTrainingPlansFound = true;
+                $this->view->assign('optionText', $trainingPlan->offsetGet('training_plan_name') . ' - ' . date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))));
+                $this->view->assign('optionValue', $trainingPlan->offsetGet('training_plan_id'));
+                $trainingPlanSelectContent .= $this->view->render('loops/option.phtml');
+            }
         }
 
-        if ($userId) {
-            $trainingPlansDb = new Model_DbTable_TrainingPlans();
-            $trainingPlanCollection = $trainingPlansDb->findAllTrainingPlansForUser($userId);
+        if ($this->findCurrentUserId()) {
+            $trainingPlanCollection = $trainingPlansDb->findAllSingleOrParentTrainingPlansForUser($this->findCurrentUserId());
 
-            var_dump($trainingPlanCollection);
+            if ($userTrainingPlansFound
+                && 0 < count($trainingPlanCollection)
+            ) {
+                $trainingPlanSelectContent .= '<hr />';
+            }
+            foreach ($trainingPlanCollection as $trainingPlan) {
+                $this->view->assign('optionText', $trainingPlan->offsetGet('training_plan_name') . ' - ' . date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))));
+                $this->view->assign('optionValue', $trainingPlan->offsetGet('training_plan_id'));
+                $trainingPlanSelectContent .= $this->view->render('loops/option.phtml');
+            }
         }
 
-        return $trainingPlanSelectContent;
+        $this->view->assign('optionLabelText', $this->translate('label_select_training_plan'));
+        $this->view->assign('optionClassName', 'training-plan-select');
+//        $this->view->assign('optionSelectText', $this->translate('label_select_training_plan'));
+        $this->view->assign('optionsContent', $trainingPlanSelectContent);
+        return $this->view->render('globals/select.phtml');
+    }
+
+    public function getTrainingPlanSelectAction() {
+        $userId = intval($this->getParam('user_id'));
+        $this->view->assign('trainingPlanSelectContent', $this->generateTrainingPlanSelectContent($userId));
     }
 
     public function createLayoutAction() {

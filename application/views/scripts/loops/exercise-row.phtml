@@ -1,4 +1,9 @@
-<div id="<?php echo $this->exercise_id;?>" class="exercise item" data-id="<?php echo $this->exercise_id;?>">
+<div id="<?php echo $this->exercise_id;?>"
+     class="exercise item"
+     data-id="<?php echo $this->exercise_id;?>"
+     data-exercise-type="<?php echo $this->exercise_type_name;?>"
+     data-exercise-device="<?php echo $this->device_name;?>"
+    >
     <?php echo $this->exercise_name;?>
 </div>
 <div id="content_<?php echo $this->exercise_id;?>" class="item-content"></div>

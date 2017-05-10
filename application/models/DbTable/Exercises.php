@@ -41,6 +41,11 @@ class Model_DbTable_Exercises extends Model_DbTable_Abstract
         } else if ('WITHOUT' == $device) {
             $select->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id');
             $select->where('exercise_x_device_id IS NULL');
+        } else {
+            $select->joinLeft('exercise_x_exercise_type', 'exercise_x_exercise_type_exercise_fk = exercise_id');
+            $select->joinLeft('exercise_types', 'exercise_type_id = exercise_x_exercise_type_exercise_type_fk');
+            $select->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id');
+            $select->joinLeft('devices', 'device_id = exercise_x_device_device_fk');
         }
 
         return $this->fetchAll($select);

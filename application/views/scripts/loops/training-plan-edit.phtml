@@ -5,25 +5,27 @@
  * Date: 04.05.14
  * Time: 17:15
  */
-
 ?>
-<ol class="training-plan droppable ui-sortable"
-    id="<?php echo $this->trainingPlanId;?>">
 
-    <div class="form-group">
-        <label>
-            <?php echo $this->translate('label_training_plan_name');?>:
-        </label>
-        <input type="text" class="training-plan-name form-control" name="training-plan-name" value="<?php echo $this->trainingPlanName;?>" />
-    </div>
-    <?php echo $this->exercisesContent;?>
+<div id="<?php echo $this->name;?>" class="tab-pane fade in <?php echo $this->classActive;?>">
+    <ol class="training-plan droppable ui-sortable"
+        id="<?php echo $this->trainingPlanId;?>">
+<!--    <div class="row">-->
+<!--        <div class="form-group">-->
+<!--            <label>-->
+<!--                --><?php //echo $this->translate('label_training_plan_name');?><!--:-->
+<!--            </label>-->
+<!--            <input type="text" class="training-plan-name form-control" name="training-plan-name" value="--><?php //echo $this->trainingPlanName;?><!--" />-->
+<!--        </div>-->
+        <?php echo $this->exercisesContent;?>
 
-    <input type="hidden"
-           name="training-plan-id[<?php echo $this->training_plan_id;?>]"
-           id="training_plan_id_<?php echo $this->training_plan_id;?>"
-           value="<?php echo $this->training_plan_id;?>" />
-<?php
-    echo $this->musclesForExerciseContent;
-?>
-    <br class="clear-fix" />
-</ol>
+        <input type="hidden"
+               name="training-plan-id[<?php echo $this->training_plan_id;?>]"
+               id="training_plan_id_<?php echo $this->training_plan_id;?>"
+               value="<?php echo $this->training_plan_id;?>" />
+    <?php
+        echo $this->musclesForExerciseContent;
+    ?>
+    </ol>
+<!--    </div>-->
+</div>
