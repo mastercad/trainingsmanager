@@ -173,6 +173,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
                 $this->getView()->assign('exercisesContent',
                     $this->generateTrainingPlanExerciseForEditContent($trainingPlan->offsetGet('training_plan_id')));
                 $this->getView()->assign('trainingPlanId', $trainingPlan->offsetGet('training_plan_id'));
+                $this->getView()->assign('trainingPlanUserId', $trainingPlan->offsetGet('training_plan_user_fk'));
                 $this->getView()->assign('trainingPlanName', $trainingPlan->offsetGet('training_plan_name'));
                 $trainingPlanContent .= $this->getView()->render('loops/training-plan-edit.phtml');
                 ++$count;

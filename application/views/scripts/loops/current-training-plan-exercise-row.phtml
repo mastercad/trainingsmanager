@@ -1,0 +1,10 @@
+<div class="col-sm-12 current-training-plan-exercise-row <?php if ($this->training_diary_x_training_plan_exercise_flag_finished) { echo ' finished ';}?>">
+    <p ><?php echo $this->exercise_name;?></p>
+<?php
+    if ($this->training_diary_x_training_plan_exercise_flag_finished) {
+?>
+        <span class="current-training-plan-exercise-row-status glyphicon glyphicon-ok"></span>
+<?php
+    }
+?>
+</div>

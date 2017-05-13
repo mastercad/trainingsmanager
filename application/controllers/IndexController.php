@@ -21,11 +21,39 @@ class IndexController extends AbstractController {
     private function generateActiveTrainingDiaryContent() {
 
         $content = 'Aktuell ist kein Trainingsplan offen!';
-        $trainingDiaryXTrainingPlanStorage = new Model_DbTable_TrainingDiaryXTrainingPlan();
-        $trainingDiary = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(12, $this->findCurrentUserId());
-//        $trainingDiary = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByUserId($this->findCurrentUserId());
+        $trainingPlanService = new Service_TrainingPlan();
+        $currentTrainingPlan = $trainingPlanService->searchCurrentTrainingPlan($this->findCurrentUserId());
+
+        if ($currentTrainingPlan instanceof Zend_Db_Table_Row_Abstract) {
+            $content = $this->generateCurrentTrainingPlanContent($currentTrainingPlan);
+        }
 
         return $content;
+    }
+
+    private function generateCurrentTrainingPlanContent($trainingPlanRow) {
+        $exercisesContent = '';
+        $trainingPlanId = $trainingPlanRow->offsetGet('training_plan_id');
+        $trainingDiaryXTrainingPlanId = null;
+        $exercisesCollection = [];
+        // trainingPlan is not finished yet
+        if ($trainingPlanRow->offsetExists('training_diary_x_training_plan_id')
+            && 0 < $trainingPlanRow->offsetGet('training_diary_x_training_plan_id')
+        ) {
+            $trainingDiaryXTrainingPlanExercise = new Model_DbTable_TrainingDiaryXTrainingPlan();
+            $exercisesCollection = $trainingDiaryXTrainingPlanExercise->findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId($trainingPlanRow->offsetGet('training_diary_x_training_plan_id'));
+        } else {
+            $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+            $exercisesCollection = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanRow->offsetGet('training_plan_id'));
+        }
+
+        foreach ($exercisesCollection as $exercise) {
+            $this->view->assign($exercise->toArray());
+            $exercisesContent .= $this->view->render('loops/current-training-plan-exercise-row.phtml');
+        }
+
+        $this->view->assign('exercisesContent', $exercisesContent);
+        return $this->view->render('index/current-training-plan.phtml');
     }
 
     private function generateChartsContent() {
@@ -47,8 +75,8 @@ class IndexController extends AbstractController {
         $trainingDiaryExerciseOptionDb = new Model_DbTable_TrainingDiaryXExerciseOption();
         $trainingDiaryDeviceOptionDb = new Model_DbTable_TrainingDiaryXDeviceOption();
 
-        $exerciseOptionCollection = $trainingDiaryExerciseOptionDb->findAllExerciseOptions();
-        $deviceOptionCollection = $trainingDiaryDeviceOptionDb->findAllDeviceOptions();
+        $exerciseOptionCollection = $trainingDiaryExerciseOptionDb->findAllExerciseOptions($this->findCurrentUserId());
+        $deviceOptionCollection = $trainingDiaryDeviceOptionDb->findAllDeviceOptions($this->findCurrentUserId());
 
         $data = [];
 

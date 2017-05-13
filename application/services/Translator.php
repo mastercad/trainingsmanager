@@ -37,14 +37,6 @@ class Service_Translator {
 
         $this->prepareLanguage();
 
-        //        $this->translation = new Zend_Translate([
-        //                'adapter' => 'array',
-        //                'content' => APPLICATION_PATH . '/../languages/',
-        //                'locale'  => 'auto',
-        //                'scan'    => Zend_Translate::LOCALE_FILENAME
-        //            ]
-        //        );
-
         $baseTranslationPath = APPLICATION_PATH . '/../languages/';
         if (! file_exists($baseTranslationPath . $this->favoriteLanguage)
             && preg_match('/^([a-z]{2})[\_|\-]([A-Z]{2})$/', $this->favoriteLanguage, $matches)
@@ -68,10 +60,12 @@ class Service_Translator {
      */
     private function prepareLanguage() {
 
-//        $this->favoriteLanguage = $this->getParam('lang');
-
         if (!$this->favoriteLanguage) {
-            $langString = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+            $langString = '';
+
+            if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+                $langString = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+            }
             $foundLanguages = explode(',', $langString);
 
             foreach ($foundLanguages as $pos => $language) {

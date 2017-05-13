@@ -15,25 +15,43 @@ set_include_path(implode(PATH_SEPARATOR, array(
 )));
 
 function customAutoload($class) {
-    $map = [
-        'Entity' => 'entities',
-        'Collection' => 'collections',
-        'Interface' => 'interfaces',
-        'Service' => 'services',
-        'Model' => 'models',
-    ];
 
-    $path = preg_split('/\_/', $class);
-    $replacedPath = APPLICATION_PATH;
+    if (false === strpos($class, 'Zend')) {
+        $map = [
+            'Entity' => 'entities',
+            'Collection' => 'collections',
+            'Interface' => 'interfaces',
+            'Service' => 'services',
+            'Model' => 'models',
+        ];
 
-    foreach ($path as $pathPiece) {
-        $pathPiece = str_replace(array_keys($map), array_values($map), $pathPiece);
-        $replacedPath .= '/' . $pathPiece;
-    }
-    $replacedPath .= '.php';
+        if (false !== (strpos($class, 'Helper'))) {
+            $classFilePathName = APPLICATION_PATH.'/controllers/helpers/'.$class.'.php';
+            if (is_readable($classFilePathName)) {
+                require_once $classFilePathName;
+                return true;
+            }
+        }
 
-    if (is_readable($replacedPath)) {
-        return require_once($replacedPath);
+        $path = preg_split('/\_/', $class);
+        $replacedPath = APPLICATION_PATH;
+
+        foreach ($path as $pathPiece) {
+            if (array_key_exists($pathPiece, $map)) {
+                $pathPiece = str_replace(array_keys($map), array_values($map), $pathPiece);
+                $replacedPath .= '/' . $pathPiece;
+            } else {
+                $replacedPath .= '/' . $pathPiece;
+            }
+        }
+        $replacedPath .= '.php';
+
+        if (is_readable($replacedPath)) {
+            require_once $replacedPath;
+            return true;
+        }
+
+        return false;
     }
     return false;
 }

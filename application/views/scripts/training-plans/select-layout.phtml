@@ -7,7 +7,7 @@
  */ 
 ?>
 
-<form method="post" action="">
+<!--<form method="post" action="">-->
 
     <?php echo $this->userSelect;?>
 
@@ -31,17 +31,32 @@
         <?php echo $this->trainingPlanSelect;?>
     </div>
 
-    <input type="hidden" id="user_id" name="user_id" value="" />
-    <input class="btn btn-primary btn-block"
-           style="margin-top: 20px;"
-           type="submit"
-           value="<?php echo $this->translate('label_create_training_plan');?>"
-           name="create" />
-</form>
+    <button class="btn btn-primary btn-block save" style="margin-top: 20px;">
+        create
+    </button>
+<!--</form>-->
 
 <script type="text/javascript" language="JavaScript">
     jQuery('document').ready(function(){
         var trainingSelectAjax = null;
+
+        jQuery('.save').unbind('click').click(function() {
+            data = {
+                ajax: true,
+                trainingPlanUserId: jQuery('.member-select').data('value'),
+                trainingPlanLayoutId: jQuery('input[name=layout]:checked').val(),
+                templateTrainingPlanId: jQuery('.training-plan-select').data('value')
+            };
+            trainingSelectAjax = jQuery.post('/'+controller+'/select-layout', data, function(response) {
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    jQuery('#content').html(Base64.decode(json.htmlContent));
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
+            });
+        });
 
         jQuery('.member-select .option-add').unbind('click').bind('click', function() {
             var selectedOption = jQuery(this).data('value');

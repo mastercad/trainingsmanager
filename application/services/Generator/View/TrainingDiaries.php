@@ -65,6 +65,7 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
         $this->getView()->assign('aBeanspruchteMuskeln', $usedMusclesCollection);
         $this->getView()->assign('exerciseOptionsContent', $this->generateExerciseOptionsContent($trainingDiaryExercise));
         $this->getView()->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($trainingDiaryExercise));
+        $this->getView()->assign('trainingDiaryXTrainingPlanId', $trainingDiaryExercise->offsetGet('training_diary_x_training_plan_id'));
         $this->getView()->assign('trainingDiaryXTrainingPlanExerciseId', $trainingDiaryExercise->offsetGet('training_diary_x_training_plan_exercise_id'));
         $this->getView()->assign('trainingPlanXExerciseId', $trainingDiaryExercise->offsetGet('training_plan_x_exercise_id'));
         $this->getView()->assign('exerciseSum', $this->getExercisesCount());

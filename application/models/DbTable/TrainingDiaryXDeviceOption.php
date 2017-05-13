@@ -78,6 +78,7 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
         $select->joinInner('training_diary_x_training_plan_exercise', 'training_diary_x_training_plan_exercise_id = training_diary_x_device_option_t_d_x_t_p_e_fk')
             ->joinInner('training_diaries', 'training_diary_id = training_diary_x_training_plan_exercise_training_diary_fk')
             ->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
+            ->joinInner('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
             ->joinInner('training_plan_x_device_option', 'training_plan_x_device_option_training_plan_exercise_fk = training_plan_x_exercise_id')
             ->joinInner('device_options', 'device_option_id = training_diary_x_device_option_device_option_fk')
             ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
@@ -89,6 +90,10 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
                         'exercises.exercise_name',
                         'device_options.device_option_name'
             ]);
+
+        if (!empty($userId)) {
+            $select->where('training_plan_user_fk = ?', $userId);
+        }
 
         return $this->fetchAll($select);
     }

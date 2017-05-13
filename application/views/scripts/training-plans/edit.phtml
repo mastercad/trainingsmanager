@@ -1,4 +1,3 @@
-<a name="right" />
 <ul class="tab-droppable nav nav-tabs">
     <?php echo $this->trainingPlansHeaderContent;?>
 </ul>
@@ -9,6 +8,7 @@
 ?>
 </div>
 <input type="hidden" id="training_plan_id" name="training-plan-id" value="<?php echo $this->trainingPlanId;?>" />
+<input type="hidden" id="training_plan_user_id" name="training-plan-user-id" value="<?php echo $this->trainingPlanUserId;?>" />
 
 <!--</form>-->
 <h3>
@@ -128,7 +128,10 @@
                 ajax.abort();
             }
 
-            ajax = jQuery.post('/'+controller+'/save', {trainingPlanCollection: trainingPlanCollection, ajax: true}, function(response) {
+            ajax = jQuery.post('/'+controller+'/save', {
+                trainingPlanCollection: trainingPlanCollection,
+                trainingPlanUserId: jQuery('#training_plan_user_id').val(),
+                ajax: true}, function(response) {
                 var json = JSON.parse(response);
 
                 if (200 == json.state) {

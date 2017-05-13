@@ -120,4 +120,30 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
 
         return $this->fetchAll($oSelect);
     }
+
+    public function findActiveTrainingPlanByUserId($userId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+//        $select->where('((training_plan_parent_fk IS NOT NULL OR training_plan_parent_fk = 0) AND training_plan_active = 1 AND training_plan_user_fk = ' . $userId);
+        $select->where('training_plan_user_fk = ?', $userId)
+            ->where('training_plan_active = 1')
+            ->where('training_plan_training_plan_layout_fk = 1')
+            ->order(['training_plan_order', 'training_plan_create_date'])
+            ->limit(1);
+
+        return $this->fetchRow($select);
+    }
+
+    public function findNextActiveTrainingPlan($userId, $currentTrainingPlanOrder) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->where('training_plan_user_fk = ?', $userId)
+            ->where('training_plan_active = 1')
+            ->where('training_plan_training_plan_layout_fk = 1')
+            ->where('training_plan_order > "' . $currentTrainingPlanOrder .'"')
+            ->order(['training_plan_order', 'training_plan_create_date'])
+            ->limit(1);
+
+        return $this->fetchRow($select);
+    }
 }

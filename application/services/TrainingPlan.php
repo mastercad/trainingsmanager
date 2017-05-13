@@ -13,38 +13,6 @@ class Service_TrainingPlan {
     /** @var Model_DbTable_Exercises */
     private $_oExerciseStorage = null;
 
-    private $trainingPlanXExerciseDb = null;
-
-    private $trainingPlanXExerciseOptionDb = null;
-
-    private $trainingPlanXDeviceOptionDb = null;
-
-    public function __construct() {
-        $this->setExerciseStorage(new Model_DbTable_Exercises());
-    }
-
-    public function searchExercise($iExerciseId) {
-        return $this->_oExerciseStorage->findExerciseById($iExerciseId);
-    }
-
-    /**
-     * @param Model_DbTable_Exercises $oUebungenStorage
-     *
-     * @return $this
-     */
-    public function setExerciseStorage(Model_DbTable_Exercises $oExerciseStorage) {
-        $this->_oExerciseStorage = $oExerciseStorage;
-
-        return $this;
-    }
-
-    /**
-     * @return null
-     */
-    public function getExerciseStorage() {
-        return $this->_oExerciseStorage;
-    }
-
     /**
      * wenn trainingPlanCollection keine exercises enthält und eine trainingPlanId => parent eines splits
      * wenn trainingPlanCollection exercises enthält und eine trainingPlanParentId übergeben wurde => children eines
@@ -52,11 +20,12 @@ class Service_TrainingPlan {
      * ohne split
      *
      * @param      $trainingPlan
+     * @param      $trainingPlanUserId
      * @param null $trainingPlantParentId
      *
      * @return $this
      */
-    public function saveTrainingPlan($trainingPlan, $trainingPlantParentId = null) {
+    public function saveTrainingPlan($trainingPlan, $trainingPlanUserId, $trainingPlantParentId = null) {
         static $trainingPlanCount = 0;
         ++$trainingPlanCount;
 
@@ -64,13 +33,24 @@ class Service_TrainingPlan {
         $trainingPlanId = intval($trainingPlan['trainingPlanId']);
         $trainingPlanName = trim($trainingPlan['trainingPlanName']);
 
-        $userId = 1;
+        $userId = $this->findCurrentUserId();
 
         /** new TrainingPlan */
         if (empty($trainingPlanId)) {
+            $trainingPlanLayoutFk = 1;
+            // expect, that training plan without exercises means, its a parent training plan,
+            // also the empty trainingPlanParentId its a sign for the first trainingPlan to save
+            if (!$trainingPlantParentId
+                && !array_key_exists('exercises', $trainingPlan)
+            ) {
+                $trainingPlanLayoutFk = 2;
+            }
             $data = [
                 'training_plan_name' => $trainingPlanName,
                 'training_plan_order' => $trainingPlanCount,
+                'training_plan_training_plan_layout_fk' => $trainingPlanLayoutFk,
+                'training_plan_user_fk' => $trainingPlanUserId,
+                'training_plan_active' => 1,
                 'training_plan_parent_fk' => $trainingPlantParentId,
                 'training_plan_create_date' => date('Y-m-d H:i:s'),
                 'training_plan_create_user_fk' => $userId,
@@ -87,7 +67,7 @@ class Service_TrainingPlan {
             } else {
                 foreach ($trainingPlan as $currentTrainingPlan) {
                     if (is_array($currentTrainingPlan)) {
-                        $this->saveTrainingPlan($currentTrainingPlan, $trainingPlanId);
+                        $this->saveTrainingPlan($currentTrainingPlan, $trainingPlanUserId, $trainingPlanId);
                     }
                 }
             }
@@ -333,9 +313,14 @@ class Service_TrainingPlan {
         if (is_numeric($iTrainingsplanLayoutId)
             && 0 < $iTrainingsplanLayoutId
         ) {
+            $this->deactivateAllCurrentTrainingPlans($iUserId);
+
             $aData = array(
                 'training_plan_training_plan_layout_fk' => $iTrainingsplanLayoutId,
-                'training_plan_create_user_fk' => $iUserId,
+                'training_plan_user_fk' => $iUserId,
+                'training_plan_active' => 1,
+                'training_plan_order' => 1,
+                'training_plan_create_user_fk' => $this->findCurrentUserId(),
                 'training_plan_create_date' => date('Y-m-d H:i:s'),
             );
             $iTrainingsplanId = $this->createTrainingPlan($aData);
@@ -343,9 +328,18 @@ class Service_TrainingPlan {
             return $iTrainingsplanId;
         } else {
             echo "Es konnte kein Layout für Normale Trainingspläne gefunden werden!";
-
-            return false;
         }
+        return false;
+    }
+
+    /**
+     * @param $userId
+     *
+     * @return int
+     */
+    private function deactivateAllCurrentTrainingPlans($userId) {
+        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb->update(['training_plan_active' => 0], 'training_plan_user_fk = "' . $userId . '"');
     }
 
     public function createSplitTrainingPlan($iUserId) {
@@ -358,8 +352,11 @@ class Service_TrainingPlan {
         ) {
             $aData = array(
                 'training_plan_training_plan_layout_fk' => $iTrainingsplanLayoutId,
-                'training_plan_create_user_fk' => $iUserId,
-                'training_plan_create_date' => date('Y-m-d H:i:s'),
+                'training_plan_active' => 1,
+                'training_plan_user_fk' => $iUserId,
+                'training_plan_order' => 1,
+                'training_plan_create_user_fk' => $this->findCurrentUserId(),
+                'training_plan_create_date' => date('Y-m-d H:i:s')
             );
             $iTrainingsplanParentId = $this->createTrainingPlan($aData);
 
@@ -371,7 +368,11 @@ class Service_TrainingPlan {
                 $aData = array(
                     'training_plan_training_plan_layout_fk' => $iTrainingsplanLayoutId,
                     'training_plan_parent_fk' => $iTrainingsplanParentId,
-                    'training_plan_user_fk' => $iUserId
+                    'training_plan_user_fk' => $iUserId,
+                    'training_plan_order' => 2,
+                    'training_plan_active' => 1,
+                    'training_plan_create_user_fk' => $this->findCurrentUserId(),
+                    'training_plan_create_date' => date('Y-m-d H:i:s')
                 );
                 $iTrainingsplanId = $this->createTrainingPlan($aData);
             }
@@ -385,22 +386,57 @@ class Service_TrainingPlan {
     }
 
     public function createTrainingPlan($aData) {
-        $oUser = Zend_Auth::getInstance()->getIdentity();
         $trainingPlansDb = new Model_DbTable_TrainingPlans();
 
-        $iUserId = $oUser->user_id;
+        $trainingPlanId = $trainingPlansDb->insert($aData);
 
-        if (is_numeric($iUserId)
-            && 0 < $iUserId
-        ) {
-            $aData['training_plan_create_date'] = date('Y-m-d H:i:s');
-            $aData['training_plan_create_user_fk'] = $iUserId;
+        return $trainingPlanId;
+    }
 
-            $trainingPlanId = $trainingPlansDb->insert($aData);
+    /**
+     * search current active training plan
+     */
+    public function searchCurrentTrainingPlan($userId) {
+        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
+        $currentOpenTrainingDiary = $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlanByUserId($userId);
 
-            return $trainingPlanId;
-        } else {
-            throw new Exception('Sie müssen angemeldet sein, um diese Aktion durchzuführen!');
+        /** current open training diary entry found! */
+        if ($currentOpenTrainingDiary instanceof Zend_Db_Table_Row_Abstract) {
+            return $currentOpenTrainingDiary;
         }
+
+        $lastFinishedTrainingDiary = $trainingDiaryXTrainingPlanDb->findLastFinishedActiveTrainingPlanByUserId($userId);
+
+        // last finished training diary of the current active training plan exists
+        if ($lastFinishedTrainingDiary instanceof Zend_Db_Table_Row_Abstract) {
+            // single training plan -> not have to search other
+            if (1 == $lastFinishedTrainingDiary->offsetGet('training_plan_training_plan_layout_fk')
+                && empty($lastFinishedTrainingDiary->offsetGet('training_plan_parent_fk'))
+            ) {
+                return $lastFinishedTrainingDiary;
+            }
+            $nextTrainingPlan = $trainingPlansDb->findNextActiveTrainingPlan(
+                $userId,
+                $lastFinishedTrainingDiary->offsetGet('training_plan_order')
+            );
+
+            if (!$nextTrainingPlan instanceof Zend_Db_Table_Row_Abstract) {
+                return $trainingPlansDb->findActiveTrainingPlanByUserId($userId);
+            }
+            return $nextTrainingPlan;
+        }
+
+        // no training diary entry found for the current active training plan, get first entry of current active training plan
+        return $trainingPlansDb->findActiveTrainingPlanByUserId($userId);
+    }
+
+    protected function findCurrentUserId() {
+        $user = Zend_Auth::getInstance()->getIdentity();
+
+        if (true == is_object($user)) {
+            return $user->user_id;
+        }
+        return false;
     }
 }

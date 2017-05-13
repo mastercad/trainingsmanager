@@ -445,7 +445,7 @@ class TrainingPlansController extends AbstractController {
 
         if (null !== ($trainingPlanCollection = $this->getParam('trainingPlanCollection', null))) {
             $trainingPlanService = new Service_TrainingPlan();
-            $trainingPlanService->saveTrainingPlan($trainingPlanCollection);
+            $trainingPlanService->saveTrainingPlan($trainingPlanCollection, $this->getParam('trainingPlanUserId'));
         }
     }
 
@@ -456,16 +456,15 @@ class TrainingPlansController extends AbstractController {
      */
     public function selectLayoutAction() {
 
-        $this->view->assign('userSelect', $this->generateUserSelectContent());
-        $this->view->assign('trainingPlanSelect', $this->generateTrainingPlanSelectContent());
-
         if ($this->getRequest()->isPost()) {
             try {
                 $trainingPlanId = $this->createLayoutAction();
                 if (is_numeric($trainingPlanId)
                     && 0 < $trainingPlanId
                 ) {
-                    $this->redirect('/training-plans/edit/id/' . $trainingPlanId);
+                    $this->redirect(
+                        '/training-plans/edit/id/' . $trainingPlanId . '/trainingPlanUserId/' . $this->getParam('trainingPlanUserId') . '/ajax/' . $this->getParam('ajax')
+                    );
                 } else {
                     echo '<br /><br />' . "Konnte aktuellen Trainingsplan nicht anlegen!";
                 }
@@ -473,6 +472,8 @@ class TrainingPlansController extends AbstractController {
                 echo '<br /><br />' . $oException->getMessage();
             }
         }
+        $this->view->assign('userSelect', $this->generateUserSelectContent());
+        $this->view->assign('trainingPlanSelect', $this->generateTrainingPlanSelectContent());
     }
 
     private function generateUserSelectContent()
@@ -545,12 +546,12 @@ class TrainingPlansController extends AbstractController {
         $aParams = $this->getAllParams();
         $trainingPlanId = null;
 
-        if (true === array_key_exists('layout', $aParams)
-            && true === array_key_exists('user_id', $aParams)
+        if (true === array_key_exists('trainingPlanLayoutId', $aParams)
+            && true === array_key_exists('trainingPlanUserId', $aParams)
         ) {
-            $iUserId = $aParams['user_id'];
+            $iUserId = $aParams['trainingPlanUserId'];
             $trainingPlanService = new Service_TrainingPlan();
-            switch ($aParams['layout']) {
+            switch ($aParams['trainingPlanLayoutId']) {
                 case 1:
                     $trainingPlanId = $trainingPlanService->createBaseTrainingPlan($iUserId);
                     break;

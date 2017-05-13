@@ -6,33 +6,47 @@
  * Time: 12:47
  */ 
 
+    if ($this->exerciseContent) {
 ?>
-<div id="training_diary_exercises"
-     class="row carousel slide"
-     data-interval="false"
-     data-training-diary-id="<?php echo $this->trainingDiaryId;?>"
-    >
-    <div class="carousel-inner">
-        <?php echo $this->exerciseContent;?>
+    <div id="training_diary_exercises"
+         class="row carousel slide"
+         data-interval="false"
+         data-training-diary-id="<?php echo $this->trainingDiaryId; ?>"
+        >
+        <div class="carousel-inner">
+            <?php echo $this->exerciseContent; ?>
+        </div>
+
+        <a class="left carousel-control" href="#training_diary_exercises" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#training_diary_exercises" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
     </div>
 
-    <a class="left carousel-control" href="#training_diary_exercises" role="button" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" href="#training_diary_exercises" role="button" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
+    <button class="btn btn-default btn-primary save">
+        <?php echo $this->translate('label_end_exercise');?>
+    </button>
 
-<button class="btn btn-default btn-primary save">
-    <?php echo $this->translate('label_end_exercise');?>
-</button>
-
+<?php
+    } else {
+?>
+    <div class="col-sm-12">
+        <p>
+            Es gibt für den aktuell ausgewählten Trainingsplan keine offenen Übungen!
+        </p>
+    </div>
+<?php
+    }
+?>
 <script type="text/javascript" language="JavaScript">
 
     jQuery(document).ready(function() {
+
+        jQuery('body').css('overflow', 'auto');
 
         // carousel finished
         $("#training_diary_exercises").on('slid.bs.carousel', function(evt) {
@@ -54,8 +68,27 @@
                     ajax: true
                 },
                 function(response) {
-                    deactivateOptionInputs();
-                    $("#training_diary_exercises").carousel("next");
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        var htmlContent = '';
+                        if (undefined !== json.htmlContent) {
+                            htmlContent = Base64.decode(json.htmlContent);
+                        }
+
+                        if (0 < htmlContent.length) {
+                            checkLastActiveExercise(htmlContent);
+                        } else {
+                            deactivateOptionInputs();
+                            if (1 < jQuery('.training-diary-exercise').length) {
+                                $("#training_diary_exercises").carousel("next");
+                            } else {
+                                jQuery('.save').hide();
+                            }
+                        }
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
                 }
             );
             return false;
@@ -63,6 +96,11 @@
 
         initTrainingDiary();
     });
+
+    function checkLastActiveExercise(content) {
+        jQuery('#training_diary_exercises').html(content);
+        jQuery('.save').remove();
+    }
 
     function initTrainingDiary() {
 
@@ -148,6 +186,7 @@
         trainingDiaryExerciseInformation['deviceOptions'] = deviceOptions;
         trainingDiaryExerciseInformation['trainingDiaryId'] = jQuery('#training_diary_exercises').data('training-diary-id');
         trainingDiaryExerciseInformation['trainingPlanXExerciseId'] = jQuery(currentExercise).data('training-plan-exercise-id');
+        trainingDiaryExerciseInformation['trainingDiaryXTrainingPlanId'] = jQuery(currentExercise).data('training-diary-x-training-plan-id');
         trainingDiaryExerciseInformation['trainingDiaryXTrainingPlanExerciseId'] = jQuery(currentExercise).data('id');
 
         return trainingDiaryExerciseInformation;

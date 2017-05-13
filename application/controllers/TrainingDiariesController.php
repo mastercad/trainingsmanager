@@ -98,16 +98,17 @@ class TrainingDiariesController extends AbstractController {
 
                         $trainingDiaryXTrainingPlanExerciseId = $this->createTrainingDiaryExerciseEntry(
                             $oTrainingsplanRow->offsetGet('training_plan_x_exercise_id'),
-                            $trainingDiaryId
+                            $trainingDiaryId,
+                            $trainingDiaryXTrainingPlanId
                         );
 
                         $oAktuellesTrainingstagebuch = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId($trainingPlanId, $iUserId);
                         $this->redirect(
-                            '/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_plan_x_exercise_exercise_fk, $aParams);
+                            '/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_diary_x_training_plan_id, $aParams);
 
                         // habe einen offenen training-plans gefunden, leite an die übersicht der übungen weiter
                     } elseif (1 <= $oAktuellesTrainingstagebuch->count()) {
-                        $this->redirect('/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_plan_x_exercise_exercise_fk,
+                        $this->redirect('/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_diary_x_training_plan_id,
                             $aParams);
                     } else {
                         echo "Nichts getan in start training-plans! o.O";
@@ -117,7 +118,7 @@ class TrainingDiariesController extends AbstractController {
         }
     }
 
-    private function createTrainingDiaryExerciseEntry($trainingPlanXExerciseId, $trainingDiaryId)
+    private function createTrainingDiaryExerciseEntry($trainingPlanXExerciseId, $trainingDiaryId, $trainingDiaryXTrainingPlanId)
     {
         $iUserId = 22;
 
@@ -125,6 +126,7 @@ class TrainingDiariesController extends AbstractController {
 
         $data = [
             'training_diary_x_training_plan_exercise_t_p_x_e_fk' => $trainingPlanXExerciseId,
+            'training_diary_x_training_plan_exercise_t_d_x_t_p_fk' => $trainingDiaryXTrainingPlanId,
             'training_diary_x_training_plan_exercise_training_diary_fk' => $trainingDiaryId,
             'training_diary_x_training_plan_exercise_create_date' => date('Y-m-d H:i:s'),
             'training_diary_x_training_plan_exercise_create_user_fk' => $iUserId
@@ -143,7 +145,9 @@ class TrainingDiariesController extends AbstractController {
         ) {
             $trainingPlanId = $aParams['id'];
             $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
-            $trainingDiaryExerciseCollection = $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlan($trainingPlanId);
+            $trainingDiaryExerciseCollection = $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(
+                $trainingPlanId, $this->findCurrentUserId()
+            );
 
             if (0 < count($trainingDiaryExerciseCollection)) {
                 $trainingsExercise = null;
@@ -198,48 +202,47 @@ class TrainingDiariesController extends AbstractController {
 
     public function showExerciseAction() {
 
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jquery.touchSwipe.min.js',
-            'text/javascript');
-        $aParams = $this->getAllParams();
+        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jquery.touchSwipe.min.js', 'text/javascript');
+        $trainingDiaryXTrainingPlanId = $this->getParam('id');
 
-        if (array_key_exists('id', $aParams)
-            && is_numeric($aParams['id'])
-            && 0 < $aParams['id']
-        ) {
+        if (0 < $trainingDiaryXTrainingPlanId) {
             $this->_aBeanspruchteMuskeln = array();
             $this->_iMinBeanspruchterMuskel = null;
             $this->_iMaxBeanspruchterMuskel = null;
             $trainingPlanExerciseId = $aParams['id'];
 
-            $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
-            $activeTrainingPlanXExercise = $trainingPlanXExerciseDb->findTrainingDiaryByTrainingPlanExerciseId(
-                $trainingPlanExerciseId);
+            $trainingPlanXExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
+            $trainingPlanXExerciseCollection = $trainingPlanXExerciseDb->findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId($trainingDiaryXTrainingPlanId);
 
             $exercisesContent = '';
+            $count = 0;
+            $countFinished = 0;
 
-            if ($activeTrainingPlanXExercise) {
-                $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
-                $trainingPlanXExerciseCollection = $trainingDiaryXTrainingPlanDb->findExercisesByTrainingDiaryId(
-                    $activeTrainingPlanXExercise->offsetGet('training_diary_x_training_plan_training_diary_fk'));
-                $count = 0;
-                $bFirstActiveSet = false;
+            if (0 < count($trainingPlanXExerciseCollection)) {
                 foreach ($trainingPlanXExerciseCollection as $trainingPlanXExercise) {
                     $trainingDiaryViewGenerator = new Service_Generator_View_TrainingDiaries($this->view);
                     $trainingDiaryViewGenerator->setExercisesCount(count($trainingPlanXExerciseCollection));
                     $exercisesContent .= $trainingDiaryViewGenerator->generateExerciseContent($trainingPlanXExercise);
                     $aViewContent = $this->getExerciseInfo($trainingPlanXExercise);
-                    $this->view->assign('trainingDiaryId', $trainingPlanXExercise->offsetGet('training_diary_id'));
+                    $this->view->assign('trainingDiaryId', $trainingPlanXExercise->offsetGet('training_diary_x_training_plan_training_diary_fk'));
                     $this->view->assign('trainingPlanExerciseId', $trainingPlanExerciseId);
                     $this->view->assign('prevTrainingPlanExerciseId', $aViewContent['prevTrainingPlanExerciseId']);
                     $this->view->assign('nextTrainingPlanExerciseId', $aViewContent['nextTrainingPlanExerciseId']);
                     $this->view->assign('iActualPos', $aViewContent['actualPos']);
+
+                    if (1 == $trainingPlanXExercise->offsetGet('training_diary_x_training_plan_exercise_flag_finished')) {
+                        ++$countFinished;
+                    }
                     ++$count;
 
                 }
             } else {
                 $exercisesContent = "Habe keine Treffer für diese Übung!";
             }
-            $this->view->assign('exerciseContent', $exercisesContent);
+
+            if ($count != $countFinished) {
+                $this->view->assign('exerciseContent', $exercisesContent);
+            }
         }
     }
 
@@ -255,11 +258,12 @@ class TrainingDiariesController extends AbstractController {
 
             $trainingPlanDiaryExerciseInformation = $this->getParam('trainingDiaryExerciseInformation');
             $trainingDiaryXTrainingPlanExerciseId = $trainingPlanDiaryExerciseInformation['trainingDiaryXTrainingPlanExerciseId'];
+            $trainingDiaryXTrainingPlanId = $trainingPlanDiaryExerciseInformation['trainingDiaryXTrainingPlanId'];
 
             if (empty($trainingDiaryXTrainingPlanExerciseId)) {
                 $trainingPlanXExerciseId = $trainingPlanDiaryExerciseInformation['trainingPlanXExerciseId'];
                 $trainingDiaryId = $trainingPlanDiaryExerciseInformation['trainingDiaryId'];
-                $trainingDiaryXTrainingPlanExerciseId = $this->createTrainingDiaryExerciseEntry($trainingPlanXExerciseId, $trainingDiaryId);
+                $trainingDiaryXTrainingPlanExerciseId = $this->createTrainingDiaryExerciseEntry($trainingPlanXExerciseId, $trainingDiaryId, $trainingDiaryXTrainingPlanId);
             }
 
             $exerciseOptions = $trainingPlanDiaryExerciseInformation['exerciseOptions'];
@@ -280,55 +284,59 @@ class TrainingDiariesController extends AbstractController {
                 $currentTrainingDiaryXDeviceOptionsCollection[$deviceOption['device_option_id']] = $deviceOption;
             }
 
-            foreach ($exerciseOptions as $exerciseOption) {
-                $exerciseOptionId = $exerciseOption['exerciseOptionId'];
-                if (array_key_exists($exerciseOptionId, $currentTrainingDiaryXExerciseOptionsCollection)) {
-                    if ($exerciseOption['exerciseOptionValue'] != $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_exercise_option_value']) {
+            if ($exerciseOptions) {
+                foreach ($exerciseOptions as $exerciseOption) {
+                    $exerciseOptionId = $exerciseOption['exerciseOptionId'];
+                    if (array_key_exists($exerciseOptionId, $currentTrainingDiaryXExerciseOptionsCollection)) {
+                        if ($exerciseOption['exerciseOptionValue'] != $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_exercise_option_value']) {
+                            $data = [
+                                'training_diary_x_exercise_option_exercise_option_value' => $exerciseOption['exerciseOptionValue'],
+                                'training_diary_x_exercise_option_update_date' => date('Y-m-d H:i:s'),
+                                'training_diary_x_exercise_option_update_user_fk' => $userId,
+                            ];
+                            $trainingDiaryXExerciseOptionDb->update($data,
+                                'training_diary_x_exercise_option_id = ' . $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_id']
+                            );
+                        }
+                        unset($currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]);
+                    } else {
                         $data = [
                             'training_diary_x_exercise_option_exercise_option_value' => $exerciseOption['exerciseOptionValue'],
-                            'training_diary_x_exercise_option_update_date' => date('Y-m-d H:i:s'),
-                            'training_diary_x_exercise_option_update_user_fk' => $userId,
+                            'training_diary_x_exercise_option_exercise_option_fk' => $exerciseOptionId,
+                            'training_diary_x_exercise_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
+                            'training_diary_x_exercise_option_create_date' => date('Y-m-d H:i:s'),
+                            'training_diary_x_exercise_option_create_user_fk' => $userId,
                         ];
-                        $trainingDiaryXExerciseOptionDb->update($data,
-                            'training_diary_x_exercise_option_id = ' . $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_id']
-                        );
+                        $trainingDiaryXExerciseOptionDb->insert($data);
                     }
-                    unset($currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]);
-                } else {
-                    $data = [
-                        'training_diary_x_exercise_option_exercise_option_value' => $exerciseOption['exerciseOptionValue'],
-                        'training_diary_x_exercise_option_exercise_option_fk' => $exerciseOptionId,
-                        'training_diary_x_exercise_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
-                        'training_diary_x_exercise_option_create_date' => date('Y-m-d H:i:s'),
-                        'training_diary_x_exercise_option_create_user_fk' => $userId,
-                    ];
-                    $trainingDiaryXExerciseOptionDb->insert($data);
                 }
             }
 
-            foreach ($deviceOptions as $deviceOption) {
-                $deviceOptionId = $deviceOption['deviceOptionId'];
-                if (array_key_exists($deviceOptionId, $currentTrainingDiaryXDeviceOptionsCollection)) {
-                    if ($deviceOption['exerciseOptionValue'] != $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_device_option_value']) {
+            if ($deviceOptions) {
+                foreach ($deviceOptions as $deviceOption) {
+                    $deviceOptionId = $deviceOption['deviceOptionId'];
+                    if (array_key_exists($deviceOptionId, $currentTrainingDiaryXDeviceOptionsCollection)) {
+                        if ($deviceOption['exerciseOptionValue'] != $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_device_option_value']) {
+                            $data = [
+                                'training_diary_x_device_option_device_option_value' => $deviceOption['deviceOptionValue'],
+                                'training_diary_x_device_option_update_date' => date('Y-m-d H:i:s'),
+                                'training_diary_x_device_option_update_user_fk' => $userId,
+                            ];
+                            $trainingDiaryXDeviceOptionDb->update($data,
+                                'training_diary_x_device_option_id = ' . $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_id']
+                            );
+                        }
+                        unset($currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]);
+                    } else {
                         $data = [
                             'training_diary_x_device_option_device_option_value' => $deviceOption['deviceOptionValue'],
-                            'training_diary_x_device_option_update_date' => date('Y-m-d H:i:s'),
-                            'training_diary_x_device_option_update_user_fk' => $userId,
+                            'training_diary_x_device_option_device_option_fk' => $deviceOptionId,
+                            'training_diary_x_device_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
+                            'training_diary_x_device_option_create_date' => date('Y-m-d H:i:s'),
+                            'training_diary_x_device_option_create_user_fk' => $userId,
                         ];
-                        $trainingDiaryXDeviceOptionDb->update($data,
-                            'training_diary_x_device_option_id = ' . $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_id']
-                        );
+                        $trainingDiaryXDeviceOptionDb->insert($data);
                     }
-                    unset($currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]);
-                } else {
-                    $data = [
-                        'training_diary_x_device_option_device_option_value' => $deviceOption['deviceOptionValue'],
-                        'training_diary_x_device_option_device_option_fk' => $deviceOptionId,
-                        'training_diary_x_device_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
-                        'training_diary_x_device_option_create_date' => date('Y-m-d H:i:s'),
-                        'training_diary_x_device_option_create_user_fk' => $userId,
-                    ];
-                    $trainingDiaryXDeviceOptionDb->insert($data);
                 }
             }
 
@@ -341,7 +349,9 @@ class TrainingDiariesController extends AbstractController {
             $trainingDiaryXTrainingPlanExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
             $trainingDiaryXTrainingPlanExerciseDb->update($data, 'training_diary_x_training_plan_exercise_id = ' . $trainingDiaryXTrainingPlanExerciseId);
 
-            $this->considerLastExerciseInTrainingDiary($trainingDiaryXTrainingPlanExerciseId);
+            if ($this->considerLastExerciseInTrainingDiary($trainingDiaryXTrainingPlanExerciseId)) {
+                $this->view->assign('content', $this->view->render('training-diaries/all-exercises-finished.phtml'));
+            }
         }
     }
 

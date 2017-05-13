@@ -106,7 +106,8 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
         $oSelect
             ->joinInner('training_diary_x_training_plan', 'training_diary_x_training_plan_training_plan_fk = training_plan_x_exercise_training_plan_fk')
 //            ->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_ = trainingsplan_uebung_id')
-            ->joinInner('training_diary_x_training_plan_exercise', 'training_diary_x_training_plan_exercise_t_p_x_e_fk = training_plan_x_exercise_id AND training_diary_x_training_plan_exercise_training_diary_fk = training_diary_x_training_plan_training_diary_fk')
+            ->joinInner('training_diary_x_training_plan_exercise', 'training_diary_x_training_plan_exercise_t_p_x_e_fk = training_plan_x_exercise_id ' .
+                'AND training_diary_x_training_plan_exercise_training_diary_fk = training_diary_x_training_plan_training_diary_fk')
             ->joinInner('training_diaries', 'training_diary_id = training_diary_x_training_plan_training_diary_fk')
             ->joinInner('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
             ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')

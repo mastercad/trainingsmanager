@@ -70,4 +70,54 @@ class Model_DbTable_TrainingDiaryXTrainingPlan extends Model_DbTable_Abstract
 
         return $this->fetchAll($oSelect);
     }
+
+    public function findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId($trainingDiaryXTrainingPlanId) {
+
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->joinInner('training_plans', 'training_plan_id = training_diary_x_training_plan_training_plan_fk')
+            ->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_training_plan_fk = training_plan_id')
+            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinLeft('training_diary_x_training_plan_exercise', 'training_diary_x_training_plan_exercise_t_p_x_e_fk = training_plan_x_exercise_id ' .
+                'AND training_diary_x_training_plan_exercise.training_diary_x_training_plan_exercise_t_d_x_t_p_fk = "' . $trainingDiaryXTrainingPlanId . '"')
+            ->where('training_diary_x_training_plan_id = ?', $trainingDiaryXTrainingPlanId);
+
+        return $this->fetchAll($select);
+    }
+
+    /**
+     * finds current open training diary entry for given user
+     *
+     * @param $userId
+     *
+     * @return null|\Zend_Db_Table_Row_Abstract
+     */
+    public function findLastOpenTrainingPlanByUserId($userId) {
+        $select = $this->select(Zend_Db_Table_Abstract::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select
+            ->joinInner('training_plans', 'training_plan_id = training_diary_x_training_plan_training_plan_fk AND training_plan_user_fk = ' . $userId)
+            ->where('training_diary_x_training_plan_flag_finished = 0');
+
+        return $this->fetchRow($select);
+    }
+
+    /**
+     * find last finished training diary entry for given user
+     *
+     * @param $userId
+     *
+     * @return null|\Zend_Db_Table_Row_Abstract
+     */
+    public function findLastFinishedActiveTrainingPlanByUserId($userId) {
+        $select = $this->select(Zend_Db_Table_Abstract::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select
+            ->joinInner('training_plans', 'training_plan_id = training_diary_x_training_plan_training_plan_fk AND training_plan_active = 1 AND training_plan_user_fk = ' . $userId)
+            ->where('training_diary_x_training_plan_flag_finished = 1')
+            ->limit(1)
+            ->order('training_diary_x_training_plan_create_date DESC');
+
+        return $this->fetchRow($select);
+    }
 }

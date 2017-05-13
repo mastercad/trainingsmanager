@@ -773,4 +773,45 @@ form.dropzone {display: table-cell;}
 /*#dropzone_previews .dz-preview {display: inline; float: left;}*/
 /*.active-preview-picture*/
 
+.current-training-plan-container {
+    border: 1px solid dimgray;
+    border-radius: 5px;
+    padding: 5px;
+    margin-right: 25px;
+}
+
+.current-training-plan-header {
+    position: relative;
+}
+
+.current-training-plan-header .current-training-plan-options {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.current-training-plan-header .current-training-plan-options span {
+    cursor: pointer;
+}
+
+.current-training-plan-exercise-row {
+    padding: 5px;
+    position: relative;
+    border-radius: 5px;
+}
+
+.current-training-plan-exercise-row p {
+    margin: 0;
+}
+
+.current-training-plan-exercise-row-status {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.current-training-plan-exercise-row.finished {
+    background-color: limegreen;
+}
+
 /* ]]> */

@@ -41,16 +41,17 @@ jQuery(document).ready(function() {
         });
 
         jQuery('#accordion_old_training_plans .item').unbind('click').click(function() {
-            if (isMobile) {
-                showSpinner(jQuery('#mobile_content_old_training_plan'));
-            } else {
-                showSpinner(jQuery('#right'));
-            }
 
             var id = jQuery(this).data('value');
             var that = this;
 
             if (0 < id) {
+                if (isMobile) {
+                    showSpinner(jQuery('#mobile_content_old_training_plan'));
+                } else {
+                    showSpinner(jQuery('#right'));
+                }
+
                 jQuery.post('/' + controller + '/get-training-plan', {id: id, ajax: true}, function (response) {
                     var json = JSON.parse(response);
 
