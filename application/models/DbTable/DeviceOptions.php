@@ -49,6 +49,24 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
     }
 
     /**
+     * finds all device options, bind on exercise by device
+     *
+     * @param $exerciseId
+     *
+     * @return \Zend_Db_Table_Rowset_Abstract
+     */
+    public function findDeviceOptionsByExerciseId($exerciseId) {
+        $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+
+        $select->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = ' . $exerciseId)
+            ->joinInner('device_x_device_option', 'device_x_device_option_device_fk = exercise_x_device_device_fk')
+            ->joinLeft('exercise_x_device_option', 'exercise_x_device_option_device_option_fk = device_option_id AND exercise_x_device_option_exercise_fk = ' . $exerciseId)
+            ->where('device_option_id = device_x_device_option_device_option_fk');
+
+        return $this->fetchAll($select);
+    }
+
+    /**
      * @inheritdoc
      */
     public function updateOption($data, $optionId) {

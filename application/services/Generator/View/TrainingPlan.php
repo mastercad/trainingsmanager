@@ -219,6 +219,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
             $deviceOptionsService->setExerciseId($exerciseId);
             $deviceOptionsService->setAllowEdit(true);
             $deviceOptionsService->setShowDelete(true);
+            $deviceOptionsService->setConvertDropDownValues(true);
 
             $this->getView()->assign('deviceOptionsContent', $deviceOptionsService->generate());
 

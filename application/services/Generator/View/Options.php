@@ -84,7 +84,7 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
      */
     protected function extractOptionValue($option) {
         foreach ($this->getOptionValuePriorities() as $priority) {
-            if (isset($option[$priority])) {
+            if (array_key_exists($priority, $option)) {
                 return $option[$priority];
             }
         }

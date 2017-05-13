@@ -59,7 +59,7 @@ class Service_TrainingPlan {
         }
 
         if (array_key_exists('trainingPlanId', $trainingPlan)
-            && ! array_key_exists('exercises', $trainingPlan)
+            && !$trainingPlantParentId
         ) {
             if (1 === count($trainingPlan)) {
                 $trainingPlansDb = new Model_DbTable_TrainingPlans();
@@ -350,6 +350,8 @@ class Service_TrainingPlan {
         if (is_numeric($iTrainingsplanLayoutId)
             && 0 < $iTrainingsplanLayoutId
         ) {
+            $this->deactivateAllCurrentTrainingPlans($iUserId);
+
             $aData = array(
                 'training_plan_training_plan_layout_fk' => $iTrainingsplanLayoutId,
                 'training_plan_active' => 1,

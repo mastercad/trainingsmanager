@@ -23,7 +23,12 @@ jQuery(document).ready(function() {
                 showSpinner(jQuery('#right'));
             }
             var that = this;
-            jQuery.post('/'+controller+'/get-training-plan', {id: jQuery(this).data('id'), ajax: true}, function(response) {
+
+            if (accordionAjaxRequest) {
+                accordionAjaxRequest.abort();
+            }
+
+            accordionAjaxRequest = jQuery.post('/'+controller+'/get-training-plan', {id: jQuery(this).data('id'), ajax: true}, function(response) {
                 var json = JSON.parse(response);
 
                 if (200 == json.state) {
@@ -46,13 +51,18 @@ jQuery(document).ready(function() {
             var that = this;
 
             if (0 < id) {
+
+                if (accordionAjaxRequest) {
+                    accordionAjaxRequest.abort();
+                }
+
                 if (isMobile) {
                     showSpinner(jQuery('#mobile_content_old_training_plan'));
                 } else {
                     showSpinner(jQuery('#right'));
                 }
 
-                jQuery.post('/' + controller + '/get-training-plan', {id: id, ajax: true}, function (response) {
+                accordionAjaxRequest = jQuery.post('/' + controller + '/get-training-plan', {id: id, ajax: true}, function (response) {
                     var json = JSON.parse(response);
 
                     if (200 == json.state) {
