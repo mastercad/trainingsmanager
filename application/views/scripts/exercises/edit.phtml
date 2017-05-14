@@ -539,6 +539,7 @@
         initMuscleRating();
         initMuscleGroups();
         initOptions();
+        initPreviewThumbRemove();
 
         function initDropZone() {
             dropzone = new Dropzone('#upload', {
@@ -567,9 +568,9 @@
                 },
                 init: function () {
                     this.on("success", function (file, response) {
-                        var json = JSON.parse(response);
-                        file.serverId = json.id;
-                        jQuery(file.previewElement).find('.dz-details').data('source-path', json.paths.html_pfad)
+                        var files = JSON.parse(response);
+                        file.serverId = files[0].id;
+                        jQuery(file.previewElement).find('.dz-details').data('source-path', files[0].paths.html_pfad)
                             .unbind('click')
                             .click(function () {
                                 refreshPreviewPicture(jQuery(this));
@@ -603,37 +604,6 @@
                             }
                         });
                     });
-                    jQuery(".dz-remove").on("click", function (e) {
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        var imageId = jQuery(this).parent().find(".dz-filename > span").text();
-                        var that = this;
-                        jQuery.ajax({
-                            url: "/" + controller + "/delete-picture/",
-                            data: {
-                                id: Base64.encode(imageId),
-                                exerciseId: jQuery('#exercise_id').val(),
-                                ajax: true
-                            },
-                            type: 'POST',
-                            success: function (response) {
-                                var json = JSON.parse(response);
-
-                                if (200 == json.state) {
-                                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
-                                    jQuery(that).parent().parent().fadeOut(500, function () {
-                                        jQuery(that).parent().parent().remove();
-                                    });
-                                } else {
-                                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
-                                }
-                            },
-                            error: function (data) {
-                                showDialog(data, BootstrapDialog.TYPE_DANGER);
-                            }
-                        });
-                    });
                     jQuery(".dz-details").on("click", function (e) {
                         refreshPreviewPicture(jQuery(this));
                     });
@@ -641,8 +611,171 @@
             });
         }
 
+        function initPreviewThumbRemove() {
+            jQuery(".dz-remove").unbind('click').click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var imageId = jQuery(this).parent().find(".dz-filename > span").text();
+                var that = this;
+                jQuery.ajax({
+                    url: "/" + controller + "/delete-picture/",
+                    data: {
+                        id: Base64.encode(imageId),
+                        exerciseId: jQuery('#exercise_id').val(),
+                        ajax: true
+                    },
+                    type: 'POST',
+                    success: function (response) {
+                        var json = JSON.parse(response);
+
+                        if (200 == json.state) {
+                            showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                            jQuery(that).parent().parent().fadeOut(500, function () {
+                                jQuery(that).parent().parent().remove();
+                            });
+                        } else {
+                            showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                        }
+                    },
+                    error: function (data) {
+                        showDialog(data, BootstrapDialog.TYPE_DANGER);
+                    }
+                });
+            });
+        }
+
+        var currentPreview = null;
+
+        function initCameraApi() {
+            var picUploadWrapper = jQuery('<div style="width: 0; height: 0; overflow: hidden;"></div>');
+            var picUpload = jQuery('<input type="file" id="picture_files" name="picture-files" accept="images/*" multiple style="visibility: hidden;" />');
+            var uploadTemplate = jQuery('#preview-template');
+
+            picUpload.change(function() {
+                uploadFiles(this.files);
+            });
+
+            jQuery('#dropzone_previews .dz-details').unbind('click').click(function (e) {
+                refreshPreviewPicture(jQuery(this));
+            });
+
+            jQuery(picUploadWrapper).append(picUpload);
+            jQuery('#upload.dropzone').append(picUploadWrapper)
+                .find('.dz-message').unbind('click').click(function() {
+                picUpload.click();
+            });
+
+            function uploadFiles(files) {
+
+                var fd = new FormData();
+                for (var index = 0; index < files.length; index ++){
+                    var file = files[index];
+                    fd.append(file.name, file);
+                }
+
+                fd.append('ajax', true);
+
+                jQuery.ajax({
+                    xhr: function() {
+                        var xhr = new window.XMLHttpRequest();
+
+                        // Upload progress
+                        xhr.upload.addEventListener("progress", function(evt){
+                            if (evt.lengthComputable) {
+                                var percentComplete = (evt.loaded / evt.total) * 100;
+                                jQuery(currentPreview).find('div.dz-progress span.dz-upload').css('width', percentComplete + "%");
+                                //Do something with upload progress
+//                                console.log("Upload : " + percentComplete);
+                            }
+                        }, false);
+
+                        // Download progress
+                        xhr.addEventListener("progress", function(evt){
+                            if (evt.lengthComputable) {
+                                var percentComplete = (evt.loaded / evt.total) * 100;
+                                // Do something with download progress
+                                console.log("Download : " + percentComplete);
+                            }
+                        }, false);
+
+                        return xhr;
+                    },
+                    url: '/'+controller+'/upload-picture',
+                    data: fd,
+                    type: 'POST',
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function(xhr) {
+                        xhr.overrideMimeType( "text/plain; charset=x-user-defined" );
+                        createPreviewPicture(files);
+
+                    },
+                    success: function (response) {
+                        var json = JSON.parse(response);
+                        if (200 == json.state) {
+                            try {
+                                var files = JSON.parse(Base64.decode(json.htmlContent));
+                                jQuery('form.dropzone').css('background-image', 'url("' + files[0].paths.html_pfad + '")');
+                                considerDropZoneBackgroundDimensions();
+                                jQuery(currentPreview).find('div.dz-progress').css('display', 'none');
+                            } catch (exception) {
+                                showDialog(exception, BootstrapDialog.TYPE_DANGER);
+                            }
+                        } else {
+                            showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                        }
+                    },
+                    error: function (data) {
+                        showDialog(data, BootstrapDialog.TYPE_DANGER);
+                    }
+                });
+            }
+        }
+
+        function createPreviewPicture(files) {
+            if (files
+                && files[0]
+            ) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    console.log(files[0]);
+                    currentPreview = jQuery('#preview-template').clone();
+                    currentPreview.addClass('dz-preview').css('display', 'inline-block').removeAttr('id');
+                    var removeLink = jQuery('<a href="#" class="dz-remove">Remove</a>');
+                    jQuery(currentPreview).find('.dz-preview').append(removeLink);
+                    jQuery(currentPreview).find('.dz-details').attr('data-source-path', e.target.result);
+                    jQuery(currentPreview).find('.dz-image img').attr('src',  e.target.result);
+                    jQuery(currentPreview).find('.dz-filename span').html(files[0].name);
+                    jQuery(currentPreview).find(".dz-details").on("click", function (e) {
+                        refreshPreviewPicture(jQuery(this));
+                    });
+
+                    jQuery('#dropzone_previews').append(currentPreview);
+                    initPreviewThumbRemove();
+                };
+
+                reader.readAsDataURL(files[0]);
+            }
+        }
+
+        function initUploadTarget() {
+            if (jQuery('#mobile').is(':visible')) {
+                initCameraApi();
+            } else {
+                considerDropZoneBackgroundDimensions();
+
+                jQuery(window).resize(function() {
+                    considerDropZoneBackgroundDimensions();
+                });
+
+                if (!dropzone) {
+                    initDropZone();
+                }
+            }
+        }
+
         function refreshPreviewPicture(element) {
-//            console.log("REFRESH!");
             jQuery('#upload').css('background-image', 'url('+jQuery(element).data('source-path')+')');
             jQuery('.dz-details').data('current-picture', false).removeClass('active-preview-picture');
             jQuery(element).data('current-picture', true).addClass('active-preview-picture');
@@ -669,7 +802,12 @@
                 var newHeight = height * ratio;
                 jQuery('#upload').css('background-size', parseInt(dropZoneWidth) + 'px ' + parseInt(newHeight) + 'px')
                     .height(newHeight);
-                jQuery('#dropzone_previews').height(newHeight);
+
+                if (!isMobile) {
+                    jQuery('#dropzone_previews').height(newHeight);
+                } else {
+                    jQuery('#dropzone_previews').css('height', 'auto');
+                }
             });
             if (newCreated) {
                 jQuery('#upload').append(bgImg);
@@ -678,15 +816,8 @@
             bgImg.attr('src', url);
         }
 
+        initUploadTarget();
         considerDropZoneBackgroundDimensions();
-
-        jQuery(window).resize(function() {
-            considerDropZoneBackgroundDimensions();
-        });
-
-        if (!dropzone) {
-            initDropZone();
-        }
 
         jQuery('#save').unbind('click').click(function() {
             save();

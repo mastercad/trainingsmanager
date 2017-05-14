@@ -773,6 +773,10 @@ form.dropzone {display: table-cell;}
 /*#dropzone_previews .dz-preview {display: inline; float: left;}*/
 /*.active-preview-picture*/
 
+.dz-image img {
+    /*max-width: none;*/
+}
+
 .current-training-plan-container {
     border: 1px solid dimgray;
     border-radius: 5px;

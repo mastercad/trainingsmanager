@@ -509,19 +509,23 @@ class ExercisesController extends AbstractController {
     public function uploadPictureAction() {
         $this->view->layout()->disableLayout();
         $result = [];
-        if (true === isset($_FILES['file'])) {
+        if (!empty($_FILES)) {
             $temp_bild_pfad = getcwd() . '/tmp/exercises/';
 
-            $obj_file = new CAD_File();
-            $obj_file->setDestPath($temp_bild_pfad);
-            $obj_file->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'svg', 'gif'));
-            $obj_file->setUploadedFiles($_FILES['file']);
-            $obj_file->moveUploadedFiles();
+            foreach ($_FILES as $fileName => $fileData) {
+                $obj_file = new CAD_File();
+                $obj_file->setDestPath($temp_bild_pfad);
+                $obj_file->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'svg', 'gif'));
+                $obj_file->setUploadedFiles($fileData);
+                $obj_file->moveUploadedFiles();
 
-            $a_files = $obj_file->getDestFiles();
-            if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
-                $result['id'] = $a_files[0][CAD_FILE::FILE];
-                $result['paths'] = $a_files[0];
+                $a_files = $obj_file->getDestFiles();
+                if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
+                    $resultCount = count($result);
+                    $result[$resultCount] = [];
+                    $result[$resultCount]['id'] = $a_files[0][CAD_FILE::FILE];
+                    $result[$resultCount]['paths'] = $a_files[0];
+                }
             }
         }
         $this->view->assign('json', json_encode($result));
