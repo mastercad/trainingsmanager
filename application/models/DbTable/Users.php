@@ -82,6 +82,15 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
         return false;
 	}
 
+    public function findTestUsers() {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->joinInner('user_right_groups', 'user_right_group_id = user_right_group_fk')
+            ->where('user_right_group_name = "Test"');
+
+        return $this->fetchAll($select);
+    }
+
     /**
      * @param $iUseId
      * @return int

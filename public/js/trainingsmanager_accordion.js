@@ -85,13 +85,11 @@ function considerMobile() {
 }
 
 function singleClick(e) {
-//                console.log('singleClick called');
     var id = jQuery(this).data('id');
     loadShowContent(id);
 }
 
 function doubleClick(e) {
-//                console.log('doubleClick called');
     var id = jQuery(this).data('id');
     loadEditContent(id);
 }

@@ -25,42 +25,6 @@
 <script type="text/javascript">
     jQuery('document').ready(function() {
 
-        jQuery('.exercise-delete').unbind('click').click(function() {
-            if(confirm('<?php echo $this->translate('question_warning_delete_exercise');?>')) {
-                jQuery(this).deleteExercise();
-            }
-        });
-        
-        jQuery.fn.deleteExercise = function() {
-            var exerciseId = jQuery(this).data('exercise-id');
-            var that = this;
-            
-            if(isNumber(exerciseId)
-                && 0 < exerciseId
-            ) {
-                var url = "/exercises/delete-exercise/";
-                var obj_params = {'id': exerciseId, 'ajax': true};
-                
-                jQuery.post(url, obj_params, function(response) {
-                    try {
-                        response = JSON.parse(response);
-//                        var cad_obj_messages = new CAD.Message();
-//                        cad_obj_messages.init(response);
-                        
-//                        if(cad_obj_messages.open()) {
-//                            jQuery(that).parent().fadeOut();
-//                        }
-                    } catch(e) {
-                        alert(response);
-                    }
-                });
-            } else {
-//                var obj_cad_messages = new CAD.Message();
-//                obj_cad_messages.init([{'type': 'fehler', 'message': '<?php //echo $this->translate('tooltip_cant_delete_exercise');?>//'}]);
-//                obj_cad_messages.open();
-            }
-        };
-
         jQuery('.search').unbind('click').on('click', function() {
 
             var exerciseType = jQuery('.exercise-type-select').attr('data-value');
@@ -104,8 +68,6 @@
                 exerciseType = jQuery.trim(selectedOptionName);
             } else {
                 exerciseType = null;
-//                otherAvailableExerciseTypes = [];
-//                refreshExerciseTypesFilterDropDown();
             }
 
             jQuery(this).parent().parent().parent().attr('data-value', selectedOption);

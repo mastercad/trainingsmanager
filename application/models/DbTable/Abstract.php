@@ -20,6 +20,16 @@ class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
         if(true === empty(self::$aTableMetaData)) {
             self::$aTableMetaData = $this->info();
         }
+
+        $user = Zend_Auth::getInstance()->getIdentity();
+
+        // current user member of a test group
+        if (true === is_object($user)
+            && preg_match('/^test\_/', $user->user_right_group_name)
+            && false === strpos('test_', $this->_name)
+        ) {
+            $this->_name = 'test_' . $this->_name;
+        }
     }
 
     /**

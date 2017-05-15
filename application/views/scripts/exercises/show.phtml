@@ -127,8 +127,67 @@
         jQuery('.detail-options .edit-button').unbind('click').click(function() {
             loadEditContent(jQuery(this).data('id'));
         });
-        jQuery('.detail-options .delete-button').unbind('click').click(function() {
-            deleteEntry(jQuery(this).data('id'));
+
+        jQuery('.delete-button').unbind('click').click(function() {
+            var that = this;
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                message: '<?php echo $this->translate('question_warning_delete_exercise');?>',
+                buttons: [{
+                    label: 'Ok',
+                    // no title as it is optional
+                    cssClass: 'btn-primary',
+                    action: function(dialogItself){
+                        jQuery(that).deleteExercise();
+                        dialogItself.close();
+                    }
+                }, {
+                    label: 'Cancel',
+                    action: function(dialogItself){
+                        dialogItself.close();
+                    }
+                }]
+            });
         });
+
+        jQuery.fn.deleteExercise = function() {
+            var exerciseId = jQuery(this).data('id');
+            var that = this;
+
+            if(jQuery.isNumeric(exerciseId)
+                && 0 < exerciseId
+            ) {
+                var url = "/exercises/delete/";
+                var obj_params = {'id': exerciseId, 'ajax': true};
+
+                jQuery.post(url, obj_params, function(response) {
+                    try {
+                        json = JSON.parse(response);
+
+                        if (200 == json.state) {
+                            jQuery('#accordion #' + exerciseId).fadeOut('normal', function() {
+                                jQuery(this).remove();
+                            }).next().remove();
+                            jQuery('#right').wrapInner('<div class="temporary">').find('.temporary').fadeOut('normal', function() {
+                                jQuery(this).remove();
+                            });
+                        } else {
+//                        var cad_obj_messages = new CAD.Message();
+//                        cad_obj_messages.init(response);
+
+//                        if(cad_obj_messages.open()) {
+//                            jQuery(that).parent().fadeOut();
+//                        }
+                        }
+                    } catch(e) {
+                        alert(e.message);
+                    }
+                });
+            } else {
+//                var obj_cad_messages = new CAD.Message();
+//                obj_cad_messages.init([{'type': 'fehler', 'message': '<?php //echo $this->translate('tooltip_cant_delete_exercise');?>//'}]);
+//                obj_cad_messages.open();
+            }
+        };
     });
 </script>
