@@ -20,6 +20,10 @@ class Model_DbTable_UserRightGroupRights extends Model_DbTable_Abstract
      */
     protected $_primary = 'user_right_group_right_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */

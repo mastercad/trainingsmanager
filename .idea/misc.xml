@@ -1,11 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/application/modules/auth/models/assertions/Comment.php" />
-    <file url="file://$PROJECT_DIR$/application/modules/auth/models/assertions/Food.php" />
-    <file url="file://$PROJECT_DIR$/application/modules/auth/models/assertions/Measure.php" />
-    <file url="file://$PROJECT_DIR$/application/modules/auth/models/resources/Nutrient.php" />
-    <file url="file://$PROJECT_DIR$/application/modules/auth/models/resources/Recipe.php" />
-  </component>
   <component name="ProjectRootManager" version="2" />
 </project>

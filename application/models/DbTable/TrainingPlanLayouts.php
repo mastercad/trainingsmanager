@@ -17,6 +17,10 @@ class Model_DbTable_TrainingPlanLayouts extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_plan_layout_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $iTrainingPlanLayoutId
      * @return null|Zend_Db_Table_Row_Abstract

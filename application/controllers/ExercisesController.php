@@ -48,6 +48,10 @@ class ExercisesController extends AbstractController {
             }
         }
     }
+
+    public function newAction() {
+        $this->forward('edit');
+    }
     
     public function editAction() {
         if (true) {
@@ -629,12 +633,7 @@ class ExercisesController extends AbstractController {
     public function saveAction() {
         $params = $this->getRequest()->getParams();
 
-        $userId = 1;
-        $user = Zend_Auth::getInstance()->getIdentity();
-
-        if (TRUE == is_object($user)) {
-            $userId = $user->user_id;
-        }
+        $userId = $this->findCurrentUserId();
 
         if ($this->getRequest()->isPost()) {
             $exercisesDb = new Model_DbTable_Exercises();
@@ -828,12 +827,7 @@ class ExercisesController extends AbstractController {
 
         // no device_id given in params? create new entry
         if (! empty($exerciseXDeviceId)) {
-            $userId = 1;
-            $user = Zend_Auth::getInstance()->getIdentity();
-
-            if (TRUE == is_object($user)) {
-                $userId = $user->user_id;
-            }
+            $userId = $this->findCurrentUserId();
 
             $exerciseXDevice = $exerciseXDeviceDb->findDeviceForExercise($exerciseId);
 
@@ -867,12 +861,7 @@ class ExercisesController extends AbstractController {
         if (array_key_exists('exercise_muscle_groups', $params)
             && is_array($params['exercise_muscle_groups'])
         ) {
-            $userId = 1;
-            $user = Zend_Auth::getInstance()->getIdentity();
-
-            if (TRUE == is_object($user)) {
-                $userId = $user->user_id;
-            }
+            $userId = $this->findCurrentUserId();
 
             $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
             $currentMusclesInDb = $exerciseXMuscleDb->findMusclesForExercise($exerciseId);
@@ -946,12 +935,7 @@ class ExercisesController extends AbstractController {
         if (array_key_exists('exercise_device_options', $params)
             && is_array($params['exercise_device_options'])
         ) {
-            $userId = 1;
-            $user = Zend_Auth::getInstance()->getIdentity();
-
-            if (TRUE == is_object($user)) {
-                $userId = $user->user_id;
-            }
+            $userId = $this->findCurrentUserId();
 
             $exerciseXDeviceOptionDb = new Model_DbTable_ExerciseXDeviceOption();
             $currentDeviceOptionsInDb = $exerciseXDeviceOptionDb->findDeviceOptionsForExercise($exerciseId);
@@ -1009,12 +993,7 @@ class ExercisesController extends AbstractController {
         if (array_key_exists('exercise_options', $params)
             && is_array($params['exercise_options'])
         ) {
-            $userId = 1;
-            $user = Zend_Auth::getInstance()->getIdentity();
-
-            if (TRUE == is_object($user)) {
-                $userId = $user->user_id;
-            }
+            $userId = $this->findCurrentUserId();
 
             $exerciseXExerciseOptionDb = new Model_DbTable_ExerciseXExerciseOption();
             $currentExerciseOptionsInDb = $exerciseXExerciseOptionDb->findExerciseOptionsForExercise($exerciseId);
@@ -1075,12 +1054,7 @@ class ExercisesController extends AbstractController {
         if (! empty($exerciseTypeId)
             && empty($exerciseXExerciseType)
         ) {
-            $userId = 1;
-            $user = Zend_Auth::getInstance()->getIdentity();
-
-            if (true == is_object($user)) {
-                $userId = $user->user_id;
-            }
+            $userId = $this->findCurrentUserId();
 
             $data = [
                 'exercise_x_exercise_type_exercise_type_fk' => $exerciseTypeId,
@@ -1093,12 +1067,7 @@ class ExercisesController extends AbstractController {
         } else if (! empty($exerciseTypeId)
             && ! empty($exerciseXExerciseType)
         ) {
-            $userId = 1;
-            $user = Zend_Auth::getInstance()->getIdentity();
-
-            if (true == is_object($user)) {
-                $userId = $user->user_id;
-            }
+            $userId = $this->findCurrentUserId();
 
             $data = [
                 'exercise_x_exercise_type_exercise_type_fk' => $exerciseTypeId,

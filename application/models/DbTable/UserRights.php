@@ -13,6 +13,10 @@ class Model_DbTable_UserRights extends Model_DbTable_Abstract {
      */
     protected $_primary = 'user_right_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $aOptions
      * @return bool|null|Zend_Db_Table_Row_Abstract

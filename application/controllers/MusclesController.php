@@ -68,6 +68,10 @@ class MusclesController extends AbstractController
             echo $result;
         }
     }
+
+    public function newAction() {
+        $this->forward('edit');
+    }
     
     public function editAction()
     {
@@ -132,11 +136,7 @@ class MusclesController extends AbstractController
 
         $user = Zend_Auth::getInstance()->getIdentity();
 
-        $userId = 1;
-
-        if (true == is_object($user)) {
-            $userId = $user->user_id;
-        }
+        $userId = $this->findCurrentUserId();
 
         if (isset($params)) {
             $musclesDb = new Model_DbTable_Muscles();

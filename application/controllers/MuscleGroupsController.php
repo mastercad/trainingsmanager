@@ -80,6 +80,10 @@ class MuscleGroupsController extends AbstractController {
         }
     }
 
+    public function newAction() {
+        $this->forward('edit');
+    }
+
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
@@ -259,13 +263,7 @@ class MuscleGroupsController extends AbstractController {
             $messagesCollection = array();
             $data = array();
 
-            $user = Zend_Auth::getInstance()->getIdentity();
-
-            $userId = 1;
-
-            if (TRUE == is_object($user)) {
-                $userId = $user->user_id;
-            }
+            $userId = $this->findCurrentUserId();
 
             if (isset($params['muscle_group_name'])
                 && 0 < strlen(trim($params['muscle_group_name']))

@@ -19,7 +19,9 @@
 	    protected function _authenticateCreateSelect()
 	    {
 	        // build credential expression
-	        if (empty($this->_credentialTreatment) || (strpos($this->_credentialTreatment, '?') === false)) {
+	        if (empty($this->_credentialTreatment)
+                || false === strpos($this->_credentialTreatment, '?')
+            ) {
 	            $this->_credentialTreatment = '?';
 	        }
 	
@@ -37,10 +39,12 @@
 	
 	        // get select
 	        $dbSelect = clone $this->getDbSelect();
-	        $dbSelect->from($this->_tableName, array('*', $credentialExpression));
-	        $dbSelect->join('user_state', 'user_state_id = user_state_fk');
-	        $dbSelect->join('user_right_groups', 'user_right_group_id = user_right_group_fk');
-	        $dbSelect->where($this->_zendDb->quoteIdentifier($this->_identityColumn, true) . ' = ?', $this->_identity);
+	        $dbSelect->from($this->_tableName, array('*', $credentialExpression))
+                ->joinInner('user_state', 'user_state_id = user_state_fk')
+                ->joinInner('user_right_groups', 'user_right_group_id = user_right_group_fk')
+                ->joinLeft('user_x_user_group', 'user_x_user_group_user_fk = user_id')
+                ->joinLeft('user_groups', 'user_group_id = user_x_user_group_user_group_fk')
+                ->where($this->_zendDb->quoteIdentifier($this->_identityColumn, true) . ' = ?', $this->_identity);
 	        
 	        return $dbSelect;
 	    }

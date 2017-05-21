@@ -321,8 +321,9 @@ class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
             if ($id) {
                 $currentControllerName = $this->convertControllerName($controller);
                 $dbClassName = 'Model_DbTable_'.$currentControllerName;
+                /** @var Model_DbTable_Abstract $db */
                 $db = new $dbClassName();
-                $row = $db->find($id)->current();
+                $row = $db->findByPrimary($id);
 
                 $role = new Auth_Model_Role_Member();
                 $resourceClassName = 'Auth_Model_Resource_'.$currentControllerName;

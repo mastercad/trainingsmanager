@@ -18,7 +18,6 @@
 
 class Auth_Model_Assertion_TrainingPlans extends Auth_Model_Assertion_Abstract {
 
-
     /**
      * @inheritdoc
      */

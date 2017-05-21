@@ -18,6 +18,10 @@ class Model_DbTable_DeviceXDeviceOption extends Model_DbTable_Abstract {
     /** @var string */
     protected $_primary = 'device_x_device_option_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $deviceId
      *

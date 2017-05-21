@@ -11,6 +11,10 @@ class Model_DbTable_ExerciseTypes extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'exercise_type_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * search all available exercises
      *

@@ -7,20 +7,7 @@
  */
 ?>
 
-<form method="post" action="" onchange="submit();">
-    <label for="user_rechte_gruppe_id">
-        Rechte Gruppe:
-    </label>
-    <select id="user_right_group_id" name="user_right_group_id">
-        <option value="">Bitte wählen</option>
-        <option value="1" <?php if ($this->iUserRechteGruppeId == 1) {echo ' selected ';}?>>Gast</option>
-        <option value="20" <?php if ($this->iUserRechteGruppeId == 20) {echo ' selected ';}?>>User</option>
-        <option value="30" <?php if ($this->iUserRechteGruppeId == 30) {echo ' selected ';}?>>Admin</option>
-        <option value="40" <?php if ($this->iUserRechteGruppeId == 40) {echo ' selected ';}?>>Superadmin</option>
-    </select>
-</form>
-
-<br />
+<?php echo $this->userRightGroupSelectContent;?>
 
 <form method="post" action="">
     <?php echo $this->sContent;?>
@@ -30,6 +17,8 @@
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
+        jQuery('body').css('overflow', 'auto');
+
         jQuery('.controller').each(function() {
             // höhe der Inputs anpassen!
             var iMaxHeight = 0;

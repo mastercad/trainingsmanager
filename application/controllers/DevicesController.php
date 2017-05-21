@@ -57,6 +57,10 @@ class DevicesController extends AbstractController {
         }
     }
 
+    public function newAction() {
+        $this->forward('edit');
+    }
+
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
@@ -300,12 +304,7 @@ class DevicesController extends AbstractController {
     {
         $params = $this->getRequest()->getParams();
         $messages = array();
-        $userId = 1;
-
-        $obj_user = Zend_Auth::getInstance()->getIdentity();
-        if (TRUE === is_object($obj_user )) {
-            $userId = $obj_user->user_id;
-        }
+        $userId = $this->findCurrentUserId();
 
         if ($this->getRequest()->isPost()) {
             $devicesDb = new Model_DbTable_Devices();

@@ -25,6 +25,10 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
      */
     protected $_primary = 'user_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $iUserId
      * @return bool|null|Zend_Db_Table_Row_Abstract

@@ -17,6 +17,10 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_plan_x_exercise_option_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $iTrainingPlanExerciseId
      * @param int $exerciseOptionId

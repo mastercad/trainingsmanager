@@ -45,6 +45,10 @@ abstract class OptionsController extends AbstractController {
         $this->view->assign('optionsContent', $optionsContent);
     }
 
+    public function newAction() {
+        $this->forward('edit');
+    }
+
     public function editAction() {
         $params = $this->getRequest()->getParams();
 

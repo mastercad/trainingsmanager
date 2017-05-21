@@ -58,11 +58,13 @@
                     if (200 == json.state) {
                         var exerciseProposals = jQuery('.proposals');
                         var offset = jQuery(self).offset();
+                        var topAddition = 40;
+                        
                         jQuery('body').append(exerciseProposals);
 
                         exerciseProposals.html(Base64.decode(json.htmlContent))
                             .css('left', offset.left + "px")
-                            .css('top', offset.top + 40 + "px")
+                            .css('top', offset.top + topAddition + "px")
                             .find('.proposal').unbind('click').bind('click', function () {
                                 var found = false;
                                 var currentProposal = jQuery(this);

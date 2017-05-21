@@ -17,6 +17,10 @@ class Model_DbTable_TrainingDiaries extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_diary_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      *
      */

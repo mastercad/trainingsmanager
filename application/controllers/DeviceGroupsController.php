@@ -69,6 +69,10 @@ class DeviceGroupsController extends AbstractController
         return $content;
     }
 
+    public function newAction() {
+        $this->forward('edit');
+    }
+
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
@@ -145,12 +149,7 @@ class DeviceGroupsController extends AbstractController
 
     public function saveAction() {
         $params = $this->getRequest()->getParams();
-        $userId = 1;
-        $user = Zend_Auth::getInstance()->getIdentity();
-
-        if (true == is_object($user)) {
-            $userId = $user->user_id;
-        }
+        $userId = $this->findCurrentUserId();
 
         if (isset($params)) {
             $deviceGroupsDb = new Model_DbTable_DeviceGroups();

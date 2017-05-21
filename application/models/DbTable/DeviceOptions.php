@@ -18,6 +18,10 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
     /** @var string */
     protected $_primary = 'device_option_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @inheritdoc
      */

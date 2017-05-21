@@ -120,7 +120,7 @@ class TrainingDiariesController extends AbstractController {
 
     private function createTrainingDiaryExerciseEntry($trainingPlanXExerciseId, $trainingDiaryId, $trainingDiaryXTrainingPlanId)
     {
-        $iUserId = 22;
+        $iUserId = $this->findCurrentUserId();
 
         $trainingDiaryXTrainingPlanExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
 
@@ -254,7 +254,7 @@ class TrainingDiariesController extends AbstractController {
     public function saveAction() {
 
         if (0 < $this->getParam('trainingDiaryExerciseInformation')) {
-            $userId = 1;
+            $userId = $this->findCurrentUserId();
 
             $trainingPlanDiaryExerciseInformation = $this->getParam('trainingDiaryExerciseInformation');
             $trainingDiaryXTrainingPlanExerciseId = $trainingPlanDiaryExerciseInformation['trainingDiaryXTrainingPlanExerciseId'];
@@ -366,7 +366,7 @@ class TrainingDiariesController extends AbstractController {
     {
         $trainingPlanXExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
         $trainingDiary = $trainingPlanXExerciseDb->checkTrainingDiaryFinished($trainingDiaryXTrainingPlanExerciseId)->toArray();
-        $userId = 22;
+        $userId = $this->findCurrentUserId();
 
         if ($trainingDiary['trainingPlanIsFinished']) {
             $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();

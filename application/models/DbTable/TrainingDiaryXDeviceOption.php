@@ -17,6 +17,10 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_diary_x_device_option_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param int $trainingDiaryTrainingPlanExerciseId
      * @return Zend_Db_Table_Rowset_Abstract

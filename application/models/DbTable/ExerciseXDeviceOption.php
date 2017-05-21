@@ -13,6 +13,10 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
      */
     protected $_primary = 'exercise_x_device_option_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $exerciseId
      * @return bool|Zend_Db_Table_Rowset_Abstract

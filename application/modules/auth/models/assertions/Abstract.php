@@ -21,15 +21,14 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      * privileges, respectively.
      *
      * @param  Zend_Acl $oAcl
-     * @param  Auth_Model_Role_Member $oRole
-     * @param  Auth_Model_Resource_Comment $oResource
+     * @param  Zend_Acl_Role_Interface $oRole
+     * @param  Zend_Acl_Resource_Interface $oResource
      * @param  string $sPrivilege
      *
      * @return boolean
      */
     public function assert(Zend_Acl $oAcl, Zend_Acl_Role_Interface $oRole = null,
-                           Zend_Acl_Resource_Interface $oResource = null, $sPrivilege = null) {
-
+        Zend_Acl_Resource_Interface $oResource = null, $sPrivilege = null) {
         return $this->_considerAclRole($oAcl, $oRole, $oResource, $sPrivilege);
     }
 
@@ -41,13 +40,10 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      * @return bool
      */
     private function _considerAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
-        $bReturn = false;
         if ($oRole instanceof Zend_Acl_Role) {
-            $bReturn = $this->_considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege);
-        } else {
-            $bReturn = $this->_considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege);
+            return $this->_considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege);
         }
-        return $bReturn;
+        return $this->_considerAuthAclRole($oRole, $oResource);
     }
 
     /**
@@ -63,7 +59,7 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      * @return bool
      */
     private function _considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
-        return true;
+        return false;
     }
 
 
@@ -74,19 +70,23 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param  Zend_Acl $oAcl
      * @param  Auth_Model_Role_Member $oRole
-     * @param  Auth_Model_Resource_Comment $oResource
-     * @param  string $sPrivilege
+     * @param  Auth_Model_Resource_Abstract $oResource
      *
      * @return boolean
      */
-    protected function _considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
+    protected function _considerAuthAclRole($oRole, $oResource) {
         $bReturn = false;
 
-        if ((null !== $oResource->getMemberId()
-                && $oRole->getMemberId() === $oResource->getMemberId())
-            || true === in_array($oRole->getRoleId(), $this->_aGlobalRights)
+        // if the current user the owner of the resource?
+        // or group admin and in the same group like to owner
+        // or if the current user member of one of the global right groups?
+        if ((!empty($oResource->getMemberId())
+                && $oRole->getMemberId() == $oResource->getMemberId())
+            || ($oRole->getGroupId() == $oResource->getGroupId()
+                && $oRole->getGroup() == $oResource->getGroupName()
+                && "GROUP_ADMIN" == strtoupper($oRole->getRoleId()))
+            || (true === in_array($oRole->getRoleId(), $this->_aGlobalRights))
         ) {
             $bReturn = true;
         }

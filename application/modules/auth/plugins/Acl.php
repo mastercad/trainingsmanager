@@ -105,9 +105,14 @@ class Auth_Plugin_Acl extends Zend_Acl
         return $this;
     }
 
+    /**
+     * @param $sCurrentRole
+     * @param $sResource
+     * @param $sAction
+     */
     public function prepareDynamicPermissionsForCurrentResource($sCurrentRole, $sResource, $sAction) {
         if (true === array_key_exists($sResource . ':' . $sAction, $this->_aDynamicPermissions)) {
-            $sRole = CAD_Tool_Extractor::extractOverPath($this->_aDynamicPermissions, $sResource . ':' . $sAction . '->role');
+            $sOrigRole = CAD_Tool_Extractor::extractOverPath($this->_aDynamicPermissions, $sResource . ':' . $sAction . '->role');
             $sValidatorClass = CAD_Tool_Extractor::extractOverPath($this->_aDynamicPermissions, $sResource . ':' . $sAction . '->validatorClass');
             $this->allow($sCurrentRole, $sResource, $sAction, new $sValidatorClass());
         }

@@ -18,6 +18,10 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
     /** @var string */
     protected $_primary = 'device_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @return Zend_Db_Table_Rowset_Abstract
      */

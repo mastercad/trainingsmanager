@@ -14,19 +14,20 @@ abstract class Auth_Model_Resource_Abstract implements Zend_Acl_Resource_Interfa
     /** @var array|int|null */
     private $alternativeMemberId = null;
 
+    private $groupId = null;
+
+    private $groupName = null;
+
     /** @var string ID der aktuellen Resource in der ACL */
     protected $resourceId = null;
 
     public function __construct($oRow = null) {
-        if (null !== $oRow) {
+        if ($oRow instanceof Zend_Db_Table_Row_Abstract) {
             $this->_prepareData($oRow);
         }
     }
 
-    protected function _prepareData($oRow)
-    {
-        $this->setMemberId(CAD_Tool_Extractor::extractOverPath($oRow, 'rezept_eintrag_user_fk'));
-    }
+    abstract protected function _prepareData($oRow);
 
     /**
      * @return null
@@ -80,6 +81,40 @@ abstract class Auth_Model_Resource_Abstract implements Zend_Acl_Resource_Interfa
     public function setResourceId($resourceId)
     {
         $this->resourceId = $resourceId;
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getGroupName() {
+        return $this->groupName;
+    }
+
+    /**
+     * @param null $groupName
+     *
+     * @return $this
+     */
+    public function setGroupName($groupName) {
+        $this->groupName = $groupName;
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getGroupId() {
+        return $this->groupId;
+    }
+
+    /**
+     * @param null $groupId
+     *
+     * @return $this
+     */
+    public function setGroupId($groupId) {
+        $this->groupId = $groupId;
         return $this;
     }
 }

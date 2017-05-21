@@ -81,15 +81,21 @@ class TrainingPlansController extends AbstractController {
      */
     private function generateTrainingPlanContent(Zend_Db_Table_Rowset_Abstract $trainingPlan) {
         $content = '';
+        $trainingPlanId = null;
 
         // split plan
         if (1 < count($trainingPlan)) {
             $content = $this->generateSplitTrainingPlanContent($trainingPlan);
+            $trainingPlanId = $trainingPlan->offsetGet(0)->offsetGet('training_plan_id');
         } else if (1 === count($trainingPlan)) {
-            $this->view->assign('currentTrainingPlan', $this->generateCurrentTrainingPlanItem($trainingPlan->current()));
-            $content = $this->generateSingleTrainingPlanContent($trainingPlan->current());
+            $trainingPlan = $trainingPlan->current();
+            if ($trainingPlan instanceof Zend_Db_Table_Row_Abstract) {
+                $this->view->assign('currentTrainingPlan', $this->generateCurrentTrainingPlanItem($trainingPlan));
+                $content = $this->generateSingleTrainingPlanContent($trainingPlan);
+                $trainingPlanId = $trainingPlan->offsetGet('training_plan_id');
+            }
         }
-        $this->view->assign('trainingPlanOptionsContent', $this->generateDetailOptionsContent($trainingPlan->offsetGet(0)->offsetGet('training_plan_id')));
+        $this->view->assign('trainingPlanOptionsContent', $this->generateDetailOptionsContent($trainingPlanId));
 
         return $content;
     }
@@ -286,7 +292,7 @@ class TrainingPlansController extends AbstractController {
 //                    $trainingPlanId = $trainingPlanService->createTrainingPlan($aData);
 //                    $this->view->assign('trainingPlanId', $trainingPlanId);
 //                    $this->view->assign('training_plan_id', $trainingPlanId);
-                    $currentName = 'NewPlan'.time();
+                    $currentName = 'NewPlan'.uniqid();
                     $this->view->assign('name', $currentName);
                     $sContent = '<ul class="nav nav-tabs"><li><a data-toggle="tab" href="#'.$currentName.'">New Plan</a></li></ul>';
                     $sContent .= $this->view->render('loops/training-plan-edit.phtml');
@@ -415,6 +421,10 @@ class TrainingPlansController extends AbstractController {
         $this->view->assign('proposalContent', $proposalContent);
 
         $this->view->assign('exerciseProposalsContent', $this->view->render('globals/proposals.phtml'));
+    }
+
+    public function newAction() {
+        $this->forward('edit');
     }
 
     /**

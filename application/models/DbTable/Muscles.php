@@ -14,6 +14,10 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
      */
     protected $_primary = 'muscle_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @return Zend_Db_Table_Rowset_Abstract
      */

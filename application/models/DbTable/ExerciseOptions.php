@@ -18,6 +18,10 @@ class Model_DbTable_ExerciseOptions extends Model_DbTable_Abstract implements In
     /** @var string */
     protected $_primary = 'exercise_option_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @inheritdoc
      */

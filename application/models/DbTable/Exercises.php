@@ -11,6 +11,17 @@ class Model_DbTable_Exercises extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'exercise_id';
 
+    public function findByPrimary($exerciseId) {
+        $select = $this->select(static::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+
+        $select->joinInner('users', 'user_id = exercise_create_user_fk')
+            ->joinLeft('user_x_user_group', 'user_x_user_group_user_fk = user_id')
+            ->joinLeft('user_groups', 'user_group_id = user_x_user_group_user_group_fk')
+            ->where('exercise_id = ?', $exerciseId);
+
+        return $this->fetchRow($select);
+    }
+
     /**
      * search all available exercises
      *

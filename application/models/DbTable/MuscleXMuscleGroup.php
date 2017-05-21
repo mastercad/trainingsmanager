@@ -14,6 +14,10 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
      */
     protected $_primary = 'muscle_x_muscle_group_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $iMuscleGroupId
      * @return bool|Zend_Db_Table_Rowset_Abstract

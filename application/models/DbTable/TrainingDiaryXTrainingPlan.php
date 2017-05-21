@@ -17,6 +17,10 @@ class Model_DbTable_TrainingDiaryXTrainingPlan extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_diary_x_training_plan_id';
 
+    function findByPrimary($id) {
+        // TODO: Implement findByPrimary() method.
+    }
+
     /**
      * @param $iTrainingPlanExerciseId
      * @return null|Zend_Db_Table_Row_Abstract

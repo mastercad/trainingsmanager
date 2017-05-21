@@ -17,6 +17,17 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_plan_id';
 
+    public function findByPrimary($trainingPlanId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->joinInner('users', 'user_id = training_plan_user_fk')
+            ->joinLeft('user_x_user_group', 'user_x_user_group_user_fk = user_id')
+            ->joinLeft('user_groups', 'user_group_id = user_x_user_group_user_group_fk')
+            ->where('training_plan_id = ?', $trainingPlanId);
+
+        return $this->fetchRow($select);
+    }
+
     /**
      * @param $iTrainingPlanId
      * @return null|Zend_Db_Table_Row_Abstract

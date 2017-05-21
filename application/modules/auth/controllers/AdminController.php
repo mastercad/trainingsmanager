@@ -12,12 +12,14 @@ class Auth_AdminController extends AbstractController {
     private $_aUserRechteGruppenRechte;
     private $_iCurrentRechteUserGruppenRechtId;
     private $_iInputCount = 0;
+    private $userRightGroupsHierarchy = [];
 
     public function indexAction() {
         $aMoCcAcData = CAD_Tool_ModuleControllerActionLister::collect();
         $oUserRechteGruppenRechteDbTable = new Auth_Model_DbTable_UserRightGroupRights();
         $iUserRechteGruppeId = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_id', 4);
         $sSpeichern = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->save');
+        $this->userRightGroupsHierarchy = $this->generatesUserRightGroupsHierarchy();
 
         if (null !== $sSpeichern) {
             $aUserRechteGruppenRechte = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right');
@@ -41,7 +43,7 @@ class Auth_AdminController extends AbstractController {
                         $oUserRechteGruppenRechteDbTable->delete('user_right_group_right_id = ' . $iUserRechteGruppenRechtId);
                     } else {
                         $aData['user_right_group_right_create_date'] = date('Y-m-d H:i:s');
-//                        $aData['user_right_groupn_recht_eintrag_user_fk'] = CAD_Tool_Extractor::extractOverPath(Zend_Auth::getInstance(), 'getIdentity->user_id');
+                        $aData['user_right_groupn_recht_eintrag_user_fk'] = $this->findCurrentUserId();
                         $oUserRechteGruppenRechteDbTable->insert($aData);
                     }
                 }
@@ -56,8 +58,43 @@ class Auth_AdminController extends AbstractController {
         foreach ($aMoCcAcData as $sMoCcAcDataModule => $aMoCcAcDataModule) {
             $sContent .= $this->_createModuleFieldset($sMoCcAcDataModule, $aMoCcAcDataModule, $iUserRechteGruppeId);
         }
+        $this->view->assign('userRightGroupSelectContent', $this->generateUserRightGroupSelect($iUserRechteGruppeId));
         $this->view->assign('iUserRechteGruppeId', $iUserRechteGruppeId);
         $this->view->assign('sContent', $sContent);
+    }
+
+    /**
+     * @return array
+     * @throws \Zend_Db_Table_Exception
+     */
+    private function generatesUserRightGroupsHierarchy() {
+        $userRightGroupsDb = new Model_DbTable_UserRightGroups();
+        $userRightGroups = $userRightGroupsDb->findAllUserRightGroups();
+        $userRightGroupsHierarchy = [];
+
+        foreach ($userRightGroups as $userRightGroup) {
+            $userRightGroupsHierarchy[$userRightGroup->offsetGet('user_right_group_id')] = $userRightGroup->offsetGet('user_right_group_parent_fk');
+        }
+
+        return $userRightGroupsHierarchy;
+    }
+
+    private function generateUserRightGroupSelect($selectedUserRightGroupId) {
+
+        $this->view->assign('selectedValue', $selectedUserRightGroupId);
+        $this->view->assign('value', null);
+        $this->view->assign('text', $this->translate('label_please_select'));
+        $userRightGroupOptionsContent = $this->view->render('admin/partials/user-right-group-row.phtml');
+        $userRightGroupsDb = new Model_DbTable_UserRightGroups();
+        $userRightGroupsCollection = $userRightGroupsDb->findAllUserRightGroups();
+
+        foreach ($userRightGroupsCollection as $userRightGroup) {
+            $this->view->assign('value', $userRightGroup->offsetGet('user_right_group_id'));
+            $this->view->assign('text', $userRightGroup->offsetGet('user_right_group_name'));
+            $userRightGroupOptionsContent .= $this->view->render('admin/partials/user-right-group-row.phtml');
+        }
+        $this->view->assign('userRightGroupOptionsContent', $userRightGroupOptionsContent);
+        return $this->view->render('admin/partials/user-right-group-drop-down.phtml');
     }
 
     private function _createModuleFieldset($sMoCcAcDataModule, $aMoCcAcDataModule, $iUserRechteGruppeId) {
@@ -104,7 +141,8 @@ class Auth_AdminController extends AbstractController {
             $bActionRightInherited = false;
             $sTitle = '';
             if (false !== $iUserRechteGruppeFk) {
-                if ($iUserRechteGruppeFk < $iUserRechteGruppeId) { // @todo hier muss auf die tatsächliche vererbung eingegangen werden!
+                if ($this->checkCurrentUserRightGroupInheritFromUserRightGroup($iUserRechteGruppeId, $iUserRechteGruppeFk)) {
+//                if ($iUserRechteGruppeFk < $iUserRechteGruppeId) { // @todo hier muss auf die tatsächliche vererbung eingegangen werden!
                     $bActionChecked = true;
                     $bActionRightInherited = true;
                     $this->_iCurrentRechteUserGruppenRechtId = null;
@@ -130,6 +168,22 @@ class Auth_AdminController extends AbstractController {
         $this->view->assign('iInputCount', $this->_iInputCount);
         $this->_iInputCount++;
         return $this->view->render('admin/partials/controller-input.phtml');
+    }
+
+    private function checkCurrentUserRightGroupInheritFromUserRightGroup($currentUserRightGroupId, $userRightGroupId) {
+        // current ID exists in userRightGroups hierarchy
+        if (array_key_exists($currentUserRightGroupId, $this->userRightGroupsHierarchy)
+            && $this->userRightGroupsHierarchy[$currentUserRightGroupId] != $userRightGroupId
+        ) {
+            return $this->checkCurrentUserRightGroupInheritFromUserRightGroup($this->userRightGroupsHierarchy[$currentUserRightGroupId], $userRightGroupId);
+        } else if (array_key_exists($currentUserRightGroupId, $this->userRightGroupsHierarchy)
+            && ($this->userRightGroupsHierarchy[$currentUserRightGroupId] == $userRightGroupId
+//                || 0 == $this->userRightGroupsHierarchy[$currentUserRightGroupId]
+            )
+        ) {
+            return true;
+        }
+        return false;
     }
 
     private function _collectUserRechteGruppenRechte($oUserRechteGruppenRechteRowSet) {
