@@ -9,7 +9,7 @@
 class Service_Module_Plugin_Data_TestCasesAclSpecial
 {
     private static $testCases = [
-        1 => ['default:exercises', 'edit', 'exercises', 1, ['userId' => 2 , 'role' => 'guest', 'groupId' => 1, '' => ''], false, ''],
+        1 => ['default:exercises', 'edit', 'exercises', 1, ['userId' => 2, 'role' => 'guest', 'groupId' => 1, '' => ''], false, ''],
         2 => ['default:exercises', 'edit', 'exercises', 1, ['userId' => 3, 'role' => 'user', 'groupId' => 1, 'groupName' => 'user_group'], true, ''],
         3 => ['default:exercises', 'edit', 'exercises', 1, ['userId' => 4, 'role' => 'user', 'groupId' => 1, 'groupName' => 'user_group'], false, ''],
         4 => ['default:exercises', 'edit', 'exercises', 1, ['userId' => 4, 'role' => 'member', 'groupId' => 1, 'groupName' => 'user_group'], false, ''],

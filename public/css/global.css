@@ -177,7 +177,7 @@ pre {
 .preview-picture   {
 	float: left;
 	display: inline;
-	width: 60%;
+	/*width: 60%;*/
 	margin-right: 10px;
     margin-bottom: 10px;
 }
@@ -362,7 +362,7 @@ pre {
 	cursor: pointer;
 	font-size: 12px;
 	font-weight: bold;
-	margin: 0px auto;
+	margin: 0 auto;
 }
 
 .button_cancel 	{
@@ -425,32 +425,6 @@ pre {
     -webkit-border-radius: 11px;
     border-radius: 11px;
     border: 1px solid var(--el-border-color);
-}
-
-.edit-button {
-	/*position: absolute ;*/
-	/*top: 5px;*/
-	/*right: 55px;*/
-    /*font-size: 0;*/
-    /*color: transparent;*/
-    /*width: 19px;*/
-    /*height: 19px;*/
-    /*background-image: url('/images/content/statisch/grafiken/edit.png');*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: top left;*/
-}
-
-.delete-button {
-    /*position: absolute;*/
-    /*top: 5px;*/
-    /*right: 30px;*/
-    /*font-size: 0;*/
-    /*color: transparent;*/
-    /*width: 19px;*/
-    /*height: 19px;*/
-    /*background-image: url('/images/content/statisch/grafiken/delete.png');*/
-    /*background-repeat: no-repeat;*/
-    /*background-position: top left;*/
 }
 
 .proposal {
@@ -817,5 +791,34 @@ form.dropzone {display: table-cell;}
 .current-training-plan-exercise-row.finished {
     background-color: limegreen;
 }
+
+.flex-container {
+    display:flex;
+    flex-direction: row;
+    /*justify-content: center;*/
+    justify-content: space-around;
+    flex-flow: row wrap;
+    flex-wrap: wrap;
+}
+
+.flex-item {
+    padding: 10px;
+    /*flex: 1;*/
+    background-color: cornflowerblue;
+    width: 400px;
+    /*height: auto;*/
+    margin: 15px;
+    border-radius: 5px;
+}
+
+.controller input.orig {
+    display: none;
+}
+
+.action-container {
+    margin-left: 30px;
+}
+
+
 
 /* ]]> */

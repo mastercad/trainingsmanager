@@ -59,7 +59,9 @@ class CAD_Tool_ModuleControllerActionLister {
         foreach ($oDirectory as $oFile) {
             if (preg_match('/(.*?)Controller\.php$/i', $oFile->getFilename(), $aMatches)) {
                 $sControllerName = self::_convertCamelCaseAction($aMatches[1]);
-                $aData[$sControllerName] = self::_collectAllActionsFromController($oFile->getPathname());
+                if (false !== ($actions = self::_collectAllActionsFromController($oFile->getPathname()))) {
+                    $aData[$sControllerName] = $actions;
+                }
             }
         }
         ksort($aData);
@@ -74,11 +76,19 @@ class CAD_Tool_ModuleControllerActionLister {
      * @return array
      */
     static private function _collectAllActionsFromController($sControllerPath) {
-        $sControllerContent = file_get_contents($sControllerPath);
-        $aData = array();
-        if (preg_match_all('/public function (.*?)Action/i', $sControllerContent, $aMatches)) {
-            foreach ($aMatches[1] as $sAction) {
-                $sAction = self::_convertCamelCaseAction($sAction);
+        $aData = [];
+        $className = static::extractClassName($sControllerPath);
+        if (!class_exists($className)) {
+            include($sControllerPath);
+        }
+        $class = new ReflectionClass($className);
+        if ($class->isAbstract()) {
+            return false;
+        }
+        $methods = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        foreach ($methods as $method) {
+            if (preg_match('/(.*?)Action/i', $method->getName(), $matches)) {
+                $sAction = self::_convertCamelCaseAction($matches[1]);
                 $aData[] = $sAction;
             }
         }
@@ -89,5 +99,13 @@ class CAD_Tool_ModuleControllerActionLister {
     static private function _convertCamelCaseAction($sActionName) {
         $oFilter = new Zend_Filter_Word_CamelCaseToDash();
         return strtolower($oFilter->filter($sActionName));
+    }
+
+    static private function extractClassName($classPathName) {
+        $sControllerContent = file_get_contents($classPathName);
+        if (preg_match('/class ([A-Z\_]+) /i', $sControllerContent, $matches)) {
+            return $matches[1];
+        }
+        return false;
     }
 }

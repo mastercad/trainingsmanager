@@ -6,7 +6,7 @@
  * Time: 07:39
  */
 
-class AbstractController extends Zend_Controller_Action {
+abstract class AbstractController extends Zend_Controller_Action {
 
     /**
      * @var

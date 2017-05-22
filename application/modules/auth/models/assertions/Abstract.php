@@ -52,6 +52,8 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      * das hier noch nicht 100% ist, müsste man hier ansetzen, derzeit springt die navi hier
      * rein um zu prüfen ob ein eintrag angezeigt werden darf oder nicht.
      *
+     * theoretisch kann diese Role nur von einem Gast Konto aufgerufen werden
+     *
      * @param Zend_Acl $oAcl
      * @param Zend_Acl_Role $oRole
      * @param Zend_Acl_Resource $oResource
@@ -76,8 +78,6 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      * @return boolean
      */
     protected function _considerAuthAclRole($oRole, $oResource) {
-        $bReturn = false;
-
         // if the current user the owner of the resource?
         // or group admin and in the same group like to owner
         // or if the current user member of one of the global right groups?
@@ -88,8 +88,8 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
                 && "GROUP_ADMIN" == strtoupper($oRole->getRoleId()))
             || (true === in_array($oRole->getRoleId(), $this->_aGlobalRights))
         ) {
-            $bReturn = true;
+            return true;
         }
-        return $bReturn;
+        return false;
     }
 }
