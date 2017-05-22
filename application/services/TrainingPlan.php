@@ -441,4 +441,111 @@ class Service_TrainingPlan {
         }
         return false;
     }
+
+    /**
+     * create copy from given trainingPlanId for given User
+     *
+     * @param $trainingPlanId
+     * @param $userId
+     *
+     * @return int
+     */
+    public function createTrainingPlanFromTemplate($trainingPlanId, $userId) {
+        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlanCollection = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId);
+        $primaryTrainingPlanId = null;
+
+        $this->deactivateAllCurrentTrainingPlans($userId);
+
+        foreach ($trainingPlanCollection as $trainingPlan) {
+            $trainingPlanName = $trainingPlan->offsetGet('training_plan_name');
+
+            if (empty($trainingPlan->offsetGet('training_plan_parent_fk'))) {
+                $trainingPlanName = 'Copy of ' . $trainingPlanName;
+            }
+            $data = [
+                'training_plan_name' => $trainingPlanName,
+                'training_plan_training_plan_layout_fk' => $trainingPlan->offsetGet('training_plan_training_plan_layout_fk'),
+                'training_plan_order' => $trainingPlan->offsetGet('training_plan_order'),
+                'training_plan_active' => 1,
+                'training_plan_user_fk' => $userId,
+                'training_plan_create_user_fk' => $this->findCurrentUserId(),
+                'training_plan_create_date' => date('Y-m-d H:i:s')
+            ];
+
+            if (!empty($trainingPlan->offsetGet('training_plan_parent_fk'))) {
+                $data['training_plan_parent_fk'] = $primaryTrainingPlanId;
+            }
+            $currentTrainingPlanId = $trainingPlansDb->insert($data);
+            $this->copyExercisesFromTrainingPlan($trainingPlan->offsetGet('training_plan_id'), $currentTrainingPlanId);
+            if (empty($trainingPlan->offsetGet('training_plan_parent_fk'))) {
+                $primaryTrainingPlanId = $currentTrainingPlanId;
+            }
+        }
+        return $primaryTrainingPlanId;
+    }
+
+    /**
+     * @param $origTrainingPlanId
+     * @param $newTrainingPlanId
+     */
+    private function copyExercisesFromTrainingPlan($origTrainingPlanId, $newTrainingPlanId) {
+        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+        $trainingPlanExerciseCollection = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($origTrainingPlanId);
+
+        foreach ($trainingPlanExerciseCollection as $trainingPlanExercise) {
+            $data = [
+                'training_plan_x_exercise_exercise_fk' => $trainingPlanExercise->offsetGet('training_plan_x_exercise_exercise_fk'),
+                'training_plan_x_exercise_training_plan_fk' => $newTrainingPlanId,
+                'training_plan_x_exercise_comment' => $trainingPlanExercise->offsetGet('training_plan_x_exercise_comment'),
+                'training_plan_x_exercise_exercise_order' => $trainingPlanExercise->offsetGet('training_plan_x_exercise_exercise_order'),
+                'training_plan_x_exercise_create_user_fk' => $this->findCurrentUserId(),
+                'training_plan_x_exercise_create_date' => date('Y-m-d H:i:s'),
+
+            ];
+            $currentTrainingPlanExerciseId = $trainingPlanXExerciseDb->saveTrainingPlanExercise($data);
+            $this->copyExerciseOptionsFromTrainingPlanExercise($trainingPlanExercise->offsetGet('training_plan_x_exercise_id'), $currentTrainingPlanExerciseId);
+            $this->copyDeviceOptionsFromTrainingPlanExercise($trainingPlanExercise->offsetGet('training_plan_x_exercise_id'), $currentTrainingPlanExerciseId);
+        }
+    }
+
+    /**
+     * @param $origTrainingPlanExerciseId
+     * @param $newTrainingPlanExerciseId
+     */
+    private function copyExerciseOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) {
+        $trainingPlanXExerciseOptionsDb = new Model_DbTable_TrainingPlanXExerciseOption();
+        $trainingPlanXExerciseOptionCollection = $trainingPlanXExerciseOptionsDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($origTrainingPlanExerciseId);
+
+        foreach ($trainingPlanXExerciseOptionCollection as $trainingPlanXExerciseOption) {
+            $data = [
+                'training_plan_x_exercise_option_training_plan_exercise_fk' => $newTrainingPlanExerciseId,
+                'training_plan_x_exercise_option_exercise_option_value' => $trainingPlanXExerciseOption->offsetGet('training_plan_x_exercise_option_exercise_option_value'),
+                'training_plan_x_exercise_option_exercise_option_fk' => $trainingPlanXExerciseOption->offsetGet('training_plan_x_exercise_option_exercise_option_fk'),
+                'training_plan_x_exercise_option_create_user_fk' => $this->findCurrentUserId(),
+                'training_plan_x_exercise_option_create_date' => date('Y-m-d H:i:s')
+            ];
+            $currentTrainingPlanXExerciseOptionId = $trainingPlanXExerciseOptionsDb->saveTrainingPlanExerciseOption($data);
+        }
+    }
+
+    /**
+     * @param $origTrainingPlanExerciseId
+     * @param $newTrainingPlanExerciseId
+     */
+    private function copyDeviceOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) {
+        $trainingPlanXDeviceOptionsDb = new Model_DbTable_TrainingPlanXDeviceOption();
+        $trainingPlanXDeviceOptionCollection = $trainingPlanXDeviceOptionsDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($origTrainingPlanExerciseId);
+
+        foreach ($trainingPlanXDeviceOptionCollection as $trainingPlanXDeviceOption) {
+            $data = [
+                'training_plan_x_device_option_training_plan_exercise_fk' => $newTrainingPlanExerciseId,
+                'training_plan_x_device_option_device_option_value' => $trainingPlanXDeviceOption->offsetGet('training_plan_x_device_option_device_option_value'),
+                'training_plan_x_device_option_device_option_fk' => $trainingPlanXDeviceOption->offsetGet('training_plan_x_device_option_device_option_fk'),
+                'training_plan_x_device_option_create_user_fk' => $this->findCurrentUserId(),
+                'training_plan_x_device_option_create_date' => date('Y-m-d H:i:s')
+            ];
+            $currentTrainingPlanXDeviceOptionId = $trainingPlanXDeviceOptionsDb->saveTrainingPlanDeviceOption($data);
+        }
+    }
 }

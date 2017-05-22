@@ -542,7 +542,6 @@ class TrainingPlansController extends AbstractController {
 
         $this->view->assign('optionLabelText', $this->translate('label_select_training_plan'));
         $this->view->assign('optionClassName', 'training-plan-select');
-//        $this->view->assign('optionSelectText', $this->translate('label_select_training_plan'));
         $this->view->assign('optionsContent', $trainingPlanSelectContent);
         return $this->view->render('globals/select.phtml');
     }
@@ -554,26 +553,28 @@ class TrainingPlansController extends AbstractController {
 
     public function createLayoutAction() {
         $aParams = $this->getAllParams();
+        $trainingPlanService = new Service_TrainingPlan();
         $trainingPlanId = null;
 
         if (true === array_key_exists('trainingPlanLayoutId', $aParams)
             && true === array_key_exists('trainingPlanUserId', $aParams)
         ) {
             $iUserId = $aParams['trainingPlanUserId'];
-            $trainingPlanService = new Service_TrainingPlan();
             switch ($aParams['trainingPlanLayoutId']) {
                 case 1:
-                    $trainingPlanId = $trainingPlanService->createBaseTrainingPlan($iUserId);
+                    return $trainingPlanService->createBaseTrainingPlan($iUserId);
                     break;
                 case 2:
-                    $trainingPlanId = $trainingPlanService->createSplitTrainingPlan($iUserId);
+                    return $trainingPlanService->createSplitTrainingPlan($iUserId);
                     break;
                 default:
             }
+        } else if (!empty($this->getParam('templateTrainingPlanId'))) {
+            return $trainingPlanService->createTrainingPlanFromTemplate($this->getParam('templateTrainingPlanId'), $this->getParam('trainingPlanUserId'));
         } else {
             echo "Funktion falsch aufgerufen!<br />";
         }
 
-        return $trainingPlanId;
+        return false;
     }
 }

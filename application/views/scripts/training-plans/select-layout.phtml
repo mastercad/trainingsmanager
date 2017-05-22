@@ -40,6 +40,7 @@
     jQuery('document').ready(function(){
 
         jQuery('body').css('overflow', 'auto');
+        initTrainingPlanSelect();
 
         var trainingSelectAjax = null;
 
@@ -75,6 +76,20 @@
             return false;
         });
 
+        function initTrainingPlanSelect() {
+
+            jQuery('.training-plan-select .option-add').unbind('click').bind('click', function () {
+                var selectedOption = jQuery(this).data('value');
+                var selectedOptionName = jQuery(this).html();
+                var caretContent = '<span class="caret"></span>';
+
+                jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
+                jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+
+                return false;
+            });
+        }
+
         function refreshTrainingPlanSelect() {
 
             if (trainingSelectAjax) {
@@ -101,6 +116,7 @@
 
                     if (200 == json.state) {
                         trainingPlanSelect.replaceWith(Base64.decode(json.htmlContent));
+                        initTrainingPlanSelect();
                     } else {
                         var modal = jQuery('#modal');
                         considerResponseCodeForModal(json.state);
