@@ -43,7 +43,7 @@ class Auth_AdminController extends AbstractController {
                         $oUserRechteGruppenRechteDbTable->delete('user_right_group_right_id = ' . $iUserRechteGruppenRechtId);
                     } else {
                         $aData['user_right_group_right_create_date'] = date('Y-m-d H:i:s');
-                        $aData['user_right_groupn_recht_eintrag_user_fk'] = $this->findCurrentUserId();
+                        $aData['user_right_group_right_create_user_fk'] = $this->findCurrentUserId();
                         $oUserRechteGruppenRechteDbTable->insert($aData);
                     }
                 }

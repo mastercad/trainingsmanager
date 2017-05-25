@@ -401,8 +401,17 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         'action' => 'index',
                         'resource' => 'default:exercise-options',
                         'privilege' => 'index'
-                    )
-                )
+                    ),
+                    array(
+                        'label' => $translator->translate('label_permissions'),
+                        'title' => $translator->translate('label_permissions'),
+                        'module' => 'auth',
+                        'controller' => 'admin',
+                        'action' => 'index',
+                        'resource' => 'auth:admin',
+                        'privilege' => 'index'
+                    ),
+                ),
             ),
             array(
                 'label' => $translator->translate('label_exercises'),
