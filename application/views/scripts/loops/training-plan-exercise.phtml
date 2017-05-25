@@ -8,18 +8,20 @@
 ?>
 
 <div class="row exercise">
-    <div class="col-sm-12">
-        <h3>
-            <?php echo $this->exercise_name;?>
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>
+                <?php echo $this->exercise_name;?>
 <?php
-        if ($this->device_name) {
+            if ($this->device_name) {
 ?>
-            an :
-            <?php echo $this->device_name;?>
+                <?php echo $this->translate('on');?> :
+                <?php echo $this->device_name;?>
 <?php
-        }
+            }
 ?>
-        </h3>
+            </h3>
+        </div>
     </div>
 
     <div class="row">
@@ -33,14 +35,49 @@
             <p>
                 <?php echo $this->exercise_description;?>
             </p>
+
+            <?php if (!empty($this->exercise_special_features)) {
+            ?>
+                <strong>
+                    <?php echo $this->translate('label_special_features');?>:
+                </strong>
+                <p>
+                    <?php echo $this->exercise_special_features;?>
+                </p>
+            <?php
+            }
+            ?>
         </div>
     </div>
 
-    <div class="col-sm-12">
+<?php
+    if (!empty($this->training_plan_x_exercise_remark)) {
+?>
+        <div class="row">
+            <div class="col-sm-12">
+                <strong>
+                    <?php echo $this->translate('label_remark'); ?>:
+                </strong>
 
-        <?php echo $this->deviceOptionsContent;?>
+                <p>
+                    <?php echo $this->training_plan_x_exercise_remark; ?>
+                </p>
+            </div>
+        </div>
+<?php
+    }
+?>
 
-        <?php echo $this->exerciseOptionsContent;?>
+    <div class="row">
+        <div class="col-sm-12">
+            <?php echo $this->deviceOptionsContent;?>
+            <?php echo $this->exerciseOptionsContent;?>
+        </div>
+    </div>
 
+    <div class="row">
+        <div class="col-sm-12">
+            <?php echo $this->musclesForExerciseContent;?>
+        </div>
     </div>
 </div>

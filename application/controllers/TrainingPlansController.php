@@ -41,7 +41,13 @@ class TrainingPlansController extends AbstractController {
         }
 
         if (false !== $currentTrainingPlan) {
-            $trainingPlanContent = $this->generateTrainingPlanContent($currentTrainingPlan);
+//            $trainingPlanContent = $this->generateTrainingPlanContent($currentTrainingPlan);
+            $trainingPlanGenerator = new Service_Generator_View_TrainingPlan($this->view);
+            $trainingPlanGenerator->setControllerName($this->getRequest()->getControllerName())
+                ->setActionName($this->getRequest()->getActionName())
+                ->setModuleName($this->getRequest()->getModuleName());
+
+            $trainingPlanContent = $trainingPlanGenerator->generateTrainingPlanContent($currentTrainingPlan);
         }
 
         $oldTrainingPlans = $trainingPlansDb->findAllTrainingPlansInArchive($this->findCurrentUserId());
@@ -57,6 +63,7 @@ class TrainingPlansController extends AbstractController {
 
         if (0 < $id) {
             $currentTrainingPlan = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($id);
+//            $currentTrainingPlan = $trainingPlansDb->findTrainingPlan($id);
             $role = new Auth_Model_Role_Member();
             $resource = new Auth_Model_Resource_TrainingPlans($currentTrainingPlan->current());
             $resourceName = $this->getRequest()->getModuleName().':'.$this->getRequest()->getControllerName();
@@ -69,7 +76,13 @@ class TrainingPlansController extends AbstractController {
         }
 
         if (false !== $currentTrainingPlan) {
-            $trainingPlanContent = $this->generateTrainingPlanContent($currentTrainingPlan);
+            $trainingPlanGenerator = new Service_Generator_View_TrainingPlan($this->view);
+            $trainingPlanGenerator->setControllerName($this->getRequest()->getControllerName())
+                ->setActionName($this->getRequest()->getActionName())
+                ->setModuleName($this->getRequest()->getModuleName());
+
+            $trainingPlanContent = $trainingPlanGenerator->generateTrainingPlanContent($currentTrainingPlan);
+//            $trainingPlanContent = $this->generateTrainingPlanContent($currentTrainingPlan);
         }
         $this->view->assign('trainingPlanContent', $trainingPlanContent);
     }
@@ -202,18 +215,100 @@ class TrainingPlansController extends AbstractController {
         $this->view->assign('exercise_description', $exercise->offsetGet('exercise_description'));
         $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($exercise));
         $this->view->assign('exerciseOptionsContent', $this->generateExerciseOptionsContent($exercise));
+        $this->view->assign('muscleRatingContent', $this->generateMuscleRatingContent($exercise));
 
         return $this->view->render('loops/training-plan-exercise.phtml');
     }
 
-    private function generateDeviceOptionsContent(Zend_Db_Table_Row_Abstract $exercise) {
+    public function generateExerciseOptionsContent($exercise) {
+
+        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        $exerciseOptionsService->setShowTrainingProgress(true);
+        $exerciseOptionsService->setAllowEdit(false);
+        // bereits ein value durch eine übung gesetzt
+//        if (array_key_exists('training_diary_x_exercise_option_exercise_option_value', $exercise)) {
+//            $exerciseOptionsService->setSelectedOptionValue($exercise['training_diary_x_exercise_option_exercise_option_value']);
+//        }
+        $exerciseOptionsService->setExerciseId($exercise['exercise_id']);
+        $exerciseOptionsService->setTrainingPlanXExerciseId($exercise['training_plan_x_exercise_id']);
+//        $exerciseOptionsService->setExerciseFinished($exercise['training_diary_x_training_plan_exercise_flag_finished']);
+
+        return $exerciseOptionsService->generate();
+    }
+
+    public function generateDeviceOptionsContent($exercise) {
+
+        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService->setShowTrainingProgress(true);
+        $deviceOptionsService->setAllowEdit(false);
+
+        // bereits ein value durch eine übung gesetzt
+        //        if (array_key_exists('training_diary_x_device_option_device_option_value', $trainingDiaryXExercise)) {
+        //            $deviceOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_device_option_device_option_value']);
+        //        }
+        $deviceOptionsService->setExerciseId($exercise['exercise_id']);
+//        $deviceOptionsService->setTrainingDiaryXTrainingPlanExerciseId($exercise['training_diary_x_training_plan_exercise_id']);
+        $deviceOptionsService->setTrainingPlanXExerciseId($exercise['training_plan_x_exercise_id']);
+//        $deviceOptionsService->setExerciseFinished($exercise['training_diary_x_training_plan_exercise_flag_finished']);
+
+        return $deviceOptionsService->generate();
+    }
+
+    /**
+     * @param Zend_Db_Table_Row $exercise
+     *
+     * @todo hier werden nur alle muskeln geholt, die für die übung abgelegt wurden, es müssen aber auch alle
+     *       anderen muskeln zu der muskelgruppe gezogen werden. muskeln, die zu dieser übung gehören, können
+     *       aus der übersicht gelöscht werden, gehört der jeweiligen muskelgruppe kein muskel mehr der übung an
+     *       wird die komplette muskelgruppe entfernt
+     *
+     * @return string
+     */
+    public function generateMuscleRatingContent($exercise) {
+        $exerciseId = $exercise->offsetGet('exercise_id');
+
+        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $muscleGroupCollection = $exerciseXMuscleDb->findMuscleGroupsForExercise($exerciseId);
+
         $content = '';
+
+        foreach ($muscleGroupCollection as $muscleGroup) {
+            $muscleGroupId = $muscleGroup->offsetGet('muscle_group_id');
+            $this->view->assign('musclesInMuscleGroupContent',
+                $this->generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId));
+            $this->view->assign($muscleGroup->toArray());
+            $content .= $this->view->render('/loops/muscle-group-row.phtml');
+        }
         return $content;
     }
 
-    private function generateExerciseOptionsContent(Zend_Db_Table_Row_Abstract $exercise) {
-        $content = '';
-        return $content;
+    /**
+     * @param Zend_Db_Table_Row $exercise
+     *
+     * @todo hier werden nur alle muskeln geholt, die für die übung abgelegt wurden, es müssen aber auch alle
+     *       anderen muskeln zu der muskelgruppe gezogen werden. muskeln, die zu dieser übung gehören, können
+     *       aus der übersicht gelöscht werden, gehört der jeweiligen muskelgruppe kein muskel mehr der übung an
+     *       wird die komplette muskelgruppe entfernt
+     *
+     * @return string
+     */
+    public function generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId) {
+        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $musclesInMuscleGroupForExerciseCollection = $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
+        $musclesInMuscleGroupContent = '';
+
+        foreach ($musclesInMuscleGroupForExerciseCollection as $exerciseXMuscle) {
+            $this->view->assign('name', $exerciseXMuscle->offsetGet('muscle_name'));
+            $this->view->assign('id', $exerciseXMuscle->offsetGet('muscle_id'));
+            $usePosX = -100;
+            if(0 < $exerciseXMuscle->offsetGet('exercise_x_muscle_muscle_use')) {
+                $usePosX = -100 + ($exerciseXMuscle->offsetGet('exercise_x_muscle_muscle_use') * 20);
+            }
+            $this->view->assign('usePosX', $usePosX);
+            $this->view->assign('muscleUseRatingContent', $this->view->render('loops/rating.phtml'));
+            $musclesInMuscleGroupContent .= $this->view->render('/loops/muscle-row.phtml');
+        }
+        return $musclesInMuscleGroupContent;
     }
 
     /**
@@ -294,7 +389,9 @@ class TrainingPlansController extends AbstractController {
 //                    $this->view->assign('training_plan_id', $trainingPlanId);
                     $currentName = 'NewPlan'.uniqid();
                     $this->view->assign('name', $currentName);
-                    $sContent = '<ul class="nav nav-tabs"><li><a data-toggle="tab" href="#'.$currentName.'">New Plan</a></li></ul>';
+                    $sContent = '<ul class="nav nav-tabs"><li><a data-toggle="tab" href="#'.$currentName.'">New Plan</a>' .
+                        '<div class="detail-options"><div class="glyphicon glyphicon-trash delete-button" data-id="' .
+                        $currentName . '"></div></div></li></ul>';
                     $sContent .= $this->view->render('loops/training-plan-edit.phtml');
                 } catch (Exception $oException) {
                     $sContent = $oException->getMessage();
@@ -374,6 +471,7 @@ class TrainingPlansController extends AbstractController {
         $deviceOptionsService->setOptionId($deviceOptionId);
         $deviceOptionsService->setDeviceId($deviceId);
         $deviceOptionsService->setForceGenerateEmptyInput(true);
+        $deviceOptionsService->setAllowEdit(true);
         $deviceOptionsService->setShowDelete(true);
 
         $this->view->assign('deviceOptionContent', $deviceOptionsService->generate());
@@ -392,6 +490,7 @@ class TrainingPlansController extends AbstractController {
         $exerciseOptionsService->setExerciseId($exerciseId);
         $exerciseOptionsService->setOptionId($exerciseOptionId);
         $exerciseOptionsService->setForceGenerateEmptyInput(true);
+        $exerciseOptionsService->setAllowEdit(true);
         $exerciseOptionsService->setShowDelete(true);
 
         $this->view->assign('exerciseOptionContent', $exerciseOptionsService->generate());

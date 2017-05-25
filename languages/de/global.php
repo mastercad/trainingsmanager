@@ -36,10 +36,12 @@
         'label_option_value' => 'Standard Wert',
         'label_option-value' => 'Wert',
         'label_day' => 'Tag',
+        'label_remark' => 'Anmerkung',
 
         'or' => 'oder',
         'and' => 'und',
         'of' => 'von',
+        'on' => 'an',
         'facebook' => 'Facebook',
         'twitter' => 'Twitter',
         'alternate_preview_picture' => 'Vorschaubild nicht gefunden',

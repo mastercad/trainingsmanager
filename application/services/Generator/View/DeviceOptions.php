@@ -40,14 +40,12 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
             if (array_key_exists('training_plan_x_device_option_device_option_value', $deviceOption)) {
                 $this->setBaseOptionValue($deviceOption['training_plan_x_device_option_device_option_value']);
             }
-//            $this->setSelectedOptionValue($deviceOption['training_diary_x_device_option_device_option_value'] ? $deviceOption['training_diary_x_device_option_device_option_value'] : $deviceOption['training_plan_x_device_option_device_option_value']);
             $this->setSelectedOptionValue($this->extractOptionValue($deviceOption));
             $this->setAdditionalElementAttributes('data-training-plan-device-option-id="' . $trainingPlanDeviceOptionId . '" data-training-diary-device-option-id="' . $trainingDiaryDeviceOptionId . '"');
 
             /** TODO überprüfen, was hier sinnvoller, weil unique ist! diese ID KANN in device und exercise vorkommen! */
             $this->setInputFieldUniqueId($trainingPlanDeviceOptionId);
             $this->setOptionName($deviceOption['device_option_name']);
-//            $this->setOptionValue($this->extractOptionValue($deviceOption));
             $this->setOptionValue($deviceOption['device_x_device_option_device_option_value']);
             $deviceOptionsContent .= $this->generateOptionInputContent();
         }
@@ -109,7 +107,9 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
             }
         }
 
-        if (!empty($this->getExerciseId())) {
+        if (!empty($this->getExerciseId())
+            && empty($this->getOptionId())
+        ) {
             $exerciseXDeviceOptionCollection = $exerciseXDeviceOptionDb->findDeviceOptionsForExercise(
                 $this->getExerciseId(), $this->getOptionId());
 
@@ -153,6 +153,13 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
                 $collectedDeviceOptions[$deviceOptionId] = array_merge($collectedDeviceOptions[$deviceOptionId],
                     $deviceOption->toArray());
             }
+        }
+
+        if (!empty($this->getOptionId())
+            && empty($collectedDeviceOptions)
+        ) {
+            $deviceOption = $deviceOptionsDb->findOptionById($this->getOptionId());
+            $collectedDeviceOptions[$this->getOptionId()] = $deviceOption->toArray();
         }
 
         return $collectedDeviceOptions;

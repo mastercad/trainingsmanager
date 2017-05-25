@@ -10,7 +10,6 @@
 <input type="hidden" id="training_plan_id" name="training-plan-id" value="<?php echo $this->trainingPlanId;?>" />
 <input type="hidden" id="training_plan_user_id" name="training-plan-user-id" value="<?php echo $this->trainingPlanUserId;?>" />
 
-<!--</form>-->
 <h3>
     <?php echo $this->translate('label_exercise');?>:
 </h3>
@@ -40,10 +39,6 @@
             var search = Base64.encode(jQuery(this).val());
             var self = jQuery(this);
 
-            //            jQuery(self).css('background-color', 'red');
-            //            jQuery(self).data('uebung-name', '');
-            //            jQuery(self).data('uebung-id', '');
-
             if (ajax) {
                 ajax.abort();
             }
@@ -72,6 +67,13 @@
                                     if (jQuery(this).data('exercise-id') == jQuery(currentProposal).data('proposal-id')) {
                                         found = true;
                                         showDialog('<?php echo $this->translate('text_exercise_already_set');?>', BootstrapDialog.TYPE_DANGER);
+
+                                        if (!jQuery(this).is(':visible')) {
+                                            jQuery(this).fadeIn('normal', function() {
+                                                jQuery(this).effect('highlight', {}, 5000)
+                                                    .removeClass('deleted');
+                                            });
+                                        }
                                         return false;
                                     }
                                 });
@@ -124,25 +126,7 @@
         });
 
         jQuery('.save').unbind('click').click(function() {
-            var trainingPlanCollection = collectionTrainingPlanInformation();
-
-            if (ajax) {
-                ajax.abort();
-            }
-
-            ajax = jQuery.post('/'+controller+'/save', {
-                trainingPlanCollection: trainingPlanCollection,
-                trainingPlanUserId: jQuery('#training_plan_user_id').val(),
-                ajax: true}, function(response) {
-                var json = JSON.parse(response);
-
-                if (200 == json.state) {
-                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
-                } else {
-                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
-                }
-            });
-            return false;
+            collectionTrainingPlanInformation();
         });
 
         function initTabs() {
@@ -157,11 +141,9 @@
                 connectWith: '.tab-droppable',
                 items: "li:not(.placeholder)",
                 sort: function() {
-//                    $(this).removeClass( "ui-state-default" );
                     $(this).addClass( "ui-state-default" );
                 },
                 stop: function(event, ui) {
-//                    $(this).addClass( "ui-state-default" );
                     $(this).removeClass( "ui-state-default" );
                 }
             });
@@ -196,13 +178,12 @@
             $(".droppable").sortable({
                 revert: true,
                 connectWith: '.droppable',
-                items: "li:not(.placeholder)",
+                items: "li.exercise",
                 sort: function() {
                     $(this).removeClass( "ui-state-default" );
                 },
                 stop: function(event, ui) {
                     $(this).addClass( "ui-state-default" );
-//                    connectExerciseToParentTrainingPlan(ui.item);
                 }
             });
 
@@ -226,9 +207,67 @@
                 return false;
             });
 
+            initTrainingPlanOptions();
+            initExerciseOptionsSelect();
+        }
+
+        function addExercise(exerciseId, count) {
+            var sUrl = '/training-plans/get-exercise';
+            var oData = {'id': exerciseId, 'ajax': true, 'counter': count};
+
+            if (ajax) {
+                ajax.abort();
+            }
+
+            ajax = jQuery.post(sUrl, oData, function(response) {
+                try {
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        jQuery('.training-plans .tab-pane.active ol').append(Base64.decode(json.htmlContent)).find('.exercise:last').effect('highlight', {}, 3000);
+                        trainingPlanEditInit();
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
+                    // is not a json object -> paste content
+                } catch (e) {
+                    showDialog(e, BootstrapDialog.TYPE_DANGER);
+                }
+            });
+        }
+
+        function countExercises() {
+            var count = 0;
+            jQuery('ol.training_plan:last .exercise').each(function() {
+                if (count < $(this).attr('id')) {
+                    count = $(this).attr('id');
+                }
+            });
+            return parseInt(count) + 1;
+        }
+
+        function initTrainingPlanOptions() {
+            jQuery('.nav-tabs .delete-button').unbind('click').click(function() {
+                var parent = jQuery(this).parent().parent();
+                var currentId = jQuery(parent).find('a').attr('href');
+                jQuery(currentId).fadeOut('normal', function() {
+                    jQuery(this).addClass('deleted');
+                });
+                jQuery(parent).fadeOut()
+            });
+        }
+
+        function initExerciseOptionsSelect() {
+            jQuery('.exercise .delete-button').unbind('click').click(function() {
+                var parent = jQuery(this).parent().parent();
+                jQuery(parent).fadeOut('normal', function() {
+                    jQuery(this).addClass('deleted');
+                });
+            });
+
             jQuery('.device-option-select .option-add').unbind('click').click(function() {
                 var self = jQuery(this);
-                var parent = jQuery(this).parent().parent().parent().parent().parent();
+                var parent = jQuery(this).parent().parent().parent().parent().parent().parent();
                 var selectedOption = jQuery(this).data('value');
                 var optionAlreadySet = false;
 
@@ -240,7 +279,7 @@
                             jQuery(this).parent().fadeIn();
                             jQuery(this).removeClass('deleted');
                             jQuery(this).focus();
-                        //
+                            //
                         } else {
                             showDialog('<?php echo $this->translate('tooltip_selected_option_already_set');?>', BootstrapDialog.TYPE_DANGER);
                             jQuery(this).effect('highlight', {}, 5000);
@@ -270,7 +309,7 @@
 
                             if (200 == json.state) {
                                 parent.find('.device-options').append(Base64.decode(json.htmlContent)).find('.device-option:last').focus();
-                                trainingPlanEditInit();
+                                initExerciseOptions();
                             } else {
                                 showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                             }
@@ -282,7 +321,7 @@
 
             jQuery('.exercise-option-select .option-add').unbind('click').click(function() {
                 var self = jQuery(this);
-                var parent = jQuery(this).parent().parent().parent().parent().parent();
+                var parent = jQuery(this).parent().parent().parent().parent().parent().parent();
                 var selectedOption = jQuery(this).data('value');
                 var optionAlreadySet = false;
                 parent.find('.exercise-option').each(function() {
@@ -321,8 +360,7 @@
 
                             if (200 == json.state) {
                                 parent.find('.exercise-options').append(Base64.decode(json.htmlContent)).find('.exercise-option:last').focus();
-                                initTabs();
-                                trainingPlanEditInit();
+                                initExerciseOptions();
                             } else {
                                 showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                             }
@@ -331,51 +369,25 @@
                 }
                 return false;
             });
+        }
 
+        function initExerciseOptions() {
             jQuery('.option-delete').unbind('click').click(function() {
-                jQuery(this).parent().find('.option-input').val('').addClass('deleted').parent().fadeOut();
-            });
-        }
-
-        function addExercise(exerciseId, count) {
-            var sUrl = '/training-plans/get-exercise';
-            var oData = {'id': exerciseId, 'ajax': true, 'counter': count};
-
-            if (ajax) {
-                ajax.abort();
-            }
-
-            ajax = jQuery.post(sUrl, oData, function(response) {
-                try {
-                    var json = JSON.parse(response);
-
-                    if (200 == json.state) {
-//                        jQuery('ol.training-plan:last').append(Base64.decode(json.htmlContent)).find('.exercise:last').effect('highlight', {}, 3000);
-                        jQuery('.training-plans .tab-pane.active ol').append(Base64.decode(json.htmlContent)).find('.exercise:last').effect('highlight', {}, 3000);
-                        trainingPlanEditInit();
-                    } else {
-                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
-                    }
-                    // is not a json object -> paste content
-                } catch (e) {
-                    showDialog(e, BootstrapDialog.TYPE_DANGER);
+                if (jQuery(this).parent().hasClass('custom-drop-down')) {
+                    jQuery(this).data('value', '').addClass('deleted').parent().fadeOut();
+                } else {
+                    jQuery(this).parent().find('.option').val('').addClass('deleted').parent().fadeOut();
                 }
             });
-        }
-
-        function countExercises() {
-            var count = 0;
-            jQuery('ol.training_plan:last .exercise').each(function() {
-                if (count < $(this).attr('id')) {
-                    count = $(this).attr('id');
-                }
-            });
-            return parseInt(count) + 1;
         }
 
         function collectionTrainingPlanInformation() {
             var trainingPlanCount = 0;
             var trainingPlanCollection = {};
+            var emptyTrainingPlans = [];
+
+            trainingPlanCollection['trainingPlans'] = {};
+
             jQuery('.nav-tabs li a').each(function() {
                 var trainingTagPlanId = jQuery(this).attr('href');
                 var trainingPlanName = jQuery(this).html();
@@ -442,24 +454,98 @@
                     });
                     exercise.trainingPlanExerciseId = jQuery(currentExercise).data('training-plan-exercise-id');
                     exercise.exerciseId = jQuery(currentExercise).data('exercise-id');
-                    exercise.exerciseComment = jQuery(currentExercise).find('.exercise-comment').val();
+                    exercise.exerciseRemark = jQuery(currentExercise).find('.exercise-remark').val();
                     exercise.deviceOptions = deviceOptions;
                     exercise.exerciseOptions = exerciseOptions;
+                    exercise.deleted = jQuery(currentExercise).hasClass('deleted') ? 1 : 0;
                     exercises[exerciseCount] = exercise;
                     ++exerciseCount;
                 });
-                trainingPlanCollection[trainingPlanCount] = {
+
+                if (0 == exerciseCount) {
+                    var size = Object.size(emptyTrainingPlans);
+                    emptyTrainingPlans[size] = trainingPlanName;
+                }
+                trainingPlanCollection['trainingPlans'][trainingPlanCount] = {
                     trainingPlanId: jQuery(currentTrainingPlan).find('ol').attr('id'),
                     trainingPlanName: trainingPlanName,
+                    deleted: jQuery(currentTrainingPlan).hasClass('deleted') ? 1 : 0,
                     exercises: exercises
                 };
+
                 ++trainingPlanCount;
             });
+
             trainingPlanCollection.trainingPlanId = jQuery('#training_plan_id').val();
-            return trainingPlanCollection;
+            trainingPlanCollection.type = 'parent';
+
+            if (0 < Object.size(emptyTrainingPlans)) {
+                var message = '';
+                if (1 == Object.size(emptyTrainingPlans)) {
+                    message = 'Der Trainingsplan ' + emptyTrainingPlans.join() + ' enthält keine Übungen, wenn du fort fährst, wird er beim speichern entfernt!';
+                } else {
+                    message = 'Die Trainingspläne ' + (emptyTrainingPlans.join(', ')) + ' enthalten keine Übungen, wenn du fort fährst, werden sie beim speichern entfernt!';
+                }
+                BootstrapDialog.show({
+                    type: BootstrapDialog.TYPE_WARNING,
+                    message: message,
+                    buttons: [{
+                        label: 'Fortfahren',
+                        // no title as it is optional
+                        cssClass: 'btn-primary',
+                        action: function(dialogItself){
+                            dialogItself.close();
+                            saveCollectedTrainingPlans(trainingPlanCollection);
+                        }
+                    }, {
+                        label: 'Cancel',
+                        action: function(dialogItself){
+                            dialogItself.close();
+                            return false;
+                        }
+                    }]
+                });
+            } else {
+                saveCollectedTrainingPlans(trainingPlanCollection);
+            }
         }
+
+        function saveCollectedTrainingPlans(trainingPlanCollection) {
+            // collection aborted
+            if (false == trainingPlanCollection) {
+                return false;
+            } else {
+                if (ajax) {
+                    ajax.abort();
+                }
+
+                ajax = jQuery.post('/'+controller+'/save', {
+                    trainingPlanCollection: trainingPlanCollection,
+                    trainingPlanUserId: jQuery('#training_plan_user_id').val(),
+                    ajax: true}, function(response) {
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
+                });
+                return false;
+            }
+        }
+
         initTabs();
         trainingPlanEditInit();
+        initExerciseOptions();
     });
+
+    Object.size = function(obj) {
+        var size = 0, key;
+        for (key in obj) {
+            if (obj.hasOwnProperty(key)) size++;
+        }
+        return size;
+    };
 
 </script>

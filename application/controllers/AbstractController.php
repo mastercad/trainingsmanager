@@ -45,8 +45,9 @@ abstract class AbstractController extends Zend_Controller_Action {
     protected function generateDetailOptionsContent($id) {
         $currentControllerName = $this->convertControllerName($this->getRequest()->getControllerName());
         $dbClassName = 'Model_DbTable_'.$currentControllerName;
+        /** @var Model_DbTable_Abstract $db */
         $db = new $dbClassName();
-        $row = $db->find($id)->current();
+        $row = $db->findByPrimary($id);
 
         $content = '';
         $role = new Auth_Model_Role_Member();

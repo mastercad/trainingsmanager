@@ -83,11 +83,21 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
      * @return null
      */
     protected function extractOptionValue($option) {
-        foreach ($this->getOptionValuePriorities() as $priority) {
-            if (array_key_exists($priority, $option)) {
-                return $option[$priority];
-            }
+        $optionValuePriorities = $this->getOptionValuePriorities();
+        if (!empty($this->getTrainingDiaryXTrainingPlanExerciseId())) {
+            return $option[$optionValuePriorities[0]];
+        } else if (!empty($this->getTrainingPlanXExerciseId())) {
+            return $option[$optionValuePriorities[1]];
+        } else if (!empty($this->getExerciseId())) {
+            return $option[$optionValuePriorities[2]];
+        } else if (!empty($this->getDeviceId())) {
+            return $option[$optionValuePriorities[3]];
         }
+//        foreach ($this->getOptionValuePriorities() as $priority) {
+//            if (array_key_exists($priority, $option)) {
+//                return $option[$priority];
+//            }
+//        }
         return null;
     }
 
@@ -121,6 +131,12 @@ abstract class Service_Generator_View_Options extends Service_Generator_View_Gen
         $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('baseValue', $this->getBaseOptionValue());
         $this->getView()->assign('additionalDataInformation', $this->getAdditionalElementAttributes());
+
+        if (!$this->isAllowEdit()
+            && empty($this->selectedOptionValue)
+        ) {
+            return null;
+        }
 
         if ($this->isAllowEdit()) {
             if ($this->isShowTrainingProgress()) {

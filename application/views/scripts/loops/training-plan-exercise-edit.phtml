@@ -2,62 +2,96 @@
 /** @TODO den blödsinn mit dem count entfernen! **/
 if (TRUE === isset($this->exercise_name)) {
     $count = $this->iCount;
-    if (NULL !== $this->training_plan_x_exercise_id) {
+    if (! empty($this->training_plan_x_exercise_id)) {
         $count = $this->training_plan_x_exercise_id;
     }
-?>
+    ?>
 
-<li id="<?php echo $count;?>" class="exercise ui-state-default"
-    data-exercise-id="<?php echo $this->exercise_id;?>"
-    data-training-plan-exercise-id="<?php echo $this->training_plan_x_exercise_id;?>">
+    <li id="<?php echo $count; ?>" class="exercise ui-state-default"
+        data-exercise-id="<?php echo $this->exercise_id; ?>"
+        data-training-plan-exercise-id="<?php echo $this->training_plan_x_exercise_id; ?>">
 
-    <div class="form-group col-sm-12">
-        <p>
-            <?php echo $this->translate('label_exercise');?> : <?php echo $this->exercise_name;?>
-            <span class="device" data-device-id="<?php echo $this->device_id;?>">
-                <?php echo $this->translate('label_on');?>
-                <?php echo $this->translate('label_device');?> : <?php echo $this->device_name;?>
-            </span>
-        </p>
-    </div>
+        <div class="detail-options">
+            <div class="glyphicon glyphicon-trash delete-button"
+                 data-id="<?php echo $this->training_plan_x_exercise_id; ?>"></div>
+        </div>
 
-    <div class="col-sm-6">
-        <?php echo $this->deviceOptionsSelectContent;?>
-    </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <p>
+                    <?php echo $this->translate('label_exercise'); ?> : <?php echo $this->exercise_name; ?>
+                    <span class="device" data-device-id="<?php echo $this->device_id; ?>">
+                    <?php echo $this->translate('label_on'); ?>
+                        <?php echo $this->translate('label_device'); ?> : <?php echo $this->device_name; ?>
+                </span>
+                </p>
+            </div>
+        </div>
 
-    <div class="col-sm-6">
-        <?php echo $this->exerciseOptionsSelectContent;?>
-    </div>
+        <div class="row">
+            <div class="col-sm-3">
+                <img src="<?php echo $this->previewSource; ?>"/>
+            </div>
+            <div class="col-sm-9">
+                <strong>
+                    <?php echo $this->translate('label_description'); ?>:
+                </strong>
 
-    <div class="col-sm-12 device-options">
-        <?php echo $this->deviceOptionsContent;?>
-    </div>
+                <p>
+                    <?php echo $this->exercise_description; ?>
+                </p>
 
-    <div class="col-sm-12 exercise-options">
-        <?php echo $this->exerciseOptionsContent;?>
-    </div>
+                <?php if (!empty($this->exercise_special_features)) {
+                    ?>
+                    <strong>
+                        <?php echo $this->translate('label_special_features');?>:
+                    </strong>
+                    <p>
+                        <?php echo $this->exercise_special_features;?>
+                    </p>
+                <?php
+                }
+                ?>
+            </div>
+        </div>
 
-    <div class="form-group">
-        <label for="training_plan_exercise_comment_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
-               style="width: 100px; margin-top: 5px;">
-            <?php echo $this->translate('label_description');?>:
-        </label>
+        <hr/>
 
-        <textarea id="training_plan_exercise_comment_<?php echo $this->trainingPlanId;?>_<?php echo $count;?>"
-               name="training_plan_exercise_comment[<?php echo $this->trainingPlanId;?>][<?php echo $count;?>]"
-               class="ui-input-text form-control exercise-comment"
-        ><?php echo $this->training_plan_x_exercise_comment;?></textarea>
-    </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <?php echo $this->deviceOptionsSelectContent; ?>
+            </div>
 
+            <div class="col-sm-6">
+                <?php echo $this->exerciseOptionsSelectContent; ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12 device-options">
+                <?php echo $this->deviceOptionsContent; ?>
+            </div>
+
+            <div class="col-sm-12 exercise-options">
+                <?php echo $this->exerciseOptionsContent; ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="form-group" style="padding: 0 15px;">
+                <!--        <div class="col-sm-12">-->
+                <label for="training_plan_exercise_remark_<?php echo $this->trainingPlanId; ?>_<?php echo $count; ?>"
+                       style="width: 100px; margin-top: 5px;">
+                    <?php echo $this->translate('label_remark'); ?>:
+                </label>
+
+                <textarea id="training_plan_exercise_remark_<?php echo $this->trainingPlanId; ?>_<?php echo $count; ?>"
+                          name="training_plan_exercise_remark[<?php echo $this->trainingPlanId; ?>][<?php echo $count; ?>]"
+                          class="ui-input-text form-control exercise-remark"
+                    ><?php echo $this->training_plan_x_exercise_remark; ?></textarea>
+                <!--        </div>-->
+            </div>
+        </div>
+    </li>
 <?php
-    if (TRUE === is_array($this->aBeanspruchteMuskeln)) {
-        foreach ($this->aBeanspruchteMuskeln as $sMuskelName => $iBeanspruchung) {
-            echo $sMuskelName . ' : ' . $iBeanspruchung . '<br />';
-        }
-    }
-} else {
-    echo "Keine Übung mit der ID " . $this->iUebungId . " gefunden!";
 }
-?>
-</li>
-<?php

@@ -1,4 +1,11 @@
 <div id="<?php echo $this->name;?>" class="tab-pane fade in <?php echo $this->classActive;?>">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <?php echo $this->musclesForTrainingPlanContent;?>
+        </div>
+    </div>
+
     <?php echo $this->exercisesContent;?>
 
     <a href="<?php echo $this->startTrainingPlanLink;?>">

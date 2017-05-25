@@ -519,6 +519,7 @@ pre {
     border-radius: 5px;
     margin-bottom: 25px;
     position: relative;
+    padding: 15px;
 }
 
 #right .tab-content .exercise {
@@ -643,8 +644,20 @@ input.option-input {
 }
 
 .detail-options div {
-    margin-left: 10px;
+    margin-left: 5px;
     cursor: pointer;
+}
+
+.nav-tabs .detail-options {
+    z-index: 2;
+    top: -2px;
+    right: -10px;
+}
+
+.exercise .detail-options {
+    z-index: 2;
+    top: -15px;
+    right: -10px;
 }
 
 #accordion .item {
@@ -819,6 +832,25 @@ form.dropzone {display: table-cell;}
     margin-left: 30px;
 }
 
+.device-options .form-group,
+.exercise-options .form-group {
+    float: left;
+    margin-right: 15px;
+}
 
+.device-options .form-group .option-delete,
+.exercise-options .form-group .option-delete {
+    top: 7px !important;
+    right: 7px !important;
+}
 
+.device-options .form-group.custom-drop-down .option-delete,
+.exercise-options .form-group.custom-drop-down .option-delete {
+    top: -7px !important;
+    right: -7px !important;
+}
+
+.row.exercise {
+    padding: 15px;
+}
 /* ]]> */

@@ -103,4 +103,8 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
     public function deleteTrainingPlanExerciseOption($iTrainingPlanExerciseOptionId) {
         return $this->delete('training_plan_x_exercise_option_id = ' . $iTrainingPlanExerciseOptionId);
     }
+
+    public function deleteTrainingPlanExerciseOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId) {
+        $this->delete('training_plan_x_exercise_option_training_plan_exercise_fk = ' . $trainingPlanXExerciseId);
+    }
 }
