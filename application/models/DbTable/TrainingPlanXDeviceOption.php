@@ -29,10 +29,10 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)
             ->setIntegrityCheck(false);
 
-        $oSelect->from('device_options')
-            ->joinLeft('training_plan_x_device_option',
-            'training_plan_x_device_option_training_plan_exercise_fk = training_plan_x_exercise_training_plan_exercise_fk')
-            ->joinLeft('exercise_x_device_option', 'exercise_x_device_option_id = training_plan_x_device_option_device_option_fk')
+        $oSelect->from($this->considerTestUserForTableName('device_options'))
+            ->joinLeft($this->considerTestUserForTableName('training_plan_x_device_option'),
+                'training_plan_x_device_option_training_plan_exercise_fk = training_plan_x_exercise_training_plan_exercise_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device_option'), 'exercise_x_device_option_id = training_plan_x_device_option_device_option_fk')
             ->where('training_plan_x_exercise_id = ?', $trainingPlanExerciseId);
 
         return $this->fetchAll($oSelect);
@@ -47,11 +47,11 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
     public function findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($trainingPlanExerciseId, $deviceOptionId = null) {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_id = training_plan_x_device_option_training_plan_exercise_fk')
-            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft('device_options', 'device_option_id = training_plan_x_device_option_device_option_fk')
-            ->joinLeft('device_x_device_option', 'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = exercise_x_device_device_fk')
+        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_plan_x_device_option_training_plan_exercise_fk')
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('device_options'), 'device_option_id = training_plan_x_device_option_device_option_fk')
+            ->joinLeft($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = exercise_x_device_device_fk')
             ->where('training_plan_x_device_option_training_plan_exercise_fk = ?', $trainingPlanExerciseId);
 
         if (! empty($deviceOptionId)) {
@@ -63,12 +63,12 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
     public function findTrainingPlanDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_id = ' . $trainingPlanExerciseId)
-            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner('device_options', 'device_option_id = ' . $deviceOptionId)
-            ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft('exercise_x_device_option', 'exercise_x_device_option_device_option_fk = ' . $deviceOptionId . ' AND exercise_x_device_option_exercise_fk = exercise_id')
-            ->joinLeft('device_x_device_option', 'device_x_device_option_id = ' . $deviceOptionId . ' AND device_x_device_option_device_fk = exercise_x_device_device_fk')
+        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = ' . $trainingPlanExerciseId)
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner($this->considerTestUserForTableName('device_options'), 'device_option_id = ' . $deviceOptionId)
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device_option'), 'exercise_x_device_option_device_option_fk = ' . $deviceOptionId . ' AND exercise_x_device_option_exercise_fk = exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_id = ' . $deviceOptionId . ' AND device_x_device_option_device_fk = exercise_x_device_device_fk')
             ->where('training_plan_x_device_option_training_plan_exercise_fk = ?', $trainingPlanExerciseId)
             ->where('training_plan_x_device_option_device_option_fk = ?', $deviceOptionId);
 
@@ -80,11 +80,11 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
     public function findExerciseDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->from('training_plan_x_exercise')
-            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner('exercise_x_device_option', 'exercise_x_device_option_exercise_fk = exercise_id')
-            ->joinLeft('device_options', 'device_option_id = exercise_x_device_option_device_option_fk')
-            ->joinLeft('device_x_device_option', 'device_x_device_option_id = exercise_x_device_option_device_option_fk')
+        $oSelect->from($this->considerTestUserForTableName('training_plan_x_exercise'))
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner($this->considerTestUserForTableName('exercise_x_device_option'), 'exercise_x_device_option_exercise_fk = exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('device_options'), 'device_option_id = exercise_x_device_option_device_option_fk')
+            ->joinLeft($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_id = exercise_x_device_option_device_option_fk')
             ->where('training_plan_x_exercise_id = ?', $trainingPlanExerciseId)
             ->where('exercise_x_device_option_device_option_fk = ?', $deviceOptionId);
 

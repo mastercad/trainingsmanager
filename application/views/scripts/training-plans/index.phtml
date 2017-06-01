@@ -24,5 +24,44 @@
 </div>
 
 <script type="text/javascript">
+    var ajax = null;
     var archivePlanLoaded = '<?php echo $this->archivePlanLoaded;?>';
+
+    function deleteEntry(id) {
+        BootstrapDialog.show({
+            type: BootstrapDialog.TYPE_WARNING,
+            message: '<?php echo $this->translate('text_really_delete');?>',
+            buttons: [{
+                label: 'Delete',
+                // no title as it is optional
+                cssClass: 'btn-primary',
+                action: function(dialogItself){
+                    dialogItself.close();
+                    deleteTrainingPlan(id);
+                }
+            }, {
+                label: 'Cancel',
+                action: function(dialogItself){
+                    dialogItself.close();
+                    return false;
+                }
+            }]
+        });
+    }
+
+    function deleteTrainingPlan(id) {
+        if (ajax) {
+            ajax.abort();
+        }
+        ajax = jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
+            var json = JSON.parse(response);
+
+            if (200 == json.state) {
+                jQuery('#accordion_old_training_plans .dropdown-menu').find("a[data-value='" + id + "']").remove();
+                showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+            } else {
+                showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+            }
+        });
+    }
 </script>

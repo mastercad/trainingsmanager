@@ -174,6 +174,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
         $deviceOptionsCollection = $deviceOptionsDb->findAllOptions();
 //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);
+        $this->getView()->assign('selectId', '');
 
         foreach ($deviceOptionsCollection as $deviceOption) {
             $this->getView()->assign('optionClassName', 'device-option-select');

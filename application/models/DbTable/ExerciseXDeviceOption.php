@@ -25,8 +25,8 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect
-                ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_x_device_option_exercise_fk')
-                ->joinLeft('device_options', 'device_option_id = exercise_x_device_option_device_option_fk')
+                ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_x_device_option_exercise_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_options'), 'device_option_id = exercise_x_device_option_device_option_fk')
                 ->where('exercise_x_device_option_exercise_fk = ?', $exerciseId);
 
             if (! empty($deviceOptionId)) {
@@ -51,12 +51,12 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect
-                ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_x_device_option_exercise_fk')
-                ->joinLeft('device_x_device_group', 'device_x_device_group_device_fk = exercise_x_device_device_fk')
-                ->joinLeft('device_groups', 'device_group_id = device_x_device_group_device_group_fk')
-                ->joinLeft('devices', 'device_id = exercise_x_device_device_fk')
-                ->joinLeft('device_options', 'device_option_id = exercise_x_device_option_device_option_fk')
-                ->joinLeft('device_x_device_option', 'device_x_device_option_device_option_fk = device_option_id')
+                ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_x_device_option_exercise_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = exercise_x_device_device_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_groups'), 'device_group_id = device_x_device_group_device_group_fk')
+                ->joinLeft($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_options'), 'device_option_id = exercise_x_device_option_device_option_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_option_fk = device_option_id')
                 ->where('exercise_x_device_option_exercise_fk = ?', $exerciseId)
                 ->where('exercise_x_device_option_device_option_fk = ?', $deviceOptionId);
 

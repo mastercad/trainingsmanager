@@ -44,11 +44,10 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceAndDeviceGroupByName($sDeviceName) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(false);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinLeft('device_x_device_group', 'device_x_device_group_device_fk = device_id')
-            ->joinLeft('device_group', 'device_group_id = device_x_device_group_device_group_fk')
+        $oSelect->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id')
+            ->joinLeft($this->considerTestUserForTableName('device_group'), 'device_group_id = device_x_device_group_device_group_fk')
             ->order(array('device_group_name', 'device_name'))
             ->where("device_name LIKE('" . $sDeviceName . "')");
         
@@ -56,10 +55,9 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
     }
 
     public function findAllDevicesByDeviceGroupId($id) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(false);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner('device_x_device_group', 'device_x_device_group_device_fk = device_id AND device_x_device_group_device_group_fk = ' . $id)
+        $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id AND device_x_device_group_device_group_fk = ' . $id)
             ->order(array('device_name'));
 
         return $this->fetchAll($oSelect);
@@ -72,8 +70,7 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
      */
     public function findDeviceById($iDeviceId) {
         try {
-            $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-                ->setIntegrityCheck(false);
+            $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
             $oSelect->where('device_id = ?', $iDeviceId);
 

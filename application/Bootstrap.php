@@ -190,6 +190,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $view->headScript()->offsetSetFile(2, $view->baseUrl() . '/js/base64.js', 'text/javascript');
         $view->headScript()->offsetSetFile(3, $view->baseUrl() . '/js/auth.js', 'text/javascript');
         $view->headScript()->offsetSetFile(5, $view->baseUrl() . '/js/jquery-ui.min.js', 'text/javascript');
+        $view->headScript()->offsetSetFile(7, $view->baseUrl() . '/js/bootstrap-tour.min.js', 'text/javascript');
 //        $view->headScript()->offsetSetFile(6, $view->baseUrl() . '/js/tether.min.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.sharrre-1.3.4.min.js', 'text/javascript');
 //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery_counts.js', 'text/javascript');
@@ -431,15 +432,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         'resource' => 'default:exercises',
                         'privilege' => 'index',
                     ),
-//                    array(
-//                        'label' => $translator->translate('label_edit'),
-//                        'title' => $translator->translate('label_edit'),
-//                        'module' => 'default',
-//                        'controller' => 'exercises',
-//                        'action' => 'edit',
-//                        'resource' => 'default:exercises',
-//                        'privilege' => 'edit'
-//                    ),
+                    array(
+                        'label' => $translator->translate('label_new'),
+                        'title' => $translator->translate('label_new'),
+                        'module' => 'default',
+                        'controller' => 'exercises',
+                        'action' => 'edit',
+                        'resource' => 'default:exercises',
+                        'privilege' => 'new'
+                    ),
                 ),
             ),
             array(
@@ -461,8 +462,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         'privilege' => 'index',
                     ),
                     array(
-                        'label' => $translator->translate('label_edit'),
-                        'title' => $translator->translate('label_edit'),
+                        'label' => $translator->translate('label_new'),
+                        'title' => $translator->translate('label_new'),
                         'module' => 'default',
                         'controller' => 'training-plans',
                         'action' => 'select-layout',
@@ -505,31 +506,31 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         'resource' => 'default:training-diaries',
                         'privilege' => 'index',
                     ),
-                    array(
-                        'label' => $translator->translate('label_edit'),
-                        'title' => $translator->translate('label_edit'),
-                        'module' => 'default',
-                        'controller' => 'training-diaries',
-                        'action' => 'edit',
-                        'resource' => 'default:training-diaries',
-                        'privilege' => 'edit'
-                    ),
-                    array(
-                        'label' => 'divider',
-                        'uri' => '#',
-                        'class' => 'divider',
-                        'resource' => 'default:training-plans',
-                        'privilege' => 'archive'
-                    ),
-                    array(
-                        'label' => $translator->translate('label_archive'),
-                        'title' => $translator->translate('label_archive'),
-                        'module' => 'default',
-                        'controller' => 'training-plans',
-                        'action' => 'archive',
-                        'resource' => 'default:training-plans',
-                        'privilege' => 'archive'
-                    ),
+//                    array(
+//                        'label' => $translator->translate('label_new'),
+//                        'title' => $translator->translate('label_new'),
+//                        'module' => 'default',
+//                        'controller' => 'training-diaries',
+//                        'action' => 'new',
+//                        'resource' => 'default:training-diaries',
+//                        'privilege' => 'edit'
+//                    ),
+//                    array(
+//                        'label' => 'divider',
+//                        'uri' => '#',
+//                        'class' => 'divider',
+//                        'resource' => 'default:training-plans',
+//                        'privilege' => 'archive'
+//                    ),
+//                    array(
+//                        'label' => $translator->translate('label_archive'),
+//                        'title' => $translator->translate('label_archive'),
+//                        'module' => 'default',
+//                        'controller' => 'training-plans',
+//                        'action' => 'archive',
+//                        'resource' => 'default:training-plans',
+//                        'privilege' => 'archive'
+//                    ),
                 ),
             ),
             /*

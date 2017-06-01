@@ -24,9 +24,9 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
     public function findDeviceForExercise($exerciseId) {
         $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
-            $select->joinInner('devices', 'device_id = exercise_x_device_device_fk')
-                ->joinLeft('device_x_device_group', 'device_x_device_group_device_fk = exercise_x_device_device_fk')
-                ->joinLeft('device_groups', 'device_group_id = device_x_device_group_device_group_fk')
+            $select->joinInner($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = exercise_x_device_device_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_groups'), 'device_group_id = device_x_device_group_device_group_fk')
                 ->where('exercise_x_device_exercise_fk = ?', $exerciseId);
 
             return $this->fetchRow($select);
@@ -41,12 +41,15 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
     {
         $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
-            $select->joinInner('devices', 'device_id = exercise_x_device_device_fk')
-                ->joinLeft('device_x_device_group', 'device_x_device_group_device_fk = device_id')
-                ->joinLeft('device_groups', 'device_group_id = device_x_device_group_device_group_fk')
-                ->columns(['COUNT(devices.device_id) AS exerciseCount', 'devices.device_name', 'devices.device_id'])
+            $select->joinInner($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
+                ->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id')
+                ->joinLeft($this->considerTestUserForTableName('device_groups'), 'device_group_id = device_x_device_group_device_group_fk')
+                ->columns([
+                    'COUNT(' . $this->considerTestUserForTableName('devices') . '.device_id) AS exerciseCount',
+                    $this->considerTestUserForTableName('devices') . '.device_name',
+                    $this->considerTestUserForTableName('devices') . '.device_id'])
                 ->order('device_name')
-                ->group('devices.device_id');
+                ->group($this->considerTestUserForTableName('devices') . '.device_id');
 
             return $this->fetchAll($select);
         } catch (Exception $oException) {
@@ -59,8 +62,8 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
     public function findExercisesWithoutDevices()
     {
         $select = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
-        $select->from('exercises', '')
-            ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id'. '')
+        $select->from($this->considerTestUserForTableName('exercises'), '')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id'. '')
             ->where('exercise_x_device_id IS NULL')
             ->columns(['COUNT(exercise_id) AS exerciseCount'])
         ;

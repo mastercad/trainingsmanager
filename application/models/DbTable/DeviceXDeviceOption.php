@@ -32,8 +32,8 @@ class Model_DbTable_DeviceXDeviceOption extends Model_DbTable_Abstract {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         try {
-            $oSelect->joinInner('devices', 'device_id = ' . $deviceId)
-                ->joinInner('device_options', 'device_option_id = device_x_device_option_device_option_fk')
+            $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = ' . $deviceId)
+                ->joinInner($this->considerTestUserForTableName('device_options'), 'device_option_id = device_x_device_option_device_option_fk')
                 ->where('device_x_device_option_device_fk = ?', $deviceId);
 
             return $this->fetchAll($oSelect);
@@ -50,8 +50,8 @@ class Model_DbTable_DeviceXDeviceOption extends Model_DbTable_Abstract {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
         try {
-            $oSelect->joinInner('devices', 'device_id = device_x_device_option_device_fk')
-                ->joinInner('device_options', 'device_option_id = device_x_device_option_device_option_fk')
+            $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = device_x_device_option_device_fk')
+                ->joinInner($this->considerTestUserForTableName('device_options'), 'device_option_id = device_x_device_option_device_option_fk')
                 ->where('device_x_device_option_device_option_fk = "?"', $deviceOptionId)
                 ->where('device_x_device_option_device_fk = "?"', $deviceId);
 

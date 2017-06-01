@@ -40,15 +40,14 @@ class Model_DbTable_TrainingDiaryXExercise extends Model_DbTable_Abstract
      */
     public function getLastTrainingExercise($TrainingPlanId)
     {
-        $oSelect = $this->select(Zend_Db_Table_Abstract::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(FALSE);
+        $oSelect = $this->select(Zend_Db_Table_Abstract::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
         $oSelect
-            ->join('trainingsplaene', 'trainingsplan_id = trainingstagebuch_uebung_trainingsplan_fk')
-            ->join('trainingsplan_uebungen', 'trainingsplan_uebung_trainingsplan_fk = trainingstagebuch_uebung_trainingsplan_fk')
-            ->join('trainingstagebuch_trainingsplaene', 'trainingstagebuch_trainingsplan_trainingsplan_fk = trainingstagebuch_uebung_trainingsplan_fk')
+            ->joinInner($this->considerTestUserForTableName('trainingsplaene'), 'trainingsplan_id = trainingstagebuch_uebung_trainingsplan_fk')
+            ->joinInner($this->considerTestUserForTableName('trainingsplan_uebungen'), 'trainingsplan_uebung_trainingsplan_fk = trainingstagebuch_uebung_trainingsplan_fk')
+            ->joinInner($this->considerTestUserForTableName('trainingstagebuch_trainingsplaene'), 'trainingstagebuch_trainingsplan_trainingsplan_fk = trainingstagebuch_uebung_trainingsplan_fk')
 //            ->join('trainingsplaene', 'trainingsplan_id = trainingstagebuch_trainingsplaene_trainingsplan_fk')
-            ->join('exercises', 'uebung_id = trainingsplan_uebung_fk')
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'uebung_id = trainingsplan_uebung_fk')
             ->where('trainingstagebuch_trainingsplan_flag_abgeschlossen != 1')
             ->order('trainingsplan_uebung_order');
 

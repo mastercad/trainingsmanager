@@ -14,13 +14,23 @@ class IndexController extends AbstractController {
     }
 
     public function indexAction() {
-        $this->view->assign('chartContent', $this->generateChartsContent());
-        $this->view->assign('activeTrainingDiary', $this->generateActiveTrainingDiaryContent());
+        $user = Zend_Auth::getInstance()->getIdentity();
+        if ('guest' == $user->user_right_group_name) {
+            $this->forward('welcome-content');
+        } else {
+            $this->view->assign('chartContent', $this->generateChartsContent());
+            $this->view->assign('activeTrainingDiary', $this->generateActiveTrainingDiaryContent());
+        }
+    }
+
+    public function welcomeContentAction() {
+
     }
 
     private function generateActiveTrainingDiaryContent() {
 
-        $content = 'Aktuell ist kein Trainingsplan offen!';
+//        $content = 'Aktuell ist kein Trainingsplan offen!';
+        $content = '';
         $trainingPlanService = new Service_TrainingPlan();
         $currentTrainingPlan = $trainingPlanService->searchCurrentTrainingPlan($this->findCurrentUserId());
 

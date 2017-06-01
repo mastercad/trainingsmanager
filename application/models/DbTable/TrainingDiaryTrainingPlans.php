@@ -49,10 +49,10 @@ class Model_DbTable_TrainingDiaryTrainingPlans extends Model_DbTable_Abstract
             ->setIntegrityCheck(FALSE);
 
         $oSelect
-            ->join('trainingsplaene', 'trainingsplan_id = trainingstagebuch_trainingsplan_trainingsplan_fk')
-            ->joinLeft('trainingsplan_uebungen', 'trainingsplan_uebung_trainingsplan_fk = trainingstagebuch_trainingsplan_trainingsplan_fk')
-            ->joinLeft('trainingstagebuch_uebungen', 'trainingstagebuch_uebung_trainingsplan_uebung_fk = trainingsplan_uebung_fk')
-            ->joinLeft('exercises', 'uebung_id = trainingsplan_uebung_fk')
+            ->joinInner($this->considerTestUserForTableName('trainingsplaene'), 'trainingsplan_id = trainingstagebuch_trainingsplan_trainingsplan_fk')
+            ->joinLeft($this->considerTestUserForTableName('trainingsplan_uebungen'), 'trainingsplan_uebung_trainingsplan_fk = trainingstagebuch_trainingsplan_trainingsplan_fk')
+            ->joinLeft($this->considerTestUserForTableName('trainingstagebuch_uebungen'), 'trainingstagebuch_uebung_trainingsplan_uebung_fk = trainingsplan_uebung_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercises'), 'uebung_id = trainingsplan_uebung_fk')
             ->where('trainingstagebuch_trainingsplan_flag_abgeschlossen != 1')
             ->where('trainingstagebuch_trainingsplan_trainingsplan_fk = ' . $iTrainingDiaryTrainingPlanId)
             ->order('trainingsplan_uebung_order');

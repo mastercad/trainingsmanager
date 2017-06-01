@@ -117,7 +117,7 @@ class Service_TrainingPlan {
      *
      * @return int
      */
-    private function deleteTrainingPlan($trainingPlanId)
+    public function deleteTrainingPlan($trainingPlanId)
     {
         $trainingPlansDb = new Model_DbTable_TrainingPlans();
         $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
@@ -130,7 +130,7 @@ class Service_TrainingPlan {
         return $trainingPlansDb->delete('training_plan_id = ' . $trainingPlanId);
     }
 
-    private function deleteTrainingPlanExercise($trainingPlanXExerciseId) {
+    public function deleteTrainingPlanExercise($trainingPlanXExerciseId) {
         $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
         $trainingPlanXExerciseOptionDb = new Model_DbTable_TrainingPlanXExerciseOption();
         $trainingPlanXDeviceOptionDb = new Model_DbTable_TrainingPlanXDeviceOption();
@@ -154,7 +154,7 @@ class Service_TrainingPlan {
         $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
 
         $trainingPlanXExerciseId = $exercise['trainingPlanExerciseId'];
-        $exerciseRemark = $exercise['exerciseRemark'];
+        $exerciseRemark = base64_decode($exercise['exerciseRemark']);
         $exerciseId = $exercise['exerciseId'];
         $exerciseShouldDeleted = (array_key_exists('deleted', $exercise) && $exercise['deleted']) ? true : false;
         static $exerciseCount = 0;
@@ -401,9 +401,7 @@ class Service_TrainingPlan {
             );
             $iTrainingsplanParentId = $this->createTrainingPlan($aData);
 
-            if (is_numeric($iTrainingsplanParentId)
-                && 0 < $iTrainingsplanParentId
-            ) {
+            if (0 < $iTrainingsplanParentId) {
                 $oTrainingsplanLayout = $oTrainingsplanLayouts->findTrainingPlanLayoutByName('Normal');
                 $iTrainingsplanLayoutId = $oTrainingsplanLayout->training_plan_layout_id;
                 $aData = array(

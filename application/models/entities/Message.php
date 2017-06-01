@@ -64,7 +64,7 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
      * @return $this
      */
     public function setJsCallBack($jsCallBack) {
-        return $this->get('jsCallBack');
+        return $this->set('jsCallBack', $jsCallBack);
     }
 
     /**
@@ -83,5 +83,19 @@ class Model_Entity_Message extends Model_Entity_AbstractEntity {
         return $this->set('htmlContent', $htmlContent);
     }
 
+    /**
+     * @return null|int
+     */
+    public function getRedirectId() {
+        return $this->get('id');
+    }
 
+    /**
+     * @param int $id
+     *
+     * @return $this
+     */
+    public function setRedirectId($id) {
+        return $this->set('id', $id);
+    }
 }

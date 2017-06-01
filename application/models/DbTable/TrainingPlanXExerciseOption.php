@@ -28,12 +28,11 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
     public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($iTrainingPlanExerciseId, $exerciseOptionId = null) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(false);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_id = training_plan_x_exercise_option_training_plan_exercise_fk')
-            ->joinLeft('exercise_options', 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
-            ->joinLeft('exercise_x_exercise_option', 'exercise_x_exercise_option_exercise_option_fk = training_plan_x_exercise_option_exercise_option_fk AND ' .
+        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_plan_x_exercise_option_training_plan_exercise_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_exercise_option'), 'exercise_x_exercise_option_exercise_option_fk = training_plan_x_exercise_option_exercise_option_fk AND ' .
                 'exercise_x_exercise_option_exercise_fk = training_plan_x_exercise_exercise_fk')
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $iTrainingPlanExerciseId);
 
@@ -50,13 +49,12 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
     public function findTrainingPlanExerciseOptionsByTrainingDiaryExerciseId($trainingPlanXExerciseId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(false);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect
-            ->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_id = ' . $trainingPlanXExerciseId)
-            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner('exercise_options', 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = ' . $trainingPlanXExerciseId)
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $trainingPlanXExerciseId);
 
         return $this->fetchAll($oSelect);
@@ -72,7 +70,7 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
 
-        $oSelect->joinLeft('exercise_options', 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+        $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $iTrainingPlanExerciseId)
             ->where('training_plan_x_exercise_option_exercise_option_fk = ?', $exerciseOptionId);
 

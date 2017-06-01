@@ -38,10 +38,9 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
 
     public function findDeviceOptionsByDeviceId($deviceId) {
         try {
-            $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-                ->setIntegrityCheck(false);
+            $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-            $oSelect->joinInner('device_x_device_option', 'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = ' . $deviceId)
+            $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = ' . $deviceId)
                 ->where('device_x_device_option_device_fk = ?', $deviceId);
 
             return $this->fetchAll($oSelect);
@@ -62,9 +61,9 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
     public function findDeviceOptionsByExerciseId($exerciseId) {
         $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $select->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = ' . $exerciseId)
-            ->joinInner('device_x_device_option', 'device_x_device_option_device_fk = exercise_x_device_device_fk')
-            ->joinLeft('exercise_x_device_option', 'exercise_x_device_option_device_option_fk = device_option_id AND exercise_x_device_option_exercise_fk = ' . $exerciseId)
+        $select->joinInner($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = ' . $exerciseId)
+            ->joinInner($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_fk = exercise_x_device_device_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device_option'), 'exercise_x_device_option_device_option_fk = device_option_id AND exercise_x_device_option_exercise_fk = ' . $exerciseId)
             ->where('device_option_id = device_x_device_option_device_option_fk');
 
         return $this->fetchAll($select);

@@ -187,7 +187,7 @@
                 }
             });
 
-            $(".droppable li").hover(
+            $(".droppable li.exercise").hover(
                 function() {
                     $(this).css({'background-color': 'lightblue', 'border': '1px solid skyblue', 'border-radius': '5px', 'cursor': 'pointer'});
                 },
@@ -195,20 +195,9 @@
                     $(this).css({'background-color': 'gainsboro', 'border': '0px none', 'cursor': 'normal'});
                 }
             );
-
-            jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
-                var selectedOption = jQuery.trim(jQuery(this).html());
-                var selectedOptionName = jQuery(this).html();
-                var caretContent = '<span class="caret"></span>';
-
-                jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
-                jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
-
-                return false;
-            });
-
             initTrainingPlanOptions();
             initExerciseOptionsSelect();
+            initExerciseOptions();
         }
 
         function addExercise(exerciseId, count) {
@@ -379,6 +368,17 @@
                     jQuery(this).parent().find('.option').val('').addClass('deleted').parent().fadeOut();
                 }
             });
+
+            jQuery('.dropdown.custom-drop-down .option-add').unbind('click').click(function() {
+                var selectedOption = jQuery.trim(jQuery(this).html());
+                var selectedOptionName = jQuery(this).html();
+                var caretContent = '<span class="caret"></span>';
+
+                jQuery(this).parent().parent().parent().attr('data-value', selectedOption);
+                jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+
+                return false;
+            });
         }
 
         function collectionTrainingPlanInformation() {
@@ -454,7 +454,7 @@
                     });
                     exercise.trainingPlanExerciseId = jQuery(currentExercise).data('training-plan-exercise-id');
                     exercise.exerciseId = jQuery(currentExercise).data('exercise-id');
-                    exercise.exerciseRemark = jQuery(currentExercise).find('.exercise-remark').val();
+                    exercise.exerciseRemark = Base64.encode(jQuery(currentExercise).find('.exercise-remark').val());
                     exercise.deviceOptions = deviceOptions;
                     exercise.exerciseOptions = exerciseOptions;
                     exercise.deleted = jQuery(currentExercise).hasClass('deleted') ? 1 : 0;
@@ -477,6 +477,7 @@
             });
 
             trainingPlanCollection.trainingPlanId = jQuery('#training_plan_id').val();
+            trainingPlanCollection.trainingPlanUserId = jQuery('#training_plan_user_id').val();
             trainingPlanCollection.type = 'parent';
 
             if (0 < Object.size(emptyTrainingPlans)) {
@@ -537,7 +538,6 @@
 
         initTabs();
         trainingPlanEditInit();
-        initExerciseOptions();
     });
 
     Object.size = function(obj) {

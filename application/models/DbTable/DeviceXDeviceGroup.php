@@ -28,10 +28,9 @@ class Model_DbTable_DeviceXDeviceGroup extends Model_DbTable_Abstract
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findDevicesByDeviceGroupId($iDeviceGroupId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(false);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
-            $oSelect->joinInner('devices', 'device_id = device_x_device_group_device_fk')
+            $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = device_x_device_group_device_fk')
                 ->where('device_x_device_group_device_group_fk = ?', $iDeviceGroupId);
 
             return $this->fetchAll($oSelect);
@@ -42,11 +41,10 @@ class Model_DbTable_DeviceXDeviceGroup extends Model_DbTable_Abstract
         }
     }
     public function findAllDeviceGroupsWithDevices() {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(false);
+        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
-            $oSelect->joinInner('devices', 'device_id = device_x_device_group_device_fk')
-                ->joinInner('device_groups', 'device_groups_id = device_x_device_group_device_group_fk');
+            $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = device_x_device_group_device_fk')
+                ->joinInner($this->considerTestUserForTableName('device_groups'), 'device_groups_id = device_x_device_group_device_group_fk');
 
             return $this->fetchAll($oSelect);
         } catch(Exception $oException) {

@@ -169,16 +169,12 @@ function requestAction(id, action) {
         data: {
             id: id,
             ajax: true,
-            format: 'json'
+            format: 'json',
+            tourStarted: !tour.ended()
         },
         beforeSend: function () {
             showSpinner(jQuery('#' + targetId));
         },
-        error: function () {
-            //                    alert('<p>An error has occurred</p>');
-        },
-        //                dataType: 'json',
-        //                dataType: 'jsonp',
         success: function (response) {
             jQuery(caller).data('status', action);
             considerResponse(response);

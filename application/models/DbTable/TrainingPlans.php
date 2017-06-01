@@ -20,9 +20,9 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
     public function findByPrimary($trainingPlanId) {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
-        $select->joinInner('users', 'user_id = training_plan_user_fk')
-            ->joinLeft('user_x_user_group', 'user_x_user_group_user_fk = user_id')
-            ->joinLeft('user_groups', 'user_group_id = user_x_user_group_user_group_fk')
+        $select->joinInner($this->considerTestUserForTableName('users'), 'user_id = training_plan_user_fk')
+            ->joinLeft($this->considerTestUserForTableName('user_x_user_group'), 'user_x_user_group_user_fk = user_id')
+            ->joinLeft($this->considerTestUserForTableName('user_groups'), 'user_group_id = user_x_user_group_user_group_fk')
             ->where('training_plan_id = ?', $trainingPlanId);
 
         return $this->fetchRow($select);
@@ -42,7 +42,7 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
     public function findFirstExerciseInTrainingPlan($iTrainingPlanId) {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
-        $select->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_training_plan_fk = ' . $iTrainingPlanId)
+        $select->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_training_plan_fk = ' . $iTrainingPlanId)
             ->order('training_plan_x_exercise_exercise_order DESC')
             ->limit(1);
 
@@ -106,10 +106,9 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllActiveTrainingPlans() {
-        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(FALSE);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
-        $oSelect->join('users', 'user_id = training_plan_user_fk')
+        $oSelect->join($this->considerTestUserForTableName('users'), 'user_id = training_plan_user_fk')
             ->where('training_plan_active = 1')
             ->where('training_plan_parent_fk = 0')
             ->order('user_first_name');
@@ -121,8 +120,7 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllInactiveTrainingPlans() {
-        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(FALSE);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
         $oSelect->join('users', 'user_id = training_plan_user_fk')
             ->where('training_plan_active = 0')

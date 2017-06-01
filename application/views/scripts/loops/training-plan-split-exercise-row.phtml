@@ -8,9 +8,14 @@
 
     <?php echo $this->exercisesContent;?>
 
-    <a href="<?php echo $this->startTrainingPlanLink;?>">
+<?php if (true == $this->trainingPlanActive) {
+?>
+    <a href="<?php echo $this->startTrainingPlanLink; ?>">
         <button class="btn btn-default btn-primary">
             Start Training Plan
         </button>
     </a>
+<?php
+    }
+?>
 </div>

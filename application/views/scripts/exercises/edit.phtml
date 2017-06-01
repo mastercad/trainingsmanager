@@ -1,120 +1,128 @@
 <a name="right" />
-<div>
-    <h3>
-        <?php echo $this->translate('label_exercise_name');?>:
-    </h3>
-    <input type="text"
-           class="editable form-control"
-           value="<?php echo $this->exercise_name;?>"
-           id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>" />
-
-    <?php echo $this->previewPictureContent;?>
-
-    <br class="clear-fix" style="margin-top: 15px;" />
-
-    <?php echo $this->exerciseTypeSelectContent;?>
-
-    <br class="clear-fix" />
-
-    <h3 class=""
-        style="margin-top: 15px;">
-        <?php echo $this->translate('label_description');?>:
-    </h3>
-    
-    <br class="clear-fix" />
-    
-    <textarea class="editable beschreibung form-control" rows="5"
-         id="exercise_description"
-         data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_description);?>" ><?php echo $this->exercise_description;?></textarea>
-
-    <h3 class="besonderheit-ueberschrift"
-        style="margin-top: 15px;">
-        <?php echo $this->translate('label_special_features');?>:
-    </h3>
-
-    <br class="clear-fix" />
-
-    <textarea class="editable beschreibung form-control" rows="5"
-        id="exercise_special_features"
-        data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_special_features);?>" ><?php echo $this->exercise_special_features;?></textarea>
-
-    <br class="clear-fix" />
-
-    <h3 style="margin-top: 25px;">
-        <?php echo $this->translate('label_device');?>:
-    </h3>
-
-    <br class="clear-fix" />
-
-    <div class="form-group" style="margin-top: 10px;">
-        <input type="text" class="form-control device-name"
-               id="exercise_device_name"
-               name="exercise_device_name"
-               value="<?php echo $this->device_name;?>"
-               data-exercise-device-name="<?php echo base64_encode($this->device_name);?>"
-               data-exercise-device-id="<?php echo $this->device_id;?>"
-               data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_type_to_get_device_proposals');?>"
-            />
+<div class="row">
+    <div class="col-sm-12 exercise-name">
+        <h3>
+            <?php echo $this->translate('label_exercise_name');?>:
+        </h3>
+        <input type="text"
+               class="editable form-control"
+               value="<?php echo $this->exercise_name;?>"
+               id="exercise_name" data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_name);?>" />
     </div>
+</div>
 
-    <br class="clear-fix" />
+<div class="row">
+    <div class="col-sm-12 exercise-preview-picture">
+        <?php echo $this->previewPictureContent;?>
+    </div>
+</div>
 
-    <div style="float: left; display: inline;">
+<div class="row">
+    <div class="col-sm-12 exercise-type">
+        <?php echo $this->exerciseTypeSelectContent;?>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 exercise-description">
+        <h3>
+            <?php echo $this->translate('label_description');?>:
+        </h3>
+
+        <textarea class="editable beschreibung form-control" rows="5"
+             id="exercise_description"
+             data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_description);?>" ><?php echo $this->exercise_description;?></textarea>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 exercise-special-features">
+        <h3>
+            <?php echo $this->translate('label_special_features');?>:
+        </h3>
+
+        <textarea class="editable beschreibung form-control" rows="5"
+            id="exercise_special_features"
+            data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_special_features);?>" ><?php echo $this->exercise_special_features;?></textarea>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 exercise-device-select">
+        <h3>
+            <?php echo $this->translate('label_device');?>:
+        </h3>
+        <div class="form-group">
+            <input type="text" class="form-control device-name"
+                   id="exercise_device_name"
+                   name="exercise_device_name"
+                   value="<?php echo $this->device_name;?>"
+                   data-exercise-device-name="<?php echo base64_encode($this->device_name);?>"
+                   data-exercise-device-id="<?php echo $this->device_id;?>"
+                   data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_type_to_get_device_proposals');?>"
+                />
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12 device-options-drop-down">
         <?php echo $this->deviceOptionsDropDownContent;?>
     </div>
+</div>
 
-    <br class="clear-fix" />
-
-    <div class="device-options" style="margin-top: 25px;">
+<div class="row">
+    <div class="col-sm-12 device-options exercise-selected-device-options">
         <?php echo $this->deviceOptionsContent;?>
     </div>
+</div>
 
-    <br class="clear-fix" />
-
-    <div style="float: left; display: inline; margin-top: 25px;">
+<div class="row">
+    <div class="col-sm-12 exercise-options-drop-down">
         <?php echo $this->exerciseOptionsDropDownContent;?>
     </div>
+</div>
 
-    <br class="clear-fix" />
-
-    <div class="exercise-options" style="margin-top: 25px;">
+<div class="row">
+    <div class="col-sm-12 exercise-options">
         <?php echo $this->exerciseOptionsContent;?>
     </div>
+</div>
 
-    <br class="clear-fix" />
+<div class="row">
+    <div class="col-sm-12 exercise-muscle-groups-input">
+        <h3>
+            <?php echo $this->translate('label_muscle_groups');?>:
+        </h3>
 
-    <h3 style="float: left; display: inline; margin-top: 25px;">
-        <?php echo $this->translate('label_muscle_groups');?>:
-    </h3>
-
-    <br class="clear-fix" />
-
-    <div class="form-group" style="margin-top: 15px;">
-        <input class="form-control muscle-group-name"
-               value=""
-               data-muscle-group-name=""
-               data-muscle-group-id=""
-               type="text"
-               data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_type_to_get_muscle_or_muscle_group_proposals');?>"
-            >
+        <div class="form-group">
+            <input class="form-control muscle-group-name"
+                   value=""
+                   data-muscle-group-name=""
+                   data-muscle-group-id=""
+                   type="text"
+                   data-toggle="tooltip" data-placement="right" title="<?php echo $this->translate('tooltip_type_to_get_muscle_or_muscle_group_proposals');?>"
+                >
+        </div>
     </div>
+</div>
 
 <!--    <img class="muscle-group-add" src="/images/content/statisch/grafiken/add_normal.png"-->
 <!--         style="width: 30px; float: left; display: inline; margin-top: 15px;"/>-->
-    
-    <br class="clear-fix" />
-    
-    <div class="exercise-muscle-groups"
-         style="margin-top: 5px;">
+
+<div class="row">
+    <div class="col-sm-12 exercise-muscle-groups">
         <?php echo $this->exerciseMuscleGroupsContent;?>
     </div>
-    
-    <br class="clear-fix" />
-    
-    <h3 style="margin-top: 15px;">
-        <?php echo $this->translate('label_exercise_video');?>:
-    </h3>
-    
+</div>
+
+<div class="row">
+     <div class="col-sm-12 exercise-video">
+        <h3>
+            <?php echo $this->translate('label_exercise_video');?>:
+        </h3>
+    </div>
+</div>
 <!--    <div id="exercise_video"-->
 <!--         style="margin-top: 5px;">-->
 <!--    </div>-->
@@ -122,8 +130,6 @@
     <input type="hidden" name="exercise-preview-picture" id="exercise_preview_picture" value="" />
     <input type="hidden" class="id" name="exercise_id" id="exercise_id" value="<?php echo $this->exercise_id;?>" />
 </div>
-
-<br class="clear-fix" />
 
 <input type="hidden" id="picture_path" value="<?php echo base64_encode($this->picturePath);?>" />
 <input type="hidden" id="picture_temp_path" value="<?php echo base64_encode($this->pictureTempPath);?>" />
@@ -133,9 +139,13 @@
      style="position: absolute; left: -5000px; top: -5000px; padding: 10px;
             background-color: #FFFFFF; opacity: 0.9; box-shadow: 5px 5px 5px #111111;" ></div>
 
-<button id="save" class="save button btn btn-primary btn-block">
-    <?php echo $this->translate('label_save');?>
-</button>
+<div class="row">
+    <div class="form-group">
+        <button id="save" class="save button btn btn-primary btn-block">
+            <?php echo $this->translate('label_save');?>
+        </button>
+    </div>
+</div>
 
 <div id="preview-template" style="display: none;">
 

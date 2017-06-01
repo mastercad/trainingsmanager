@@ -24,7 +24,7 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
     public function findExerciseOptionsForExercise($exerciseId) {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
-            $oSelect->joinLeft('exercise_options', 'exercise_option_id = exercise_x_exercise_option_exercise_option_fk')
+            $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = exercise_x_exercise_option_exercise_option_fk')
                 ->where('exercise_x_exercise_option_exercise_fk = ?', $exerciseId);
 
             return $this->fetchAll($oSelect);
@@ -38,8 +38,8 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
     public function findExerciseOptionForExercise($exerciseId, $exerciseOptionId) {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
-            $oSelect->from('exercise_options')
-                ->joinLeft('exercise_x_exercise_option',
+            $oSelect->from($this->considerTestUserForTableName('exercise_options'))
+                ->joinLeft($this->considerTestUserForTableName('exercise_x_exercise_option'),
                     'exercise_x_exercise_option_exercise_option_fk = exercise_option_id AND exercise_x_exercise_option_exercise_fk = "' . $exerciseId . '"')
                 ->where('exercise_option_id = ?', $exerciseOptionId);
 

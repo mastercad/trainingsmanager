@@ -24,7 +24,7 @@ class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
     public function findExerciseTypeForExercise($exerciseId) {
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
-            $oSelect->joinInner('exercises', 'exercise_id = exercise_x_exercise_type_exercise_fk')
+            $oSelect->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = exercise_x_exercise_type_exercise_fk')
                 ->where('exercise_x_exercise_type_exercise_fk = ?', $exerciseId);
 
             return $this->fetchRow($oSelect);
@@ -39,8 +39,8 @@ class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
     {
         $select = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
-            $select->from('exercises', '')
-                ->joinLeft('exercise_x_exercise_type', 'exercise_x_exercise_type_exercise_fk = exercise_id', '')
+            $select->from($this->considerTestUserForTableName('exercises'), '')
+                ->joinLeft($this->considerTestUserForTableName('exercise_x_exercise_type'), 'exercise_x_exercise_type_exercise_fk = exercise_id', '')
                 ->where('exercise_x_exercise_type_id IS NULL')
                 ->columns(['COUNT(exercise_id) AS exerciseCount']);
 

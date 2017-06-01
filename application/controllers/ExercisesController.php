@@ -32,6 +32,9 @@ class ExercisesController extends AbstractController {
         $exerciseId = intval($this->getRequest()->getParam('id', null));
         $exercise = null;
 
+//        if ("true" == $this->getParam('tourStarted')) {
+//            $this->generateDummyExerciseShowContent();
+//        } else if (0 < $exerciseId) {
         if (0 < $exerciseId) {
             $exerciseDb = new Model_DbTable_Exercises();
             $exercise = $exerciseDb->findExerciseById($exerciseId);
@@ -258,7 +261,7 @@ class ExercisesController extends AbstractController {
         $this->view->assign('optionSelectText', $optionSelectText);
 //        $this->view->assign('optionLabelText', $this->translate('label_device_name') . ':');
         $this->view->assign('optionLabelText', '');
-        $this->view->assign('optionClassName', 'device-select custom-drop-down');
+        $this->view->assign('optionClassName', ' device-select custom-drop-down col-sm-4 ');
 
         return $this->view->render('globals/select.phtml');
     }
@@ -310,13 +313,13 @@ class ExercisesController extends AbstractController {
             $this->view->assign('currentValue', $exerciseType);
         }
 
-        $this->view->assign('selectId', 'exercise_type_id');
+        $this->view->assign('selectId', 'filter_exercise_type_id');
         $this->view->assign('optionsContent', $exerciseTypeContent);
 
         $this->view->assign('optionSelectText', $optionSelectText);
 //        $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
         $this->view->assign('optionLabelText', '');
-        $this->view->assign('optionClassName', 'exercise-type-select custom-drop-down');
+        $this->view->assign('optionClassName', ' exercise-type-select custom-drop-down col-sm-4 ');
 
         return $this->view->render('globals/select.phtml');
     }

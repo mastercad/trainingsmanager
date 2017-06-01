@@ -40,8 +40,9 @@ class TrainingPlansController extends AbstractController {
             $currentTrainingPlan = $trainingPlansDb->findActiveTrainingPlan($this->findCurrentUserId());
         }
 
-        if (false !== $currentTrainingPlan) {
-//            $trainingPlanContent = $this->generateTrainingPlanContent($currentTrainingPlan);
+        if (0 < count($currentTrainingPlan)
+            && false !== $currentTrainingPlan
+        ) {
             $trainingPlanGenerator = new Service_Generator_View_TrainingPlan($this->view);
             $trainingPlanGenerator->setControllerName($this->getRequest()->getControllerName())
                 ->setActionName($this->getRequest()->getActionName())
@@ -63,7 +64,6 @@ class TrainingPlansController extends AbstractController {
 
         if (0 < $id) {
             $currentTrainingPlan = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($id);
-//            $currentTrainingPlan = $trainingPlansDb->findTrainingPlan($id);
             $role = new Auth_Model_Role_Member();
             $resource = new Auth_Model_Resource_TrainingPlans($currentTrainingPlan->current());
             $resourceName = $this->getRequest()->getModuleName().':'.$this->getRequest()->getControllerName();
@@ -82,70 +82,8 @@ class TrainingPlansController extends AbstractController {
                 ->setModuleName($this->getRequest()->getModuleName());
 
             $trainingPlanContent = $trainingPlanGenerator->generateTrainingPlanContent($currentTrainingPlan);
-//            $trainingPlanContent = $this->generateTrainingPlanContent($currentTrainingPlan);
         }
         $this->view->assign('trainingPlanContent', $trainingPlanContent);
-    }
-
-    /**
-     * @param \Zend_Db_Table_Rowset
-     *
-     * @return string
-     */
-    private function generateTrainingPlanContent(Zend_Db_Table_Rowset_Abstract $trainingPlan) {
-        $content = '';
-        $trainingPlanId = null;
-
-        // split plan
-        if (1 < count($trainingPlan)) {
-            $content = $this->generateSplitTrainingPlanContent($trainingPlan);
-            $trainingPlanId = $trainingPlan->offsetGet(0)->offsetGet('training_plan_id');
-        } else if (1 === count($trainingPlan)) {
-            $trainingPlan = $trainingPlan->current();
-            if ($trainingPlan instanceof Zend_Db_Table_Row_Abstract) {
-                $this->view->assign('currentTrainingPlan', $this->generateCurrentTrainingPlanItem($trainingPlan));
-                $content = $this->generateSingleTrainingPlanContent($trainingPlan);
-                $trainingPlanId = $trainingPlan->offsetGet('training_plan_id');
-            }
-        }
-        $this->view->assign('trainingPlanOptionsContent', $this->generateDetailOptionsContent($trainingPlanId));
-
-        return $content;
-    }
-
-    private function generateSplitTrainingPlanContent(Zend_Db_Table_Rowset_Abstract $trainingPlanCollection) {
-        $content = '';
-        $headerContent = '';
-        $active = 'active';
-        $count = 1;
-        foreach ($trainingPlanCollection as $trainingPlan) {
-            // parent außer acht lassen
-            if (0 < $trainingPlan->offsetGet('training_plan_parent_fk')) {
-                $this->view->assign('classActive', $active);
-                $headerContent .= $this->generateSplitTrainingPlanHeaderRow($trainingPlan, $count);
-                $content .= $this->generateSingleTrainingPlanContent($trainingPlan);
-                ++$count;
-                $active = '';
-            } else {
-                $this->view->assign('currentTrainingPlan', $this->generateCurrentTrainingPlanItem($trainingPlan));
-            }
-        }
-        $this->view->assign('trainingPlansHeaderContent', $headerContent);
-        $this->view->assign('trainingPlansExercisesContent', $content);
-        return $this->view->render('loops/training-plan-split-container.phtml');
-    }
-
-    private function generateCurrentTrainingPlanItem(Zend_Db_Table_Row $trainingPlan) {
-        $trainingPlanName = $this->translate('label_training_plan');
-        if ($trainingPlan->offsetGet('training_plan_name')) {
-            $trainingPlanName = $trainingPlan->offsetGet('training_plan_name');
-        }
-        $trainingPlanName .=  ' ' . $this->translate('of') . ' : ';
-        $content = '<span class="item selected" data-id="'.$trainingPlan->offsetGet('training_plan_id').'">' .
-            $trainingPlanName . ' ' . date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))) .
-            '</a>';
-
-        return $content;
     }
 
     /**
@@ -169,91 +107,6 @@ class TrainingPlansController extends AbstractController {
         return $this->view->render('globals/select.phtml');
     }
 
-    private function generateSplitTrainingPlanHeaderRow(Zend_Db_Table_Row_Abstract $trainingPlan, $count) {
-        $name = trim($trainingPlan->offsetGet('training_plan_name'));
-        if (0 == strlen($name)) {
-            $name = $this->translate('label_day') . '' . $count;
-        }
-        $this->view->assign('name', $name);
-        return $this->view->render('loops/training-plan-split-header-row.phtml');
-    }
-
-    private function generateSingleTrainingPlanContent(Zend_Db_Table_Row_Abstract $trainingPlan) {
-        $content = '';
-
-        if (0 == $trainingPlan->offsetGet('training_plan_active')) {
-            $this->view->assign('archiveTrainingPlanLoaded', true);
-        }
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
-        $exercises = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlan->offsetGet('training_plan_id'));
-
-        foreach ($exercises as $exercise) {
-            $content .= $this->generateExerciseContent($exercise);
-        }
-
-        $this->view->assign('exercisesContent', $content);
-
-        $this->view->assign('startTrainingPlanLink', '/training-diaries/start/id/' . $trainingPlan->offsetGet('training_plan_id'));
-        return $this->view->render('loops/training-plan-split-exercise-row.phtml');
-    }
-
-    private function generateExerciseContent(Zend_Db_Table_Row_Abstract $exercise) {
-        $previewPicture = '/images/content/dynamisch/exercises/' . $exercise->offsetGet('exercise_id') . '/' . $exercise->offsetGet('exercise_preview_picture');
-        $previewPictureSource = '/images/content/statisch/grafiken/kein_bild.png';
-
-        if (is_file(getcwd() . '/' . $previewPicture)
-            && is_readable(getcwd() . '/' . $previewPicture)
-        ) {
-            $thumbnailService = new Service_Generator_Thumbnail();
-            $thumbnailService->setThumbWidth(1024);
-            $thumbnailService->setThumbHeight(768);
-            $thumbnailService->setSourceFilePathName(getcwd() . '/' . $previewPicture);
-            $previewPictureSource = $thumbnailService->generateImageString();
-        }
-        $this->view->assign($exercise->toArray());
-        $this->view->assign('previewSource', $previewPictureSource);
-        $this->view->assign('exercise_description', $exercise->offsetGet('exercise_description'));
-        $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($exercise));
-        $this->view->assign('exerciseOptionsContent', $this->generateExerciseOptionsContent($exercise));
-        $this->view->assign('muscleRatingContent', $this->generateMuscleRatingContent($exercise));
-
-        return $this->view->render('loops/training-plan-exercise.phtml');
-    }
-
-    public function generateExerciseOptionsContent($exercise) {
-
-        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
-        $exerciseOptionsService->setShowTrainingProgress(true);
-        $exerciseOptionsService->setAllowEdit(false);
-        // bereits ein value durch eine übung gesetzt
-//        if (array_key_exists('training_diary_x_exercise_option_exercise_option_value', $exercise)) {
-//            $exerciseOptionsService->setSelectedOptionValue($exercise['training_diary_x_exercise_option_exercise_option_value']);
-//        }
-        $exerciseOptionsService->setExerciseId($exercise['exercise_id']);
-        $exerciseOptionsService->setTrainingPlanXExerciseId($exercise['training_plan_x_exercise_id']);
-//        $exerciseOptionsService->setExerciseFinished($exercise['training_diary_x_training_plan_exercise_flag_finished']);
-
-        return $exerciseOptionsService->generate();
-    }
-
-    public function generateDeviceOptionsContent($exercise) {
-
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
-        $deviceOptionsService->setShowTrainingProgress(true);
-        $deviceOptionsService->setAllowEdit(false);
-
-        // bereits ein value durch eine übung gesetzt
-        //        if (array_key_exists('training_diary_x_device_option_device_option_value', $trainingDiaryXExercise)) {
-        //            $deviceOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_device_option_device_option_value']);
-        //        }
-        $deviceOptionsService->setExerciseId($exercise['exercise_id']);
-//        $deviceOptionsService->setTrainingDiaryXTrainingPlanExerciseId($exercise['training_diary_x_training_plan_exercise_id']);
-        $deviceOptionsService->setTrainingPlanXExerciseId($exercise['training_plan_x_exercise_id']);
-//        $deviceOptionsService->setExerciseFinished($exercise['training_diary_x_training_plan_exercise_flag_finished']);
-
-        return $deviceOptionsService->generate();
-    }
-
     /**
      * @param Zend_Db_Table_Row $exercise
      *
@@ -264,7 +117,7 @@ class TrainingPlansController extends AbstractController {
      *
      * @return string
      */
-    public function generateMuscleRatingContent($exercise) {
+    private function generateMuscleRatingContent($exercise) {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
         $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
@@ -383,10 +236,6 @@ class TrainingPlansController extends AbstractController {
                 $sContent = '';
 
                 try {
-//                    $trainingPlanService = new Service_TrainingPlan();
-//                    $trainingPlanId = $trainingPlanService->createTrainingPlan($aData);
-//                    $this->view->assign('trainingPlanId', $trainingPlanId);
-//                    $this->view->assign('training_plan_id', $trainingPlanId);
                     $currentName = 'NewPlan'.uniqid();
                     $this->view->assign('name', $currentName);
                     $sContent = '<ul class="nav nav-tabs"><li><a data-toggle="tab" href="#'.$currentName.'">New Plan</a>' .
@@ -419,9 +268,8 @@ class TrainingPlansController extends AbstractController {
      *
      */
     public function getExerciseAction() {
-        $aParams = $this->getAllParams();
-
-        if (array_key_exists('id', $aParams)) {
+        if (0 < ($id = $this->getParam('id'))) {
+            /*
             $exerciseId = $aParams['id'];
             $count = $aParams['counter'];
             $exercisesDb = new Model_DbTable_Exercises();
@@ -451,9 +299,64 @@ class TrainingPlansController extends AbstractController {
             $this->view->assign('count', $count);
             $this->view->assign($exercise->toArray());
 
-//            $this->view->assign('exerciseContent', $this->view->render('loops/training-plan-exercise-edit.phtml'));
-            $this->view->assign('exerciseContent', $this->view->render('loops/training-plan-exercise-edit.phtml'));
+            */
+            $this->view->assign('exerciseContent', $this->generateExerciseForEditContent($id));
         }
+    }
+
+    private function generateExerciseForEditContent($id) {
+        $exercisesDb = new Model_DbTable_Exercises();
+        $exercise = $exercisesDb->findByPrimary($id);
+        $previewPicture = '/images/content/dynamisch/exercises/' . $exercise->offsetGet('exercise_id') . '/' . $exercise->offsetGet('exercise_preview_picture');
+        $previewPictureSource = '/images/content/statisch/grafiken/kein_bild.png';
+        $count = $this->getParam('counter');
+
+        if (is_file(getcwd() . '/' . $previewPicture)
+            && is_readable(getcwd() . '/' . $previewPicture)
+        ) {
+            $thumbnailService = new Service_Generator_Thumbnail();
+            $thumbnailService->setThumbWidth(1024);
+            $thumbnailService->setThumbHeight(768);
+            $thumbnailService->setSourceFilePathName(getcwd() . '/' . $previewPicture);
+            $previewPictureSource = $thumbnailService->generateImageString();
+        }
+        $this->view->assign($exercise->toArray());
+        $this->view->assign('previewSource', $previewPictureSource);
+        $this->view->assign('exercise_description', $exercise->offsetGet('exercise_description'));
+
+        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService->setExerciseId($id);
+
+        if (isset($exercise['device_option_id'])) {
+            $deviceOptionsService->setOptionId($exercise['device_option_id']);
+        }
+        if (isset($exercise['device_id'])) {
+            $deviceOptionsService->setDeviceId($exercise['device_id']);
+        }
+        $deviceOptionsService->setForceGenerateEmptyInput(true);
+        $deviceOptionsService->setShowDelete(true);
+        $this->view->assign('deviceOptionContent', $deviceOptionsService->generate());
+
+        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        $exerciseOptionsService->setExerciseId($id);
+
+        if (isset($exercise['device_option_id'])) {
+            $exerciseOptionsService->setOptionId($exercise['exercise_option_id']);
+        }
+        $exerciseOptionsService->setForceGenerateEmptyInput(true);
+        $exerciseOptionsService->setShowDelete(true);
+
+        $this->view->assign('exerciseOptionContent', $exerciseOptionsService->generate());
+
+        $deviceOptionsService->setShowDelete(false);
+        $this->view->assign('deviceOptionsSelectContent', $deviceOptionsService->generateDeviceOptionsSelectContent());
+        $exerciseOptionsService->setShowDelete(false);
+        $this->view->assign('exerciseOptionsSelectContent', $exerciseOptionsService->generateExerciseOptionsSelectContent());
+
+        $this->view->assign('count', $count);
+        $this->view->assign('muscleRatingContent', $this->generateMuscleRatingContent($exercise));
+
+        return $this->view->render('loops/training-plan-exercise-edit.phtml');
     }
 
     /**
@@ -522,8 +425,37 @@ class TrainingPlansController extends AbstractController {
         $this->view->assign('exerciseProposalsContent', $this->view->render('globals/proposals.phtml'));
     }
 
+    /**
+     *
+     */
     public function newAction() {
-        $this->forward('edit');
+        $trainingPlanId = null;
+
+        if ($this->getRequest()->isPost()) {
+            $trainingPlanId = $this->createLayoutAction();
+        }
+
+        // wenn ein vorhandener training-plans abgerufen werden soll
+        if (0 < $trainingPlanId) {
+            $messageEntity = new Model_Entity_Message();
+            $messageEntity->setRedirectId($trainingPlanId)
+                ->setMessage('Trainingsplan erfolgreich angelegt!')
+                ->setState(Model_Entity_Message::STATUS_OK);
+            Service_GlobalMessageHandler::setMessageEntity($messageEntity);
+//            $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+//            $trainingPlanService = new Service_Generator_View_TrainingPlan($this->view);
+//            $this->view->assign('deviceOptionsSelectContent', $deviceOptionsService->generateDeviceOptionsSelectContent());
+//            $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+//            $this->view->assign('exerciseOptionsSelectContent', $exerciseOptionsService->generateExerciseOptionsSelectContent());
+//            $this->view->assign('trainingPlanContent', $trainingPlanService->generateTrainingPlanForEditContent($trainingPlanId));
+
+//            $trainingPlanTabHeaderContent = $trainingPlanService->getTrainingPlanTabHeaderContent();
+//            $trainingPlanTabHeaderContent .= '<li><span id="new_split_plan" class="glyphicon glyphicon-plus-sign add"></span></li>';
+
+//            $this->view->assign('trainingPlansHeaderContent', $trainingPlanTabHeaderContent);
+//            $this->view->assign('trainingPlanId', $trainingPlanId);
+//            $this->view->assign('userId', $this->findCurrentUserId());
+        }
     }
 
     /**
@@ -555,6 +487,7 @@ class TrainingPlansController extends AbstractController {
         if (null !== ($trainingPlanCollection = $this->getParam('trainingPlanCollection', null))) {
             $trainingPlanService = new Service_TrainingPlan();
             $trainingPlanService->saveTrainingPlan($trainingPlanCollection, $this->getParam('trainingPlanUserId'));
+            Service_GlobalMessageHandler::appendMessage('Trainingsplan erfolgreich angepasst!', Model_Entity_Message::STATUS_OK);
         }
     }
 
@@ -564,23 +497,6 @@ class TrainingPlansController extends AbstractController {
      *  - split
      */
     public function selectLayoutAction() {
-
-        if ($this->getRequest()->isPost()) {
-            try {
-                $trainingPlanId = $this->createLayoutAction();
-                if (is_numeric($trainingPlanId)
-                    && 0 < $trainingPlanId
-                ) {
-                    $this->redirect(
-                        '/training-plans/edit/id/' . $trainingPlanId . '/trainingPlanUserId/' . $this->getParam('trainingPlanUserId') . '/ajax/' . $this->getParam('ajax')
-                    );
-                } else {
-                    echo '<br /><br />' . "Konnte aktuellen Trainingsplan nicht anlegen!";
-                }
-            } catch (Exception $oException) {
-                echo '<br /><br />' . $oException->getMessage();
-            }
-        }
         $this->view->assign('userSelect', $this->generateUserSelectContent());
         $this->view->assign('trainingPlanSelect', $this->generateTrainingPlanSelectContent());
     }
@@ -675,5 +591,14 @@ class TrainingPlansController extends AbstractController {
         }
 
         return false;
+    }
+
+    public function deleteAction() {
+        $id = intval($this->getParam('id'));
+
+        if (0 < $id) {
+            $trainingPlanService = new Service_TrainingPlan();
+            $trainingPlanService->deleteTrainingPlan($id);
+        }
     }
 }

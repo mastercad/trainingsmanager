@@ -94,6 +94,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
         $this->getView()->assign('exercisesContent', $content);
 
         $this->getView()->assign('startTrainingPlanLink', '/training-diaries/start/id/' . $trainingPlan->offsetGet('training_plan_id'));
+        $this->getView()->assign('trainingPlanActive', $trainingPlan->offsetGet('training_plan_active'));
         $this->getView()->assign('musclesForTrainingPlanContent', $this->generateUsedMusclesForTrainingPlanContent());
         return $this->getView()->render('loops/training-plan-split-exercise-row.phtml');
     }

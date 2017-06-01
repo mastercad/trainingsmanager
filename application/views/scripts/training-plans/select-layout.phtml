@@ -45,17 +45,18 @@
         var trainingSelectAjax = null;
 
         jQuery('.save').unbind('click').click(function() {
+            jQuery(this).addClass('disabled');
             data = {
                 ajax: true,
                 trainingPlanUserId: jQuery('.member-select').data('value'),
                 trainingPlanLayoutId: jQuery('input[name=layout]:checked').val(),
                 templateTrainingPlanId: jQuery('.training-plan-select').data('value')
             };
-            trainingSelectAjax = jQuery.post('/'+controller+'/select-layout', data, function(response) {
+            trainingSelectAjax = jQuery.post('/'+controller+'/new', data, function(response) {
                 var json = JSON.parse(response);
-
                 if (200 == json.state) {
-                    jQuery('#content').html(Base64.decode(json.htmlContent));
+                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                    window.location.href = '/'+controller+'/edit/id/' + json.id;
                 } else {
                     showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                 }

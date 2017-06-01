@@ -29,7 +29,7 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
         $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
 
-        $oSelect->join('exercises', 'exercise_id = training_plan_exercise_fk')
+        $oSelect->join($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_exercise_fk')
             ->where('training_plan_x_exercise_id = ?', $iTrainingPlanExerciseId);
 
         return $this->fetchRow($oSelect);
@@ -40,15 +40,14 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findExercisesByTrainingPlanId($iTrainingPlanId) {
-        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(FALSE);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
-        $oSelect->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner('training_plans', 'training_plan_id = ' . $iTrainingPlanId)
+        $oSelect->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = ' . $iTrainingPlanId)
 //            ->joinLeft('training_diaries', '')
 //            ->joinLeft('training_diary_x_training_plan', '')
-            ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft('devices', 'device_id = exercise_x_device_device_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
             ->where('training_plan_x_exercise_training_plan_fk = ?', $iTrainingPlanId)
             ->order('training_plan_x_exercise_exercise_order');
 
@@ -63,10 +62,10 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(FALSE);
 
-        $oSelect->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
-            ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft('devices', 'device_id = exercise_x_device_device_fk')
+        $oSelect->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_plan_x_exercise_training_plan_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
             ->where('training_plan_id = ' . $iParentTrainingPlanId)
             ->orWhere('training_plan_parent_fk = ' . $iParentTrainingPlanId)
 //            ->where('trainingsplan_id = ' . $iParentTrainingsplanId . ' AND trainingsplan_layout_fk = 1')
@@ -108,15 +107,15 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
 //            ->order('trainingsplan_uebung_order');
 
         $oSelect
-            ->joinInner('training_diary_x_training_plan', 'training_diary_x_training_plan_training_plan_fk = training_plan_x_exercise_training_plan_fk')
+            ->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan'), 'training_diary_x_training_plan_training_plan_fk = training_plan_x_exercise_training_plan_fk')
 //            ->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_ = trainingsplan_uebung_id')
-            ->joinInner('training_diary_x_training_plan_exercise', 'training_diary_x_training_plan_exercise_t_p_x_e_fk = training_plan_x_exercise_id ' .
+            ->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan_exercise'), 'training_diary_x_training_plan_exercise_t_p_x_e_fk = training_plan_x_exercise_id ' .
                 'AND training_diary_x_training_plan_exercise_training_diary_fk = training_diary_x_training_plan_training_diary_fk')
-            ->joinInner('training_diaries', 'training_diary_id = training_diary_x_training_plan_training_diary_fk')
-            ->joinInner('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
-            ->joinInner('exercises', 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinLeft('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft('devices', 'device_id = exercise_x_device_device_fk')
+            ->joinInner($this->considerTestUserForTableName('training_diaries'), 'training_diary_id = training_diary_x_training_plan_training_diary_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_plan_x_exercise_training_plan_fk')
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
             ->where('training_plan_x_exercise_exercise_fk = ' . $iTrainingPlanExerciseId)
             ->order('training_diary_create_date DESC')
 //            ->order('trainingsplan_uebung_order')

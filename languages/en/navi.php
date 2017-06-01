@@ -6,6 +6,7 @@
         'label_overview' => 'Overview',
         'label_create' => 'Create',
         'label_edit' => 'Edit',
+        'label_new' => 'New',
         'label_archive' => 'Archive',
         'label_have_account' => 'Account already exists?',
     ];

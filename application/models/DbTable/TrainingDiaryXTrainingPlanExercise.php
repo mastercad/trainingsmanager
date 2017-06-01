@@ -38,16 +38,16 @@ class Model_DbTable_TrainingDiaryXTrainingPlanExercise extends Model_DbTable_Abs
     {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
-        $oSelect->joinInner('training_plan_x_exercise', 'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
-            ->joinInner('training_diary_x_training_plan', 'training_diary_x_training_plan_training_plan_fk = training_plan_x_exercise_training_plan_fk AND training_diary_x_training_plan_training_diary_fk = training_diary_x_training_plan_exercise_training_diary_fk')
-            ->joinInner('training_plans', 'training_plan_id = training_plan_x_exercise_training_plan_fk')
-            ->joinInner('training_plan_x_exercise AS trainingPlanExercises', 'trainingPlanExercises.training_plan_x_exercise_training_plan_fk = training_plan_id')
-            ->joinLeft('training_diary_x_training_plan_exercise AS trainingDiaryXTrainingPlanExercises', 'trainingDiaryXTrainingPlanExercises.training_diary_x_training_plan_exercise_t_p_x_e_fk = trainingPlanExercises.training_plan_x_exercise_id ' .
-                'AND trainingDiaryXTrainingPlanExercises.training_diary_x_training_plan_exercise_training_diary_fk = training_diary_x_training_plan_exercise.training_diary_x_training_plan_exercise_training_diary_fk')
-            ->where('training_diary_x_training_plan_exercise.training_diary_x_training_plan_exercise_id = ?', $trainingDiaryXTrainingPlanExerciseId)
+        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
+            ->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan'), 'training_diary_x_training_plan_training_plan_fk = training_plan_x_exercise_training_plan_fk AND training_diary_x_training_plan_training_diary_fk = training_diary_x_training_plan_exercise_training_diary_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_plan_x_exercise_training_plan_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise') . ' AS trainingPlanExercises', 'trainingPlanExercises.training_plan_x_exercise_training_plan_fk = training_plan_id')
+            ->joinLeft($this->considerTestUserForTableName('training_diary_x_training_plan_exercise') . ' AS trainingDiaryXTrainingPlanExercises', 'trainingDiaryXTrainingPlanExercises.training_diary_x_training_plan_exercise_t_p_x_e_fk = trainingPlanExercises.training_plan_x_exercise_id ' .
+                'AND trainingDiaryXTrainingPlanExercises.training_diary_x_training_plan_exercise_training_diary_fk = ' . $this->considerTestUserForTableName('training_diary_x_training_plan_exercise') . '.training_diary_x_training_plan_exercise_training_diary_fk')
+            ->where($this->considerTestUserForTableName('training_diary_x_training_plan_exercise') . '.training_diary_x_training_plan_exercise_id = ?', $trainingDiaryXTrainingPlanExerciseId)
             ->columns([
                 'COUNT(trainingPlanExercises.training_plan_x_exercise_id) = SUM(trainingDiaryXTrainingPlanExercises.training_diary_x_training_plan_exercise_flag_finished) AS trainingPlanIsFinished',
-                'training_diary_x_training_plan.training_diary_x_training_plan_id'
+                $this->considerTestUserForTableName('training_diary_x_training_plan') . '.training_diary_x_training_plan_id'
             ]);
 
         return $this->fetchRow($oSelect);

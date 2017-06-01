@@ -15,7 +15,9 @@ class MessageHelper extends Zend_Controller_Action_Helper_Abstract {
                 $messageEntity->setState($this->getResponse()->getHttpResponseCode());
             } else {
                 $state = $messageEntity->getState();
-                if (1 == $state) {
+                if (1 == $state
+                    || 200 == $state
+                ) {
                     $state = 200;
                 } else {
                     $state *= 100;

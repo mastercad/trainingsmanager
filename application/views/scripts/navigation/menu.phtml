@@ -9,6 +9,15 @@
 if (false == isset($this->iLevel)) {
     $this->iLevel = 0;
 }
+
+if (!function_exists('replaceSpecialChars')) {
+    function replaceSpecialChars($string) {
+        $string = str_replace(['Ü', 'ü', 'Ä', 'ä', 'Ö', 'ö', 'ß'], ['ue', 'ue', 'ae', 'ae', 'oe', 'oe', 'ss'], $string);
+
+        return $string;
+    }
+}
+
 ?>
 <ul <?php if ($this->iLevel == 0) {?>id="nav" class="nav navbar-nav level" <?php } else { echo 'class="dropdown-menu level' . $this->iLevel . '"';}?> >
 <?php
@@ -16,7 +25,7 @@ if (false == isset($this->iLevel)) {
         /** @var $page Zend_Navigation_Page_Mvc */
         if ($this->navigation()->accept($page)) {
 ?>
-            <li class="<?php echo $page->getClass(); echo ' ' . $page->getLabel();?>">
+            <li class="<?php echo $page->getClass(); echo ' ' . replaceSpecialChars($page->getLabel());?>">
                 <a
 <?php
                     if ('#' != $page->getHref()) {

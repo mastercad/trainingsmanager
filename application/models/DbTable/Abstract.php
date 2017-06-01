@@ -21,13 +21,7 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
             self::$aTableMetaData = $this->info();
         }
 
-        $user = Zend_Auth::getInstance()->getIdentity();
-
-        // current user member of a test group
-        if (true === is_object($user)
-            && preg_match('/^test\_/', $user->user_right_group_name)
-            && false === strpos('test_', $this->_name)
-        ) {
+        if (true === $this->checkIfTestUser()) {
             $this->_name = 'test_' . $this->_name;
         }
     }
@@ -40,5 +34,28 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
     public function getInfo()
     {
         return self::$aTableMetaData;
+    }
+
+    public function checkIfTestUser() {
+
+        $user = Zend_Auth::getInstance()->getIdentity();
+
+        // current user member of a test group
+        if (true === is_object($user)
+            && preg_match('/^test\_/', $user->user_right_group_name)
+            && false === strpos('test_', $this->_name)
+        ) {
+            return true;
+        }
+        return false;
+    }
+
+    public function considerTestUserForTableName($tableName) {
+        if (true === $this->checkIfTestUser()
+            && 0 == preg_match('/^test_/', $tableName)
+        ) {
+            return 'test_' . trim($tableName);
+        }
+        return $tableName;
     }
 }

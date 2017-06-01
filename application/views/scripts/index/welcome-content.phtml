@@ -1,0 +1,122 @@
+<div class="col-sm-12 text-center">
+    <p>
+        <button type="button" id="demo" class="btn btn-default btn-lg" data-demo="">
+            <span class="glyphicon glyphicon-play"></span>
+            Start the demo
+        </button>
+    </p>
+</div>
+
+<div class="col-sm-12">
+    <h3>
+        Herzlich Willkommen im Trainingsmanager, Gast!
+    </h3>
+</div>
+<div class="col-sm-12">
+    <p>
+        Diese Application wurde entwickelt, um komfortabel trainieren zu können und den fortschritt übersichtlich und hilfreich angezeigt zu bekommen.
+    </p>
+    <p>
+        Mit dieser Application kannst du mit den jeweils notwendigen Rechten:
+    </p>
+</div>
+<div class="col-sm-12" style="padding-left: 30px;">
+    <ul>
+        <li>
+            Muskeln anlegen
+        </li>
+        <li>
+            Diese Muskeln in Muskelgruppen sortieren
+        </li>
+        <li>
+            Geräte anlegen
+        </li>
+        <li>
+            Diese Geräte in Gerätegruppen sortieren
+        </li>
+        <li>
+            Übungen anlegen
+        </li>
+        <li>
+            Trainingspläne anlegen
+        </li>
+        <li>
+            Diese Trainingspläne starten
+        </li>
+        <li>
+            Übungen, beim anlegen des Trainingsplanes sortiert, nacheinander abarbeiten
+        </li>
+    </ul>
+</div>
+
+<div class="col-sm-12">
+<p>
+    Zu dem kann man Widgets komfortabel auf dem Dashboard anlegen und so seinen Trainingsfortschritt auf einfache weise immer im blick haben.
+</p>
+<p>
+    Zusätzlich ist eine anbindung von Strava und Runtastic in der Entwicklung um auch die dort verzeichneten Fortschritte mit in die übersichten und auswertungen einfließen lassen zu können.
+</p>
+<p>
+    Um diese Application ausgiebig zu testen, kannst du dich mit folgenden Accounts anmelden und dir in Ruhe die Möglichkeiten ansehen:
+</p>
+</div>
+
+<form method="post">
+    <div class="form-group">
+        <input type="hidden" name="enc_user_login_name" value="<?php echo base64_encode('test_user');?>"/>
+        <input type="hidden" name="enc_user_login_password" value="<?php echo base64_encode('test_user');?>" />
+        <input type="submit" class="btn btn-default btn-primary" value="Login als Test User" />
+    </div>
+</form>
+(für einen User können von Administratoren (einer Gruppe oder Globale) trainingspläne angelegt werden, der User braucht sich um so etwas nicht kümmern, dieser account dient lediglich zum trainieren.
+<br />
+<form method="post">
+    <div class="form-group">
+        <input type="hidden" name="enc_user_login_name" value="<?php echo base64_encode('test_member');?>"/>
+        <input type="hidden" name="enc_user_login_password" value="<?php echo base64_encode('test_member');?>" />
+        <input type="submit" class="btn btn-default btn-primary" value="Login als Test Mitglied" />
+    </div>
+</form>
+(ein Mitglied kann selbst seine Trainingspläne anlegen und sie auch editieren, zu dem kann ein Mitglied selbstverständlich auch nach einem Trainingsplan trainieren).
+<br />
+<br />
+<form method="post">
+    <div class="form-group">
+        <input type="hidden" name="enc_user_login_name" value="<?php echo base64_encode('test_group_user');?>"/>
+        <input type="hidden" name="enc_user_login_password" value="<?php echo base64_encode('test_group_user');?>" />
+        <input type="submit" class="btn btn-default btn-primary" value="Login als Test Gruppen User" />
+    </div>
+</form>
+(ein Gruppen User hat die selben möglichkeiten wie ein user, kann aber von Gruppen administratoren supported werden).
+<br />
+<form method="post">
+    <div class="form-group">
+        <input type="hidden" name="enc_user_login_name" value="<?php echo base64_encode('test_group_admin');?>"/>
+        <input type="hidden" name="enc_user_login_password" value="<?php echo base64_encode('test_group_admin');?>" />
+        <input type="submit" class="btn btn-default btn-primary" value="Login als Test Gruppen Admin" />
+    </div>
+</form>
+(ein Administrator einer bestimmten Gruppe. dieser administrator kann trainingspläne dieser gruppe bearbeiten, auch er kann wie ein normaler user oder ein mitglied einen trainingsplan abarbeiten).
+<br />
+<br />
+<form method="post">
+    <div class="form-group">
+        <input type="hidden" name="enc_user_login_name" value="<?php echo base64_encode('test_admin');?>"/>
+        <input type="hidden" name="enc_user_login_password" value="<?php echo base64_encode('test_admin');?>" />
+        <input type="submit" class="btn btn-default btn-primary" value="Login als Test Admin" />
+    </div>
+</form>
+(ein Admin kann global auf alle Trainingspläne zugreifen, sie bearbeiten und neue anlegen. auch er kann selbstverständlich auch normal einen Trainingsplan abarbeiten).
+
+<script type="text/javascript" src="/js/tainingsmanager_tour.js"></script>
+
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        jQuery('body').css('overflow', 'auto');
+        var demoButton = jQuery('#demo');
+
+        demoButton.unbind('click').click(function() {
+            tour.restart();
+        });
+    });
+</script>
