@@ -142,9 +142,11 @@ class Service_TrainingPlan {
 
     private function removeWasteExercisesFromDatabase($currentTrainingPlanXExerciseCollection) {
         /** delete all old exercises in DB */
-        foreach ($currentTrainingPlanXExerciseCollection as $exerciseId => $currentTrainingPlanXExercise) {
-            $currentTrainingPlanExerciseId = $currentTrainingPlanXExercise['exercise']->offsetGet('training_plan_x_exercise_id');
-            $this->deleteTrainingPlanExercise($currentTrainingPlanExerciseId);
+        if (is_array($currentTrainingPlanXExerciseCollection)) {
+            foreach ($currentTrainingPlanXExerciseCollection as $exerciseId => $currentTrainingPlanXExercise) {
+                $currentTrainingPlanExerciseId = $currentTrainingPlanXExercise['exercise']->offsetGet('training_plan_x_exercise_id');
+                $this->deleteTrainingPlanExercise($currentTrainingPlanExerciseId);
+            }
         }
         return $this;
     }
@@ -154,8 +156,17 @@ class Service_TrainingPlan {
         $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
 
         $trainingPlanXExerciseId = $exercise['trainingPlanExerciseId'];
-        $exerciseRemark = base64_decode($exercise['exerciseRemark']);
         $exerciseId = $exercise['exerciseId'];
+
+        // fallback wenn beim erstellen ohne reload nochmals gespeichert wird
+        if (empty($trainingPlanXExerciseId)) {
+            $trainingPlanExercise = $trainingPlanXExerciseDb->findExerciseByParentTrainingPlanIdAndExerciseId($trainingPlanId, $exerciseId);
+            if ($trainingPlanExercise instanceof Zend_Db_Table_Row_Abstract) {
+                $trainingPlanXExerciseId = $trainingPlanExercise->offsetGet('training_plan_x_exercise_id');
+            }
+        }
+
+        $exerciseRemark = base64_decode($exercise['exerciseRemark']);
         $exerciseShouldDeleted = (array_key_exists('deleted', $exercise) && $exercise['deleted']) ? true : false;
         static $exerciseCount = 0;
 
@@ -316,11 +327,11 @@ class Service_TrainingPlan {
         $trainingPlanXExerciseOptionDb = new Model_DbTable_TrainingPlanXExerciseOption();
         $trainingPlanXDeviceOptionDb = new Model_DbTable_TrainingPlanXDeviceOption();
 
-        $currentTrainingPlanXExercisesDb = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanId);
+        $currentTrainingPlanXExercisesInDb = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanId);
         $currentTrainingPlanXExerciseCollection = [];
 
         /** iterate all trainingPlanXExercises in DB */
-        foreach ($currentTrainingPlanXExercisesDb as $currentTrainingPlanExercise) {
+        foreach ($currentTrainingPlanXExercisesInDb as $currentTrainingPlanExercise) {
             $currentTrainingPlanExerciseId = $currentTrainingPlanExercise->offsetGet('training_plan_x_exercise_id');
             $currentExerciseId = $currentTrainingPlanExercise->offsetGet('exercise_id');
             $currentTrainingPlanXExerciseCollection[$currentExerciseId] = [];

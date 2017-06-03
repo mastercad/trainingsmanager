@@ -9,8 +9,11 @@
 
 <div class="controller flex-item"
      data-controller-name="<?php echo $this->sControllerName;?>" >
-    <span >Controller: </span>
-
+    <strong>
+        <span>
+            Controller:
+        </span>
+    </strong>
     <div class="checkbox checkbox-primary">
 
         <input class="global-check"
@@ -23,7 +26,9 @@
             <?php if (true === $this->bGlobalControllerRightInherited) {echo ' disabled ';}?> />
 
         <label for="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_active';?>">
-            <?php echo $this->sControllerName;?>
+            <strong>
+                <?php echo $this->sControllerName;?>
+            </strong>
         </label>
     </div>
 

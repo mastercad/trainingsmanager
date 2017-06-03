@@ -18,8 +18,8 @@ class Auth_Plugin_Acl extends Zend_Acl
         $obj_db_user_right_groups_rights = new Auth_Model_DbTable_UserRightGroupRights();
         $obj_db_user_right_groups = new Auth_Model_DbTable_UserRightGroups();
 
-        $a_user_right_groups_rights = $obj_db_user_right_groups_rights->getUserRightGroupRights();
-        $a_user_right_groups = $obj_db_user_right_groups->getUserRightGroups();
+        $a_user_right_groups_rights = $obj_db_user_right_groups_rights->findUserRightGroupRights();
+        $a_user_right_groups = $obj_db_user_right_groups->findUserRightGroups();
         $a_user_right_groups_namen = array();
         $a_user_right_groups_erbt_von = array();
 

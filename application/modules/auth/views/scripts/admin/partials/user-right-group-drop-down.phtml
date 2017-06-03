@@ -1,8 +1,8 @@
-<form method="post" action="" onchange="submit();">
-    <label for="user_rechte_gruppe_id">
-        Rechte Gruppe:
+<div class="form-group">
+    <label class="control-label" for="<?php echo $this->prefix;?>_id">
+        <?php echo $this->labelText;?>:
     </label>
-    <select id="user_right_group_id" name="user_right_group_id">
+    <select class="form-control" id="<?php echo $this->prefix;?>_id" name="<?php echo $this->prefix;?>_id">
         <?php echo $this->userRightGroupOptionsContent;?>
     </select>
-</form>
+</div>

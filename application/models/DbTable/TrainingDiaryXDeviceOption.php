@@ -85,7 +85,9 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
             ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_plan_x_exercise_training_plan_fk')
             ->joinInner($this->considerTestUserForTableName('device_options'), 'device_option_id = training_diary_x_device_option_device_option_fk')
             ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinLeft($this->considerTestUserForTableName('training_plan_x_device_option'), 'training_plan_x_device_option_training_plan_exercise_fk = training_plan_x_exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('training_plan_x_device_option'),
+                'training_plan_x_device_option_training_plan_exercise_fk = training_plan_x_exercise_id AND ' .
+                'training_plan_x_device_option_device_option_fk = training_diary_x_device_option_device_option_fk')
             ->order(['training_diary_id', 'training_plan_x_exercise_exercise_order'])
             ->columns([
                 'training_diary_x_device_option_create_date',
@@ -99,6 +101,8 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
         if (!empty($userId)) {
             $select->where('training_plan_user_fk = ?', $userId);
         }
+
+        $sql = $select->assemble();
 
         return $this->fetchAll($select);
     }

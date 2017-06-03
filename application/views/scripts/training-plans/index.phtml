@@ -1,9 +1,11 @@
 <div class="col-sm-3" id="left">
-    <h4>
-        <?php echo $this->translate('label_current_training_plan');?>:
-    </h4>
-    <div id="current_training_plan">
-        <?php echo $this->currentTrainingPlan;?>
+    <div class="current-training-plans">
+        <h4>
+            <?php echo $this->translate('label_current_training_plan');?>:
+        </h4>
+        <div id="current_training_plan">
+            <?php echo $this->currentTrainingPlan;?>
+        </div>
     </div>
 
     <hr />
@@ -15,53 +17,90 @@
     </div>
     <div id="mobile_content_old_training_plan"></div>
 </div>
+
 <div class="col-sm-9" id="right">
-    <div class="detail-options">
+    <div class="training-plans detail-options">
         <?php echo $this->trainingPlanOptionsContent;?>
     </div>
 
     <?php echo $this->trainingPlanContent;?>
 </div>
 
+<script type="text/javascript" src="/js/trainingsmanager_tour.js"></script>
+
 <script type="text/javascript">
     var ajax = null;
     var archivePlanLoaded = '<?php echo $this->archivePlanLoaded;?>';
 
-    function deleteEntry(id) {
-        BootstrapDialog.show({
-            type: BootstrapDialog.TYPE_WARNING,
-            message: '<?php echo $this->translate('text_really_delete');?>',
-            buttons: [{
-                label: 'Delete',
-                // no title as it is optional
-                cssClass: 'btn-primary',
-                action: function(dialogItself){
-                    dialogItself.close();
-                    deleteTrainingPlan(id);
+    jQuery(document).ready(function() {
+        jQuery('.training-diary-interpolate').unbind('click').click(function () {
+            jQuery(this).attr('disabled', true).addClass('disabled');
+
+            jQuery.post('/' + controller + '/interpolate-training-diary', {ajax: true}, function(response) {
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                 }
-            }, {
-                label: 'Cancel',
-                action: function(dialogItself){
-                    dialogItself.close();
-                    return false;
-                }
-            }]
+            });
         });
-    }
 
-    function deleteTrainingPlan(id) {
-        if (ajax) {
-            ajax.abort();
-        }
-        ajax = jQuery.post('/'+controller+'/delete', {id: id, ajax: true}, function(response) {
-            var json = JSON.parse(response);
+        jQuery('#training_plans_demo').unbind('click').click(function () {
+            tour.init();
+            tour.restart();
+            setTourStartPositionByTitle('Trainingspläne');
 
-            if (200 == json.state) {
-                jQuery('#accordion_old_training_plans .dropdown-menu').find("a[data-value='" + id + "']").remove();
-                showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+            if ('MEMBER' == UserRightGroup
+                || 'TEST_MEMBER' == UserRightGroup
+                || 'ADMIN' == UserRightGroup
+                || 'TEST_ADMIN' == UserRightGroup
+                || 'GROUP_ADMIN' == UserRightGroup
+                || 'SUPERADMIN' == UserRightGroup
+            ) {
+                setTourEndPositionByTitle('Übungen - Übung bearbeiten - speichern');
             } else {
-                showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                setTourEndPositionByTitle('Übungen - Übung bearbeiten - speichern');
             }
         });
-    }
+
+        function deleteEntry(id) {
+            BootstrapDialog.show({
+                type: BootstrapDialog.TYPE_WARNING,
+                message: '<?php echo $this->translate('text_really_delete');?>',
+                buttons: [{
+                    label: 'Delete',
+                    // no title as it is optional
+                    cssClass: 'btn-primary',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                        deleteTrainingPlan(id);
+                    }
+                }, {
+                    label: 'Cancel',
+                    action: function (dialogItself) {
+                        dialogItself.close();
+                        return false;
+                    }
+                }]
+            });
+        }
+
+        function deleteTrainingPlan(id) {
+            if (ajax) {
+                ajax.abort();
+            }
+            ajax = jQuery.post('/' + controller + '/delete', {id: id, ajax: true}, function (response) {
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    jQuery('#accordion_old_training_plans .dropdown-menu').find("a[data-value='" + id + "']").remove();
+                    showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
+            });
+        }
+    });
 </script>

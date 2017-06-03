@@ -37,6 +37,7 @@
         'label_option-value' => 'value',
         'label_day' => 'Day',
         'label_remark' => 'Remark',
+        'label_profile' => 'Profile',
 
         'text_needed_permissions' => 'You are not allowed to see this site',
 

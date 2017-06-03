@@ -6,10 +6,7 @@
         return ucfirst(str_replace('-', '', $piece[1]));
     }
 
-    function generatePathDepth($neededDepth, $currentDepth, $currentPath) {
-
-    }
-
+/*
     $db = mysqli_connect('172.18.0.2', 'root', 'dwj8YvVHdLVP', 'site_test');
 
     $maxSitesCount = 500000;
@@ -79,3 +76,8 @@
     $end = microtime(true);
 
     echo "Time : " . ($end - $start);
+*/
+
+    for ($i = 0; $i < 10; ++$i) {
+        echo PHP_EOL . mt_rand(-2, 3);
+    }

@@ -19,9 +19,10 @@
             '<div class="row">
                 <div class="col-sm-12 text-center">
                     <p>
-                        <button type="button" id="demo" class="btn btn-default btn-lg" data-demo="">
+                        <button type="button" id="exercises_demo" class="btn btn-default btn-lg" data-demo="">
                             <span class="glyphicon glyphicon-play"></span>
-                            Start the demo
+<!--                            Start the ' . call_user_func([$this, 'translate'], "label_exercises") . ' demo-->
+                            Start exercises demo
                         </button>
                     </p>
                 </div>

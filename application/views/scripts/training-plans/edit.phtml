@@ -1,6 +1,18 @@
-<ul class="tab-droppable nav nav-tabs">
-    <?php echo $this->trainingPlansHeaderContent;?>
-</ul>
+<div class="row" style="padding-bottom: 20px;">
+    <div class="col-sm-12">
+        <strong>
+            <?php echo $this->userNameContent;?>
+        </strong>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <ul class="tab-droppable nav nav-tabs">
+            <?php echo $this->trainingPlansHeaderContent;?>
+        </ul>
+    </div>
+</div>
 
 <div class="training-plans tab-content">
 <?php
@@ -89,38 +101,6 @@
                     } else {
                         showDialog(json.message, BootstrapDialog.TYPE_DANGER);
                     }
-                }
-            });
-        });
-
-        $('#new_split_plan').unbind('click').bind('click', function() {
-            var sUrl = '/training-plans/get-training-plan-for-split';
-            var oParams = {
-                'user_id': '<?php echo $this->userId;?>',
-                'training_plan_id': '<?php echo $this->trainingPlanId;?>',
-                'ajax': 1
-            };
-
-            if (ajax) {
-                ajax.abort();
-            }
-
-            var that = this;
-            ajax = jQuery.post(sUrl, oParams, function(response) {
-                try {
-                    var json = JSON.parse(response);
-
-                    if (200 == json.state) {
-                        var content = Base64.decode(json.htmlContent);
-                        jQuery(content).find("li").insertBefore(jQuery(that).parent());
-                        jQuery('.tab-content').append(jQuery(content).filter('div.tab-pane').get(0));
-                        trainingPlanEditInit();
-                        initTabs();
-                    } else {
-                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
-                    }
-                } catch (e) {
-
                 }
             });
         });

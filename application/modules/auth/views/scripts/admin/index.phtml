@@ -7,16 +7,28 @@
  */
 ?>
 
-<?php echo $this->userRightGroupSelectContent;?>
+<form method="post" action="" onchange="submit();">
+    <div class="input-group">
+        <?php echo $this->userRightGroupSelectContent;?>
+    </div>
+</form>
 
 <form method="post" action="">
+    <div class="input-group">
+        <?php echo $this->userInheritRightGroupSelectContent;?>
+    </div>
+
     <?php echo $this->sContent;?>
-    <input type="hidden" name="user_right_group_id" value="<?php echo $this->iUserRechteGruppeId;?>" />
-    <input type="submit" name="save" value="speichern" />
+
+    <div class="form-group">
+        <input type="hidden" name="user_right_group_id" value="<?php echo $this->iUserRechteGruppeId;?>" />
+        <input class="form-control ui-submit" type="submit" name="save" value="speichern" />
+    </div>
 </form>
 
 <script type="text/javascript">
     jQuery(document).ready(function() {
         jQuery('body').css('overflow', 'auto');
+        jQuery('[data-toggle="tooltip"]').tooltip();
     });
 </script>

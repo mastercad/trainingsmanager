@@ -37,6 +37,7 @@
         'label_option-value' => 'Wert',
         'label_day' => 'Tag',
         'label_remark' => 'Anmerkung',
+        'label_profile' => 'Profil',
 
         'or' => 'oder',
         'and' => 'und',

@@ -1,21 +1,38 @@
 <div id="<?php echo $this->name;?>" class="tab-pane fade in <?php echo $this->classActive;?>">
 
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-12 muscles-for-training-plan">
             <?php echo $this->musclesForTrainingPlanContent;?>
         </div>
     </div>
 
     <?php echo $this->exercisesContent;?>
 
-<?php if (true == $this->trainingPlanActive) {
+<?php
+    if (true == $this->trainingPlanActive) {
 ?>
-    <a href="<?php echo $this->startTrainingPlanLink; ?>">
-        <button class="btn btn-default btn-primary">
-            Start Training Plan
-        </button>
-    </a>
+    <div class="row">
+        <div class="col-sm-12">
+            <a href="<?php echo $this->startTrainingPlanLink; ?>">
+                <button class="training-plan-start btn btn-default btn-primary">
+                    Start Training Plan
+                </button>
+            </a>
+        </div>
+    </div>
 <?php
     }
+
+    if (true == $this->allowedToInterpolate) {
+?>
+    <div class="row">
+        <div class="col-sm-12">
+            <button class="training-diary-interpolate btn btn-default btn-primary">
+                Erzeuge Trainingstagebucheinträge
+            </button>
+        </div>
+    </div>
+<?php
+}
 ?>
 </div>

@@ -59,8 +59,7 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findExercisesByParentTrainingPlanId($iParentTrainingPlanId) {
-        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-            ->setIntegrityCheck(FALSE);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
         $oSelect->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
             ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_plan_x_exercise_training_plan_fk')
@@ -122,5 +121,14 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
         ;
 
         return $this->fetchRow($oSelect);
+    }
+
+    public function findExerciseByParentTrainingPlanIdAndExerciseId($trainingPlanId, $exerciseId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->where('training_plan_x_exercise_training_plan_fk = ?', $trainingPlanId)
+            ->where('training_plan_x_exercise_exercise_fk = ?', $exerciseId);
+
+        return $this->fetchRow($select);
     }
 }

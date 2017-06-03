@@ -27,20 +27,9 @@
 
     <label class="rotate"
         for="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName . '_active';?>"
-    ><?php echo $this->sActionName;?></label>
-
-    <input class="orig" type="checkbox"
-           name="user_right_group_right_active_orig[<?php echo $this->iInputCount;?>]"
-           id="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName . '_orig';?>"
-        <?php
-        if (true === $this->bActionChecked) {echo ' checked ';}
-        if (true === $this->bActionRightInherited) { echo ' disabled ';}
-        ?>
-           title="<?php echo $this->sTitle;?>" />
-
-    <input type="hidden"
-           name="user_right_group_right_id[<?php echo $this->iInputCount;?>]"
-           value="<?php echo $this->iUserRechteGruppenRechtId;?>" />
+        data-toggle="tooltip"
+        title="<?php echo $this->sTitle;?>"
+        ><?php echo $this->sActionName;?></label>
 
     <input type="hidden"
            name="user_right_group_right[<?php echo $this->iInputCount;?>]"

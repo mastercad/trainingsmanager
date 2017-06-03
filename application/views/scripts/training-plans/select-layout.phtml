@@ -7,34 +7,44 @@
  */ 
 ?>
 
-<!--<form method="post" action="">-->
-
-    <?php echo $this->userSelect;?>
-
-    <div class="form-group" style="margin-top: 20px;">
-        <label class="custom-control custom-radio">
-            <input id="layout1" name="layout" type="radio" class="custom-control-input" value="1">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"><?php echo $this->translate('label_normal_training_plan');?></span>
-        </label>
-        <label class="custom-control custom-radio">
-            <input id="layout2" name="layout" type="radio" class="custom-control-input" value="2">
-            <span class="custom-control-indicator"></span>
-            <span class="custom-control-description"><?php echo $this->translate('label_split_training_plan');?></span>
-        </label>
+<div class="row">
+    <div class="col-sm-12">
+        <?php echo $this->userSelect;?>
     </div>
 
-    <div class="form-group">
-        <label class="checkbox-inline">
-            <?php echo $this->translate('or') . ' ' . $this->translate('select_existing_training_plan_as_template');?> :
-        </label>
+    <div class="col-sm-12">
+        Trainingsplan Layout für einen neuen Trainingsplan auswählen :
+        <div class="form-group">
+
+            <div class="checkbox checkbox-primary">
+                <label class="custom-control custom-radio">
+                    <input id="layout1" name="layout" type="radio" class="custom-control-input" value="1">
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description"><?php echo $this->translate('label_normal_training_plan');?></span>
+                </label>
+            </div>
+
+            <div class="checkbox checkbox-primary">
+                <label class="custom-control custom-radio">
+                    <input id="layout2" name="layout" type="radio" class="custom-control-input" value="2">
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description"><?php echo $this->translate('label_split_training_plan');?></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12">
+        <?php echo $this->translate('or') . ' ' . $this->translate('select_existing_training_plan_as_template');?> :
         <?php echo $this->trainingPlanSelect;?>
     </div>
 
-    <button class="btn btn-primary btn-block save" style="margin-top: 20px;">
-        create
-    </button>
-<!--</form>-->
+    <div class="col-sm-12">
+        <button class="btn btn-primary btn-block save" style="margin-top: 20px;">
+            create
+        </button>
+    </div>
+</div>
 
 <script type="text/javascript" language="JavaScript">
     jQuery('document').ready(function(){
@@ -46,6 +56,15 @@
 
         jQuery('.save').unbind('click').click(function() {
             jQuery(this).addClass('disabled');
+
+            if (!jQuery('input[name=layout]:checked').val()
+                && !jQuery('.training-plan-select').data('value')
+            ) {
+                showDialog("Es muss entweder ein Layout für einen neuen Trainingsplan,<br /><br />" +
+                    "oder ein bestehender als Vorlage ausgewählt werden!", BootstrapDialog.TYPE_DANGER);
+                jQuery(this).removeClass('disabled');
+                return false;
+            }
             data = {
                 ajax: true,
                 trainingPlanUserId: jQuery('.member-select').data('value'),

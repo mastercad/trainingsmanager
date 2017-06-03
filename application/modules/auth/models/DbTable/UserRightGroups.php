@@ -15,27 +15,11 @@ class Auth_Model_DbTable_UserRightGroups extends Zend_Db_Table_Abstract
 		}
 	}
 
-	public function getUserRightGroups()
-	{
-		try
-		{
-			$rows = $this->fetchAll();
-
-			if( !$rows)
-			{
-				throw new Exception("Konnte User Rechte Gruppen Liste nicht laden!");
-			}
-		}
-		catch( Exception $e)
-		{
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $e->getMessage() . "<br />";
-			return false;
-		}
-		return $rows->toArray();
+	public function findUserRightGroups() {
+        return $this->fetchAll();
 	}
 	
-	public function getUserRightGroup($a_options)
+	public function findUserRightGroup($a_options)
 	{
 		$row = '';
 		

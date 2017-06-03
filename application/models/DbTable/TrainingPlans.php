@@ -90,7 +90,7 @@ class Model_DbTable_TrainingPlans extends Model_DbTable_Abstract
         return $this->fetchAll(
             'training_plan_user_fk = ' . $userId . ' AND (training_plan_active = 0 OR training_plan_active IS NULL) AND (' .
                 'training_plan_parent_fk IS NULL OR training_plan_parent_fk = 0)',
-            ['training_plan_create_date']
+            ['training_plan_create_date DESC']
         );
     }
 

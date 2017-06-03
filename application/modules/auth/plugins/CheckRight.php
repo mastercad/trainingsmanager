@@ -16,6 +16,8 @@
 				$resource = $module . ':' . $controller;
 			}
 
+            Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role, $resource, $action);
+
 			if (!$acl->isAllowed($role, $resource, $action)
 				&& !$acl->isAllowed($role, $resource, '*')
             ) {

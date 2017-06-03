@@ -21,7 +21,7 @@ class Auth_Model_DbTable_UserRightGroupRights extends Zend_Db_Table_Abstract
         }
     }
 
-    public function getUserRightGroupRights($iUserGruppeRechtFk = null)
+    public function findUserRightGroupRights($iUserGruppeRechtFk = null)
     {
         try {
             $oSelect = $this->select(true)->setIntegrityCheck(false);

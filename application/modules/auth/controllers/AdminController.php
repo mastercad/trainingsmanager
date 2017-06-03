@@ -13,44 +13,73 @@ class Auth_AdminController extends AbstractController {
     private $_iCurrentRechteUserGruppenRechtId;
     private $_iInputCount = 0;
     private $userRightGroupsHierarchy = [];
+    private $userRightGroups = [];
+
+    public function init() {
+        $userRightGroupsDb = new Auth_Model_DbTable_UserRightGroups();
+        $userRightGroups = $userRightGroupsDb->findUserRightGroups();
+
+        foreach ($userRightGroups as $userRightGroup) {
+            $this->userRightGroups[$userRightGroup->offsetGet('user_right_group_id')] = $userRightGroup->offsetGet('user_right_group_name');
+        }
+    }
 
     public function indexAction() {
         $aMoCcAcData = CAD_Tool_ModuleControllerActionLister::collect();
-        $oUserRechteGruppenRechteDbTable = new Auth_Model_DbTable_UserRightGroupRights();
-        $iUserRechteGruppeId = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_id', 4);
+        $userRightGroupsDb = new Model_DbTable_UserRightGroups();
+        $userRightGroup = null;
+        $userRightGroupRightDb = new Auth_Model_DbTable_UserRightGroupRights();
+        $iUserRechteGruppeId = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_id', 1);
+        $iUserRechteGruppeParentId = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_parent_id');
         $sSpeichern = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->save');
-        $this->userRightGroupsHierarchy = $this->generatesUserRightGroupsHierarchy();
 
-        if (null !== $sSpeichern) {
-            $aUserRechteGruppenRechte = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right');
-            $aUserRechteGruppenRechtId = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right_id');
-            $aUserRechteGruppenRechtAktiv = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right_active');
-            $aUserRechteGruppenRechtAktivOrig = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right_active_orig');
-
-            foreach ($aUserRechteGruppenRechte as $iKey => $sUserRechteGruppenRecht) {
-                $iUserRechteGruppenRechtId = CAD_Tool_Extractor::extractOverPath($aUserRechteGruppenRechtId, $iKey);
-                $sUserRechteGruppenRechtAktiv = CAD_Tool_Extractor::extractOverPath($aUserRechteGruppenRechtAktiv, $iKey);
-                $sUserRechteGruppenRechtAktivOrig = CAD_Tool_Extractor::extractOverPath($aUserRechteGruppenRechtAktivOrig, $iKey);
-
-                // wenn sich der status geändert hat
-                if ($sUserRechteGruppenRechtAktiv != $sUserRechteGruppenRechtAktivOrig) {
-                    $aData = array(
-                        'user_right_group_right' => $sUserRechteGruppenRecht,
-                        'user_right_group_fk' => $iUserRechteGruppeId,
-                    );
-                    // recht existiert bereits in der DB
-                    if (0 < strlen(trim($iUserRechteGruppenRechtId))) {
-                        $oUserRechteGruppenRechteDbTable->delete('user_right_group_right_id = ' . $iUserRechteGruppenRechtId);
-                    } else {
-                        $aData['user_right_group_right_create_date'] = date('Y-m-d H:i:s');
-                        $aData['user_right_group_right_create_user_fk'] = $this->findCurrentUserId();
-                        $oUserRechteGruppenRechteDbTable->insert($aData);
-                    }
-                }
+        if (0 < $iUserRechteGruppeId) {
+            $userRightGroup = $userRightGroupsDb->findByPrimary($iUserRechteGruppeId);
+            if (empty($iUserRechteGruppeParentId)) {
+                $iUserRechteGruppeParentId = $userRightGroup->user_right_group_parent_fk;
             }
         }
 
-        $oUserRechteGruppenRechteRowSet = $oUserRechteGruppenRechteDbTable->getUserRightGroupRights();
+        if (null !== $sSpeichern) {
+            $currentUserRightGroupRights = $this->collectCurrentUserRightGroupRights($iUserRechteGruppeId);
+            $aUserRechteGruppenRechte = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right');
+            $aUserRechteGruppenRechtAktiv = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right_active');
+
+            foreach ($aUserRechteGruppenRechte as $iKey => $sUserRechteGruppenRecht) {
+                $sUserRechteGruppenRechtAktiv = CAD_Tool_Extractor::extractOverPath($aUserRechteGruppenRechtAktiv, $iKey);
+
+                // right exists already in db!
+                if (array_key_exists($sUserRechteGruppenRecht, $currentUserRightGroupRights)) {
+                    if (empty($sUserRechteGruppenRechtAktiv)) {
+                        $userRightGroupRightDb->delete('user_right_group_right_id = ' . $currentUserRightGroupRights[$sUserRechteGruppenRecht]);
+                    }
+                    unset($currentUserRightGroupRights[$sUserRechteGruppenRecht]);
+                } else if (!empty($sUserRechteGruppenRechtAktiv)) {
+                    $aData['user_right_group_right'] = $sUserRechteGruppenRecht;
+                    $aData['user_right_group_fk'] = $iUserRechteGruppeId;
+                    $aData['user_right_group_right_create_date'] = date('Y-m-d H:i:s');
+                    $aData['user_right_group_right_create_user_fk'] = $this->findCurrentUserId();
+                    $userRightGroupRightDb->insert($aData);
+                    unset($currentUserRightGroupRights[$sUserRechteGruppenRecht]);
+                }
+            }
+
+            // clean DB from waste data
+            foreach ($currentUserRightGroupRights as $currentUserRightGroupRight => $userRightGroupRightId) {
+                $userRightGroupRightDb->delete('user_right_group_right_id = ' . $userRightGroupRightId);
+            }
+
+            $aData = [
+                'user_right_group_parent_fk' => $iUserRechteGruppeParentId,
+                'user_right_group_update_date' => date('Y-m-d H:i:s'),
+                'user_right_group_update_user_fk' => $this->findCurrentUserId(),
+            ];
+            $userRightGroupsDb->update($aData, 'user_right_group_id = ' . $iUserRechteGruppeId);
+//            $this->initAuth();
+        }
+        $this->userRightGroupsHierarchy = $this->generatesUserRightGroupsHierarchy();
+
+        $oUserRechteGruppenRechteRowSet = $userRightGroupRightDb->findUserRightGroupRights();
         $this->_aUserRechteGruppenRechte = $this->_collectUserRechteGruppenRechte($oUserRechteGruppenRechteRowSet);
 
         $sContent = '';
@@ -58,9 +87,37 @@ class Auth_AdminController extends AbstractController {
         foreach ($aMoCcAcData as $sMoCcAcDataModule => $aMoCcAcDataModule) {
             $sContent .= $this->_createModuleFieldset($sMoCcAcDataModule, $aMoCcAcDataModule, $iUserRechteGruppeId);
         }
-        $this->view->assign('userRightGroupSelectContent', $this->generateUserRightGroupSelect($iUserRechteGruppeId));
+        $this->view->assign('userRightGroupSelectContent',
+            $this->generateUserRightGroupSelect($iUserRechteGruppeId, 'Rechte Gruppe', 'user_right_group'));
+
+        $userRightGroup = $userRightGroupsDb->findByPrimary($iUserRechteGruppeId);
+        $iUserRechteGruppeParentId = $userRightGroup->user_right_group_parent_fk;
+
+        if ($userRightGroup instanceof Zend_Db_Table_Row_Abstract) {
+            $this->view->assign('userInheritRightGroupSelectContent',
+                $this->generateUserRightGroupSelect($userRightGroup->user_right_group_parent_fk, 'Erbt von', 'user_right_group_parent'));
+        }
+
         $this->view->assign('iUserRechteGruppeId', $iUserRechteGruppeId);
+        $this->view->assign('iUserRechteGruppeParentId', $iUserRechteGruppeParentId);
         $this->view->assign('sContent', $sContent);
+    }
+
+//    private function initAuth() {
+//        $oAcl = new Auth_Plugin_Acl();
+//        Zend_Registry::set('acl', $oAcl);
+//    }
+
+    private function collectCurrentUserRightGroupRights($userRightGroupId)
+    {
+        $userRightGroupRightDb = new Auth_Model_DbTable_UserRightGroupRights();
+        $currentUserRightGroupRights = $userRightGroupRightDb->findUserRightGroupRights($userRightGroupId);
+        $userRightGroupRightCollection = [];
+
+        foreach ($currentUserRightGroupRights as $currentUserRightGroupRight) {
+            $userRightGroupRightCollection[$currentUserRightGroupRight->offsetGet('user_right_group_right')] = $currentUserRightGroupRight->offsetGet('user_right_group_right_id');
+        }
+        return $userRightGroupRightCollection;
     }
 
     /**
@@ -79,7 +136,7 @@ class Auth_AdminController extends AbstractController {
         return $userRightGroupsHierarchy;
     }
 
-    private function generateUserRightGroupSelect($selectedUserRightGroupId) {
+    private function generateUserRightGroupSelect($selectedUserRightGroupId, $labelText, $prefix) {
 
         $this->view->assign('selectedValue', $selectedUserRightGroupId);
         $this->view->assign('value', null);
@@ -94,6 +151,8 @@ class Auth_AdminController extends AbstractController {
             $userRightGroupOptionsContent .= $this->view->render('admin/partials/user-right-group-row.phtml');
         }
         $this->view->assign('userRightGroupOptionsContent', $userRightGroupOptionsContent);
+        $this->view->assign('prefix', $prefix);
+        $this->view->assign('labelText', $labelText);
         return $this->view->render('admin/partials/user-right-group-drop-down.phtml');
     }
 
@@ -117,38 +176,54 @@ class Auth_AdminController extends AbstractController {
 
         $this->view->assign('sControllerName', $sMoCcAcDataController);
 
-        $iUserRechteGruppeFk = $this->_checkResourceExistsInRightGroups($this->_aUserRechteGruppenRechte, $sMoCcAcDataModule . '|' . $sMoCcAcDataController . '|*');
+        $rightAvailableInRightGroups = $this->_checkResourceExistsInRightGroups($this->_aUserRechteGruppenRechte, $sMoCcAcDataModule . '|' . $sMoCcAcDataController . '|' . $sMoCcAcDataAction);
 
-        if (false !== $iUserRechteGruppeFk) {
-            $bGlobaleControllerChecked = true;
-
-            if ($iUserRechteGruppeFk == $iUserRechteGruppeId) {
-                $iGlobalUserGruppenRechtId = $this->_iCurrentRechteUserGruppenRechtId;
-            } else if ($iUserRechteGruppeFk < $iUserRechteGruppeId) {
+        if (!empty($rightAvailableInRightGroups)) {
+            if (array_key_exists($iUserRechteGruppeId, $rightAvailableInRightGroups)) {
                 $bGlobalControllerRightInherited = true;
-                $sGlobalControllerTitle = "Erbt von Gruppe " . $iUserRechteGruppeFk;
-                $iGlobalUserGruppenRechtId = $this->_iCurrentRechteUserGruppenRechtId;
             } else {
-                $this->_iCurrentRechteUserGruppenRechtId = null;
-                $bGlobaleControllerChecked = false;
+                $inherited = false;
+                $inheritedRightGroupId = null;
+                foreach ($rightAvailableInRightGroups as $userRightGroupId => $data) {
+                    if ($this->checkCurrentUserRightGroupInheritFromUserRightGroup($iUserRechteGruppeId, $userRightGroupId)) {
+                        $inherited = true;
+                        $inheritedRightGroupId = $userRightGroupId;
+                        break;
+                    }
+                }
+
+                if ($inherited) {
+                    $bGlobalControllerRightInherited = true;
+                    $sGlobalControllerTitle = "Erbt von " . $this->userRightGroups[$inheritedRightGroupId];
+                }
             }
         }
 
         foreach ($aMoCcAcDataController as $sMoCcAcDataAction) {
             $this->_iCurrentRechteUserGruppenRechtId = null;
-            $iUserRechteGruppeFk = $this->_checkResourceExistsInRightGroups($this->_aUserRechteGruppenRechte, $sMoCcAcDataModule . '|' . $sMoCcAcDataController . '|' . $sMoCcAcDataAction);
+            $rightAvailableInRightGroups = $this->_checkResourceExistsInRightGroups($this->_aUserRechteGruppenRechte, $sMoCcAcDataModule . '|' . $sMoCcAcDataController . '|' . $sMoCcAcDataAction);
             $bActionChecked = false;
             $bActionRightInherited = false;
             $sTitle = '';
-            if (false !== $iUserRechteGruppeFk) {
-                if ($this->checkCurrentUserRightGroupInheritFromUserRightGroup($iUserRechteGruppeId, $iUserRechteGruppeFk)) {
-//                if ($iUserRechteGruppeFk < $iUserRechteGruppeId) { // @todo hier muss auf die tatsächliche vererbung eingegangen werden!
+            if (!empty($rightAvailableInRightGroups)) {
+                if (array_key_exists($iUserRechteGruppeId, $rightAvailableInRightGroups)) {
                     $bActionChecked = true;
-                    $bActionRightInherited = true;
-                    $this->_iCurrentRechteUserGruppenRechtId = null;
-                    $sTitle = "Erbt von Gruppe " . $iUserRechteGruppeFk;
-                } else if ($iUserRechteGruppeFk == $iUserRechteGruppeId) {
-                    $bActionChecked = true;
+                } else {
+                    $inherited = false;
+                    $inheritedRightGroupId = null;
+                    foreach ($rightAvailableInRightGroups as $userRightGroupId => $data) {
+                        if ($this->checkCurrentUserRightGroupInheritFromUserRightGroup($iUserRechteGruppeId, $userRightGroupId)) {
+                            $inherited = true;
+                            $inheritedRightGroupId = $userRightGroupId;
+                            break;
+                        }
+                    }
+
+                    if ($inherited) {
+                        $bActionChecked = true;
+                        $bActionRightInherited = true;
+                        $sTitle = "Erbt von " . $this->userRightGroups[$inheritedRightGroupId];
+                    }
                 }
             }
             $this->view->assign('sTitle', $sTitle);
@@ -209,14 +284,18 @@ class Auth_AdminController extends AbstractController {
     }
 
     private function _checkResourceExistsInRightGroups($aUserRechteGruppe, $sResource) {
+        krsort($aUserRechteGruppe);
+        $rightAvailableInGroups = [];
+
         foreach ($aUserRechteGruppe as $iUserRechteGruppeId => $aUserRechteGruppeRechte) {
             $mReturn = $this->_searchResourceByPath($aUserRechteGruppeRechte, $sResource);
             if (null !== $mReturn) {
-                $this->_iCurrentRechteUserGruppenRechtId = $mReturn;
-                return $iUserRechteGruppeId;
+                $rightAvailableInGroups[$iUserRechteGruppeId] = $mReturn;
+//                $this->_iCurrentRechteUserGruppenRechtId = $mReturn;
+//                return $iUserRechteGruppeId;
             }
         }
-        return false;
+        return $rightAvailableInGroups;
     }
 
     private function _searchResourceByPath($aUserRechteGruppe, $sResource) {

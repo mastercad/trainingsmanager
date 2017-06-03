@@ -488,6 +488,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     ),
                 ),
             ),
+            /*
             array(
                 'label' => $translator->translate('label_training_diaries'),
                 'title' => $translator->translate('label_training_diaries'),
@@ -533,6 +534,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 //                    ),
                 ),
             ),
+            */
             /*
             array(
                 'label' => 'Profil',

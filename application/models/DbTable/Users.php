@@ -26,7 +26,7 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
     protected $_primary = 'user_id';
 
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        return $this->fetchRow("user_id = '" . $id . "'");
     }
 
     /**
@@ -116,6 +116,15 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
      */
     public function findActiveUsers() {
         return $this->fetchAll('user_state_fk = 2', 'user_first_name');
+    }
+
+    public function findAllActiveUsersInSameUserGroup($userGroupId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select->joinInner($this->considerTestUserForTableName('user_x_user_group'), 'user_x_user_group_user_fk = user_id AND ' .
+            'user_x_user_group_user_group_fk = ' . $userGroupId);
+
+        return $this->fetchAll($select);
     }
 }
 

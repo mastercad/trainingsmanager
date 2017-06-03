@@ -254,6 +254,7 @@ class TrainingDiariesController extends AbstractController {
     public function saveAction() {
 
         if (0 < $this->getParam('trainingDiaryExerciseInformation')) {
+            $hasErrors = false;
             $userId = $this->findCurrentUserId();
 
             $trainingPlanDiaryExerciseInformation = $this->getParam('trainingDiaryExerciseInformation');
@@ -286,28 +287,35 @@ class TrainingDiariesController extends AbstractController {
 
             if ($exerciseOptions) {
                 foreach ($exerciseOptions as $exerciseOption) {
+                    $exerciseOptionValue = $exerciseOption['exerciseOptionValue'];
                     $exerciseOptionId = $exerciseOption['exerciseOptionId'];
-                    if (array_key_exists($exerciseOptionId, $currentTrainingDiaryXExerciseOptionsCollection)) {
-                        if ($exerciseOption['exerciseOptionValue'] != $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_exercise_option_value']) {
-                            $data = [
-                                'training_diary_x_exercise_option_exercise_option_value' => $exerciseOption['exerciseOptionValue'],
-                                'training_diary_x_exercise_option_update_date' => date('Y-m-d H:i:s'),
-                                'training_diary_x_exercise_option_update_user_fk' => $userId,
-                            ];
-                            $trainingDiaryXExerciseOptionDb->update($data,
-                                'training_diary_x_exercise_option_id = ' . $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_id']
-                            );
-                        }
-                        unset($currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]);
+
+                    if (empty($exerciseOptionValue)) {
+                        Service_GlobalMessageHandler::appendMessage('Option not allowed to be empty!', Model_Entity_Message::STATUS_ERROR);
+                        $hasErrors = true;
                     } else {
-                        $data = [
-                            'training_diary_x_exercise_option_exercise_option_value' => $exerciseOption['exerciseOptionValue'],
-                            'training_diary_x_exercise_option_exercise_option_fk' => $exerciseOptionId,
-                            'training_diary_x_exercise_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
-                            'training_diary_x_exercise_option_create_date' => date('Y-m-d H:i:s'),
-                            'training_diary_x_exercise_option_create_user_fk' => $userId,
-                        ];
-                        $trainingDiaryXExerciseOptionDb->insert($data);
+                        if (array_key_exists($exerciseOptionId, $currentTrainingDiaryXExerciseOptionsCollection)) {
+                            if ($exerciseOption['exerciseOptionValue'] != $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_exercise_option_value']) {
+                                $data = [
+                                    'training_diary_x_exercise_option_exercise_option_value' => $exerciseOption['exerciseOptionValue'],
+                                    'training_diary_x_exercise_option_update_date' => date('Y-m-d H:i:s'),
+                                    'training_diary_x_exercise_option_update_user_fk' => $userId,
+                                ];
+                                $trainingDiaryXExerciseOptionDb->update($data,
+                                    'training_diary_x_exercise_option_id = ' . $currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]['training_diary_x_exercise_option_id']
+                                );
+                            }
+                            unset($currentTrainingDiaryXExerciseOptionsCollection[$exerciseOptionId]);
+                        } else {
+                            $data = [
+                                'training_diary_x_exercise_option_exercise_option_value' => $exerciseOptionValue,
+                                'training_diary_x_exercise_option_exercise_option_fk' => $exerciseOptionId,
+                                'training_diary_x_exercise_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
+                                'training_diary_x_exercise_option_create_date' => date('Y-m-d H:i:s'),
+                                'training_diary_x_exercise_option_create_user_fk' => $userId,
+                            ];
+                            $trainingDiaryXExerciseOptionDb->insert($data);
+                        }
                     }
                 }
             }
@@ -315,27 +323,33 @@ class TrainingDiariesController extends AbstractController {
             if ($deviceOptions) {
                 foreach ($deviceOptions as $deviceOption) {
                     $deviceOptionId = $deviceOption['deviceOptionId'];
-                    if (array_key_exists($deviceOptionId, $currentTrainingDiaryXDeviceOptionsCollection)) {
-                        if ($deviceOption['exerciseOptionValue'] != $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_device_option_value']) {
+                    $deviceOptionValue = $deviceOption['deviceOptionValue'];
+                    if (empty($deviceOptionValue)) {
+                        Service_GlobalMessageHandler::appendMessage('Option not allowed to be empty!', Model_Entity_Message::STATUS_ERROR);
+                        $hasErrors = true;
+                    } else {
+                        if (array_key_exists($deviceOptionId, $currentTrainingDiaryXDeviceOptionsCollection)) {
+                            if ($deviceOption['exerciseOptionValue'] != $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_device_option_value']) {
+                                $data = [
+                                    'training_diary_x_device_option_device_option_value' => $deviceOptionValue,
+                                    'training_diary_x_device_option_update_date' => date('Y-m-d H:i:s'),
+                                    'training_diary_x_device_option_update_user_fk' => $userId,
+                                ];
+                                $trainingDiaryXDeviceOptionDb->update($data,
+                                    'training_diary_x_device_option_id = ' . $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_id']
+                                );
+                            }
+                            unset($currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]);
+                        } else {
                             $data = [
                                 'training_diary_x_device_option_device_option_value' => $deviceOption['deviceOptionValue'],
-                                'training_diary_x_device_option_update_date' => date('Y-m-d H:i:s'),
-                                'training_diary_x_device_option_update_user_fk' => $userId,
+                                'training_diary_x_device_option_device_option_fk' => $deviceOptionId,
+                                'training_diary_x_device_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
+                                'training_diary_x_device_option_create_date' => date('Y-m-d H:i:s'),
+                                'training_diary_x_device_option_create_user_fk' => $userId,
                             ];
-                            $trainingDiaryXDeviceOptionDb->update($data,
-                                'training_diary_x_device_option_id = ' . $currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]['training_diary_x_device_option_id']
-                            );
+                            $trainingDiaryXDeviceOptionDb->insert($data);
                         }
-                        unset($currentTrainingDiaryXDeviceOptionsCollection[$deviceOptionId]);
-                    } else {
-                        $data = [
-                            'training_diary_x_device_option_device_option_value' => $deviceOption['deviceOptionValue'],
-                            'training_diary_x_device_option_device_option_fk' => $deviceOptionId,
-                            'training_diary_x_device_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
-                            'training_diary_x_device_option_create_date' => date('Y-m-d H:i:s'),
-                            'training_diary_x_device_option_create_user_fk' => $userId,
-                        ];
-                        $trainingDiaryXDeviceOptionDb->insert($data);
                     }
                 }
             }
@@ -348,6 +362,10 @@ class TrainingDiariesController extends AbstractController {
 
             $trainingDiaryXTrainingPlanExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
             $trainingDiaryXTrainingPlanExerciseDb->update($data, 'training_diary_x_training_plan_exercise_id = ' . $trainingDiaryXTrainingPlanExerciseId);
+
+            if (false === $hasErrors) {
+                Service_GlobalMessageHandler::appendMessage('Übung erfolgreich beendet!', Model_Entity_Message::STATUS_OK);
+            }
 
             if ($this->considerLastExerciseInTrainingDiary($trainingDiaryXTrainingPlanExerciseId)) {
                 $this->view->assign('content', $this->view->render('training-diaries/all-exercises-finished.phtml'));

@@ -14,7 +14,11 @@ class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
     protected $_primary = 'user_right_group_id';
 
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+
+        $select->where($this->considerTestUserForTableName('user_right_group_id') . ' = ?', $id);
+
+        return $this->fetchRow($select);
     }
 
     /**

@@ -57,30 +57,34 @@ img {
         height: 100%
     }
 
-#left,
-#right {
-    height:100%;
-    min-height: 100%;
-    overflow-y: scroll;
+    #left,
+    #right {
+        height:100%;
+        min-height: 100%;
+        overflow-y: scroll;
+    }
 }
 
-#left {
-    /*position: absolute;*/
-    /*top: 70px;*/
-    /*bottom: 0;*/
-    /*left: 0;*/
-    /*width: 75%;*/
-    /*overflow-y: scroll;*/
+.navbar-right.demo {
+    height: 100%;
+    align-items: center;
 }
 
-#right {
-    /*position: absolute;*/
-    /*top: 70px;*/
-    /*bottom: 0;*/
-    /*right: 0;*/
-    /*overflow-y: scroll;*/
-    /*width: 25%;*/
+.navbar-right button.demo {
+    display: flex;
 }
+
+.vertical-align {
+    display: flex;
+    flex-direction: row;
+}
+
+.vertical-align > [class^="col-"],
+.vertical-align > [class*=" col-"] {
+    display: flex;
+    align-items: center;     /* Align the flex-items vertically */
+    justify-content: center; /* Optional, to align inner flex-items
+                              horizontally within the column  */
 }
 
 @media (max-width: 767px) {
@@ -503,7 +507,7 @@ pre {
     /*height: 20px*/
 }
 
-.training-plan {
+ol.training-plan {
     background-color: gainsboro;
     border-radius: 5px;
     border-color: lightgray;
@@ -514,26 +518,26 @@ pre {
     /*position: relative;*/
 }
 
-.training-plan .exercise-options label,
-.training-plan .device-options label {
+ol.training-plan .exercise-options label,
+ol.training-plan .device-options label {
     /*width: 100px;*/
     float: left;
     clear: left;
     margin-top: 7px;
 }
 
-.training-plan .exercise-options .exercise-option,
-.training-plan .device-options .device-option {
+ol.training-plan .exercise-options .exercise-option,
+ol.training-plan .device-options .device-option {
     /*width: 44px;*/
     float: left;
     margin-top: 7px;
 }
 
-.training-plan li {
+ol.training-plan li {
     list-style: none;
 }
 
-.training-plan .exercise {
+ol.training-plan .exercise {
     border:  1px solid var(--el-border-color);
     border-radius: 5px;
     margin-bottom: 25px;

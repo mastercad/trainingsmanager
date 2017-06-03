@@ -21,15 +21,16 @@
     <?php echo $this->translate('exercises_default_content');?>
 </div>
 
-<script type="text/javascript" src="/js/tainingsmanager_tour.js"></script>
+<script type="text/javascript" src="/js/trainingsmanager_tour.js"></script>
 
 <script type="text/javascript">
     jQuery('document').ready(function() {
 
-        jQuery('#demo').unbind('click').click(function() {
+        jQuery('#exercises_demo').unbind('click').click(function() {
             tour.init();
             tour.restart();
-            setTourPositionByTitle('Übungen');
+            setTourStartPositionByTitle('Übungen');
+            setTourEndPositionByTitle('Übungen - Übung bearbeiten - speichern');
         });
 
         jQuery('.search').unbind('click').on('click', function() {
