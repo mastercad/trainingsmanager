@@ -30,5 +30,19 @@
     jQuery(document).ready(function() {
         jQuery('body').css('overflow', 'auto');
         jQuery('[data-toggle="tooltip"]').tooltip();
+
+        jQuery('.asset-extend').unbind('click').click(function() {
+            var self = this;
+            var asset = jQuery(this).parent().find('.asset');
+            if (asset.is(':visible')) {
+                asset.fadeOut(500, function() {
+                    jQuery(self).removeClass('glyphicon glyphicon-chevron-up').addClass('glyphicon glyphicon-chevron-down');
+                });
+            } else {
+                jQuery(self).removeClass('glyphicon glyphicon-chevron-down').addClass('glyphicon glyphicon-chevron-up');
+                jQuery(asset).removeClass('hidden').fadeIn(500, function() {
+                });
+            }
+        });
     });
 </script>

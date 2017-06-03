@@ -44,19 +44,28 @@ class Auth_AdminController extends AbstractController {
             $currentUserRightGroupRights = $this->collectCurrentUserRightGroupRights($iUserRechteGruppeId);
             $aUserRechteGruppenRechte = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right');
             $aUserRechteGruppenRechtAktiv = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right_active');
+            $validatorClassCollection = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_right_validator_class_name');
 
             foreach ($aUserRechteGruppenRechte as $iKey => $sUserRechteGruppenRecht) {
                 $sUserRechteGruppenRechtAktiv = CAD_Tool_Extractor::extractOverPath($aUserRechteGruppenRechtAktiv, $iKey);
+                $validatorClass = CAD_Tool_Extractor::extractOverPath($validatorClassCollection, $iKey);
 
                 // right exists already in db!
                 if (array_key_exists($sUserRechteGruppenRecht, $currentUserRightGroupRights)) {
                     if (empty($sUserRechteGruppenRechtAktiv)) {
-                        $userRightGroupRightDb->delete('user_right_group_right_id = ' . $currentUserRightGroupRights[$sUserRechteGruppenRecht]);
+                        $userRightGroupRightDb->delete('user_right_group_right_id = ' . $currentUserRightGroupRights[$sUserRechteGruppenRecht]['id']);
+                    } else if ($validatorClass != $currentUserRightGroupRights[$sUserRechteGruppenRecht]['validatorClass']) {
+                        $data['user_right_group_right_validator_class'] = $validatorClass;
+                        $data['user_right_group_right_update_date'] = date('Y-m-d H:i:s');
+                        $data['user_right_group_right_update_user_fk'] = $this->findCurrentUserId();
+                        $userRightGroupRightDb->update($data, 'user_right_group_right_id = ' . $currentUserRightGroupRights[$sUserRechteGruppenRecht]['id']);
+                        unset($currentUserRightGroupRights[$sUserRechteGruppenRecht]);
                     }
                     unset($currentUserRightGroupRights[$sUserRechteGruppenRecht]);
                 } else if (!empty($sUserRechteGruppenRechtAktiv)) {
                     $aData['user_right_group_right'] = $sUserRechteGruppenRecht;
                     $aData['user_right_group_fk'] = $iUserRechteGruppeId;
+                    $aData['user_right_group_right_validator_class'] = $validatorClass;
                     $aData['user_right_group_right_create_date'] = date('Y-m-d H:i:s');
                     $aData['user_right_group_right_create_user_fk'] = $this->findCurrentUserId();
                     $userRightGroupRightDb->insert($aData);
@@ -115,7 +124,14 @@ class Auth_AdminController extends AbstractController {
         $userRightGroupRightCollection = [];
 
         foreach ($currentUserRightGroupRights as $currentUserRightGroupRight) {
-            $userRightGroupRightCollection[$currentUserRightGroupRight->offsetGet('user_right_group_right')] = $currentUserRightGroupRight->offsetGet('user_right_group_right_id');
+            $userRightGroupRight = $currentUserRightGroupRight->offsetGet('user_right_group_right');
+            if (!array_key_exists($userRightGroupRight, $userRightGroupRightCollection)) {
+                $userRightGroupRightCollection[$userRightGroupRight] = [];
+            }
+            $userRightGroupRightCollection[$userRightGroupRight] = [
+                'id' => $currentUserRightGroupRight->offsetGet('user_right_group_right_id'),
+                'validatorClass' => $currentUserRightGroupRight->offsetGet('user_right_group_right_validator_class'),
+            ];
         }
         return $userRightGroupRightCollection;
     }
@@ -176,7 +192,7 @@ class Auth_AdminController extends AbstractController {
 
         $this->view->assign('sControllerName', $sMoCcAcDataController);
 
-        $rightAvailableInRightGroups = $this->_checkResourceExistsInRightGroups($this->_aUserRechteGruppenRechte, $sMoCcAcDataModule . '|' . $sMoCcAcDataController . '|' . $sMoCcAcDataAction);
+        $rightAvailableInRightGroups = $this->_checkResourceExistsInRightGroups($this->_aUserRechteGruppenRechte, $sMoCcAcDataModule . '|' . $sMoCcAcDataController);
 
         if (!empty($rightAvailableInRightGroups)) {
             if (array_key_exists($iUserRechteGruppeId, $rightAvailableInRightGroups)) {
@@ -200,14 +216,18 @@ class Auth_AdminController extends AbstractController {
         }
 
         foreach ($aMoCcAcDataController as $sMoCcAcDataAction) {
+
             $this->_iCurrentRechteUserGruppenRechtId = null;
             $rightAvailableInRightGroups = $this->_checkResourceExistsInRightGroups($this->_aUserRechteGruppenRechte, $sMoCcAcDataModule . '|' . $sMoCcAcDataController . '|' . $sMoCcAcDataAction);
             $bActionChecked = false;
             $bActionRightInherited = false;
             $sTitle = '';
+            $validatorClass = null;
+
             if (!empty($rightAvailableInRightGroups)) {
                 if (array_key_exists($iUserRechteGruppeId, $rightAvailableInRightGroups)) {
                     $bActionChecked = true;
+                    $validatorClass = $rightAvailableInRightGroups[$iUserRechteGruppeId]['validatorClass'];
                 } else {
                     $inherited = false;
                     $inheritedRightGroupId = null;
@@ -215,6 +235,7 @@ class Auth_AdminController extends AbstractController {
                         if ($this->checkCurrentUserRightGroupInheritFromUserRightGroup($iUserRechteGruppeId, $userRightGroupId)) {
                             $inherited = true;
                             $inheritedRightGroupId = $userRightGroupId;
+                            $validatorClass = $data['validatorClass'];
                             break;
                         }
                     }
@@ -228,6 +249,7 @@ class Auth_AdminController extends AbstractController {
             }
             $this->view->assign('sTitle', $sTitle);
             $this->view->assign('sActionName', $sMoCcAcDataAction);
+            $this->view->assign('asset', $validatorClass);
             $this->view->assign('bActionChecked', $bActionChecked);
             $this->view->assign('iGlobalUserGruppenRechtId', $iGlobalUserGruppenRechtId);
             $this->view->assign('bGlobalControllerRightInherited', $bGlobalControllerRightInherited);
@@ -276,7 +298,10 @@ class Auth_AdminController extends AbstractController {
             if (false === array_key_exists($aResource[1], $aUserRechteGruppenRechte[$oUserRechteGruppenRechteRow->user_right_group_fk][$aResource[0]])) {
                 $aUserRechteGruppenRechte[$oUserRechteGruppenRechteRow->user_right_group_fk][$aResource[0]][$aResource[1]] = array();
             }
-            $aUserRechteGruppenRechte[$oUserRechteGruppenRechteRow->user_right_group_fk][$aResource[0]][$aResource[1]][$aResource[2]] = $oUserRechteGruppenRechteRow->user_right_group_right_id;
+            $aUserRechteGruppenRechte[$oUserRechteGruppenRechteRow->user_right_group_fk][$aResource[0]][$aResource[1]][$aResource[2]] = [
+                'id' => $oUserRechteGruppenRechteRow->user_right_group_right_id,
+                'validatorClass' => $oUserRechteGruppenRechteRow->user_right_group_right_validator_class
+            ];
         }
 
         ksort($aUserRechteGruppenRechte);
@@ -304,7 +329,7 @@ class Auth_AdminController extends AbstractController {
         $sKey = array_shift($aPath);
 
         if (array_key_exists($sKey, $aUserRechteGruppe)) {
-            if (true === is_numeric($aUserRechteGruppe[$sKey])) {
+            if (true === array_key_exists('id', $aUserRechteGruppe[$sKey])) {
                 $mReturn = $aUserRechteGruppe[$sKey];
             } else if (true === is_array($aUserRechteGruppe[$sKey])) {
                 $mReturn = $this->_searchResourceByPath($aUserRechteGruppe[$sKey], implode('|', $aPath));

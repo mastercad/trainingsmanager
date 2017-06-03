@@ -10,28 +10,47 @@
 
 ?>
 
-<div class="action checkbox checkbox-primary">
+<div class="action" style="position: relative;">
+    <div class=" checkbox checkbox-primary">
 
-    <input type="checkbox"
-           name="user_right_group_right_active[<?php echo $this->iInputCount;?>]"
-           id="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName . '_active';?>"
-        <?php
-        if (true === $this->bActionChecked) {
-            echo ' checked ';
-        }
-        if (true === $this->bActionRightInherited) {
-            echo ' disabled ';
-        }
-        ?>
-           title="<?php echo $this->sTitle;?>" />
+        <input type="checkbox"
+               name="user_right_group_right_active[<?php echo $this->iInputCount;?>]"
+               id="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName . '_active';?>"
+            <?php
+            if (true === $this->bActionChecked) {
+                echo ' checked ';
+            }
+            if (true === $this->bActionRightInherited) {
+                echo ' disabled ';
+            }
+            ?>
+               title="<?php echo $this->sTitle;?>" />
 
-    <label class="rotate"
-        for="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName . '_active';?>"
-        data-toggle="tooltip"
-        title="<?php echo $this->sTitle;?>"
-        ><?php echo $this->sActionName;?></label>
+        <label class="rotate"
+            for="<?php echo $this->sModuleName . '_' . $this->sControllerName . '_' . $this->sActionName . '_active';?>"
+            data-toggle="tooltip"
+            title="<?php echo $this->sTitle;?>"
+            ><?php echo $this->sActionName;?></label>
 
-    <input type="hidden"
-           name="user_right_group_right[<?php echo $this->iInputCount;?>]"
-           value="<?php echo $this->sModuleName . ':' . $this->sControllerName . ':' . $this->sActionName;?>" />
+        <input type="hidden"
+               name="user_right_group_right[<?php echo $this->iInputCount;?>]"
+               value="<?php echo $this->sModuleName . ':' . $this->sControllerName . ':' . $this->sActionName;?>" />
+    </div>
+
+    <div class="asset-container">
+        <span class="asset-extend glyphicon <?php if (empty($this->asset)) {echo 'glyphicon glyphicon-chevron-down';} else {echo  'glyphicon glyphicon-chevron-up';}?>"
+              style="position: absolute; right: 0; top: 0;"></span>
+        <div class="asset" <?php if (empty($this->asset)) {echo ' style="display: none;" ';}?>>
+            <label for="">
+                Asset:
+            </label>
+            <input type="text"
+                   <?php if ($this->bActionRightInherited) {echo ' disabled ';}?>
+                   class="form-control"
+                   id="user_right_group_right_validator_class_name_<?php echo $this->iInputCount;?>"
+                   name="user_right_group_right_validator_class_name[<?php echo $this->iInputCount;?>]"
+                   value="<?php echo $this->asset;?>" />
+        </div>
+    </div>
+
 </div>
