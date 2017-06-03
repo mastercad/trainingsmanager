@@ -49,16 +49,69 @@
 
         jQuery('body').css('overflow', 'auto');
 
-        // carousel finished
-        $("#training_diary_exercises").on('slid.bs.carousel', function(evt) {
-            jQuery('.carousel-inner').css('overflow', 'visible');
-            if (jQuery('.training-diary-exercise.active').attr('data-finished')) {
-                jQuery('.save').hide();
-            } else {
-                jQuery('.save').show();
+        jQuery('.qr-code').unbind('click').click(function() {
+            if (0 == jQuery('body .qr-dummy').length) {
+                jQuery('body').append('<div class="qr-dummy"></div>');
+                jQuery('.training-diary-exercise.active .qr-code-container').clone().appendTo('body .qr-dummy');
             }
+
+            var qrContainer = jQuery('body .qr-dummy .qr-code-container');
+
+            var qrWidth = qrContainer.data('qr-width') ? qrContainer.data('qr-width') : qrContainer.width();
+            var qrHeight = qrContainer.data('qr-height') ? qrContainer.data('qr-height') : qrContainer.height();
+            var windowHeight = jQuery(window).height();
+            var windowWidth = jQuery(window).width();
+            var iconWidth = jQuery(this).width();
+            var iconHeight = jQuery(this).height();
+            var iconTop = jQuery(this).offset().top;
+            var iconLeft = jQuery(this).offset().left;
+            var newTop = 0;
+            var newLeft = 0;
+
+            if (true === qrContainer.data('animated')) {
+                console.log("Blende aus!");
+                qrContainer
+                    .animate({
+                        top: iconTop,
+                        left: iconLeft,
+                        height: iconHeight,
+                        width: iconWidth,
+                        opacity: 0
+                    }, function() {
+                        jQuery(this).parent().remove()
+                    }).data('animated', false);
+            } else {
+                console.log('Blende ein!');
+                qrContainer
+                    .data('qr-height', qrHeight)
+                    .data('qr-width', qrWidth)
+                    .css('height', iconHeight)
+                    .css('width', iconWidth)
+                    .css('top', iconTop)
+                    .css('left', iconLeft)
+                    .css('opacity', '0.5')
+                    .animate({
+                        top: (windowHeight - qrHeight) / 2,
+                        left: (windowWidth - qrWidth) / 2,
+                        height: qrHeight,
+                        width: qrWidth,
+                        opacity: 1
+                    }).data('animated', true);
+            }
+        });
+
+        // carousel finished
+        $("#training_diary_exercises")
+            .on('slid.bs.carousel', function(evt) {
+                jQuery('.carousel-inner').css('overflow', 'visible');
+                if (jQuery('.training-diary-exercise.active').attr('data-finished')) {
+                    jQuery('.save').hide();
+                } else {
+                    jQuery('.save').show();
+                }
         }) // carousel in progress
             .on('slide.bs.carousel', function(evt) {
+                jQuery('body .qr-dummy').remove();
                 jQuery('.carousel-inner').css('overflow', 'hidden');
         });
 
@@ -220,6 +273,7 @@
             if (!jQuery(this).data('finished')
                 && !jQuery(this).attr('data-finished')
             ) {
+                jQuery('body .qr-dummy').remove();
                 jQuery("#training_diary_exercises").carousel(count);
                 return false;
             }

@@ -6,6 +6,8 @@
  * Time: 19:31
  */
 
+require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
+
 class Service_Generator_View_TrainingDiaries extends Service_Generator_View_GeneratorAbstract{
 
     private $exercisesCount = 0;
@@ -71,6 +73,17 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
         $this->getView()->assign('exerciseSum', $this->getExercisesCount());
         $this->getView()->assign('exerciseFinished', $trainingDiaryExercise->offsetGet('training_diary_x_training_plan_exercise_flag_finished'));
         $this->getView()->assign($trainingDiaryExercise->toArray());
+
+        $sUrl = 'http://trainingsmanager.org/training-diaries/show-exercise/id/' . $trainingDiaryExercise->offsetGet('training_diary_x_training_plan_training_diary_fk');
+
+        $qrCodeFileName = APPLICATION_PATH . '/../data/tmp/'.time();
+
+        QRcode::png($sUrl, $qrCodeFileName, QR_ECLEVEL_H);
+        $qrCode = 'data:image/png;base64,'.base64_encode(file_get_contents($qrCodeFileName));
+
+        unlink($qrCodeFileName);
+
+        $this->getView()->assign('qrCode', $qrCode);
 
         if (!$trainingDiaryExercise->offsetGet('training_diary_x_training_plan_exercise_flag_finished')
             && !$bFirstActiveSet

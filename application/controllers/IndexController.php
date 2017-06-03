@@ -29,7 +29,6 @@ class IndexController extends AbstractController {
 
     private function generateActiveTrainingDiaryContent() {
 
-//        $content = 'Aktuell ist kein Trainingsplan offen!';
         $content = '';
         $trainingPlanService = new Service_TrainingPlan();
         $currentTrainingPlan = $trainingPlanService->searchCurrentTrainingPlan($this->findCurrentUserId());
@@ -92,7 +91,6 @@ class IndexController extends AbstractController {
 
         foreach ($exerciseOptionCollection as $exerciseOption) {
             $date = date('Y-m-d', strtotime($exerciseOption->offsetGet('training_diary_x_exercise_option_create_date')));
-//            $date = $exerciseOption->offsetGet('training_diary_x_exercise_option_create_date');
             $optionName = $exerciseOption->offsetGet('exercise_option_name');
             $exerciseName = $exerciseOption->offsetGet('exercise_name');
 
@@ -110,7 +108,6 @@ class IndexController extends AbstractController {
 
         foreach ($deviceOptionCollection as $deviceOption) {
             $date = date('Y-m-d', strtotime($deviceOption->offsetGet('training_diary_x_device_option_create_date')));
-//            $date = $deviceOption->offsetGet('training_diary_x_device_option_create_date');
             $optionName = $deviceOption->offsetGet('device_option_name');
             $exerciseName = $deviceOption->offsetGet('exercise_name');
 
