@@ -28,15 +28,13 @@
                     id: jQuery('.id').val(),
                     ajax: true
                 }, function(response) {
-                    jQuery.post('/'+controller+'/save', saveData, function(response) {
-                        var json = JSON.parse(response);
+                    var json = JSON.parse(response);
 
-                        if (200 == json.state) {
-                            showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
-                        } else {
-                            showDialog(json.message, BootstrapDialog.TYPE_DANGER);
-                        }
-                    });
+                    if (200 == json.state) {
+                        showDialog(json.message, BootstrapDialog.TYPE_SUCCESS);
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
                 });
             } else {
                 messages += '</ul>';

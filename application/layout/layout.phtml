@@ -8,7 +8,6 @@
 
         <?php echo $this->headTitle()->setSeparator(' | ')->setAutoEscape(false) ?>
 
-        <script src="/js/utils.js"></script>
         <link rel="stylesheet" href="/css/tether-theme-arrows.min.css" />
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/jquery-ui.min.css">
@@ -21,6 +20,9 @@
         <?php echo $this->headLink();?>
 
         <?php echo $this->headScript();?>
+
+        <script src="/js/utils.js"></script>
+        <script type="text/javascript" src="/js/trainingsmanager_tour.js"></script>
     </head>
     <body itemscope itemtype="http://schema.org/Article" <?php if($this->obj_social_media){ echo $this->obj_social_media->getBodyAttributes();}?> >
 <?php
