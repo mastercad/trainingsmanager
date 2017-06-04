@@ -595,18 +595,21 @@ class TrainingPlansController extends AbstractController {
         $aParams = $this->getAllParams();
         $trainingPlanService = new Service_TrainingPlan();
         $trainingPlanId = null;
+        $trainingPlanUserId = $this->getParam('trainingPlanUserId');
 
+        if (empty($trainingPlanUserId)) {
+            $trainingPlanUserId = $this->findCurrentUserId();
+        }
         if (true === array_key_exists('trainingPlanLayoutId', $aParams)
-            && true === array_key_exists('trainingPlanUserId', $aParams)
+            && !empty($trainingPlanUserId)
         ) {
-            $iUserId = $aParams['trainingPlanUserId'];
             switch ($aParams['trainingPlanLayoutId']) {
                 case 1:
 //                    return $trainingPlanService->createBaseTrainingPlan($iUserId);
-                    return $trainingPlanService->createSplitTrainingPlan($iUserId);
+                    return $trainingPlanService->createSplitTrainingPlan($trainingPlanUserId);
                     break;
                 case 2:
-                    return $trainingPlanService->createSplitTrainingPlan($iUserId);
+                    return $trainingPlanService->createSplitTrainingPlan($trainingPlanUserId);
                     break;
                 default:
             }
