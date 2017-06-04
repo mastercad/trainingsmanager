@@ -29,7 +29,19 @@
 <script type="text/javascript">
     jQuery(document).ready(function() {
         jQuery('body').css('overflow', 'auto');
-        jQuery('[data-toggle="tooltip"]').tooltip();
+        jQuery('[data-toggle="tooltip"]').tooltip({
+            placement: 'bottom auto',
+            container: 'body',
+            position: {
+                my: "left bottom",
+                at: "top right",
+                collision: "flipfit"
+                //using: function (position, feedback) {
+                //    console.log(position);
+                //}
+            },
+            track: true
+        });
 
         jQuery('.asset-extend').unbind('click').click(function() {
             var self = this;

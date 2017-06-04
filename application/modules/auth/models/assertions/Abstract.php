@@ -43,7 +43,7 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
         if ($oRole instanceof Zend_Acl_Role) {
             return $this->_considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege);
         }
-        return $this->_considerAuthAclRole($oRole, $oResource);
+        return $this->_considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege);
     }
 
     /**
@@ -77,7 +77,7 @@ class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
      *
      * @return boolean
      */
-    protected function _considerAuthAclRole($oRole, $oResource) {
+    protected function _considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
         // if the current user the owner of the resource?
         // or group admin and in the same group like to owner
         // or if the current user member of one of the global right groups?

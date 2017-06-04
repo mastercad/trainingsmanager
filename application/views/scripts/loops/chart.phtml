@@ -1,8 +1,12 @@
 <div class="widget" style="position: relative; height: 340px; width: 400px; float: left; display: inline; margin-right: 25px;" data-id="<?php echo $this->dashboardXWidgetId;?>">
     <span class="widget-delete glyphicon glyphicon-remove"
-          style="width: 14px; height: 14px; position: absolute; top: 0; right: 20px; cursor: pointer;"></span>
+          style="width: 14px; height: 14px; position: absolute; top: 0; right: 20px; cursor: pointer;"
+          title="Klicken, um diesen Chart vom Dashboard zu entfernen"
+          data-toggle="tooltip"></span>
     <span class="resize<?php echo $this->chartCount;?> glyphicon glyphicon-resize-full"
-          style="width: 14px; height: 14px; position: absolute; top: 0; right: 0; cursor: pointer;"></span>
+          style="width: 14px; height: 14px; position: absolute; top: 0; right: 0; cursor: pointer;"
+          title="Klicken, um die Größe dieses Charts zu ändern"
+          data-toggle="tooltip"></span>
     <strong><?php echo $this->exerciseName;?></strong>
     <div class="chart" id="chart<?php echo $this->chartCount;?>" style="height: 300px; width: 400px; position: relative;">
 

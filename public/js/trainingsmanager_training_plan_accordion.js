@@ -10,8 +10,18 @@ jQuery(document).ready(function() {
         checkIsMobile();
     });
 
-    jQuery(function () {
-        jQuery('[data-toggle="tooltip"]').tooltip()
+    jQuery('[data-toggle="tooltip"]').tooltip({
+        placement: 'bottom auto',
+        container: 'body',
+        position: {
+            my: "left bottom",
+            at: "top right",
+            collision: "flipfit"
+            //using: function (position, feedback) {
+            //    console.log(position);
+            //}
+        },
+        track: true
     });
 
     function initItems() {

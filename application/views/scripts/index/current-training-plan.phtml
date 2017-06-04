@@ -6,9 +6,16 @@
         <?php echo $this->translate('label_current_training_plan');?>:
         <?php if ($this->training_plan_name) { echo '(' . $this->training_plan_name . ')';}?>
         <div class="current-training-plan-options">
+            <span class="widget-delete glyphicon glyphicon-remove"
+                  style="width: 14px; height: 14px; position: absolute; top: 0; right: 20px; cursor: pointer;"
+                  title="Klicken, um diesen Chart vom Dashboard zu entfernen"
+                  data-toggle="tooltip"></span>
 <!--            <span class="glyphicon glyphicon-info-sign"></span>-->
             <a href="/training-diaries/start/id/<?php echo $this->training_plan_id;?>">
-                <span class="glyphicon glyphicon-play"></span>
+                <span class="glyphicon glyphicon-play"
+                    title="Klicken, um diesen Trainingsplan für das Training zu starten"
+                    data-toggle="tooltip"
+                ></span>
             </a>
         </div>
     </div>

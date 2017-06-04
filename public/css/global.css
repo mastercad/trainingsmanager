@@ -946,4 +946,9 @@ form.dropzone {display: table-cell;}
     opacity: 0.5;
 }
 
+.tooltip {
+    /*position: fixed;*/
+    /*z-index: 9999;*/
+}
+
 /* ]]> */
