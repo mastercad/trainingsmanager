@@ -12,32 +12,33 @@
         <?php echo $this->userSelect;?>
     </div>
 
-    <div class="col-sm-12">
+    <div class="col-sm-12" style="padding-top: 15px; padding-bottom: 15px;">
         Trainingsplan Layout für einen neuen Trainingsplan auswählen :
-        <div class="form-group">
 
-            <div class="checkbox checkbox-primary">
-                <label class="custom-control custom-radio">
-                    <input id="layout1" name="layout" type="radio" class="custom-control-input" value="1">
-                    <span class="custom-control-indicator"></span>
-                    <span class="custom-control-description"><?php echo $this->translate('label_normal_training_plan');?></span>
-                </label>
-            </div>
+        <br />
 
-            <div class="checkbox checkbox-primary">
-                <label class="custom-control custom-radio">
-                    <input id="layout2" name="layout" type="radio" class="custom-control-input" value="2">
-                    <span class="custom-control-indicator"></span>
-                    <span class="custom-control-description"><?php echo $this->translate('label_split_training_plan');?></span>
-                </label>
-            </div>
-        </div>
+        <label class="btn btn-primary">
+            <input type="radio" name="layout" value="1">
+            <?php echo $this->translate('label_normal_training_plan');?>
+        </label>
+
+        <label class="btn btn-primary">
+            <input type="radio" name="layout" value="2">
+            <?php echo $this->translate('label_split_training_plan');?>
+        </label>
+
     </div>
 
+<?php
+    if ($this->trainingPlanSelect) {
+?>
     <div class="col-sm-12">
         <?php echo $this->translate('or') . ' ' . $this->translate('select_existing_training_plan_as_template');?> :
         <?php echo $this->trainingPlanSelect;?>
     </div>
+<?php
+    }
+?>
 
     <div class="col-sm-12">
         <button class="btn btn-primary btn-block save" style="margin-top: 20px;">

@@ -35,19 +35,39 @@ jQuery(document).ready(function() {
     tour.addStep({
         element: "#nav",
         title: "Navigation",
-        content: "Das ist das Navigationsmenü"
+        placement: isMobile ? 'bottom' : 'right',
+        content: "Das ist das Navigationsmenü",
+        onShow: function(tour) {
+            if (isMobile) {
+                jQuery('.navbar-toggle').click();
+                return false;
+            }
+        },
+        onHide: function(tour) {
+            //if (isMobile) {
+            //    jQuery('.navbar-toggle').click();
+            //    return false;
+            //}
+        }
     });
 
     tour.addStep({
         element: "li.uebungen .uebersicht",
         title: "Navigation",
+        placement: isMobile ? 'bottom' : 'right',
         content: "Hier kann man sich eine Übersicht aller Übungen anzeigen lassen.<br /><br />Hat man die notwendigen Rechte, können sie auch Übungen editieren und neue anlegen, sowie alte löschen.",
         onShow:  function (tour) {
+            //if (isMobile) {
+            //    jQuery('.navbar-toggle').click();
+            //}
             jQuery('li.uebungen ul.dropdown-menu').dropdown('toggle');
             return false;
 
         },
         onHide: function(tour) {
+            //if (isMobile) {
+            //    jQuery('.navbar-toggle').click();
+            //}
             jQuery('li.uebungen ul.dropdown-menu').dropdown('toggle');
             return false;
         }
@@ -63,13 +83,20 @@ jQuery(document).ready(function() {
         tour.addStep({
             element: 'li.uebungen .Neu',
             title: 'Navigation - neue Übung anlegen',
+            placement: isMobile ? 'bottom' : 'right',
             content: 'Hier kann man eine neue Übung anlegen',
             onShow:  function (tour) {
+                //if (isMobile) {
+                //    jQuery('.navbar-toggle').click();
+                //}
                 jQuery('li.uebungen ul.dropdown-menu').dropdown('toggle');
                 return false;
 
             },
             onHide: function(tour) {
+                //if (isMobile) {
+                //    jQuery('.navbar-toggle').click();
+                //}
                 jQuery('li.uebungen ul.dropdown-menu').dropdown('toggle');
                 return false;
             }
@@ -79,13 +106,20 @@ jQuery(document).ready(function() {
     tour.addStep({
         element: "li.Trainingsplaene .uebersicht",
         title: "Navigation",
+        placement: isMobile ? 'bottom' : 'right',
         content: "Hier kann man sich eine Übersicht aller Trainingspläne ansehen und neue anlegen.<br /><br />Hat man hier die notwendingen Rechte, kann man ebenfalls die Trainingspläne von Usern der selben Gruppe editieren oder neue anlegen.",
         onShow:  function (tour) {
+            //if (isMobile) {
+            //    jQuery('.navbar-toggle').click();
+            //}
             jQuery('li.Trainingsplaene ul.dropdown-menu').dropdown('toggle');
             return false;
 
         },
         onHide: function(tour) {
+            //if (isMobile) {
+            //    jQuery('.navbar-toggle').click();
+            //}
             jQuery('li.Trainingsplaene ul.dropdown-menu').dropdown('toggle');
             return false;
         }
@@ -101,19 +135,26 @@ jQuery(document).ready(function() {
         tour.addStep({
             element: 'li.Trainingsplaene .Neu',
             title: 'Navigation - neuen Trainingsplan anlegen',
+            placement: isMobile ? 'bottom' : 'right',
             content: 'Hier kann man einen neuen Trainingsplan anlegen',
             onShow:  function (tour) {
+                //if (isMobile) {
+                //    jQuery('.navbar-toggle').click();
+                //}
                 jQuery('li.Trainingsplaene ul.dropdown-menu').dropdown('toggle');
                 return false;
 
             },
             onHide: function(tour) {
+                if (isMobile) {
+                    jQuery('.navbar-toggle').click();
+                }
                 jQuery('li.Trainingsplaene ul.dropdown-menu').dropdown('toggle');
                 return false;
             }
         });
     }
-
+/*
     if ('MEMBER' == UserRightGroup
         || 'TEST_MEMBER' == UserRightGroup
         || 'ADMIN' == UserRightGroup
@@ -136,7 +177,8 @@ jQuery(document).ready(function() {
             }
         });
     }
-
+*/
+/*
     tour.addStep({
         element: "li.Trainingstagebuch .uebersicht",
         title: "Navigation",
@@ -151,7 +193,17 @@ jQuery(document).ready(function() {
             return false;
         }
     });
+*/
 
+    if ('GUEST' != UserRightGroup) {
+        tour.addStep({
+            element: '.widget-button',
+            title: 'Dashboard - Widget Button',
+            placement: 'left',
+            content: 'Mit einem Klick auf diesen Button kann man seinem Dashboard Widgets hinzufügen.<br /><br />' +
+                'Diese Widgets können z.b. den aktuellen Trainingsplan, oder den Frotschritt bei Übungen anzeigen.'
+        });
+    }
     tour.addStep({
         path: '/exercises',
         element: 'UNKNOWN',
@@ -509,7 +561,7 @@ jQuery(document).ready(function() {
         });
 
         tour.addStep({
-            element: '.exercise-muscle-groups .muscle-group:first .muscle span:first',
+            element: '.exercise-muscle-groups .muscle-group:first .muscle img:first',
             title: 'Übungen - Muskelgruppe bearbeiten - Muskel bewerten',
             placement: isMobile ? 'bottom' : 'right',
             content: 'Mit einem Klick auf einen dieser Sterne kann man den aktuellen Muskel bewerten.<br /><br />' +
