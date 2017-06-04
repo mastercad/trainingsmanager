@@ -1,4 +1,5 @@
-<a name="right" />
+<a name="right"></a>
+
 <div class="row">
     <div class="col-sm-12 exercise-name">
         <h3>
@@ -29,7 +30,7 @@
             <?php echo $this->translate('label_description');?>:
         </h3>
 
-        <textarea class="editable beschreibung form-control" rows="5"
+        <textarea class="editable form-control" rows="5"
              id="exercise_description"
              data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_description);?>" ><?php echo $this->exercise_description;?></textarea>
     </div>
@@ -41,7 +42,7 @@
             <?php echo $this->translate('label_special_features');?>:
         </h3>
 
-        <textarea class="editable beschreibung form-control" rows="5"
+        <textarea class="editable form-control" rows="5"
             id="exercise_special_features"
             data-cad-cms-content-orig="<?php echo base64_encode($this->exercise_special_features);?>" ><?php echo $this->exercise_special_features;?></textarea>
     </div>
@@ -127,10 +128,8 @@
 <!--         style="margin-top: 5px;">-->
 <!--    </div>-->
 
-    <input type="hidden" name="exercise-preview-picture" id="exercise_preview_picture" value="" />
-    <input type="hidden" class="id" name="exercise_id" id="exercise_id" value="<?php echo $this->exercise_id;?>" />
-</div>
-
+<input type="hidden" name="exercise-preview-picture" id="exercise_preview_picture" value="" />
+<input type="hidden" class="id" name="exercise_id" id="exercise_id" value="<?php echo $this->exercise_id;?>" />
 <input type="hidden" id="picture_path" value="<?php echo base64_encode($this->picturePath);?>" />
 <input type="hidden" id="picture_temp_path" value="<?php echo base64_encode($this->pictureTempPath);?>" />
 <input type="hidden" id="exercise_id" value="<?php echo $this->exercise_id;?>" />

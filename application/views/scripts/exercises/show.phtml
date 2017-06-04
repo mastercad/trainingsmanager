@@ -1,51 +1,52 @@
-    <a name="right" />
-    <div class="detail-options">
-        <?php echo $this->detailOptionsContent;?>
-    </div>
+<a name="right" ></a>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <h3 class="exercise-name">
-                <?php echo $this->exercise_name;?>
-            </h3>
-        </div>
-    </div>
+<div class="detail-options">
+    <?php echo $this->detailOptionsContent;?>
+</div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <?php echo $this->previewPictureContent;?>
-        </div>
+<div class="row">
+    <div class="col-sm-12">
+        <h3 class="exercise-name">
+            <?php echo $this->exercise_name;?>
+        </h3>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col-sm-12">
-            <?php echo $this->exerciseTypeContent;?>
-        </div>
+<div class="row">
+    <div class="col-sm-12">
+        <?php echo $this->previewPictureContent;?>
     </div>
+</div>
 
-    <div class="row exercise-description">
-        <div class="col-sm-12">
-            <h3>
-                <?php echo $this->translate('label_description');?>:
-            </h3>
-        </div>
-        <div class="col-sm-12">
-            <?php echo $this->exercise_description;?>
-        </div>
+<div class="row">
+    <div class="col-sm-12">
+        <?php echo $this->exerciseTypeContent;?>
     </div>
+</div>
+
+<div class="row exercise-description">
+    <div class="col-sm-12">
+        <h3>
+            <?php echo $this->translate('label_description');?>:
+        </h3>
+    </div>
+    <div class="col-sm-12">
+        <?php echo $this->exercise_description;?>
+    </div>
+</div>
 <?php
     if ($this->exercise_special_features) {
 ?>
-        <div class="row exercise-special-features">
-            <div class="col-sm-12">
-                <h3>
-                    <?php echo $this->translate('label_special_features'); ?>:
-                </h3>
-            </div>
-            <div class="col-sm-12">
-                <?php echo $this->exercise_special_features; ?>
-            </div>
+    <div class="row exercise-special-features">
+        <div class="col-sm-12">
+            <h3>
+                <?php echo $this->translate('label_special_features'); ?>:
+            </h3>
         </div>
+        <div class="col-sm-12">
+            <?php echo $this->exercise_special_features; ?>
+        </div>
+    </div>
 <?php
     }
 ?>
@@ -65,30 +66,30 @@
     <?php
     if ($this->deviceOptionsContent) {
 ?>
-        <div class="row exercise-device-options">
-            <div class="col-sm-12">
-                <h3 class=""><?php echo $this->translate('label_device_options');?> :</h3>
-            </div>
-
-            <div class="col-sm-12 device-options">
-                <?php echo $this->deviceOptionsContent;?>
-            </div>
+    <div class="row exercise-device-options">
+        <div class="col-sm-12">
+            <h3 class=""><?php echo $this->translate('label_device_options');?> :</h3>
         </div>
+
+        <div class="col-sm-12 device-options">
+            <?php echo $this->deviceOptionsContent;?>
+        </div>
+    </div>
 <?php
     }
 ?>
 <?php
     if ($this->exerciseOptionsContent) {
 ?>
-        <div class="row exercise-exercise-options">
-            <div class="col-sm-12">
-            <h3 class=""><?php echo $this->translate('label_exercise_options');?> :</h3>
-            </div>
-
-            <div class="col-sm-12 exercise-options">
-                <?php echo $this->exerciseOptionsContent;?>
-            </div>
+    <div class="row exercise-exercise-options">
+        <div class="col-sm-12">
+        <h3 class=""><?php echo $this->translate('label_exercise_options');?> :</h3>
         </div>
+
+        <div class="col-sm-12 exercise-options">
+            <?php echo $this->exerciseOptionsContent;?>
+        </div>
+    </div>
 <?php
     }
 ?>
@@ -96,17 +97,17 @@
 <?php
     if ($this->exerciseMuscleGroupsContent) {
 ?>
-        <div class="row exercise-muscle-groups">
-            <div class="col-sm-12">
-                <h3 style="float: left; display: inline; margin-top: 25px;">
-                    <?php echo $this->translate('label_muscle_groups'); ?>:
-                </h3>
-            </div>
-            <div class="col-sm-12 exercise-muscle-groups"
-                 style="margin-top: 5px;">
-                <?php echo $this->exerciseMuscleGroupsContent; ?>
-            </div>
+    <div class="row exercise-muscle-groups">
+        <div class="col-sm-12">
+            <h3 style="float: left; display: inline; margin-top: 25px;">
+                <?php echo $this->translate('label_muscle_groups'); ?>:
+            </h3>
         </div>
+        <div class="col-sm-12 exercise-muscle-groups"
+             style="margin-top: 5px;">
+            <?php echo $this->exerciseMuscleGroupsContent; ?>
+        </div>
+    </div>
 
 <?php
     }
