@@ -52,4 +52,41 @@ class Model_DbTable_TrainingDiaryXTrainingPlanExercise extends Model_DbTable_Abs
 
         return $this->fetchRow($oSelect);
     }
+
+    public function findActualTrainingDiaryTrainingPlanExercises($userId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select
+            ->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan'), 'training_diary_x_training_plan_id = training_diary_x_training_plan_exercise_t_d_x_t_p_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_diary_x_training_plan_training_plan_fk')
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinLeft($this->considerTestUserForTableName('training_diary_x_device_option'), 'training_diary_x_device_option_t_d_x_t_p_e_fk = training_diary_x_training_plan_exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('training_diary_x_exercise_option'), 'training_diary_x_exercise_option_t_d_x_t_p_e_fk = training_diary_x_training_plan_exercise_id')
+            ->where('training_plan_active = 1')
+            ->where('training_plan_user_fk = ?', $userId)
+            ->where('training_diary_x_exercise_option_id IS NOT NULL OR training_diary_x_device_option_id IS NOT NULL')
+            ->group('exercise_id')
+            ->order('exercise_name');
+
+        return $this->fetchAll($select);
+    }
+
+    public function findTrainingDiaryTrainingPlanExercises($userId) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+
+        $select
+            ->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan'), 'training_diary_x_training_plan_id = training_diary_x_training_plan_exercise_t_d_x_t_p_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_diary_x_training_plan_training_plan_fk')
+            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinLeft($this->considerTestUserForTableName('training_diary_x_device_option'), 'training_diary_x_device_option_t_d_x_t_p_e_fk = training_diary_x_training_plan_exercise_id')
+            ->joinLeft($this->considerTestUserForTableName('training_diary_x_exercise_option'), 'training_diary_x_exercise_option_t_d_x_t_p_e_fk = training_diary_x_training_plan_exercise_id')
+            ->where('training_plan_user_fk = ?', $userId)
+            ->where('training_diary_x_exercise_option_id IS NOT NULL OR training_diary_x_device_option_id IS NOT NULL')
+            ->group('exercise_id')
+            ->order('exercise_name');
+
+        return $this->fetchAll($select);
+    }
 }

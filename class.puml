@@ -1,0 +1,490 @@
+@startuml
+class KontaktController {
+    #breadcrumb
+    +indexAction()
+    +init()
+    +parseKontaktanfrageAction()
+    +postDispatch()
+    +sendenAction()
+}
+class KontaktController extends Zend_Controller_Action
+class GeraetegruppenController {
+    #beschreibung
+    #breadcrumb
+    #schlagwoerter
+    +editAction()
+    +getGeraeteFuerEditAction()
+    +getGeraetegruppenVorschlaegeAction()
+    +indexAction()
+    +init()
+    +loescheGeraetegruppeAction()
+    +postDispatch()
+    +showAction()
+    +speichernAction()
+    +uebersichtAction()
+}
+class GeraetegruppenController extends Zend_Controller_Action
+class AuthController {
+    +checkEmailExists(str_email) : bool
+    +indexAction()
+    +loginAction()
+    +loginFormAction()
+    +logoutAction()
+    +passwortVergessenAction()
+    +passwortVergessenFormAction()
+    +postDispatch()
+    +registerAction()
+    +registerFormAction()
+    +validateRegistrationAction()
+    +__init()
+}
+class AuthController extends Zend_Controller_Action
+class ErrorController {
+    +errorAction()
+    +getLog()
+    +loginFailAction()
+}
+class ErrorController extends Zend_Controller_Action
+class IndexController {
+    +indexAction()
+    +init()
+}
+class IndexController extends Zend_Controller_Action
+class TrainingsplanController {
+    +archivAction()
+    +considerTrainingstagebuchEntryFuerUebung(oTrainingsplanUebung, oTrainingstagebuchUebung)
+    #createBaseTrainingsplan(iUserId)
+    +createLayoutAction()
+    #createSplitTrainingsplan(iUserId)
+    +createTrainingsplan(aData)
+    +editAction()
+    +generateMoeglicheBeinpolster(oUebungRow)
+    +generateMoeglicheGewichte(oUebungRow)
+    +generateMoeglicheRueckenpolster(oUebungRow)
+    +generateMoeglicheSitzpositionen(oUebungRow)
+    +getTrainingsplanFuerSplitAction()
+    +getUebung(iUebungId)
+    +getUebungAction()
+    +getUebungenVorschlaegeAction()
+    +indexAction()
+    +postDispatch()
+    +selectLayoutAction()
+    +showAction()
+    +speichernAction()
+    +__init()
+}
+class TrainingsplanController extends Zend_Controller_Action
+class MuskelnController {
+    #beschreibung
+    #breadcrumb
+    #schlagwoerter
+    +editAction()
+    +getMuskelnFuerEditAction()
+    +getMuskelVorschlaegeAction()
+    +indexAction()
+    +init()
+    +loescheMuskelAction()
+    +postDispatch()
+    +showAction()
+    +speichernAction()
+    +uebersichtAction()
+}
+class MuskelnController extends Zend_Controller_Action
+class QrController {
+    +getImageForUrlAction(sUrl : string = "TESTIMAGE!")
+    +__init()
+}
+class QrController extends Zend_Controller_Action
+class UebungenController {
+    #beschreibung
+    #breadcrumb
+    #schlagwoerter
+    +editAction()
+    +getGeraeteFuerEditAction()
+    +getMuskelgruppenFuerEditAction()
+    +holeBilderFuerEditAction()
+    +indexAction()
+    +init()
+    +loescheBildAction()
+    +loescheUebungAction()
+    +postDispatch()
+    +showAction()
+    +speichernAction()
+    +uebersichtAction()
+    +uploadBildAction()
+}
+class UebungenController extends Zend_Controller_Action
+class XmlController {
+    +createSitemapAction()
+    +indexAction()
+    +init()
+}
+class XmlController extends Zend_Controller_Action
+class MuskelgruppenController {
+    #beschreibung
+    #breadcrumb
+    #schlagwoerter
+    +editAction()
+    +getMuskelgruppeFuerEditAction()
+    +getMuskelgruppenVorschlaegeAction()
+    +getMuskelnFuerEditAction()
+    +indexAction()
+    +init()
+    +loescheMuskelgruppeAction()
+    +postDispatch()
+    +showAction()
+    +speichernAction()
+    +uebersichtAction()
+}
+class MuskelgruppenController extends Zend_Controller_Action
+class CmsController {
+    +breadcrumb
+    +getEditorTemplateAction()
+    +getUbbReplacedContentAction()
+    +indexAction()
+    +init()
+    +postDispatch()
+}
+class CmsController extends Zend_Controller_Action
+class ButlerController {
+    +createThumbAction()
+    +init()
+    +postDispatch()
+}
+class ButlerController extends Zend_Controller_Action
+class TrainingstagebuchController {
+    #_aBeanspruchteMuskeln = []
+    #_iMaxBeanspruchterMuskel
+    #_iMinBeanspruchterMuskel
+    +editAction()
+    +generateViewForTrainingsplan(oTrainingstagebuchTrainingsplanRow : Zend_Db_Table_Row_Abstract) : string
+    +generateViewForUebung(oTrainingstagebuchUebungRow : Zend_Db_Table_Row_Abstract) : string
+    +getTrainingsplanAction()
+    +getTrainingsplanInfos(oTrainingstagebuchTrainingsplanRow)
+    +getUebungAction()
+    +getUebungInfos(oTrainingstagebuchUebungRow)
+    +indexAction()
+    +showAction()
+    +showUebungAction()
+    +speichernAction()
+    +startAction()
+    +__init()
+}
+class TrainingstagebuchController extends Zend_Controller_Action
+class GeraeteController {
+    #beschreibung
+    #breadcrumb
+    #schlagwoerter
+    +editAction()
+    +getGeraeteFuerEditAction()
+    +getGeraetVorschlaegeAction()
+    +holeBilderFuerEditAction()
+    +indexAction()
+    +init()
+    +loescheBildAction()
+    +loescheGeraetAction()
+    +optionenMoeglicheBeinpolsterAction()
+    +optionenMoeglicheEinstellungenAction()
+    +optionenMoeglicheGewichteAction()
+    +optionenMoeglicheRueckenpolsterAction()
+    +optionenMoeglicheSitzpositionenAction()
+    +postDispatch()
+    +showAction()
+    +speichernAction()
+    +uebersichtAction()
+    +uploadBildAction()
+}
+class GeraeteController extends Zend_Controller_Action
+class Helper_Sidebar {
+    +pluginLoader : Zend_Loader_PluginLoader
+    #_run = false
+    +direct(name : string, options : array|Zend_Config = null) : Zend_Form
+    +loadForm(name : string, options : array|Zend_Config = null) : Zend_Form
+    +preDispatch()
+    +__construct() : void
+}
+class Helper_Sidebar extends Zend_Controller_Action_Helper_Abstract
+class Bootstrap {
+    +_initActionHelper()
+    #_initAuth()
+    #_initAutoloader()
+    #_initConfig()
+    #_initDb()
+    #_initDoctype()
+    #_initEmailTransport()
+    #_initFavIcon()
+    #_initHeadScripts()
+    #_initInlineScripts()
+    #_initLink()
+    #_initLocale()
+    #_initLogger()
+    #_initMeta()
+    +_initMVC()
+    #_initRouter()
+    #_initTimezone()
+    #_initView()
+}
+class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
+class Application_Plugin_CheckeRecht {
+    +hatRecht(module, controller = "index", action = "index")
+}
+class Application_Plugin_CheckeRecht extends Zend_Controller_Plugin_Abstract
+class Application_Plugin_Auth_Acl {
+    +a_rechte
+    #obj_db_user_rechte_gruppen
+    +__construct()
+}
+class Application_Plugin_Auth_Acl extends Zend_Acl
+class Application_Plugin_Auth_AuthAdapter {
+    #_a_identity
+    #_identity
+    -alreadyLoggedIn()
+    +authenticate()
+    -setLoggedIn()
+    +__construct()
+}
+class Application_Plugin_Auth_AuthAdapter extends CAD_Auth_Adapter_DbTable
+class Application_Plugin_Auth_AccessControl {
+    #a_messages : null
+    #b_logged_in : bool = false
+    #b_logged_out : bool = false
+    #b_session_timed_out : bool = false
+    #error_code : int = 1
+    #_acl : null|Zend_Acl
+    #_auth : CAD_Auth|null
+    +preDispatch(request : Zend_Controller_Request_Abstract) : bool
+    +routeStartup(request : Zend_Controller_Request_Abstract)
+    +__construct(auth : CAD_Auth, acl : Zend_Acl)
+}
+class Application_Plugin_Auth_AccessControl extends Zend_Controller_Plugin_Abstract
+class Application_Plugin_LayoutLoader {
+    +preDispatch(request : Zend_Controller_Request_Abstract)
+}
+class Application_Plugin_LayoutLoader extends Zend_Controller_Plugin_Abstract
+abstract class Service_Abstract {
+}
+class Service_Devices {
+}
+class Service_Devices extends Service_Abstract
+class Service_TrainingDiary {
+}
+class Service_TrainingDiary extends Service_Abstract
+class Service_Exercise {
+}
+class Service_Exercise extends Service_Abstract
+class Service_TrainingPlan {
+    -_oExerciseStorage : Application_Model_DbTable_Uebungen
+    +getExerciseStorage() : null
+    +searchExercise(iExerciseId)
+    +setExerciseStorage(oExerciseStorage : Application_Model_DbTable_Uebungen)
+    +__construct()
+}
+class Application_Model_DbTable_TrainingPlanExercises {
+    #_name : string = "trainingsplan_uebungen"
+    #_primary : string = "trainingsplan_uebung_id"
+    +findExercisesByParentTrainingPlanId(iParentTrainingPlanId) : Zend_Db_Table_Rowset_Abstract
+    +findExercisesByTrainingPlanId(iTrainingPlanId) : Zend_Db_Table_Rowset_Abstract
+    +findTrainingDiaryByTrainingPlanExerciseId(iTrainingPlanExerciseId) : null|Zend_Db_Table_Row_Abstract
+    +findTrainingPlanExercise(iTrainingPlanExerciseId) : null|Zend_Db_Table_Row_Abstract
+    +saveTrainingPlanExercise(aData) : mixed
+    +updateTrainingPlanExercise(aData, iTrainingPlanExerciseId) : int
+}
+class Application_Model_DbTable_TrainingPlanExercises extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_Exercises {
+    #_name : string = "uebungen"
+    #_primary : string = "uebung_id"
+    +deleteExercise(iExerciseId : int) : bool|int
+    +deleteExerciseByDeviceId(iDeviceId : int) : bool|int
+    +findExerciseById(iExerciseId : int) : bool|null|Zend_Db_Table_Row_Abstract
+    +findExerciseForDevice(iDeviceId : int) : array|bool
+    +findExercises() : array|bool
+    +findExercisesByName(sExerciseNamePiece : string) : Zend_Db_Table_Rowset_Abstract
+    +saveExercise(aData : array) : bool|mixed
+    +updateExercise(aData : array, iExerciseId : int) : bool|int
+}
+class Application_Model_DbTable_Exercises extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_Muscles {
+    #_name : string = "muskeln"
+    #_primary : string = "muskel_id"
+    +deleteMuscle(iMuscleId) : bool|int
+    +findAllMuscles() : Zend_Db_Table_Rowset_Abstract
+    +findMuscle(iMuscleId) : bool|null|Zend_Db_Table_Row_Abstract
+    +findMuscleByName(sMuscleName) : Zend_Db_Table_Rowset_Abstract
+    +saveMuscle(aData) : bool|mixed
+    +updateMuscle(aData, iMuscleId) : bool|int
+}
+class Application_Model_DbTable_Muscles extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_ExerciseMuscles {
+    #_name : string = "uebung_muskeln"
+    #_primary : string = "uebung_muskel_id"
+    +deleteExerciseMuscle(iExerciseMuscleId) : bool|int
+    +deleteExerciseMuscleByExerciseId(iExerciseId) : bool|int
+    +findExercisesForMuscle(iMuscleId) : bool|Zend_Db_Table_Rowset_Abstract
+    +findMusclesForExercise(iExerciseId) : bool|Zend_Db_Table_Rowset_Abstract
+    +saveExerciseMuscle(aData) : bool|mixed
+    +updateExerciseMuscle(aData, iExerciseMuscleId) : bool|int
+}
+class Application_Model_DbTable_ExerciseMuscles extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_TrainingDiaryTrainingPlans {
+    #_name : string = "trainingstagebuch_trainingsplaene"
+    #_primary : string = "trainingstagebuch_trainingsplan_id"
+    +findActualTrainingDiary()
+    +findActualTrainingDiaryByTrainingPlanExerciseId(iTrainingPlanExerciseId) : null|Zend_Db_Table_Row_Abstract
+    +findLastOpenTrainingPlan(iTrainingDiaryTrainingPlanId) : Zend_Db_Table_Rowset_Abstract
+}
+class Application_Model_DbTable_TrainingDiaryTrainingPlans extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_MuscleGroups {
+    #_name : string = "muskelgruppen"
+    #_primary : string = "muskelgruppe_id"
+    +deleteMuscleGroup(iMuscleGroupId) : bool|int
+    +findAllMuscleGroups() : Zend_Db_Table_Rowset_Abstract
+    +findMuscleGroup(iMuscleGroupId) : bool|Zend_Db_Table_Rowset_Abstract
+    +findMuscleGroupsByName(sMuscleGroupName) : bool|Zend_Db_Table_Rowset_Abstract
+    +saveMuscleGroup(aData) : bool|mixed
+    +updateMuscleGroup(aData, iMuscleGroupId) : bool|int
+}
+class Application_Model_DbTable_MuscleGroups extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_TrainingDiaries {
+    #_name : string = "trainingstagebuecher"
+    #_primary : string = "trainingstagebuch_id"
+    +findActualTrainingDiary()
+    +findActualTrainingsDiaryByTrainingPlanExerciseId(iTrainingPlanExerciseId) : null|Zend_Db_Table_Row_Abstract
+}
+class Application_Model_DbTable_TrainingDiaries extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_DeviceGroups {
+    #_name : string = "geraetegruppen"
+    #_primary : string = "geraetegruppe_id"
+    +deleteDeviceGroup(iDeviceGroupId) : bool|int
+    +findAllDeviceGroups() : Zend_Db_Table_Rowset_Abstract
+    +findDeviceGroup(iDeviceGroupId) : bool|null|Zend_Db_Table_Row_Abstract
+    +findDeviceGroupByName(sDeviceGroupName) : bool|Zend_Db_Table_Rowset_Abstract
+    +saveDeviceGroup(aData) : bool|mixed
+    +updateDeviceGroup(aData, iDeviceGroupId) : bool|int
+}
+class Application_Model_DbTable_DeviceGroups extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_ExerciseMuscleGroups {
+    #_name : string = "uebung_muskelgruppen"
+    #_primary : string = "uebung_muskelgruppe_id"
+    +deleteExerciseMuscleGroup(iExerciseMuscleGroupId) : bool|int
+    +deleteExerciseMuscleGroupByExercise(iExerciseId) : bool|int
+    +deleteExerciseMuscleGroupByMuscleGroup(iMuscleGroupId) : bool|int
+    +findExerciseMuscleGroupByExerciseId(iExerciseId) : bool|Zend_Db_Table_Rowset_Abstract
+    +findExercisesByMuscleGroup(iMuscleGroupId) : bool|Zend_Db_Table_Rowset_Abstract
+    +saveExerciseMuscleGroup(aData) : bool|mixed
+    +updateExerciseMuscleGroup(aData, iExerciseMuscleGroupId) : bool|int
+}
+class Application_Model_DbTable_ExerciseMuscleGroups extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_Abstract {
+    #aTableMetaData : */
+    +getInfo() : mixed
+    +init()
+}
+class Application_Model_DbTable_Abstract extends Zend_Db_Table_Abstract
+class Application_Model_DbTable_TrainingPlanLayouts {
+    #_name : string = "trainingsplan_layouts"
+    #_primary : string = "trainingsplan_layout_id"
+    +findTrainingPlanLayout(iTrainingPlanLayoutId) : null|Zend_Db_Table_Row_Abstract
+    +findTrainingPlanLayoutByName(sTrainingPlanLayoutName) : null|Zend_Db_Table_Row_Abstract
+}
+class Application_Model_DbTable_TrainingPlanLayouts extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_Devices {
+    #_name : string = "geraete"
+    #_primary : string = "geraet_id"
+    +deleteDevice(iDeviceId) : bool|int
+    +findAllDevices() : Zend_Db_Table_Rowset_Abstract
+    +findDeviceAndDeviceGroupByName(sDeviceName) : Zend_Db_Table_Rowset_Abstract
+    +findDeviceById(iDeviceId) : bool|null|Zend_Db_Table_Row_Abstract
+    +findDeviceByName(sDeviceName) : Zend_Db_Table_Rowset_Abstract
+    +saveDevice(aData) : bool|mixed
+    +updateDevice(aData, iDeviceId) : bool|int
+}
+class Application_Model_DbTable_Devices extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_TrainingDiaryExercises {
+    #_name : string = "trainingstagebuch_uebungen"
+    #_primary : string = "trainingstagebuch_uebung_id"
+    +getActualTrainingstagebuchFuerUebung(iTrainingsplanUebungId) : null|Zend_Db_Table_Row_Abstract
+    +getLastTrainingstagebuchUebungen(iTrainingsplanId) : Zend_Db_Table_Rowset_Abstract
+}
+class Application_Model_DbTable_TrainingDiaryExercises extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_UserRightGroups {
+    #_name : string = "user_rechte_gruppen"
+    #_primary : string = "user_rechte_gruppe_id"
+    +deleteUserRightGroup(iUserRightGroupId) : bool|int
+    +findAllUserRightGroups() : bool|Zend_Db_Table_Rowset_Abstract
+    +findUserRightGroup(aOptions) : bool|null|Zend_Db_Table_Row_Abstract
+    +saveUserRightGroup(aData) : bool|mixed
+    +updateUserRightGroup(aData, iUserRightGroupId) : bool
+}
+class Application_Model_DbTable_UserRightGroups extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_UserRights {
+    #_name : string = "user_rechte"
+    #_primary : string = "user_recht_id"
+    +findAllUserRightsByUserId(iUserId) : bool|Zend_Db_Table_Rowset_Abstract
+    +findUserRights(aOptions) : bool|null|Zend_Db_Table_Row_Abstract
+    +saveUserRight(aData) : bool|mixed
+}
+class Application_Model_DbTable_UserRights extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_UserRightGroupsRight {
+    #_name : string = "user_rechte_gruppen_rechte"
+    #_primary : string = "user_rechte_gruppen_recht_id"
+    +findAllUserRightGroupRights() : bool|Zend_Db_Table_Rowset_Abstract
+}
+class Application_Model_DbTable_UserRightGroupsRight extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_Users {
+    #_name : string = "users"
+    #_primary : string = "user_id"
+    +checkEmailExists(str_email) : null|Zend_Db_Table_Row_Abstract
+    +deleteUser(iUseId) : int
+    +findActiveUsers() : Zend_Db_Table_Rowset_Abstract
+    +findUser(iUserId) : bool|null|Zend_Db_Table_Row_Abstract
+    +findUserByEmail(sUserEmail) : bool|null|Zend_Db_Table_Row_Abstract
+    +saveUser(aData) : bool|mixed
+    +updateUser(aData, iUserId) : bool|int
+}
+class Application_Model_DbTable_Users extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_DeviceGroupDevices {
+    #_name : string = "geraetegruppe_geraete"
+    #_primary : string = "geraetegruppe_geraet_id"
+    +deleteAllDeviceGroupDevicesByDeviceGroupId(iDeviceGroupDeviceId) : bool|int
+    +deleteAllDeviceGroupDevicesByDeviceId(iDeviceId) : bool|int
+    +deleteDeviceFromDeviceGroupDevices(iDeviceGroupDeviceId) : bool|int
+    +findDeviceGroupsForDevice(iDeviceId) : bool|Zend_Db_Table_Rowset_Abstract
+    +findDevicesByDeviceGroupId(iDeviceGroupId) : bool|Zend_Db_Table_Rowset_Abstract
+    +saveDeviceGroupDevice(aData) : bool|mixed
+    +updateDeviceGroupDevice(aData, iDeviceGroupDeviceId) : bool|int
+}
+class Application_Model_DbTable_DeviceGroupDevices extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_MuscleGroupMuscles {
+    #_name : string = "muskelgruppe_muskeln"
+    #_primary : string = "muskelgruppe_muskel_id"
+    +deleteAllMuscleGroupsMusclesByMuscleGroupId(iMuscleGroupId) : bool|int
+    +deleteAllMuscleGroupsMusclesByMuscleId(iMuscleId) : bool|int
+    +deleteMuscleGroupMuscle(iMuscleGroupMuscleId) : bool|int
+    +findMuscleGroupsByMuscleId(iMuscleId) : bool|Zend_Db_Table_Rowset_Abstract
+    +findMusclesByMuscleGroupId(iMuscleGroupId) : bool|Zend_Db_Table_Rowset_Abstract
+    +saveMuscleGroupMuscle(aData) : bool|mixed
+    +updateMuscleGroupMuscle(aData, iMuscleGroupMuscleId) : bool|int
+}
+class Application_Model_DbTable_MuscleGroupMuscles extends Application_Model_DbTable_Abstract
+class Application_Model_DbTable_TrainingPlans {
+    #_name : string = "trainingsplaene"
+    #_primary : string = "trainingsplan_id"
+    +findAllActiveTrainingPlans() : Zend_Db_Table_Rowset_Abstract
+    +findAllInactiveTrainingPlans() : Zend_Db_Table_Rowset_Abstract
+    +findChildTrainingPlanIdsForTrainingPlan(iTrainingPlanId)
+    +findChildTrainingPlans(iParentTrainingPlanId) : Zend_Db_Table_Rowset_Abstract
+    +findLastOpenTrainingPlan(iTrainingPlanId) : Zend_Db_Table_Rowset_Abstract
+    +findTrainingPlan(iTrainingPlanId) : null|Zend_Db_Table_Row_Abstract
+    +getChildTrainingPlansWithExercises(iParentTrainingPlanId)
+}
+class Application_Model_DbTable_TrainingPlans extends Application_Model_DbTable_Abstract
+class Zend_View_Helper_ViewGenerator {
+    -_aMehrzahl = ["saetze", "sitzpositionen", "wiederholungen", "gewichte", "beinpolster", "rueckenpolster"]
+    +extractReferenzValue(sType, sReferenzColumn)
+    +formatFloatValue(mValue)
+    +generateMoeglichkeitenArrayFuerColumn(sColumnName)
+    +generateOptionsForUebungColumn(sType, sReferenzColumn = null, iCount : int = 0) : string
+    +viewGenerator() : $this
+}
+class Zend_View_Helper_ViewGenerator extends Zend_View_Helper_Abstract
+@enduml

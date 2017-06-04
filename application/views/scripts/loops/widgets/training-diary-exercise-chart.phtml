@@ -1,0 +1,34 @@
+<div class="widget chart" style="position: relative; height: 340px; width: 400px; float: left; display: inline; margin-right: 25px;">
+    <span class="resize<?php echo $this->chartCount;?> glyphicon glyphicon-resize-full"
+          style="width: 14px; height: 14px; position: absolute; top: 0; right: 0; cursor: pointer;"></span>
+    <strong><?php echo $this->exerciseName;?></strong>
+    <div class="chart" id="chart<?php echo $this->chartCount;?>" style="height: 300px; width: 400px; position: relative;">
+
+    </div>
+</div>
+
+<script>
+    jQuery(document).ready(function() {
+        jQuery('body').css('overflow', 'auto');
+
+        var chart<?php echo $this->chartCount;?> = c3.generate(JSON.parse('<?php echo $this->jsonString;?>'));
+
+        jQuery('.resize<?php echo $this->chartCount;?>').unbind('click').click(function() {
+            var height = 600;
+            var width = 800;
+
+            if (jQuery(this).data('resized')) {
+                height = 300;
+                width = 400;
+                jQuery(this).data('resized', false);
+                jQuery(this).removeClass('glyphicon-resize-small').addClass('glyphicon-resize-full');
+            } else {
+                jQuery(this).data('resized', true);
+                jQuery(this).removeClass('glyphicon-resize-full').addClass('glyphicon-resize-small');
+            }
+            chart<?php echo $this->chartCount;?>.resize({height: height, width: width});
+            jQuery(this).parent().css('height', height + 40).css('width', width);
+        })
+    });
+
+</script>

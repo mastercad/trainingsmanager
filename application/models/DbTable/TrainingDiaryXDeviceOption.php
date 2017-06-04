@@ -76,7 +76,7 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllDeviceOptions($userId = null) {
+    public function findAllDeviceOptions($userId = null, $exerciseId = null) {
         $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan_exercise'), 'training_diary_x_training_plan_exercise_id = training_diary_x_device_option_t_d_x_t_p_e_fk')
@@ -102,7 +102,9 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
             $select->where('training_plan_user_fk = ?', $userId);
         }
 
-        $sql = $select->assemble();
+        if (!empty($exerciseId)) {
+            $select->where('exercise_id = ?', $exerciseId);
+        }
 
         return $this->fetchAll($select);
     }

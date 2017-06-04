@@ -1,8 +1,8 @@
 <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 <script src="/js/c3.js"></script>
 
-<div class="widget">
-    <span class="glyphicon glyphicon glyphicon-dashboard"></span>
+<div class="widget-button" style="position: absolute; right: 30px; top: 70px; cursor: pointer; z-index: 10;">
+    <span class="glyphicon glyphicon glyphicon-dashboard" style="font-size: 20px;"></span>
 </div>
 
 <div class="col-sm-12 text-center">
@@ -14,14 +14,9 @@
     </p>
 </div>
 
-
-<?php
-    echo $this->activeTrainingDiary;
-?>
-
-<?php
-    echo $this->chartContent;
-?>
+<div id="widgets_container" class="col-sm-12">
+    <?php echo $this->widgetsContent;?>
+</div>
 
 <script type="text/javascript" src="/js/trainingsmanager_tour.js"></script>
 
@@ -33,5 +28,137 @@
         demoButton.unbind('click').click(function() {
             tour.restart();
         });
+
+        jQuery('.widget-button').unbind('click').click(function() {
+            jQuery.post('/index/get-widget-settings-content', {ajax: true}, function(response) {
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    var oldContainer = jQuery('body #widget_settings_container');
+                    if (0 < oldContainer.length) {
+                        oldContainer.remove();
+                    }
+                    jQuery('body').append(Base64.decode(json.htmlContent));
+                    var container = jQuery('#widget_settings_container');
+
+                    var containerHeight = container.outerHeight();
+                    var containerWidth = container.outerWidth();
+                    var windowHeight = jQuery(window).height();
+                    var windowWidth = jQuery(window).width();
+
+                    container.css({
+                        height: 0,
+                        width: 0,
+                        top: windowHeight / 2,
+                        left: windowWidth / 2
+                    }).animate({
+                        width: containerWidth,
+                        height: containerHeight,
+                        top: (windowHeight - containerHeight) / 2,
+                        left: (windowWidth - containerWidth) / 2
+                    }, function() {
+                        initWidgetSettings();
+                    });
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
+            });
+        });
+
+        function initWidgetSettings() {
+            jQuery('#widget_settings_container .glyphicon-remove').unbind('click').click(function() {
+                var widgetEditContainer = jQuery('.widget-edit-container');
+                if (0 < widgetEditContainer.length) {
+                    jQuery(widgetEditContainer).fadeOut(500, function() {
+                        jQuery(this).remove();
+                    });
+                }
+                jQuery(this).parent().fadeOut(500, function() {
+                    jQuery(this).remove();
+                });
+            });
+
+            jQuery('#widget_settings_container .glyphicon-plus').unbind('click').click(function() {
+                var widget = jQuery(this).parent().parent();
+
+                if (true == widget.data('editable')) {
+                    jQuery.post('/index/load-widget-edit-content', {
+                        ajax: true,
+                        id: jQuery(widget).data('id')
+                    }, function (response) {
+                        var json = JSON.parse(response);
+
+                        if (200 == json.state) {
+                            var oldContainer = jQuery('.widget-edit-container');
+                            if (0 < oldContainer.length) {
+                                oldContainer.remove();
+                            }
+                            jQuery('body').append(Base64.decode(json.htmlContent));
+                            var container = jQuery('.widget-edit-container');
+
+                            var containerHeight = container.outerHeight();
+                            var containerWidth = container.outerWidth();
+                            var windowHeight = jQuery(window).height();
+                            var windowWidth = jQuery(window).width();
+
+                            console.log(containerWidth + " x " + containerHeight);
+                            console.log(windowWidth + " x " + windowHeight);
+
+                            container.css({
+                                height: 0,
+                                width: 0,
+                                top: windowHeight / 2,
+                                left: windowWidth / 2
+                            }).animate({
+                                width: containerWidth,
+                                height: containerHeight,
+                                top: (windowHeight - containerHeight) / 2,
+                                left: (windowWidth - containerWidth) / 2
+                            }, function() {
+                                initWidgetSettings();
+                            });
+                        } else {
+                            showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                        }
+                    });
+                } else {
+                    jQuery.post('/index/load-widget-content', {
+                        ajax: true,
+                        id: jQuery(widget).data('id')
+                    }, function(response) {
+                        var json = JSON.parse(response);
+
+                        if (200 == json.state) {
+                            widget.addClass('disabled').find('.glyphicon').remove();
+                            widget.append('<div style="position: absolute; top: 0; right: 0;"><span class="option glyphicon glyphicon glyphicon-check"></span></div>');
+                            jQuery('#widgets_container').append(Base64.decode(json.htmlContent));
+                            initWidgets();
+                        } else {
+                            showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                        }
+                    });
+                }
+            });
+        }
+
+        initWidgets();
     });
+
+    function initWidgets() {
+        jQuery('.widget .widget-delete').unbind('click').click(function() {
+            var parent = jQuery(this).parent();
+            var id = parent.data('id');
+            jQuery.post('/index/delete-widget', {ajax: true, id: id}, function(response) {
+                var json = JSON.parse(response);
+
+                if (200 == json.state) {
+                    parent.fadeOut(500, function() {
+                        parent.remove();
+                    })
+                } else {
+                    showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                }
+            });
+        });
+    }
 </script>

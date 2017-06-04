@@ -830,7 +830,7 @@ form.dropzone {display: table-cell;}
 }
 
 .flex-container {
-    display:flex;
+    display: flex;
     flex-direction: row;
     /*justify-content: center;*/
     justify-content: space-around;
@@ -876,6 +876,74 @@ form.dropzone {display: table-cell;}
 
 .row.exercise {
     padding: 15px;
+}
+
+.widget-settings-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-flow: row wrap;
+    flex-wrap: wrap;
+}
+
+.widget-settings-container .widget-setting {
+    padding: 10px;
+    /*flex: 1;*/
+    background-color: cornflowerblue;
+    width: 350px;
+    /*height: auto;*/
+    margin: 15px;
+    border-radius: 5px;
+}
+
+#widgets_container {
+    display: flex;
+    flex-direction: row;
+    /*justify-content: space-around;*/
+    flex-flow: row wrap;
+    flex-wrap: wrap;
+}
+
+#widgets_container .widget {
+    padding: 10px;
+    width: 350px;
+    /*height: auto;*/
+    margin: 15px;
+    border-radius: 5px;
+}
+
+.widget-settings-container .widget h3 {
+    font-size: 16px;
+}
+
+#widget_settings_container {
+    background-color: white;
+    padding: 15px;
+    border: 1px solid cornflowerblue;
+    border-radius: 5px;
+    position: absolute;
+    top: -5000px;
+    left: -5000px;
+    height: 400px;
+    width: 800px;
+}
+
+.widget .option {
+    cursor: pointer;
+}
+
+.widget-edit-container {
+    background-color: white;
+    padding: 15px;
+    border: 1px solid cornflowerblue;
+    border-radius: 5px;
+    position: absolute;
+    top: -5000px;
+    left: -5000px;
+}
+
+.disabled {
+    opacity: 0.5;
 }
 
 /* ]]> */

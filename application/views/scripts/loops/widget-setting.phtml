@@ -1,0 +1,23 @@
+<div class="widget-setting
+    <?php if (true === $this->widgetInUse) { echo ' disabled ';}?> "
+     style="position: relative; <?php if (true === $this->widgetInUse) { echo ' opacity: 0.5; ';}?>"
+     data-editable="<?php echo $this->widget_editable;?>"
+     data-id="<?php echo $this->widget_id;?>"
+>
+    <h3>
+        <?php echo $this->widget_name;?>
+    </h3>
+    <div style="position: absolute; top: 0; right: 0;">
+<?php
+    if ($this->widgetInUse) {
+?>
+        <span class="option glyphicon glyphicon glyphicon-check"></span>
+<?php
+    } else {
+?>
+        <span class="option glyphicon glyphicon-plus"></span>
+<?php
+    }
+?>
+    </div>
+</div>

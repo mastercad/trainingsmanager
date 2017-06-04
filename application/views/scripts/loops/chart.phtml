@@ -1,4 +1,6 @@
-<div style="position: relative; height: 340px; width: 400px; float: left; display: inline; margin-right: 25px;">
+<div class="widget" style="position: relative; height: 340px; width: 400px; float: left; display: inline; margin-right: 25px;" data-id="<?php echo $this->dashboardXWidgetId;?>">
+    <span class="widget-delete glyphicon glyphicon-remove"
+          style="width: 14px; height: 14px; position: absolute; top: 0; right: 20px; cursor: pointer;"></span>
     <span class="resize<?php echo $this->chartCount;?> glyphicon glyphicon-resize-full"
           style="width: 14px; height: 14px; position: absolute; top: 0; right: 0; cursor: pointer;"></span>
     <strong><?php echo $this->exerciseName;?></strong>
@@ -28,7 +30,7 @@
             }
             chart<?php echo $this->chartCount;?>.resize({height: height, width: width});
             jQuery(this).parent().css('height', height + 40).css('width', width);
-        })
+        });
     });
 
 </script>

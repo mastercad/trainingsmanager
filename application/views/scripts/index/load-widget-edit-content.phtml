@@ -1,0 +1,60 @@
+<div class="widget-edit-container" style="position: absolute; top: -5000px; left: -5000px;" data-id="<?php echo $this->widgetId;?>">
+    <span class="glyphicon glyphicon-remove" style="position: absolute; top: 0; right: 0; cursor: pointer;"></span>
+<?php
+    echo $this->content;
+?>
+    <div class="form-group">
+        <button class="widget-add orm-control btn-default btn">
+            Widget hinzufügen
+        </button>
+    </div>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            jQuery('.widget-edit-container .glyphicon-remove').unbind('click').click(function() {
+                jQuery(this).parent().remove();
+            });
+
+            jQuery('.widget-edit-container .custom-drop-down .option-add').unbind('click').click(function() {
+                var selectedOption = jQuery(this).data('value');
+                var selectedOptionName = jQuery(this).html();
+                var caretContent = '<span class="caret"></span>';
+
+                jQuery(this).parent().parent().parent().data('value', selectedOption);
+                jQuery(this).parent().parent().parent().find('.dropdown-toggle').html(selectedOptionName + caretContent).dropdown('toggle');
+
+                return false;
+            });
+
+            jQuery('.widget-edit-container .widget-add').unbind('click').click(function() {
+                var type = jQuery('.widget-edit-container .custom-drop-down').data('value');
+                var id = jQuery('.widget-edit-container').data('id');
+                var count = parseInt(jQuery('#widgets-container .widget').length) + 1;
+                var self = this;
+
+                jQuery.post('/index/load-widget-content', {ajax: true, type: type, id: id, count: count}, function(response) {
+                    var json = JSON.parse(response);
+
+                    if (200 == json.state) {
+                        jQuery('#widgets_container').append(Base64.decode(json.htmlContent));
+                        initWidgets();
+                        if ('QUxM' == type
+                            || 2 == jQuery('.widget-edit-container .option-add').length
+                        ) {
+                            jQuery('.widget-edit-container').fadeOut(500, function() {
+                                var widget = jQuery('#widget_settings_container .widget[data-id="' + id + '"]');
+                                widget.addClass('disabled').find('.glyphicon').remove();
+                                widget.append('<div style="position: absolute; top: 0; right: 0;"><span class="option glyphicon glyphicon glyphicon-check"></span></div>');
+                                jQuery(this).remove();
+                            });
+                        } else {
+                            jQuery('.widget-edit-container .option-add[data-value="' + type + '"]').parent().remove();
+                        }
+                    } else {
+                        showDialog(json.message, BootstrapDialog.TYPE_DANGER);
+                    }
+                });
+            });
+        });
+    </script>
+</div>
