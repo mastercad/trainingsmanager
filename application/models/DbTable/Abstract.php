@@ -58,4 +58,19 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
         }
         return $tableName;
     }
+
+    /**
+     * notwendig um zwischen einer tabelle und einer test tabelle mit dem selben namen zu syncen und nicht für
+     * jede test tabelle ein neues model anlegen zu müssen...
+     *
+     * @param $name
+     */
+    public function setName($name) {
+        $this->_name = $name;
+        return $this;
+    }
+
+    public function getName() {
+        return $this->_name;
+    }
 }

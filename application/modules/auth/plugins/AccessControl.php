@@ -332,8 +332,7 @@ class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
                     $resource = new $resourceClassName($row);
                     $resourceName = $module . ':' . $controller;
 
-                    Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role, $resourceName,
-                        $action);
+                    Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role, $resourceName, $action);
                 }
             }
 

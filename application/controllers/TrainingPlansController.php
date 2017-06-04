@@ -487,7 +487,9 @@ class TrainingPlansController extends AbstractController {
         $trainingPlan = $trainingPlansDb->findByPrimary($trainingPlanId);
         $content = '';
 
-        if ($userId != $trainingPlan->offsetGet('training_plan_user_fk')) {
+        if ($trainingPlan instanceof Zend_Db_Table_Row_Abstract
+            && $userId != $trainingPlan->offsetGet('training_plan_user_fk')
+        ) {
             $usersDb = new Model_DbTable_Users();
             $trainingPlanUser = $usersDb->findUser($trainingPlan->offsetGet('training_plan_user_fk'));
             $content = 'Bearbeitet wird der Trainingsplan von ' . $trainingPlanUser->offsetGet('user_first_name') . ' ' . $trainingPlanUser->offsetGet('user_last_name');

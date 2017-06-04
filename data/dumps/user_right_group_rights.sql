@@ -24,9 +24,6 @@ CREATE TABLE IF NOT EXISTS `test_user_right_group_rights` (
   `user_right_group_right_validator_class` varchar(255) NOT NULL,
   PRIMARY KEY (`user_right_group_right_id`),
   UNIQUE KEY `user_rechte_gruppe_fk` (`user_right_group_fk`,`user_right_group_right`),
-  UNIQUE KEY `unique_user_right_group_right` (`user_right_group_right`),
-  UNIQUE KEY `user_right_group_right__id` (`user_right_group_right_id`),
-  UNIQUE KEY `user_right_group_right_id` (`user_right_group_right_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8;
 
 -- Exportiere Daten aus Tabelle rundumfit.user_right_group_rights: ~97 rows (ungefähr)
