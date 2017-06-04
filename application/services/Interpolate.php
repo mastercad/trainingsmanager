@@ -80,11 +80,8 @@ class Service_Interpolate {
                         $trainingDiaryXTrainingPlanExerciseId = $trainingDiaryXTrainingPlanExerciseDb->insert($data);
                         $exerciseOptions = $trainingPlanXExerciseOptionDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($trainingPlanXExerciseId);
 
-//                            echo "Datum : " . $currentDate . "<br />";
-//                            echo "Übung : " . $trainingPlanXExercise->offsetGet('exercise_name') . "<br />";
-
                         foreach ($exerciseOptions as $exerciseOption) {
-                            $optionName = strtoupper($exerciseOption->offsetGet('exercise_option_name'));
+                            $optionName = mb_strtoupper($exerciseOption->offsetGet('exercise_option_name'));
                             $optionHash = $trainingPlanXExerciseId . '_' . $optionName;
                             if (array_key_exists($optionName, $this->optionsAllowedToIncrease['exercises'])) {
                                 if (!array_key_exists($optionHash, $processedExerciseOptions)) {
@@ -100,13 +97,12 @@ class Service_Interpolate {
                                     'training_diary_x_exercise_option_create_user_fk' => $this->findCurrentUserId(),
                                 ];
                                 $trainingDiaryXExerciseOptionDb->insert($data);
-//                                    echo $optionName . " : " . $processedExerciseOptions[$optionName] . "<br />";
                             }
                         }
                         $deviceOptions = $trainingPlanXDeviceOptionDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($trainingPlanXExerciseId);
 
                         foreach ($deviceOptions as $deviceOption) {
-                            $optionName = strtoupper($deviceOption->offsetGet('device_option_name'));
+                            $optionName = mb_strtoupper($deviceOption->offsetGet('device_option_name'));
                             $optionHash = $trainingPlanXExerciseId . '_' . $optionName;
                             if (array_key_exists($optionName, $this->optionsAllowedToIncrease['devices'])) {
                                 if (!array_key_exists($optionHash, $processedDeviceOptions)) {
@@ -122,7 +118,6 @@ class Service_Interpolate {
                                     'training_diary_x_device_option_create_user_fk' => $this->findCurrentUserId(),
                                 ];
                                 $trainingDiaryXDeviceOptionDb->insert($data);
-//                                    echo $optionName . " : " . $processedDeviceOptions[$optionName] . "<br />";
                             }
                         }
                     }
