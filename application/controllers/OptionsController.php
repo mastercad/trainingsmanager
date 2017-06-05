@@ -124,7 +124,7 @@ abstract class OptionsController extends AbstractController {
             } else {
                 $optionId = $this->useOptionsStorage()->insertOption($data);
             }
-            Service_GlobalMessageHandler::appendMessage('Übungsoption erfolgreich gespeichert', Model_Entity_Message::STATUS_OK);
+            Service_GlobalMessageHandler::appendMessage('Option erfolgreich gespeichert', Model_Entity_Message::STATUS_OK);
         } else {
             Service_GlobalMessageHandler::appendMessage('Falscher Aufruf dieser Seite', Model_Entity_Message::STATUS_ERROR);
         }

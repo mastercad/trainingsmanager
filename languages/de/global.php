@@ -53,23 +53,35 @@
             'sehen sie eine Übersicht aller bereits eingestellten Muskelgruppen.<br /><br />' .
             'Ein einfachter Klick lädt die details der jeweiligen Muskelgruppe<br />'.
             'Ein Doppelklick lädt die details der jeweiligen Muskelgruppe zum editieren.<br /><br />'.
-            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Muskelgruppe anlegen."',
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Muskelgruppe anlegen.',
 
         'device_groups_default_content' => 'Das ist die Ansicht der Gerätegruppen.<br /><br />Auf der linken Seite ' .
             'sehen sie eine Übersicht aller bereits eingestellten Gerätegruppen.<br /><br />' .
             'Ein einfachter Klick lädt die details der jeweiligen Gerätegruppe<br />'.
             'Ein Doppelklick lädt die details der jeweiligen Gerätegruppe zum editieren.<br /><br />'.
-            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Gerätegruppe anlegen."',
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Gerätegruppe anlegen.',
 
         'muscles_default_content' => 'Das ist die Ansicht der Muskeln.<br /><br />Auf der linken Seite ' .
             'sehen sie eine Übersicht aller bereits eingestellten Muskeln.<br /><br />' .
             'Ein einfachter Klick lädt die details des jeweiligen Muskels<br />'.
             'Ein Doppelklick lädt die details des jeweiligen Muskels zum editieren.<br /><br />'.
-            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie einen neuen Muskel anlegen."',
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie einen neuen Muskel anlegen.',
 
         'devices_default_content' => 'Das ist die Ansicht der Geräte.<br /><br />Auf der linken Seite ' .
             'sehen sie eine Übersicht aller bereits eingestellten Geräte.<br /><br />' .
             'Ein einfachter Klick lädt die details des jeweiligen Gerätes<br />'.
             'Ein Doppelklick lädt die details des jeweiligen Gerätes zum editieren.<br /><br />'.
-            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neues Gerät anlegen."',
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neues Gerät anlegen.',
+
+        'device_options_default_content' => 'Das ist die Ansicht der Geräte Optionen.<br /><br />Auf der linken Seite ' .
+            'sehen sie eine Übersicht aller bereits eingestellten Geräte Optionen.<br /><br />' .
+            'Ein einfachter Klick lädt die details der jeweiligen Geräte Option.<br />'.
+            'Ein Doppelklick lädt die details der jeweiligen Gerätes Option zum editieren.<br /><br />'.
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Gerät Option anlegen.',
+
+        'exercise_options_default_content' => 'Das ist die Ansicht der Übungs Optionen.<br /><br />Auf der linken Seite ' .
+            'sehen sie eine Übersicht aller bereits eingestellten Übungs Optionen.<br /><br />' .
+            'Ein einfachter Klick lädt die details der jeweiligen Übungs Option.<br />'.
+            'Ein Doppelklick lädt die details der jeweiligen Übungs Option zum editieren.<br /><br />'.
+            'Über folgenden Link : <a href="Javascript:loadEditContent();">Edit</a> können sie eine neue Übungs Option anlegen.',
     ];
