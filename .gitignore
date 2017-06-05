@@ -23,3 +23,4 @@
 /data/*.log
 /data/tmp/*
 !/data/tmp
+/application/configs/application.ini

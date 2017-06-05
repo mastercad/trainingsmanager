@@ -65,7 +65,12 @@ class MusclesController extends AbstractController
         if (0 < $id) {
             $musclesDb = new Model_DbTable_Muscles();
             $result = $musclesDb->deleteMuscle($id);
-            echo $result;
+
+            if ($result) {
+                Service_GlobalMessageHandler::appendMessage('Muskel erfolgreich gelöscht', Model_Entity_Message::STATUS_OK);
+            } else {
+                Service_GlobalMessageHandler::appendMessage('Muskel konnte nicht gelöscht werden', Model_Entity_Message::STATUS_ERROR);
+            }
         }
     }
 

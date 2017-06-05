@@ -2,6 +2,9 @@
 namespace Deployer;
 
 // Configuration
+task('test', function () {
+    writeln('Hello world');
+});
 
 set('repository', 'https://mastercad@bitbucket.org/AmbitiousTeam/trainingsmanager.git');
 set('git_tty', true); // [Optional] Allocate tty for git on first deployment

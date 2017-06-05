@@ -133,34 +133,34 @@ class MuscleGroupsController extends AbstractController {
             $obj_db_uebung_muskelgruppen = new Model_DbTable_ExerciseXMuscle();
             $obj_db_muskelgruppen_muskeln = new Model_DbTable_MuscleXMuscleGroup();
 
-            $a_uebungen = $obj_db_uebung_muskelgruppen->findExercisesForMuscleGroup($i_muskelgruppe_id);
+//            $a_uebungen = $obj_db_uebung_muskelgruppen->findExercisesForMuscleGroup($i_muskelgruppe_id);
 
             if ($obj_db_muskelgruppen->deleteMuscleGroup($i_muskelgruppe_id)) {
-                $obj_db_muskelgruppen_muskeln->deleteAllMuscleGroupsMusclesByMuscleGroupId($i_muskelgruppe_id);
-                $obj_db_uebung_muskelgruppen->deleteExerciseXMuscleByMuscleGroupId($i_muskelgruppe_id);
+//                $obj_db_muskelgruppen_muskeln->deleteAllMuscleGroupsMusclesByMuscleGroupId($i_muskelgruppe_id);
+//                $obj_db_uebung_muskelgruppen->deleteExerciseXMuscleByMuscleGroupId($i_muskelgruppe_id);
 
-                if (is_array($a_uebungen) &&
-                    count($a_uebungen) > 0
-                ) {
-                    foreach ($a_uebungen as $a_uebung) {
-                        $obj_db_uebungen->deleteExercise($a_uebung['uebung_muskelgruppe_uebung_fk']);
-                    }
-                }
+//                if (is_array($a_uebungen) &&
+//                    count($a_uebungen) > 0
+//                ) {
+//                    foreach ($a_uebungen as $a_uebung) {
+//                        $obj_db_uebungen->deleteExercise($a_uebung['uebung_muskelgruppe_uebung_fk']);
+//                    }
+//                }
 
-                $i_count_message = count($messagesCollection);
-                $messagesCollection[$i_count_message]['type'] = "meldung";
-                $messagesCollection[$i_count_message]['message'] = "Muskelgruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!";
-                $messagesCollection[$i_count_message]['result'] = true;
-
-                $bilder_pfad = getcwd() . '/images/content/dynamisch/muscle-groups/' . $i_muskelgruppe_id . '/';
-
-                $obj_file = new CAD_File();
-                $obj_file->cleanDirRek($bilder_pfad, 2);
-            } else {
-                $i_count_message = count($messagesCollection);
-                $messagesCollection[$i_count_message]['type'] = "fehler";
-                $messagesCollection[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
-                $messagesCollection[$i_count_message]['result'] = false;
+//                $i_count_message = count($messagesCollection);
+//                $messagesCollection[$i_count_message]['type'] = "meldung";
+//                $messagesCollection[$i_count_message]['message'] = "Muskelgruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!";
+//                $messagesCollection[$i_count_message]['result'] = true;
+//
+//                $bilder_pfad = getcwd() . '/images/content/dynamisch/muscle-groups/' . $i_muskelgruppe_id . '/';
+//
+//                $obj_file = new CAD_File();
+//                $obj_file->cleanDirRek($bilder_pfad, 2);
+//            } else {
+//                $i_count_message = count($messagesCollection);
+//                $messagesCollection[$i_count_message]['type'] = "fehler";
+//                $messagesCollection[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
+//                $messagesCollection[$i_count_message]['result'] = false;
             }
         } else {
             $i_count_message = count($messagesCollection);
