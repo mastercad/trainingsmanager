@@ -527,8 +527,9 @@ class TrainingPlansController extends AbstractController {
             || 'SUPERADMIN' == $currentUserRightGroupName
         ) {
             $usersCollection = $usersDb->findActiveUsers();
-        } else if ('GROUP_ADMIN' == $currentUserRightGroupName
-            || 'TEST_GROUP_ADMIN' == $currentUserRightGroupName
+        } else if (('GROUP_ADMIN' == $currentUserRightGroupName
+            || 'TEST_GROUP_ADMIN' == $currentUserRightGroupName)
+            && $currentUser->user_group_id
         ) {
             $usersCollection = $usersDb->findAllActiveUsersInSameUserGroup($currentUser->user_group_id);
         }
