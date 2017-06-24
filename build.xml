@@ -29,11 +29,11 @@
 
     <target name="replace-tokens-in-configs" description="Replace all Tokens in config files">
         <exec executable="sed">
-            <arg value="s/{{DB_HOST}}/${env.DB_HOST}/g" />
+            <arg value="s/\{\{DB_HOST\}\}/$\{env.DB_HOST\}/g" />
             <arg value="${basedir}/application/configs/application.ini" />
         </exec>
         <exec executable="sed">
-            <arg value="s/{{DB_USER_NAME}}/${env.DB_USER_NAME}/g" />
+            <arg value="s/\{\{DB_USER_NAME\}\}/$\{env.DB_USER_NAME\}/g" />
             <arg value="${basedir}/application/configs/application.ini" />
         </exec>
         <exec executable="sed">
