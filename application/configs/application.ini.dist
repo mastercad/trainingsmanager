@@ -28,10 +28,10 @@ resources.frontController.defaultAction = "index"
 ;resources.frontController.plugins.layoutloader.class = Plugin_LayoutLoader
 
 resources.db.adapter		 = "pdo_mysql"
-resources.db.params.host	 = "${env.DB_HOST}"
-resources.db.params.username = "${env.DB_USER_NAME}"
-resources.db.params.password = "${env.DB_PASSWORD}"
-resources.db.params.dbname	 = "${env.DB_NAME}"
+resources.db.params.host	 = "{{DB_HOST}}"
+resources.db.params.username = "DB_USER_NAME"
+resources.db.params.password = "DB_PASSWORD"
+resources.db.params.dbname	 = "DB_NAME"
 resources.db.params.charset	 = "utf8"
 
 smtp.server = "byte-artist.de"

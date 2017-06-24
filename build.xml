@@ -27,6 +27,25 @@
         </exec>
     </target>
 
+    <target name="replace-tokens-in-configs" description="Replace all Tokens in config files">
+        <exec executable="sed">
+            <arg value="s/{{DB_HOST}}/${env.DB_HOST}/g" />
+            <arg value="${basedir}/application/configs/application.ini" />
+        </exec>
+        <exec executable="sed">
+            <arg value="s/{{DB_USER_NAME}}/${env.DB_USER_NAME}/g" />
+            <arg value="${basedir}/application/configs/application.ini" />
+        </exec>
+        <exec executable="sed">
+            <arg value="s/{{DB_PASSWORD}}/${env.DB_PASSWORD}/g" />
+            <arg value="${basedir}/application/configs/application.ini" />
+        </exec>
+        <exec executable="sed">
+            <arg value="s/{{DB_NAME}}/${env.DB_NAME}/g" />
+            <arg value="${basedir}/application/configs/application.ini" />
+        </exec>
+    </target>
+
     <target name="composer" description="Update composer packages with composer.phar">
         <exec logoutput="true"
               command="composer update" />
@@ -82,6 +101,6 @@
               command="${php_bin_path}phpcb --log ${basedir}/build/logs --source ${source} --output ${basedir}/build/code-browser" />
     </target>
 
-    <target name="build" depends="clean,copy-configs,composer,parallelTasks,phpunit,phpcb"/>
+    <target name="build" depends="clean,copy-configs,replace-tokens-in-configs,composer,parallelTasks,phpunit,phpcb"/>
 
 </project>
