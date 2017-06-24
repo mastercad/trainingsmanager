@@ -1,0 +1,80 @@
+<project name="Trainingsmanager" default="build" basedir=".">
+    <property name="basedir" value="${project.basedir}" />
+    <property name="source" value="${basedir}/application"/>
+    <!--<property name="php_bin_path" value="/usr/bin/" />-->
+    <property name="php_bin_path" value="~/.config/composer/vendor/bin/" />
+    <!--<property name="php_bin_path" value="/usr/bin/" />-->
+
+    <target name="clean" description="Clean up and create artifact directories">
+        <delete dir="${basedir}/build/api"/>
+        <delete dir="${basedir}/build/code-browser"/>
+        <delete dir="${basedir}/build/coverage"/>
+        <delete dir="${basedir}/build/logs"/>
+        <delete dir="${basedir}/build/pdepend"/>
+        <delete dir="${basedir}/vendor"/>
+
+        <mkdir dir="${basedir}/build/api"/>
+        <mkdir dir="${basedir}/build/code-browser"/>
+        <mkdir dir="${basedir}/build/coverage"/>
+        <mkdir dir="${basedir}/build/logs"/>
+        <mkdir dir="${basedir}/build/pdepend"/>
+    </target>
+
+    <target name="composer" description="Update composer packages with composer.phar">
+        <exec logoutput="true"
+              command="composer update" />
+    </target>
+
+    <target name="phpunit" description="Run unit tests using PHPUnit and generates junit.xml and clover.xml">
+        <exec logoutput="true"
+              command="${php_bin_path}phpunit --configuration=tests/phpunit.xml --coverage-clover=${basedir}/build/coverage/glover.xml" />
+    </target>
+
+    <target name="parallelTasks" description="Run the pdepend, phpmd, phpcpd, phpcs, phpdoc and phploc tasks in parallel using a maximum of 2 threads.">
+        <phingcall target="pdepend"/>
+        <phingcall target="phpmd"/>
+        <phingcall target="phpcpd"/>
+        <phingcall target="phpcs"/>
+        <phingcall target="phpdoc"/>
+        <phingcall target="phploc"/>
+    </target>
+
+    <target name="pdepend" description="Generate jdepend.xml and software metrics charts using PHP_Depend">
+        <exec logoutput="true"
+              command="${php_bin_path}pdepend --jdepend-xml=${basedir}/build/logs/jdepend.xml --jdepend-chart=${basedir}/build/pdepend/dependencies.svg --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg ${source}" />
+    </target>
+
+    <target name="phpmd" description="Generate pmd.xml using PHPMD">
+        <exec logoutput="true" spawn="true"
+              command="${php_bin_path}phpmd ${source} xml codesize,design,naming,unusedcode --reportfile ${basedir}/build/logs/pmd.xml" />
+    </target>
+
+    <target name="phpcpd" description="Generate pmd-cpd.xml using PHPCPD">
+        <exec logoutput="true"
+              command="${php_bin_path}phpcpd --log-pmd ${basedir}/build/logs/pmd-cpd.xml ${source}" />
+    </target>
+
+    <target name="phploc" description="Generate phploc.csv">
+        <exec logoutput="true"
+              command="${php_bin_path}phploc --log-csv ${basedir}/build/logs/phploc.csv ${source}" />
+    </target>
+
+    <target name="phpcs" description="Generate checkstyle.xml using PHP_CodeSniffer">
+        <exec logoutput="true"
+              command="${php_bin_path}phpcs --report=checkstyle --report-file=${basedir}/build/logs/checkstyle.xml --standard=PSR2 --ignore=Exceptions.php,*_view.php ${source}" />
+    </target>
+
+    <target name="phpdoc" description="Generate API documentation using APIGen">
+        <exec logoutput="true"
+              command="${php_bin_path}apigen.php --source ${source} --destination ${basedir}/build/api" />
+    </target>
+
+    <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
+        <exec command="echo ${php_bin_path}phpcb --log ${basedir}/build/logs --source ${source} --output ${basedir}/build/code-browser" />
+        <exec logoutput="true"
+              command="${php_bin_path}phpcb --log ${basedir}/build/logs --source ${source} --output ${basedir}/build/code-browser" />
+    </target>
+
+    <target name="build" depends="clean,composer,parallelTasks,phpunit,phpcb"/>
+
+</project>
