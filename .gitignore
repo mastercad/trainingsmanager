@@ -6,7 +6,7 @@
 /public/images/content/dynamisch/devices/*
 !/public/images/content/dynamisch/devices
 /public/tmp/*
-!/public/tmp
+!/public/tmp/.gitkeep
 /phpuml
 /api
 /trainingsmanager.sql
