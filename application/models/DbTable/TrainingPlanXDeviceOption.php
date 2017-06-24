@@ -26,7 +26,7 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function findTrainingPlanDeviceOptionsByTrainingPlanExerciseIdProblem($trainingPlanExerciseId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)
             ->setIntegrityCheck(false);
 
         $oSelect->from($this->considerTestUserForTableName('device_options'))
@@ -45,7 +45,7 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
      * @return \Zend_Db_Table_Rowset_Abstract
      */
     public function findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($trainingPlanExerciseId, $deviceOptionId = null) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_plan_x_device_option_training_plan_exercise_fk')
             ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
@@ -61,7 +61,7 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
     }
 
     public function findTrainingPlanDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = ' . $trainingPlanExerciseId)
             ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
@@ -78,7 +78,7 @@ class Model_DbTable_TrainingPlanXDeviceOption extends Model_DbTable_Abstract
     }
 
     public function findExerciseDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->from($this->considerTestUserForTableName('training_plan_x_exercise'))
             ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')

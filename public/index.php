@@ -8,10 +8,12 @@ defined('APPLICATION_PATH')
 defined('APPLICATION_ENV')
     || define('APPLICATION_ENV', (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'development'));
 
+require_once realpath(APPLICATION_PATH . '/../vendor/autoload.php');
+
 // Ensure library/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
     realpath(APPLICATION_PATH . '/../library'),
-    realpath(APPLICATION_PATH),
+//    realpath(APPLICATION_PATH),
     get_include_path(),
 )));
 
@@ -61,7 +63,6 @@ spl_autoload_register('customAutoload');
 
 /** Zend_Application */
 require_once 'Zend/Application.php';
-//require_once APPLICATION_PATH . '/../vendor/autoload.php';
 
 // Create application, bootstrap, and run
 $application = new Zend_Application(

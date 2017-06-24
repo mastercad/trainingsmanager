@@ -6,7 +6,7 @@
  * Time: 09:50
  */
 
-require_once(__DIR__ . '/../../../library/Zend/Db/Table.php');
+//require_once(__DIR__ . '/../../../library/Zend/Db/Table.php');
 
 abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
 

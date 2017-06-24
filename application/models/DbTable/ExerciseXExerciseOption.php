@@ -22,7 +22,7 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findExerciseOptionsForExercise($exerciseId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = exercise_x_exercise_option_exercise_option_fk')
                 ->where('exercise_x_exercise_option_exercise_fk = ?', $exerciseId);
@@ -36,7 +36,7 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
     }
 
     public function findExerciseOptionForExercise($exerciseId, $exerciseOptionId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('exercise_options'))
                 ->joinLeft($this->considerTestUserForTableName('exercise_x_exercise_option'),

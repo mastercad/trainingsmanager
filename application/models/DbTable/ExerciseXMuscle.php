@@ -22,7 +22,7 @@ class Model_DbTable_ExerciseXMuscle extends Model_DbTable_Abstract {
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMusclesForExercise($iExerciseId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('exercise_x_muscle'))
                 ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'), 'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk')
@@ -44,7 +44,7 @@ class Model_DbTable_ExerciseXMuscle extends Model_DbTable_Abstract {
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMuscleGroupsForExercise($iExerciseId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('exercise_x_muscle'))
                 ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'), 'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk')
@@ -63,7 +63,7 @@ class Model_DbTable_ExerciseXMuscle extends Model_DbTable_Abstract {
     }
 
     public function findMusclesForExerciseInMuscleGroup($exerciseId, $muscleGroupId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('exercise_x_muscle'))
                 ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'), 'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk')
@@ -82,7 +82,7 @@ class Model_DbTable_ExerciseXMuscle extends Model_DbTable_Abstract {
     }
 
     public function findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('muscle_groups'))
                 ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'), 'muscle_x_muscle_group_muscle_group_fk = muscle_group_id')

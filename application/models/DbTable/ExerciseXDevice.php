@@ -22,7 +22,7 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceForExercise($exerciseId) {
-        $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $select->joinInner($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
                 ->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = exercise_x_device_device_fk')
@@ -39,7 +39,7 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
 
     public function findDevicesWithExercises()
     {
-        $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $select->joinInner($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
                 ->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id')
@@ -61,7 +61,7 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
 
     public function findExercisesWithoutDevices()
     {
-        $select = $this->select(ZEND_DB_TABLE::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
+        $select = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         $select->from($this->considerTestUserForTableName('exercises'), '')
             ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id'. '')
             ->where('exercise_x_device_id IS NULL')

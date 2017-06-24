@@ -30,7 +30,7 @@ class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMuscleGroup($iMuscleGroupId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
                                    ->setIntegrityCheck(false);
         try {
             $oSelect->where("muscle_group_id = '" . $iMuscleGroupId . "'");

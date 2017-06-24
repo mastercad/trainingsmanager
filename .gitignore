@@ -24,3 +24,6 @@
 /data/tmp/*
 !/data/tmp
 /application/configs/application.ini
+/library/facebook-php-sdk/
+/vendor/
+/build/

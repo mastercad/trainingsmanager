@@ -22,7 +22,7 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceOptionsForExercise($exerciseId, $deviceOptionId = null) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect
                 ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_x_device_option_exercise_fk')
@@ -48,7 +48,7 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceOptionForExercise($exerciseId, $deviceOptionId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect
                 ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_x_device_option_exercise_fk')

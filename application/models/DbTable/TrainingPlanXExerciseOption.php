@@ -28,7 +28,7 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
     public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($iTrainingPlanExerciseId, $exerciseOptionId = null) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_plan_x_exercise_option_training_plan_exercise_fk')
             ->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
@@ -49,7 +49,7 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
     public function findTrainingPlanExerciseOptionsByTrainingDiaryExerciseId($trainingPlanXExerciseId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect
             ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = ' . $trainingPlanXExerciseId)
@@ -67,7 +67,7 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
     public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseIdAndExerciseOptionId($iTrainingPlanExerciseId, $exerciseOptionId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
 
         $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')

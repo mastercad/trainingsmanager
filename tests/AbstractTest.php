@@ -6,7 +6,7 @@
  * Time: 20:06
  */
 
-class Test_AbstractTest extends PHPUnit_Framework_TestCase {
+class Test_AbstractTest extends \PHPUnit\Framework\TestCase {
 
     protected static $currentTempDatabaseName = null;
 

@@ -26,7 +26,7 @@ class Model_DbTable_TrainingPlanXExercise extends Model_DbTable_Abstract
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function findTrainingPlanExercise($iTrainingPlanExerciseId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
 
         $oSelect->join($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_exercise_fk')

@@ -6,7 +6,9 @@
  * Time: 10:19
  */
 
-class Model_Entity_MessageTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class Model_Entity_MessageTest extends TestCase {
 
     public function testMapping() {
         $message = [

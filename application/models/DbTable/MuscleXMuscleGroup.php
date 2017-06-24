@@ -23,7 +23,7 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMusclesByMuscleGroupId($iMuscleGroupId) {
-		$oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+		$oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 		try {
             $oSelect->join($this->considerTestUserForTableName('muscles'), 'muscle_id = muscle_x_muscle_group_muscle_fk')
                 ->where('muscle_x_muscle_group_muscle_group_fk = ?', $iMuscleGroupId);

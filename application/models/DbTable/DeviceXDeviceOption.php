@@ -29,7 +29,7 @@ class Model_DbTable_DeviceXDeviceOption extends Model_DbTable_Abstract {
      */
     public function findAllDeviceXDeviceOptionsByDeviceId($deviceId) {
 
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         try {
             $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = ' . $deviceId)
@@ -47,7 +47,7 @@ class Model_DbTable_DeviceXDeviceOption extends Model_DbTable_Abstract {
 
     public function findDeviceOption($deviceOptionId, $deviceId) {
 
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
         try {
             $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = device_x_device_option_device_fk')

@@ -43,7 +43,7 @@ class Model_DbTable_ExerciseTypes extends Model_DbTable_Abstract
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
     public function findExerciseTypeById($iExerciseTypeId) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->where('exercise_type_id = ?', $iExerciseTypeId);
 

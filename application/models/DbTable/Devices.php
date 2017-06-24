@@ -44,7 +44,7 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceAndDeviceGroupByName($sDeviceName) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id')
             ->joinLeft($this->considerTestUserForTableName('device_group'), 'device_group_id = device_x_device_group_device_group_fk')
@@ -55,7 +55,7 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
     }
 
     public function findAllDevicesByDeviceGroupId($id) {
-        $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id AND device_x_device_group_device_group_fk = ' . $id)
             ->order(array('device_name'));
@@ -70,7 +70,7 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
      */
     public function findDeviceById($iDeviceId) {
         try {
-            $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+            $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
             $oSelect->where('device_id = ?', $iDeviceId);
 

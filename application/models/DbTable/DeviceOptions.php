@@ -38,7 +38,7 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
 
     public function findDeviceOptionsByDeviceId($deviceId) {
         try {
-            $oSelect = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+            $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
             $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = ' . $deviceId)
                 ->where('device_x_device_option_device_fk = ?', $deviceId);
@@ -59,7 +59,7 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
      * @return \Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceOptionsByExerciseId($exerciseId) {
-        $select = $this->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->joinInner($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = ' . $exerciseId)
             ->joinInner($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_fk = exercise_x_device_device_fk')
