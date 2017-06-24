@@ -2,7 +2,7 @@
     <property name="basedir" value="${project.basedir}" />
     <property name="source" value="${basedir}/application"/>
     <!--<property name="php_bin_path" value="/usr/bin/" />-->
-    <property name="php_bin_path" value="~/.config/composer/vendor/bin/" />
+    <property name="php_bin_path" value="${basedir}/vendor/bin/" />
     <!--<property name="php_bin_path" value="/usr/bin/" />-->
 
     <target name="clean" description="Clean up and create artifact directories">
@@ -66,7 +66,7 @@
 
     <target name="phpdoc" description="Generate API documentation using APIGen">
         <exec logoutput="true"
-              command="${php_bin_path}apigen.php --source ${source} --destination ${basedir}/build/api" />
+              command="${php_bin_path}apigen --source ${source} --destination ${basedir}/build/api" />
     </target>
 
     <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
