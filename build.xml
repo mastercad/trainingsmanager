@@ -20,30 +20,17 @@
         <mkdir dir="${basedir}/build/pdepend"/>
     </target>
 
-    <target name="copy-configs" description="Copy config files">
-        <exec executable="cp" checkreturn="true">
-            <arg path="application/configs/application.ini.dist" />
-            <arg path="application/configs/application.ini" />
-        </exec>
-    </target>
-
-    <target name="replace-tokens-in-configs" description="Replace all Tokens in config files">
-        <exec executable="sed">
-            <arg value="s/\{\{DB_HOST\}\}/$\{env.DB_HOST\}/g" />
-            <arg value="${basedir}/application/configs/application.ini" />
-        </exec>
-        <exec executable="sed">
-            <arg value="s/\{\{DB_USER_NAME\}\}/$\{env.DB_USER_NAME\}/g" />
-            <arg value="${basedir}/application/configs/application.ini" />
-        </exec>
-        <exec executable="sed">
-            <arg value="s/{{DB_PASSWORD}}/${env.DB_PASSWORD}/g" />
-            <arg value="${basedir}/application/configs/application.ini" />
-        </exec>
-        <exec executable="sed">
-            <arg value="s/{{DB_NAME}}/${env.DB_NAME}/g" />
-            <arg value="${basedir}/application/configs/application.ini" />
-        </exec>
+    <target name="handle-configs" description="Copy config files">
+        <copy file="${basedir}/application/configs/application.ini.dist" tofile="${basedir}/application/configs/application.ini" overwrite="true">
+            <filterchain>
+                <replacetokens begintoken="%%" endtoken="%%">
+                    <token key="DB_HOST" value="${env.DB_HOST}" />
+                    <token key="DB_USER_NAME" value="${env.DB_USER_NAME}" />
+                    <token key="DB_PASSWORD" value="${env.DB_PASSWORD}" />
+                    <token key="DB_NAME" value="${env.DB_NAME}" />
+                </replacetokens>
+            </filterchain>
+        </copy>
     </target>
 
     <target name="composer" description="Update composer packages with composer.phar">
@@ -101,6 +88,6 @@
               command="${php_bin_path}phpcb --log ${basedir}/build/logs --source ${source} --output ${basedir}/build/code-browser" />
     </target>
 
-    <target name="build" depends="clean,copy-configs,replace-tokens-in-configs,composer,parallelTasks,phpunit,phpcb"/>
+    <target name="build" depends="clean,handle-configs,composer,parallelTasks,phpunit,phpcb"/>
 
 </project>
