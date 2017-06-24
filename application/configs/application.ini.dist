@@ -58,7 +58,8 @@ resources.session.remember_me_seconds                       = 864000
 phpSettings.display_startup_errors = 1
 phpSettings.display_errors = 1
 
-resources.db.params.host	 = "trainingsmanager_db"
+;resources.db.params.host	 = "trainingsmanager_db"
+resources.db.params.host	 = "172.18.0.2"
 resources.db.params.username	 = "root"
 resources.db.params.password	 = "dwj8YvVHdLVP"
 resources.db.params.dbname	    = "rundumfit"
@@ -68,7 +69,8 @@ phpSettings.display_startup_errors = 0
 phpSettings.display_errors = 0
 resources.frontController.params.displayExceptions = 0
 
-resources.db.params.host	 = "trainingsmanager_db"
+;resources.db.params.host	 = "trainingsmanager_db"
+resources.db.params.host	 = "172.18.0.2"
 resources.db.params.username	 = "root"
 resources.db.params.password	 = "dwj8YvVHdLVP"
 resources.db.params.dbname	    = "rundumfit"
