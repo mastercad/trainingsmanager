@@ -3,7 +3,7 @@
         "zendframework/zendframework1": "^1.12"
     },
     "require-dev": {
-        "deployer/deployer": "^5.0",
+        "deployer/deployer": "*",
         "phpunit/phpunit": "*",
         "phpunit/php-invoker": "*",
         "phpunit/dbunit": "*",
@@ -14,7 +14,6 @@
         "phpmd/phpmd": "*",
         "squizlabs/php_codesniffer": "*",
         "sebastian/diff": "*",
-        "phpunit/php-invoker": "*",
         "apigen/apigen": "^2.8",
         "mayflower/php-codebrowser": "*",
         "texy/texy": "*",
