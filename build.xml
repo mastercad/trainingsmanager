@@ -1,9 +1,7 @@
 <project name="Trainingsmanager" default="build" basedir=".">
     <property name="basedir" value="${project.basedir}" />
     <property name="source" value="${basedir}/application"/>
-    <!--<property name="php_bin_path" value="/usr/bin/" />-->
     <property name="php_bin_path" value="${basedir}/vendor/bin/" />
-    <!--<property name="php_bin_path" value="/usr/bin/" />-->
 
     <target name="clean" description="Clean up and create artifact directories">
         <delete dir="${basedir}/build/api"/>
@@ -58,8 +56,8 @@
     </target>
 
     <target name="phpmd" description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
-        <exec executable="phpmd">
-            <arg path="${basedir}" />
+        <exec executable="${php_bin_path}phpmd">
+            <arg path="${source}" />
             <arg value="xml" />
             <arg value="cleancode,codesize,controversial,design,naming,unusedcode" />
             <arg value="--reportfile" />
@@ -68,6 +66,7 @@
             <arg value="${basedir}/tests" />
         </exec>
     </target>
+
     <target name="phpcpd" description="Generate pmd-cpd.xml using PHPCPD">
         <exec logoutput="true"
               command="${php_bin_path}phpcpd --log-pmd ${basedir}/build/logs/pmd-cpd.xml ${source}" />
