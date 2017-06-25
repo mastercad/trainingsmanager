@@ -57,11 +57,6 @@
               command="${php_bin_path}pdepend --jdepend-xml=${basedir}/build/logs/jdepend.xml --jdepend-chart=${basedir}/build/pdepend/dependencies.svg --overview-pyramid=${basedir}/build/pdepend/overview-pyramid.svg ${source}" />
     </target>
 
-    <!--<target name="phpmd" description="Generate pmd.xml using PHPMD">-->
-        <!--<exec logoutput="true" spawn="true"-->
-              <!--command="phpmd ${source} xml cleancode,codesize,controversial,design,naming,unusedcode --reportfile ${basedir}/build/logs/pmd.xml" />-->
-    <!--</target>-->
-
     <target name="phpmd" description="Perform project mess detection using PHPMD creating a log file for the continuous integration server">
         <exec executable="phpmd">
             <arg path="${basedir}" />
