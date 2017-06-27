@@ -7,10 +7,15 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_DeviceGroups
  */
-class Model_DbTable_DashboardXWidget extends Model_DbTable_Abstract
+class DashboardXWidget extends AbstractDbTable
 {
     /** @var string */
     protected $_name 	= 'dashboard_x_widget';
@@ -18,11 +23,16 @@ class Model_DbTable_DashboardXWidget extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'dashboard_x_widget_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
         return $this->fetchRow('dashboard_x_widget_id = ' . intval($id));
     }
 
     /**
+     * find all widgets by given dashboard
+     *
      * @param int $dashboardId
      *
      * @return Zend_Db_Table_Rowset_Abstract
@@ -39,6 +49,8 @@ class Model_DbTable_DashboardXWidget extends Model_DbTable_Abstract
     }
 
     /**
+     * insert given data in dashboard_x_widget
+     *
      * @param $aData
      *
      * @return bool|mixed
@@ -54,6 +66,8 @@ class Model_DbTable_DashboardXWidget extends Model_DbTable_Abstract
     }
 
     /**
+     * update given dashboard with given data
+     *
      * @param $aData
      * @param $dashboardXWidgetId
      *
@@ -70,6 +84,8 @@ class Model_DbTable_DashboardXWidget extends Model_DbTable_Abstract
     }
 
     /**
+     * delete given dashboard from table
+     *
      * @param $dashboardXWidgetId
      *
      * @return bool|int

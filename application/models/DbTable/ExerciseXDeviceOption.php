@@ -1,9 +1,17 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
+class ExerciseXDeviceOption extends AbstractDbTable {
     /**
      * @var string
      */
@@ -13,12 +21,19 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
      */
     protected $_primary = 'exercise_x_device_option_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $exerciseId
+     * find device options for exercise
+     *
+     * @param int $exerciseId
+     * @param null|int $deviceOptionId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceOptionsForExercise($exerciseId, $deviceOptionId = null) {
@@ -42,8 +57,10 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $exerciseId
-     * @param $deviceOptionId
+     * find device option for exercise
+     *
+     * @param int $exerciseId
+     * @param int $deviceOptionId
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
@@ -69,7 +86,10 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
     }
 
     /**
+     * find exercises for device option
+     *
      * @param $deviceOptionId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findExercisesForDeviceOption($deviceOptionId) {
@@ -83,7 +103,10 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
+     * save exercise device option data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveExerciseXDeviceOption($aData) {
@@ -97,8 +120,11 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
-     * @param $exerciseXDeviceOptionId
+     * update exercise device option data by given exercise device option id
+     *
+     * @param array $aData
+     * @param int $exerciseXDeviceOptionId
+     *
      * @return bool|int
      */
     public function updateExerciseXDeviceOption($aData, $exerciseXDeviceOptionId) {
@@ -112,10 +138,13 @@ class Model_DbTable_ExerciseXDeviceOption extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $exerciseXDeviceOptionId
+     * delete exercise device option by given exercise device option id
+     *
+     * @param int $exerciseXDeviceOptionId
+     *
      * @return bool|int
      */
-    public function deleteDeviceOption($exerciseXDeviceOptionId) {
+    public function deleteExerciseXDeviceOption($exerciseXDeviceOptionId) {
         try {
             return $this->delete( "exercise_x_device_option_id = '" . $exerciseXDeviceOptionId . "'");
         } catch (Exception $oException) {

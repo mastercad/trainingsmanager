@@ -1,4 +1,7 @@
- <?php
+ 
+
+namespace Auth;
+<?php
 /**
  * Created by PhpStorm.
  * User: mastercad
@@ -6,9 +9,14 @@
  * Time: 23:39
  */
 
+
+
+use \AbstractController;
+use Zend_Auth;
+
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-class Auth_LoginController extends AbstractController
+class LoginController extends AbstractController
 {
      public function __init()
      {

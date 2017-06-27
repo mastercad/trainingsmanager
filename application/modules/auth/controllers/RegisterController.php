@@ -6,9 +6,23 @@
  * Time: 23:40
  */
 
+namespace Auth;
+
+use \AbstractController;
+use Auth\Model\DbTable\Users;
+use Zend_Validate_EmailAddress;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+use CAD_Tools;
+use CAD_Tool_TemplateHandler;
+use Zend_Mail;
+
+
+
+
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-class Auth_RegisterController extends AbstractController
+class RegisterController extends AbstractController
 {
 
     public function indexAction()
@@ -26,7 +40,7 @@ class Auth_RegisterController extends AbstractController
 
         if ($this->getRequest()->isPost()) {
             $a_data = array();
-            $obj_db_users = new Auth_Model_DbTable_Users();
+            $obj_db_users = new Users();
             $b_all_valid = true;
 
             if(isset($a_params['register_email'])) {
@@ -59,11 +73,11 @@ class Auth_RegisterController extends AbstractController
                 && $b_email_exists
             ) {
                 $b_all_valid = false;
-                Service_GlobalMessageHandler::appendMessage($this->translate('error_email_already_registered'), Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage($this->translate('error_email_already_registered'), Message::STATUS_ERROR);
             // nicht valid
             } else if(!$b_valid_email) {
                 $b_all_valid = false;
-                Service_GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Message::STATUS_ERROR);
             }
 
             if(strlen(trim($str_register_vorname)) > 0) {
@@ -84,7 +98,7 @@ class Auth_RegisterController extends AbstractController
                 $result = $obj_db_users->saveUser($a_data);
 
                 if ($result) {
-                    Service_GlobalMessageHandler::appendMessage($this->translate('login_successfully_created'), Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage($this->translate('login_successfully_created'), Message::STATUS_OK);
 
                     $str_user_name = $str_register_email;
                     if(strlen(trim($str_register_vorname))){
@@ -114,7 +128,7 @@ class Auth_RegisterController extends AbstractController
 
                     $result = $obj_mail->send();
                 } else {
-                    Service_GlobalMessageHandler::appendMessage($this->translate('unknown_error_while_create_login'), Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage($this->translate('unknown_error_while_create_login'), Message::STATUS_ERROR);
                 }
             }
         }
@@ -122,7 +136,7 @@ class Auth_RegisterController extends AbstractController
 
     private function checkEmailExists($str_email)
     {
-        $obj_db_users = new Auth_Model_DbTable_Users();
+        $obj_db_users = new Users();
         $b_result = $obj_db_users->checkEmailExists($str_email);
 
         return $b_result;

@@ -6,7 +6,14 @@
  * Time: 10:13
  */
 
-class Service_TrainingDiaries extends Service_Abstract {
+namespace Service;
+
+use Service\AbstractService;
+
+
+
+
+class TrainingDiaries extends AbstractService {
 
     public function save($params) {
 

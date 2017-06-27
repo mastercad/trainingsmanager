@@ -1,11 +1,19 @@
 <?php 
+
+namespace Auth\Model\Adapter;
+
+use Zend_Auth_Adapter_DbTable;
+use Zend_Db_Expr;
+
+
+
 	/**
 	 * 
 	 * @author Andreas Kempe / andreas.kempe@byte-artist.de
 	 *
 	 */
 
-	class Auth_Model_Adapter_DbTable extends Zend_Auth_Adapter_DbTable
+	class DbTable extends Zend_Auth_Adapter_DbTable
 	{
 	    public function authenticate()
 	    {

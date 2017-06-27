@@ -5,18 +5,20 @@
  * Date: 23.04.17
  * Time: 10:19
  */
+namespace Test\Model\Entity;
 
+use Model\Entity\Message;
 use PHPUnit\Framework\TestCase;
 
-class Model_Entity_MessageTest extends TestCase {
+class MessageTest extends TestCase {
 
     public function testMapping() {
         $message = [
-            'state' => Model_Entity_Message::STATUS_NOTICE,
+            'state' => Message::STATUS_NOTICE,
             'text' => 'TESTTEXT'
         ];
 
-        $messageEntity = new Model_Entity_Message($message);
+        $messageEntity = new Message($message);
     }
 
     public function testDriven()

@@ -1,6 +1,12 @@
 <?php
 
-class Auth_Model_DbTable_UserRightGroups extends Zend_Db_Table_Abstract
+
+namespace Auth\Model\DbTable;
+
+use Zend_Db_Table_Abstract;
+use Exception;
+
+class UserRightGroups extends Zend_Db_Table_Abstract
 {
     protected $_name 	= 'user_right_groups';
 	protected $_primary = 'user_right_group_id';

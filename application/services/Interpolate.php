@@ -6,7 +6,25 @@
  * Time: 12:29
  */
 
-class Service_Interpolate {
+namespace Service;
+
+use Model\DbTable\TrainingPlans;
+use Zend_Db_Table_Row_Abstract;
+use Model\DbTable\TrainingPlanXExercise;
+use Model\DbTable\TrainingPlanXExerciseOption;
+use Model\DbTable\TrainingPlanXDeviceOption;
+use Model\DbTable\TrainingDiaries;
+use Model\DbTable\TrainingDiaryXTrainingPlan;
+use Model\DbTable\TrainingDiaryXTrainingPlanExercise;
+use Model\DbTable\TrainingDiaryXExerciseOption;
+use Model\DbTable\TrainingDiaryXDeviceOption;
+use Zend_Db_Table_Rowset_Abstract;
+use Zend_Auth;
+
+
+
+
+class Interpolate {
 
     private $optionsAllowedToIncrease = [
         'devices' => [
@@ -25,7 +43,7 @@ class Service_Interpolate {
      */
     public function trainingDiary($userId) {
 
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $currentTrainingPlan = $trainingPlansDb->findActiveTrainingPlanByUserId($userId);
         $processedExerciseOptions = [];
         $processedDeviceOptions = [];
@@ -33,14 +51,14 @@ class Service_Interpolate {
         $daysToNewTrainingPlan = mt_rand(12, 24);
 
         if ($currentTrainingPlan instanceof Zend_Db_Table_Row_Abstract) {
-            $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
-            $trainingPlanXExerciseOptionDb = new Model_DbTable_TrainingPlanXExerciseOption();
-            $trainingPlanXDeviceOptionDb = new Model_DbTable_TrainingPlanXDeviceOption();
-            $trainingDiariesDb = new Model_DbTable_TrainingDiaries();
-            $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
-            $trainingDiaryXTrainingPlanExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
-            $trainingDiaryXExerciseOptionDb = new Model_DbTable_TrainingDiaryXExerciseOption();
-            $trainingDiaryXDeviceOptionDb = new Model_DbTable_TrainingDiaryXDeviceOption();
+            $trainingPlanXExerciseDb = new TrainingPlanXExercise();
+            $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
+            $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
+            $trainingDiariesDb = new TrainingDiaries();
+            $trainingDiaryXTrainingPlanDb = new TrainingDiaryXTrainingPlan();
+            $trainingDiaryXTrainingPlanExerciseDb = new TrainingDiaryXTrainingPlanExercise();
+            $trainingDiaryXExerciseOptionDb = new TrainingDiaryXExerciseOption();
+            $trainingDiaryXDeviceOptionDb = new TrainingDiaryXDeviceOption();
 
             $trainingPlanId = $currentTrainingPlan->offsetGet('training_plan_id');
             $trainingPlanXExercises = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanId);

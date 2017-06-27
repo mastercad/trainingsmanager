@@ -6,7 +6,17 @@
  * Time: 22:00
  */
 
-class Service_Reset {
+namespace Service;
+
+use Model\DbTable\Users;
+use CAD_File;
+use DirectoryIterator;
+use Zend_Registry;
+
+
+
+
+class Reset {
 
     private $testUserCollection = [];
 
@@ -25,7 +35,7 @@ class Service_Reset {
      * collect user ids to remove specific data from tables and folders
      */
     private function collectCurrentTestUsers() {
-        $usersDb = new Model_DbTable_Users();
+        $usersDb = new Users();
         $testUsersCollection = $usersDb->findTestUsers();
         $this->testUserCollection = [];
         foreach ($testUsersCollection as $testUser) {

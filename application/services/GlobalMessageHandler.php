@@ -6,20 +6,34 @@
  * Time: 14:56
  */
 
-class Service_GlobalMessageHandler {
+namespace Service;
 
-    /** @var Model_Entity_Message  */
+use Model\Entity\Message;
+
+class GlobalMessageHandler {
+
+    /** @var Message */
     static private $messageEntity = null;
 
+    /** @var bool */
     static private $init = false;
 
+    /**
+     * @var GlobalMessageHandler
+     */
     static private $instance = null;
 
+    /**
+     *
+     */
     private function __construct() {
         static::init();
-        static::$messageEntity = new Model_Entity_Message();
+        static::$messageEntity = new Message();
     }
 
+    /**
+     *
+     */
     private static function init() {
         if (!static::$init) {
             static::$init = true;
@@ -27,13 +41,16 @@ class Service_GlobalMessageHandler {
         }
     }
 
+    /**
+     * @return GlobalMessageHandler
+     */
     public static function getInstance() {
         static::init();
         return static::$instance;
     }
 
     /**
-     * @return \Model_Entity_Message
+     * @return Message
      */
     public static function getMessageEntity() {
         static::init();
@@ -41,14 +58,19 @@ class Service_GlobalMessageHandler {
     }
 
     /**
-     * @param $messageEntity
+     * @param Message $messageEntity
      */
     public static function setMessageEntity($messageEntity) {
         static::init();
         static::$messageEntity = $messageEntity;
     }
 
-    public static function appendMessage($message, $state = Model_Entity_Message::STATUS_OK) {
+    /**
+     * @param string $message
+     *
+     * @param int $state
+     */
+    public static function appendMessage($message, $state = Message::STATUS_OK) {
         $messageEntity = static::getMessageEntity();
         $currentMessages = $messageEntity->getMessage();
 

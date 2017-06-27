@@ -6,23 +6,30 @@
  * Time: 07:39
  */
 
+use \Auth\Model\Role\Member;
+
+/**
+ * Class AbstractController
+ */
 abstract class AbstractController extends Zend_Controller_Action {
 
     /**
      * @var
      */
     private $breadcrumb;
+
     /**
      * @var
      */
     private $keywords;
+
     /**
      * @var
      */
     private $description;
 
     /**
-     *
+     * post dispatch function
      */
     public function postDispatch() {
 
@@ -38,20 +45,23 @@ abstract class AbstractController extends Zend_Controller_Action {
     }
 
     /**
-     * @param $id
+     * generate detail options content
+     *
+     * @param $optionId
      *
      * @return string
      */
-    protected function generateDetailOptionsContent($id) {
+    protected function generateDetailOptionsContent($optionId) {
         $currentControllerName = $this->convertControllerName($this->getRequest()->getControllerName());
-        $dbClassName = 'Model_DbTable_'.$currentControllerName;
-        /** @var Model_DbTable_Abstract $db */
+        $dbClassName = '\Model\DbTable\\'.$currentControllerName;
+
+        /** @var \Model\DbTable\AbstractDbTable $db */
         $db = new $dbClassName();
-        $row = $db->findByPrimary($id);
+        $row = $db->findByPrimary($optionId);
 
         $content = '';
-        $role = new Auth_Model_Role_Member();
-        $resourceClassName = 'Auth_Model_Resource_'.$currentControllerName;
+        $role = new Member();
+        $resourceClassName = '\Auth\Model\Resource\\'.$currentControllerName;
         $resource = new $resourceClassName($row);
         $resourceName = $this->getRequest()->getModuleName().':'.$this->getRequest()->getControllerName();
 
@@ -59,16 +69,21 @@ abstract class AbstractController extends Zend_Controller_Action {
         Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'delete');
 
         if (Zend_Registry::get('acl')->isAllowed($role, $resource, 'edit')) {
-            $content .= '<div class="glyphicon glyphicon-edit edit-button" data-id="' . $id . '"></div>';
+            $content .= '<div class="glyphicon glyphicon-edit edit-button" data-id="' . $optionId . '"></div>';
         }
 
         if (Zend_Registry::get('acl')->isAllowed($role, $resource, 'delete')) {
-            $content .= '<div class="glyphicon glyphicon-trash delete-button" data-id="' . $id . '"></div>';;
+            $content .= '<div class="glyphicon glyphicon-trash delete-button" data-id="' . $optionId . '"></div>';;
         }
 
         return $content;
     }
 
+    /**
+     * find id for current user logged in
+     *
+     * @return bool
+     */
     protected function findCurrentUserId() {
         $user = Zend_Auth::getInstance()->getIdentity();
 
@@ -78,12 +93,27 @@ abstract class AbstractController extends Zend_Controller_Action {
         return false;
     }
 
+    /**
+     * convert url controller name to zend Controller Name
+     *
+     * @param $controllerName
+     *
+     * @return string
+     */
     protected function convertControllerName($controllerName) {
         return ucFirst(preg_replace_callback('/(\-[a-z]{1})/', function(array $piece) {
             return ucfirst(str_replace('-', '', $piece[1]));
         }, $controllerName));
     }
 
+    /**
+     * translate given key
+     *
+     * @param $key
+     *
+     * @return mixed
+     * @throws \Zend_Exception
+     */
     protected function translate($key) {
         return Zend_Registry::get('Zend_Translate')->translate($key);
     }

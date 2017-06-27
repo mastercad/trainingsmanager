@@ -1,9 +1,17 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Nette\NotImplementedException;
+use Zend_Db_Table_Rowset_Abstract;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
+class ExerciseXExerciseOption extends AbstractDbTable {
     /**
      * @var string
      */
@@ -13,18 +21,25 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
      */
     protected $_primary = 'exercise_x_exercise_option_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $exerciseId
+     * find exercise options for exercise
+     *
+     * @param int $exerciseId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findExerciseOptionsForExercise($exerciseId) {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
-            $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = exercise_x_exercise_option_exercise_option_fk')
+            $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'),
+                'exercise_option_id = exercise_x_exercise_option_exercise_option_fk')
                 ->where('exercise_x_exercise_option_exercise_fk = ?', $exerciseId);
 
             return $this->fetchAll($oSelect);
@@ -35,6 +50,14 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
         return false;
     }
 
+    /**
+     * find exercise option for exercise
+     *
+     * @param int $exerciseId
+     * @param int $exerciseOptionId
+     *
+     * @return bool|null|\Zend_Db_Table_Row_Abstract
+     */
     public function findExerciseOptionForExercise($exerciseId, $exerciseOptionId) {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
@@ -52,7 +75,10 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
+     * save given exercise exercise options data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveExerciseXExerciseOption($aData) {
@@ -66,8 +92,11 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
-     * @param $exerciseXExerciseOptionId
+     * update exercise exercise option with given data by given exercise exercise option id
+     *
+     * @param array $aData
+     * @param int $exerciseXExerciseOptionId
+     *
      * @return bool|int
      */
     public function updateExerciseXExerciseOption($aData, $exerciseXExerciseOptionId) {
@@ -81,7 +110,10 @@ class Model_DbTable_ExerciseXExerciseOption extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $exerciseXExerciseOptionId
+     * delete exercise exercise option
+     *
+     * @param int $exerciseXExerciseOptionId
+     *
      * @return bool|int
      */
     public function deleteExerciseXExerciseOption($exerciseXExerciseOptionId) {

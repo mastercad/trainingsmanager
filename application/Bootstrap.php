@@ -3,6 +3,8 @@
 define('ZEND_LOGGER','zend_logger');
 define('SESSION_TIMEOUT', 7400);
 
+use Service\Translator;
+
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
     protected function _initConfig()
@@ -28,6 +30,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     protected function _initAutoloader()
     {
         $autoloader = Zend_Loader_Autoloader::getInstance();
+        $autoloader->registerNamespace('Auth'); // this is why is dead simple
         $autoloader->setFallbackAutoloader(true);
 
 //        $resourceLoader->addResourceTypes(array(
@@ -327,7 +330,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     }
 
     public function _initTranslation() {
-        $translationService = new Service_Translator();
+        $translationService = new Translator();
         Zend_Registry::set('Zend_Translate', $translationService->getTranslation());
     }
 

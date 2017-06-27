@@ -1,24 +1,40 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
+class ExerciseXExerciseType extends AbstractDbTable {
+
     /**
      * @var string
      */
     protected $_name 	= 'exercise_x_exercise_type';
+
     /**
      * @var string
      */
     protected $_primary = 'exercise_x_exercise_type_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $exerciseId
+     * find exercise type for exercise
+     *
+     * @param int $exerciseId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findExerciseTypeForExercise($exerciseId) {
@@ -35,6 +51,11 @@ class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
         return false;
     }
 
+    /**
+     * find exercises without exercise type
+     *
+     * @return bool|null|\Zend_Db_Table_Row_Abstract
+     */
     public function findExercisesWithoutExerciseTypes()
     {
         $select = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
@@ -53,7 +74,10 @@ class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
+     * save given exercise exercise type data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveExerciseXExerciseType($aData) {
@@ -67,8 +91,11 @@ class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
-     * @param $exerciseXExerciseTypeId
+     * update exercise exercise type data by given exercise exercise type id
+     *
+     * @param array $aData
+     * @param int $exerciseXExerciseTypeId
+     *
      * @return bool|int
      */
     public function updateExerciseXExerciseType($aData, $exerciseXExerciseTypeId) {
@@ -82,7 +109,10 @@ class Model_DbTable_ExerciseXExerciseType extends Model_DbTable_Abstract {
     }
 
     /**
+     * delete exercise exercise type
+     *
      * @param $exerciseXExerciseTypeId
+     *
      * @return bool|int
      */
     public function deleteExerciseXExerciseType($exerciseXExerciseTypeId) {

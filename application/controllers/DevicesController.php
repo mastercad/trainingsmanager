@@ -9,8 +9,22 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Model\Entity\Message;
+use Service\GlobalMessageHandler;
+use Model\DbTable\Devices;
+use Model\DbTable\DeviceOptions;
+use Service\Generator\View\DeviceOptions AS DeviceOptionsViewService;
+use Service\Generator\Thumbnail;
+use Model\DbTable\DeviceXDeviceGroup;
+use Model\DbTable\DeviceXDeviceOption;
+use Model\DbTable\Exercises;
+use Model\DbTable\ExerciseXDevice;
+
 class DevicesController extends AbstractController {
 
+    /**
+     * initial function for controller
+     */
     public function init() {
         if (!$this->getParam('ajax')) {
             $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
@@ -20,9 +34,12 @@ class DevicesController extends AbstractController {
         }
     }
 
+    /**
+     * index action
+     */
     public function indexAction() {
 
-        $devicesDb = new Model_DbTable_Devices();
+        $devicesDb = new Devices();
         $devicesCollection = $devicesDb->findAllDevices();
         $devicesContent = 'Es konnten leider keine Geräte gefunden werden!';
 
@@ -37,11 +54,14 @@ class DevicesController extends AbstractController {
         $this->view->assign('devicesContent', $devicesContent);
     }
 
+    /**
+     * show action
+     */
     public function showAction() {
         $id = intval($this->getParam('id'));
 
         if (0 < $id) {
-            $devicesDb = new Model_DbTable_Devices();
+            $devicesDb = new Devices();
             $device = $devicesDb->findDeviceById($id);
 
             if ($device instanceof Zend_Db_Table_Row) {
@@ -57,10 +77,16 @@ class DevicesController extends AbstractController {
         }
     }
 
+    /**
+     * new action
+     */
     public function newAction() {
         $this->forward('edit');
     }
 
+    /**
+     * edit action
+     */
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
@@ -71,7 +97,7 @@ class DevicesController extends AbstractController {
         if (0 < $deviceId) {
             $deviceContent = '';
             $deviceId = $params['id'];
-            $devicesDb = new Model_DbTable_Devices();
+            $devicesDb = new Devices();
             $device = $devicesDb->findDeviceById($deviceId);
 
             if ($device instanceof Zend_Db_Table_Row) {
@@ -85,6 +111,13 @@ class DevicesController extends AbstractController {
         $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
     }
 
+    /**
+     * generates preview picture content
+     *
+     * @param Zend_Db_Table_Row $device
+     *
+     * @return string
+     */
     private function generatePreviewPictureContent($device)
     {
         $this->view->assign('previewPictureId', 'device_preview_picture');
@@ -93,6 +126,13 @@ class DevicesController extends AbstractController {
         return $this->view->render('globals/preview-picture.phtml');
     }
 
+    /**
+     * generate preview picture content for edit
+     *
+     * @param Zend_Db_Table_Row $device
+     *
+     * @return string
+     */
     private function generatePreviewPictureForEditContent($device)
     {
         $this->view->assign('previewPictureId', 'exercise_preview_picture');
@@ -103,6 +143,8 @@ class DevicesController extends AbstractController {
     }
 
     /**
+     * generate preview picture path
+     *
      * @param Zend_Db_Table_Row $device
      *
      * @return string
@@ -133,18 +175,20 @@ class DevicesController extends AbstractController {
      * @return string
      */
     public function generateDeviceOptionsContent($device) {
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService = new DeviceOptionsViewService($this->view);
         $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
         return $deviceOptionsService->generate();
     }
 
     /**
+     * generate device options content for edit
+     *
      * @param Zend_Db_Table_Row $device
      *
      * @return string
      */
     public function generateDeviceOptionsEditContent($device) {
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService = new DeviceOptionsViewService($this->view);
         $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
         $deviceOptionsService->setAllowEdit(true);
         $deviceOptionsService->setConvertDropDownValues(false);
@@ -153,30 +197,13 @@ class DevicesController extends AbstractController {
     }
 
     /**
-     * @param Zend_Db_Table_Row $exercise
-     */
-//    public function generateDeviceOptionsEditContent($exercise) {
-//        $content = '';
-//
-//        foreach ($this->collectDeviceOptions($exercise) as $deviceOptionId => $deviceOption) {
-//            $this->view->assign($deviceOption);
-//            $this->view->assign('device_option_value',
-//                $deviceOption['exercise_x_device_option_device_option_value'] ?
-//                    $deviceOption['exercise_x_device_option_device_option_value'] :
-//                    $deviceOption['device_x_device_option_device_option_value']);
-//            $content .= $this->view->render('/loops/device-option-edit.phtml');
-//        }
-//        return $content;
-//    }
-
-    /**
      * generates drop down from all possible options in database
      *
      * @return string
      */
     public function generateDeviceOptionsDropDownContent() {
         $content = '';
-        $deviceOptions = new Model_DbTable_DeviceOptions();
+        $deviceOptions = new DeviceOptions();
         $optionsCollection = $deviceOptions->findAllOptions();
         $this->view->assign('optionLabelText', 'Geräte Optionen:');
         $optionSelectText = $this->translate('label_please_select');
@@ -194,6 +221,9 @@ class DevicesController extends AbstractController {
         return $this->view->render('globals/select.phtml');
     }
 
+    /**
+     * upload picture action
+     */
     public function uploadPictureAction() {
         $this->view->layout()->disableLayout();
         $result = [];
@@ -215,6 +245,13 @@ class DevicesController extends AbstractController {
         $this->view->assign('json', json_encode($result));
     }
 
+    /**
+     * generate preview pictures content for edit
+     *
+     * @param int $deviceId
+     *
+     * @return string
+     */
     private function generatePreviewPicturesForEditContent($deviceId)
     {
         $previewPictureContent = '';
@@ -227,7 +264,7 @@ class DevicesController extends AbstractController {
 
         foreach ($previewPicturesCollection as $previewPicture) {
             $sysPath = APPLICATION_PATH.'/../public/'.$previewPicture['html_pfad'];
-            $thumbnailService = new Service_Generator_Thumbnail();
+            $thumbnailService = new Thumbnail();
             $thumbnailService->setSourceFilePathName($sysPath);
             $thumbnailService->setThumbHeight(120);
             $thumbnailService->setThumbWidth(120);
@@ -243,6 +280,9 @@ class DevicesController extends AbstractController {
         return $previewPictureContent;
     }
 
+    /**
+     * delete picture action
+     */
     public function deletePictureAction() {
         $deviceId = intval($this->getParam('deviceId'));
         $picture = base64_decode($this->getParam('id'));
@@ -257,35 +297,41 @@ class DevicesController extends AbstractController {
             if (true === is_readable($exercisePicturePath)
                 && @unlink($exercisePicturePath)
             ) {
-                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Message::STATUS_OK);
                 $deleted = true;
             } else if (true === is_readable($tempPicturePath)
                 && @unlink($tempPicturePath)
             ) {
-                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Message::STATUS_OK);
                 $deleted = true;
             }
 
             if (!$deleted) {
-                Service_GlobalMessageHandler::appendMessage("Bild konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage("Bild konnte nicht gelöscht werden!", Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage("Es wurde kein Bild übergeben!", Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage("Es wurde kein Bild übergeben!", Message::STATUS_ERROR);
         }
     }
 
+    /**
+     * get devices for edit action
+     */
     public function getDevicesForEditAction() {
         $params = $this->getRequest()->getParams();
 
         if (isset($params['id'])) {
             $deviceGroupId = $params['id'];
-            $deviceXDeviceGroupsDb = new Model_DbTable_DeviceXDeviceGroup();
+            $deviceXDeviceGroupsDb = new DeviceXDeviceGroup();
             $devicesCollection = $deviceXDeviceGroupsDb->findDevicesByDeviceGroupId($deviceGroupId);
 
             $this->view->assign('a_geraete', $devicesCollection);
         }
     }
 
+    /**
+     * get device proposals action
+     */
     public function getDeviceProposalsAction()
     {
         $params = $this->getRequest()->getParams();
@@ -293,13 +339,16 @@ class DevicesController extends AbstractController {
         if(isset($params['search']))
         {
             $search = base64_decode($params['search']) . '%';
-            $devicesDb = new Model_DbTable_Devices();
+            $devicesDb = new Devices();
             $devicesCollection = $devicesDb->findDeviceByName($search);
 
             $this->view->assign('deviceProposals', $devicesCollection);
         }
     }
 
+    /**
+     * save action
+     */
     public function saveAction()
     {
         $params = $this->getRequest()->getParams();
@@ -307,8 +356,8 @@ class DevicesController extends AbstractController {
         $userId = $this->findCurrentUserId();
 
         if ($this->getRequest()->isPost()) {
-            $devicesDb = new Model_DbTable_Devices();
-            $deviceXDeviceOptionDb = new Model_DbTable_DeviceXDeviceOption();
+            $devicesDb = new Devices();
+            $deviceXDeviceOptionDb = new DeviceXDeviceOption();
             $deviceName = '';
             $devicePreviewPicture = '';
             $deviceId = 0;
@@ -337,7 +386,7 @@ class DevicesController extends AbstractController {
             if (0 == strlen(trim($deviceName))
                && !$deviceId
             ) {
-                Service_GlobalMessageHandler::appendMessage('Dieses Geraet benötigt einen Namen', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Dieses Geraet benötigt einen Namen', Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if(0 < strlen(trim($deviceName))) {
                 $data['device_name'] = $deviceName;
@@ -406,7 +455,7 @@ class DevicesController extends AbstractController {
                 if (is_array($deviceCurrent)
                     && 0 < count($deviceCurrent)
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Geraet existiert bereits!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Geraet existiert bereits!', Message::STATUS_ERROR);
                     $hasErrors = true;
                 }
             }
@@ -452,7 +501,7 @@ class DevicesController extends AbstractController {
                     $data['device_update_user_fk'] = $userId;
 
                     $devicesDb->updateDevice($data, $deviceId);
-                    Service_GlobalMessageHandler::appendMessage('Dieses Gerät wurde erfolgreich bearbeitet!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Dieses Gerät wurde erfolgreich bearbeitet!', Message::STATUS_OK);
                 // neues gerät anlegen
                 } else if (0 < count($data)) {
                     $cadSeo->setLinkName($data['device_name']);
@@ -467,9 +516,9 @@ class DevicesController extends AbstractController {
                     $data['device_create_user_fk'] = $userId;
 
                     $deviceId = $devicesDb->saveDevice($data);
-                    Service_GlobalMessageHandler::appendMessage('Dieses Gerät wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Dieses Gerät wurde erfolgreich angelegt!', Message::STATUS_OK);
                 } else {
-                    Service_GlobalMessageHandler::appendMessage('Dieses Gerät wurde nicht geändert!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Dieses Gerät wurde nicht geändert!', Message::STATUS_ERROR);
                 }
 
                 if ($deviceId) {
@@ -529,16 +578,16 @@ class DevicesController extends AbstractController {
                             || 0 < count($deviceXDeviceOptionUpdates)
                             || 0 < count($deviceXDeviceOptionDeletes)
                         ) {
-                            Service_GlobalMessageHandler::appendMessage('Die Optionen des Gerätes wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
+                            GlobalMessageHandler::appendMessage('Die Optionen des Gerätes wurden erfolgreich geändert!', Message::STATUS_OK);
                         }
                     }
 
                 }
             } else {
-                Service_GlobalMessageHandler::appendMessage('Beim Speichern des Gerätes trat ein unbekannter Fehler auf!', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Beim Speichern des Gerätes trat ein unbekannter Fehler auf!', Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Gerät speichern!', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Falscher Aufruf von Gerät speichern!', Message::STATUS_ERROR);
         }
     }
 
@@ -560,16 +609,15 @@ class DevicesController extends AbstractController {
             $deviceId = $params['id'];
             $hasErrors = false;
 
-            $devicesDb = new Model_DbTable_Devices();
-            $deviceGroupsDb = new Model_DbTable_DeviceGroups();
-            $deviceXDeviceGroupDb = new Model_DbTable_DeviceXDeviceGroup();
-            $exercisesDb = new Model_DbTable_Exercises();
-            $exerciseXDeviceDb = new Model_DbTable_ExerciseXDevice();
+            $devicesDb = new Devices();
+            $deviceXDeviceGroupDb = new DeviceXDeviceGroup();
+            $exercisesDb = new Exercises();
+            $exerciseXDeviceDb = new ExerciseXDevice();
 
             if ($devicesDb->deleteDevice($deviceId)) {
-                Service_GlobalMessageHandler::appendMessage('Geraet erfolgreich gelöscht!', Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage('Geraet erfolgreich gelöscht!', Message::STATUS_OK);
             } else {
-                Service_GlobalMessageHandler::appendMessage('Geraet konnte leider nicht gelöscht werden!', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Geraet konnte leider nicht gelöscht werden!', Message::STATUS_ERROR);
                 $hasErrors = true;
             }
 
@@ -587,16 +635,19 @@ class DevicesController extends AbstractController {
 
             $deviceXDeviceGroupDb->deleteAllDeviceGroupDevicesByDeviceId($deviceId);
         } else {
-            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf!', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Falscher Aufruf!', Message::STATUS_ERROR);
         }
     }
 
+    /**
+     * get device options for edit action
+     */
     public function getDeviceOptionEditAction() {
         $deviceOptionId = intval($this->getRequest()->getParam('device_option_id', 0));
         $deviceOptionsContent = '';
 
         if (0 < $deviceOptionId) {
-            $deviceOptionsDb = new Model_DbTable_DeviceOptions();
+            $deviceOptionsDb = new DeviceOptions();
             $deviceOption = $deviceOptionsDb->findOptionById($deviceOptionId);
 
             $this->view->assign('device_option_id', $deviceOption->offsetGet('device_option_id'));
@@ -607,6 +658,14 @@ class DevicesController extends AbstractController {
         $this->view->assign('deviceOptionsContent', $deviceOptionsContent);
     }
 
+    /**
+     * formats given bytes in human readable number
+     *
+     * @param     $bytes
+     * @param int $decimals
+     *
+     * @return string
+     */
     private function humanFileSize($bytes, $decimals = 2) {
         $sz = 'BKMGTP';
         $factor = floor((strlen($bytes) - 1) / 3);

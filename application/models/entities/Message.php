@@ -6,7 +6,14 @@
  * Time: 09:38
  */
 
-class Model_Entity_Message extends Model_Entity_AbstractEntity {
+namespace Model\Entity;
+
+/**
+ * Class Message
+ *
+ * @package Model\Entity
+ */
+class Message extends AbstractEntity {
 
     const STATUS_OK = 1;
     const STATUS_NOTICE = 2;

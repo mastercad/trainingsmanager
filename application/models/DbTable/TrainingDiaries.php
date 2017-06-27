@@ -6,7 +6,12 @@
  * Time: 08:54
  */
 
-class Model_DbTable_TrainingDiaries extends Model_DbTable_Abstract
+namespace Model\DbTable;
+
+use Zend_Db_Table_Row_Abstract;
+use Nette\NotImplementedException;
+
+class TrainingDiaries extends AbstractDbTable
 {
     /**
      * @var string
@@ -17,27 +22,23 @@ class Model_DbTable_TrainingDiaries extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_diary_id';
 
-    function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
-    }
-
     /**
-     *
+     * @inheritdoc
      */
-    public function findActualTraining() {
-
+    function findByPrimary($id) {
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $iTrainingPlanExerciseId
+     * find actual training by training plan exercise
+     *
+     * @param int $iTrainingPlanExerciseId
+     *
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function findActualTrainingByTrainingPlanExerciseId($iTrainingPlanExerciseId)
     {
-//        $this->getAdapter()->getProfiler()->setEnabled(TRUE);
         return $this->fetchRow('training_training_plan_x_exercise_fk = ' . $iTrainingPlanExerciseId,
             'training_create_date DESC');
-
-//        Zend_Debug::dump($this->getAdapter()->getProfiler()->getLastQueryProfile()->getQuery());
     }
 }

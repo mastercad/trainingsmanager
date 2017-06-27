@@ -6,7 +6,14 @@
  * Time: 15:18
  */
 
-class Service_Translator {
+namespace Service;
+
+use Zend_Translate;
+
+
+
+
+class Translator {
 
     /** @var  Zend_Translate */
     private $translation;

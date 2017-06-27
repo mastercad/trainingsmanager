@@ -1,9 +1,18 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Zend_Db_Table_Row_Abstract;
+use Zend_Db_Table_Rowset_Abstract;
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_Exercises
  */
-class Model_DbTable_ExerciseTypes extends Model_DbTable_Abstract
+class ExerciseTypes extends AbstractDbTable
 {
     /** @var string */
     protected $_name 	= 'exercise_types';
@@ -11,8 +20,11 @@ class Model_DbTable_ExerciseTypes extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'exercise_type_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**

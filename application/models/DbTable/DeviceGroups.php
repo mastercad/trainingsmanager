@@ -7,10 +7,17 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Nette\NotImplementedException;
+use Zend_Db_Table_Rowset_Abstract;
+use Zend_Db_Table_Row_Abstract;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_DeviceGroups
  */
-class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
+class DeviceGroups extends AbstractDbTable
 {
     /** @var string */
     protected $_name 	= 'device_groups';
@@ -18,11 +25,16 @@ class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'device_group_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
+     * find all device groups
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllDeviceGroups() {
@@ -30,6 +42,8 @@ class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
     }
 
     /**
+     * find device group by given id
+     *
      * @param $iDeviceGroupId
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
@@ -45,6 +59,8 @@ class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
     }
 
     /**
+     * find device group by name
+     *
      * @param $sDeviceGroupName
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
@@ -60,6 +76,8 @@ class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
     }
 
     /**
+     * save given data in database
+     *
      * @param $aData
      *
      * @return bool|mixed
@@ -75,6 +93,8 @@ class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
     }
 
     /**
+     * update given device group by given id with given data
+     *
      * @param $aData
      * @param $iDeviceGroupId
      *
@@ -91,6 +111,8 @@ class Model_DbTable_DeviceGroups extends Model_DbTable_Abstract
     }
 
     /**
+     * delete given device group
+     *
      * @param $iDeviceGroupId
      *
      * @return bool|int

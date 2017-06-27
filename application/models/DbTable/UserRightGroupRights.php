@@ -6,10 +6,16 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
 
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Exception;
+use Nette\NotImplementedException;
+
 /**
  * Class Application_Model_DbTable_UserRightGroupsRight
  */
-class Model_DbTable_UserRightGroupRights extends Model_DbTable_Abstract
+class UserRightGroupRights extends AbstractDbTable
 {
     /**
      * @var string
@@ -20,11 +26,16 @@ class Model_DbTable_UserRightGroupRights extends Model_DbTable_Abstract
      */
     protected $_primary = 'user_right_group_right_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
+     * find all user right group rights
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findAllUserRightGroupRights()

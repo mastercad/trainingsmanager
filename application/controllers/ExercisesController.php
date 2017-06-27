@@ -7,6 +7,21 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Model\DbTable\Exercises;
+use \Service\Generator\View\ExerciseOptions as ExerciseOptionsViewService;
+use \Model\DbTable\ExerciseXMuscle;
+use \Service\Generator\View\DeviceOptions as DeviceOptionsViewService;
+use \Model\DbTable\DeviceOptions;
+use \Model\DbTable\ExerciseXDevice;
+use \Model\DbTable\DeviceXDeviceOption;
+use \Model\DbTable\ExerciseXDeviceOption;
+use \Model\DbTable\ExerciseTypes;
+use \Model\DbTable\ExerciseXExerciseType;
+use \Model\DbTable\ExerciseXExerciseOption;
+use \Service\Generator\Thumbnail;
+use \Service\GlobalMessageHandler;
+use Model\Entity\Message;
+
 class ExercisesController extends AbstractController {
 
     public function init() {
@@ -19,7 +34,7 @@ class ExercisesController extends AbstractController {
     }
 
     public function indexAction() {
-        $exercisesDb = new Model_DbTable_Exercises();
+        $exercisesDb = new Exercises();
         $exerciseType = $this->getParam('exercise-type', null);
         $device = $this->getParam('device', null);
         $exercisesCollection = $exercisesDb->findExercises($exerciseType, $device)->toArray();
@@ -36,7 +51,7 @@ class ExercisesController extends AbstractController {
 //            $this->generateDummyExerciseShowContent();
 //        } else if (0 < $exerciseId) {
         if (0 < $exerciseId) {
-            $exerciseDb = new Model_DbTable_Exercises();
+            $exerciseDb = new Exercises();
             $exercise = $exerciseDb->findExerciseById($exerciseId);
 
             if ($exercise instanceof Zend_Db_Table_Row) {
@@ -62,7 +77,7 @@ class ExercisesController extends AbstractController {
             $exercise = null;
 
             if (0 < $exerciseId) {
-                $exerciseDb = new Model_DbTable_Exercises();
+                $exerciseDb = new Exercises();
                 $exercise = $exerciseDb->findExerciseById($exerciseId);
 
                 if ($exercise instanceof Zend_Db_Table_Row) {
@@ -92,7 +107,7 @@ class ExercisesController extends AbstractController {
      */
     private function generateExerciseOptionsContent($exerciseId)
     {
-        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        $exerciseOptionsService = new ExerciseOptionsViewService($this->view);
         $exerciseOptionsService->setExerciseId($exerciseId);
         $exerciseOptionsService->setAllowEdit(false);
 
@@ -106,7 +121,7 @@ class ExercisesController extends AbstractController {
      */
     private function generateDeviceOptionsContent($exerciseId)
     {
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService = new DeviceOptionsViewService($this->view);
         $deviceOptionsService->setExerciseId($exerciseId);
         $deviceOptionsService->setAllowEdit(false);
 
@@ -126,7 +141,7 @@ class ExercisesController extends AbstractController {
     public function generateExerciseMuscleGroupsContent($exercise) {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $muscleGroupCollection = $exerciseXMuscleDb->findMuscleGroupsForExercise($exerciseId);
 
         $content = '';
@@ -152,7 +167,7 @@ class ExercisesController extends AbstractController {
      * @return string
      */
     public function generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId) {
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $musclesInMuscleGroupForExerciseCollection = $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
         $musclesInMuscleGroupContent = '';
 
@@ -183,7 +198,7 @@ class ExercisesController extends AbstractController {
     public function generateExerciseMuscleGroupsEditContent($exercise) {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $muscleGroupCollection = $exerciseXMuscleDb->findMuscleGroupsForExercise($exerciseId);
 
         $content = '';
@@ -211,7 +226,7 @@ class ExercisesController extends AbstractController {
         $device = $this->getParam('device', null);
         $deviceName = '';
 
-        $exerciseXDeviceDb = new Model_DbTable_ExerciseXDevice();
+        $exerciseXDeviceDb = new ExerciseXDevice();
         $devicesCollection = $exerciseXDeviceDb->findDevicesWithExercises();
         $exercisesWithoutDevices = $exerciseXDeviceDb->findExercisesWithoutDevices();
 
@@ -271,8 +286,8 @@ class ExercisesController extends AbstractController {
         $exerciseType = $this->getParam('exercise-type', null);
         $exerciseTypeName = '';
 
-        $exerciseTypeDb = new Model_DbTable_ExerciseTypes();
-        $exerciseXExerciseTypes = new Model_DbTable_ExerciseXExerciseType();
+        $exerciseTypeDb = new ExerciseTypes();
+        $exerciseXExerciseTypes = new ExerciseXExerciseType();
         $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
 
         $exerciseTypeContent = '';
@@ -325,7 +340,7 @@ class ExercisesController extends AbstractController {
     }
 
     private function generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId) {
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $musclesInMuscleGroupForExerciseCollection =
             $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
         $musclesInMuscleGroupContent = '';
@@ -373,7 +388,7 @@ class ExercisesController extends AbstractController {
     private function collectDeviceOptions($exercise) {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
-        $deviceXDeviceOptionDb = new Model_DbTable_DeviceXDeviceOption();
+        $deviceXDeviceOptionDb = new DeviceXDeviceOption();
 
         $deviceOptionCollection = [];
 
@@ -386,7 +401,7 @@ class ExercisesController extends AbstractController {
                 $deviceOptionCollection[$deviceOption['device_option_id']] = $deviceOption;
             }
         }
-        $ExerciseXDeviceOptionDb = new Model_DbTable_ExerciseXDeviceOption();
+        $ExerciseXDeviceOptionDb = new ExerciseXDeviceOption();
         $exerciseOptionCollection = $ExerciseXDeviceOptionDb->findDeviceOptionsForExercise($exerciseId)->toArray();
 
 
@@ -409,7 +424,7 @@ class ExercisesController extends AbstractController {
         $exerciseId = $this->getParam('exercise_id');
         $exerciseOptionId = $this->getParam('exercise_option_id');
 
-        $exerciseXExerciseOptionDb = new Model_DbTable_ExerciseXExerciseOption();
+        $exerciseXExerciseOptionDb = new ExerciseXExerciseOption();
         $exerciseXExerciseOption = $exerciseXExerciseOptionDb->findExerciseOptionForExercise($exerciseId, $exerciseOptionId);
 
         $this->view->assign($exerciseXExerciseOption->toArray());
@@ -423,7 +438,7 @@ class ExercisesController extends AbstractController {
     public function generateExerciseOptionsEditContent($exercise) {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
-        $exerciseXExerciseOptionDb = new Model_DbTable_ExerciseXExerciseOption();
+        $exerciseXExerciseOptionDb = new ExerciseXExerciseOption();
         $exerciseXExerciseOptionCollection = $exerciseXExerciseOptionDb->findExerciseOptionsForExercise($exerciseId);
 
         $content = '';
@@ -437,7 +452,7 @@ class ExercisesController extends AbstractController {
     }
 
     private function generateExerciseTypeContent($exercise) {
-        $exerciseTypeDb = new Model_DbTable_ExerciseTypes();
+        $exerciseTypeDb = new ExerciseTypes();
         $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
 
         $exerciseTypeContent = '';
@@ -562,7 +577,7 @@ class ExercisesController extends AbstractController {
 
         foreach ($previewPicturesCollection as $previewPicture) {
             $sysPath = APPLICATION_PATH.'/../public/'.$previewPicture['html_pfad'];
-            $thumbnailService = new Service_Generator_Thumbnail();
+            $thumbnailService = new Thumbnail();
             $thumbnailService->setSourceFilePathName($sysPath);
             $thumbnailService->setThumbHeight(120);
             $thumbnailService->setThumbWidth(120);
@@ -592,20 +607,20 @@ class ExercisesController extends AbstractController {
             if (true === is_readable($exercisePicturePath)
                 && @unlink($exercisePicturePath)
             ) {
-                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                \Service\GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Message::STATUS_OK);
                 $deleted = true;
             } else if (true === is_readable($tempPicturePath)
                 && @unlink($tempPicturePath)
             ) {
-                Service_GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage("Bild erfolgreich gelöscht!", Message::STATUS_OK);
                 $deleted = true;
             }
 
             if (!$deleted) {
-                Service_GlobalMessageHandler::appendMessage("Bild konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage("Bild konnte nicht gelöscht werden!", Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage("Es wurde kein Bild übergeben!", Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage("Es wurde kein Bild übergeben!", Message::STATUS_ERROR);
         }
     }
 
@@ -617,19 +632,19 @@ class ExercisesController extends AbstractController {
             && 0 < $params['id']
         ) {
             $exerciseId = $params['id'];
-            $exercisesDb = new Model_DbTable_Exercises();
+            $exercisesDb = new Exercises();
             if ($exercisesDb->deleteExercise($exerciseId)) {
-                Service_GlobalMessageHandler::appendMessage("Übung erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage("Übung erfolgreich gelöscht!", Message::STATUS_OK);
                 
                 $bilder_pfad = getcwd() . '/images/content/dynamisch/exercises/' . $exerciseId . '/';
                 
                 $obj_file = new CAD_File();
                 $obj_file->cleanDirRek($bilder_pfad, 2);
             } else {
-                Service_GlobalMessageHandler::appendMessage("Übung konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage("Übung konnte nicht gelöscht werden!", _Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage("Falscher Aufruf!", Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage("Falscher Aufruf!", Message::STATUS_ERROR);
         }
     }
     
@@ -639,7 +654,7 @@ class ExercisesController extends AbstractController {
         $userId = $this->findCurrentUserId();
 
         if ($this->getRequest()->isPost()) {
-            $exercisesDb = new Model_DbTable_Exercises();
+            $exercisesDb = new Exercises();
 
             $exerciseName = '';
 
@@ -686,7 +701,7 @@ class ExercisesController extends AbstractController {
             if (0 == strlen(trim($exerciseName))
                 && true === empty($exerciseId)
             ) {
-                Service_GlobalMessageHandler::appendMessage('Diese Übung benötigt einen Namen', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Diese Übung benötigt einen Namen', Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if (0 < strlen(trim($exerciseName))) {
                 $data['exercise_name'] = $exerciseName;
@@ -703,7 +718,7 @@ class ExercisesController extends AbstractController {
             if (0 == strlen(trim($exerciseDescription))
                 && true === empty($exerciseId)
             ) {
-                Service_GlobalMessageHandler::appendMessage('Diese Übung benötigt eine Beschreibung', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Diese Übung benötigt eine Beschreibung', Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if (0 < strlen(trim($exerciseDescription))) {
                 $data['exercise_description'] = $exerciseDescription;
@@ -716,7 +731,7 @@ class ExercisesController extends AbstractController {
             ) {
                 $currentExercise = $exercisesDb->findExercisesByName($exerciseName);
                 if (! $currentExercise instanceof Zend_Db_Table_Row) {
-                    Service_GlobalMessageHandler::appendMessage('Übung "' . $exerciseName . '" existiert bereits!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Übung "' . $exerciseName . '" existiert bereits!', Message::STATUS_ERROR);
                     $hasErrors = true;
                 }
             }
@@ -763,7 +778,7 @@ class ExercisesController extends AbstractController {
                     $data['exercise_update_user_fk'] = $userId;
 
                     $exercisesDb->updateExercise($data, $exerciseId);
-                    Service_GlobalMessageHandler::appendMessage('Diese Übung wurde erfolgreich bearbeitet!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Diese Übung wurde erfolgreich bearbeitet!', Message::STATUS_OK);
                 // neu anlegen
                 } else if (is_array($data)
                     && 0 < count($data)
@@ -780,18 +795,18 @@ class ExercisesController extends AbstractController {
                     $data['exercise_create_user_fk'] = $userId;
 
                     $exerciseId = $exercisesDb->saveExercise($data);
-                    Service_GlobalMessageHandler::appendMessage('Diese Übung wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Diese Übung wurde erfolgreich angelegt!', Message::STATUS_OK);
                 } else if (0 == count($exerciseXMuscleInserts)
                     && 0 == count($exerciseXMuscleUpdates)
                     && 0 == count($exerciseXMuscleDeletes)
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Die beanspruchten Muskeln für diese Übung wurden nicht geändert!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Die beanspruchten Muskeln für diese Übung wurden nicht geändert!', Message::STATUS_OK);
                 }
                 if (0 < count($exerciseXMuscleInserts)
                     || 0 < count($exerciseXMuscleUpdates)
                     || 0 < count($exerciseXMuscleDeletes)
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Message::STATUS_OK);
                 }
                 
                 if ($exerciseId) {
@@ -815,10 +830,10 @@ class ExercisesController extends AbstractController {
                     $this->processExerciseXExerciseType($params, $exerciseId);
                 }
             } else {
-                Service_GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Message::STATUS_OK);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Übung speichern!', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Falscher Aufruf von Übung speichern!', Message::STATUS_ERROR);
         }
     }
 
@@ -826,7 +841,7 @@ class ExercisesController extends AbstractController {
     {
         $exerciseXDeviceId = $params['exercise_device_fk'];
 
-        $exerciseXDeviceDb = new Model_DbTable_ExerciseXDevice();
+        $exerciseXDeviceDb = new ExerciseXDevice();
 
         // no device_id given in params? create new entry
         if (! empty($exerciseXDeviceId)) {
@@ -866,7 +881,7 @@ class ExercisesController extends AbstractController {
         ) {
             $userId = $this->findCurrentUserId();
 
-            $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+            $exerciseXMuscleDb = new ExerciseXMuscle();
             $currentMusclesInDb = $exerciseXMuscleDb->findMusclesForExercise($exerciseId);
             $musclesCollection = [];
             $muscleGroupsInDb = [];
@@ -940,7 +955,7 @@ class ExercisesController extends AbstractController {
         ) {
             $userId = $this->findCurrentUserId();
 
-            $exerciseXDeviceOptionDb = new Model_DbTable_ExerciseXDeviceOption();
+            $exerciseXDeviceOptionDb = new ExerciseXDeviceOption();
             $currentDeviceOptionsInDb = $exerciseXDeviceOptionDb->findDeviceOptionsForExercise($exerciseId);
             $deviceOptionsCollection = array();
 
@@ -955,7 +970,7 @@ class ExercisesController extends AbstractController {
                 ) {
                     // checken ob der aktuelle muskel keine beanspruchung, dann löschen
                     if (TRUE === empty($deviceOption['value'])) {
-                        $bResult = $exerciseXDeviceOptionDb->deleteDeviceOption($deviceOption['exerciseXDeviceOptionId']);
+                        $bResult = $exerciseXDeviceOptionDb->deleteExerciseXDeviceOption($deviceOption['exerciseXDeviceOptionId']);
                         // wenn beanspruchung und != eingetragener, dann updaten
                     } else if ($deviceOptionsCollection[$deviceOption['exerciseXDeviceOptionId']]->exercise_x_device_option_device_option_value != $deviceOption['value']) {
                         $aData = array(
@@ -998,7 +1013,7 @@ class ExercisesController extends AbstractController {
         ) {
             $userId = $this->findCurrentUserId();
 
-            $exerciseXExerciseOptionDb = new Model_DbTable_ExerciseXExerciseOption();
+            $exerciseXExerciseOptionDb = new ExerciseXExerciseOption();
             $currentExerciseOptionsInDb = $exerciseXExerciseOptionDb->findExerciseOptionsForExercise($exerciseId);
             $exerciseOptionsCollection = array();
 
@@ -1050,7 +1065,7 @@ class ExercisesController extends AbstractController {
      * @throws \Zend_Db_Table_Rowset_Exception
      */
     private function processExerciseXExerciseType($params, $exerciseId) {
-        $exerciseXExerciseTypeDb = new Model_DbTable_ExerciseXExerciseType();
+        $exerciseXExerciseTypeDb = new ExerciseXExerciseType();
         $exerciseXExerciseType = $exerciseXExerciseTypeDb->findExerciseTypeForExercise($exerciseId);
         $exerciseTypeId = $params['exercise_type_id'];
 
@@ -1118,7 +1133,7 @@ class ExercisesController extends AbstractController {
      * @return string
      */
     public function generateDeviceOptionsDropDownContent() {
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService = new DeviceOptionsViewService($this->view);
         return $deviceOptionsService->generateDeviceOptionsSelectContent();
     }
 
@@ -1128,7 +1143,7 @@ class ExercisesController extends AbstractController {
      * @return string
      */
     public function generateExerciseOptionsDropDownContent() {
-        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        $exerciseOptionsService = new ExerciseOptionsViewService($this->view);
         return $exerciseOptionsService->generateExerciseOptionsSelectContent();
     }
 

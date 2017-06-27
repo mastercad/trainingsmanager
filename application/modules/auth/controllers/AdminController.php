@@ -6,9 +6,22 @@
  * Time: 20:30
  */
 
+namespace Auth;
+
+use \AbstractController;
+use Auth\Model\DbTable\UserRightGroups as AuthModelDbTableUserRightGroups;
+use CAD_Tool_ModuleControllerActionLister;
+use Model\DbTable\UserRightGroups as ModelDbTableUserRightGroups;
+use Auth\Model\DbTable\UserRightGroupRights;
+use CAD_Tool_Extractor;
+use Zend_Db_Table_Row_Abstract;
+
+
+
+
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-class Auth_AdminController extends AbstractController {
+class AdminController extends AbstractController {
     private $_aUserRechteGruppenRechte;
     private $_iCurrentRechteUserGruppenRechtId;
     private $_iInputCount = 0;
@@ -16,7 +29,7 @@ class Auth_AdminController extends AbstractController {
     private $userRightGroups = [];
 
     public function init() {
-        $userRightGroupsDb = new Auth_Model_DbTable_UserRightGroups();
+        $userRightGroupsDb = new AuthModelDbTableUserRightGroups();
         $userRightGroups = $userRightGroupsDb->findUserRightGroups();
 
         foreach ($userRightGroups as $userRightGroup) {
@@ -26,9 +39,9 @@ class Auth_AdminController extends AbstractController {
 
     public function indexAction() {
         $aMoCcAcData = CAD_Tool_ModuleControllerActionLister::collect();
-        $userRightGroupsDb = new Model_DbTable_UserRightGroups();
+        $userRightGroupsDb = new ModelDbTableUserRightGroups();
         $userRightGroup = null;
-        $userRightGroupRightDb = new Auth_Model_DbTable_UserRightGroupRights();
+        $userRightGroupRightDb = new UserRightGroupRights();
         $iUserRechteGruppeId = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_id', 1);
         $iUserRechteGruppeParentId = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->user_right_group_parent_id');
         $sSpeichern = CAD_Tool_Extractor::extractOverPath($this, 'getRequest->getParams->save');
@@ -119,7 +132,7 @@ class Auth_AdminController extends AbstractController {
 
     private function collectCurrentUserRightGroupRights($userRightGroupId)
     {
-        $userRightGroupRightDb = new Auth_Model_DbTable_UserRightGroupRights();
+        $userRightGroupRightDb = new UserRightGroupRights();
         $currentUserRightGroupRights = $userRightGroupRightDb->findUserRightGroupRights($userRightGroupId);
         $userRightGroupRightCollection = [];
 
@@ -141,7 +154,7 @@ class Auth_AdminController extends AbstractController {
      * @throws \Zend_Db_Table_Exception
      */
     private function generatesUserRightGroupsHierarchy() {
-        $userRightGroupsDb = new Model_DbTable_UserRightGroups();
+        $userRightGroupsDb = new ModelDbTableUserRightGroups();
         $userRightGroups = $userRightGroupsDb->findAllUserRightGroups();
         $userRightGroupsHierarchy = [];
 
@@ -158,7 +171,7 @@ class Auth_AdminController extends AbstractController {
         $this->view->assign('value', null);
         $this->view->assign('text', $this->translate('label_please_select'));
         $userRightGroupOptionsContent = $this->view->render('admin/partials/user-right-group-row.phtml');
-        $userRightGroupsDb = new Model_DbTable_UserRightGroups();
+        $userRightGroupsDb = new ModelDbTableUserRightGroups();
         $userRightGroupsCollection = $userRightGroupsDb->findAllUserRightGroups();
 
         foreach ($userRightGroupsCollection as $userRightGroup) {

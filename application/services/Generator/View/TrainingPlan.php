@@ -6,7 +6,26 @@
  * Time: 19:30
  */
 
-class Service_Generator_View_TrainingPlan extends Service_Generator_View_GeneratorAbstract {
+namespace Service\Generator\View;
+
+use Service\Generator\View\GeneratorAbstract;
+use Zend_Db_Table_Rowset_Abstract;
+use Zend_Db_Table_Row_Abstract;
+use Zend_Db_Table_Row;
+use Model\DbTable\TrainingPlanXExercise;
+use Service\Generator\Thumbnail;
+use Service\Generator\View\ExerciseOptions;
+use Service\Generator\View\DeviceOptions;
+use Model\DbTable\ExerciseXMuscle;
+use Model\DbTable\TrainingPlans as ModelDbTableTrainingPlans;
+use Auth\Model\Resource\TrainingPlans as AuthModelResourceTrainingPlans;
+use Auth\Model\Role\Member;
+use Zend_Registry;
+
+
+
+
+class TrainingPlan extends GeneratorAbstract {
 
     private $usedMuscles = [];
     private $muscleUsageMin = 0;
@@ -83,7 +102,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
         if (0 == $trainingPlan->offsetGet('training_plan_active')) {
             $this->getView()->assign('archiveTrainingPlanLoaded', true);
         }
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+        $trainingPlanXExerciseDb = new TrainingPlanXExercise();
         $exercises = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlan->offsetGet('training_plan_id'));
 
         foreach ($exercises as $exercise) {
@@ -118,7 +137,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
         if (is_file(getcwd() . '/' . $previewPicture)
             && is_readable(getcwd() . '/' . $previewPicture)
         ) {
-            $thumbnailService = new Service_Generator_Thumbnail();
+            $thumbnailService = new Thumbnail();
             $thumbnailService->setThumbWidth($width);
             $thumbnailService->setThumbHeight($height);
             $thumbnailService->setSourceFilePathName(getcwd() . '/' . $previewPicture);
@@ -129,7 +148,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
 
     public function generateExerciseOptionsContent($exercise) {
 
-        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->getView());
+        $exerciseOptionsService = new ExerciseOptions($this->getView());
         $exerciseOptionsService->setShowTrainingProgress(true);
         $exerciseOptionsService->setAllowEdit(false);
         // bereits ein value durch eine übung gesetzt
@@ -145,7 +164,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
 
     public function generateDeviceOptionsContent($exercise) {
 
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->getView());
+        $deviceOptionsService = new DeviceOptions($this->getView());
         $deviceOptionsService->setShowTrainingProgress(true);
         $deviceOptionsService->setAllowEdit(false);
 
@@ -252,7 +271,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
      * @return $this
      */
     private function collectMusclesForExerciseContent($trainingPlanExercise) {
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $usedMusclesInExercise = $exerciseXMuscleDb->findMusclesForExercise($trainingPlanExercise->training_plan_x_exercise_exercise_fk);
 
         foreach ($usedMusclesInExercise as $usedMuscleInExercise) {
@@ -299,7 +318,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
     }
 
     public function generateTrainingPlanForEditContent($trainingPlanId) {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new ModelDbTableTrainingPlans();
         $trainingPlanCollection = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId);
         $trainingPlanContent = '';
         $this->trainingPlanTabHeaderContent = '';
@@ -350,8 +369,8 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
      */
     private function generateTrainingPlanOptionsContent(Zend_Db_Table_Row_Abstract $trainingPlan) {
         $id = $trainingPlan->offsetGet('training_plan_id');
-        $resource = new Auth_Model_Resource_TrainingPlans($trainingPlan);
-        $role = new Auth_Model_Role_Member();
+        $resource = new AuthModelResourceTrainingPlans($trainingPlan);
+        $role = new Member();
         $resourceName = 'default:training-plans';
 
         Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'delete');
@@ -364,7 +383,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
     }
 
     private function generateTrainingPlanExerciseForEditContent($trainingPlanId) {
-        $trainingPlanXExercisesDb = new Model_DbTable_TrainingPlanXExercise();
+        $trainingPlanXExercisesDb = new TrainingPlanXExercise();
 
         $trainingPlanXExerciseCollection =
             $trainingPlanXExercisesDb->findExercisesByTrainingPlanId($trainingPlanId);
@@ -377,7 +396,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
             $exerciseId = $trainingPlanExercise->offsetGet('exercise_id');
             $trainingPlanExerciseId = $trainingPlanExercise->offsetGet('training_plan_x_exercise_id');
 
-            $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->getView());
+            $exerciseOptionsService = new ExerciseOptions($this->getView());
             $exerciseOptionsService->setTrainingPlanXExerciseId($trainingPlanExerciseId);
             $exerciseOptionsService->setExerciseId($exerciseId);
             $exerciseOptionsService->setAllowEdit(true);
@@ -385,7 +404,7 @@ class Service_Generator_View_TrainingPlan extends Service_Generator_View_Generat
 
             $this->getView()->assign('exerciseOptionsContent', $exerciseOptionsService->generate());
 
-            $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->getView());
+            $deviceOptionsService = new DeviceOptions($this->getView());
             $deviceOptionsService->setTrainingPlanXExerciseId($trainingPlanExerciseId);
             $deviceOptionsService->setExerciseId($exerciseId);
             $deviceOptionsService->setAllowEdit(true);

@@ -1,25 +1,40 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_MuscleGroupMuscles
  */
-class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
+class MuscleXMuscleGroup extends AbstractDbTable
 {
     /**
      * @var string
      */
     protected $_name 	= 'muscle_x_muscle_group';
+
     /**
      * @var string
      */
     protected $_primary = 'muscle_x_muscle_group_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $iMuscleGroupId
+     * find muscles by muscle group
+     *
+     * @param int $iMuscleGroupId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMusclesByMuscleGroupId($iMuscleGroupId) {
@@ -37,7 +52,10 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $iMuscleId
+     * find muscle group by muscle
+     *
+     * @param int $iMuscleId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMuscleGroupByMuscleId($iMuscleId) {
@@ -51,7 +69,10 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $aData
+     * save muscle muscle group data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveMuscleXMuscleGroup($aData) {
@@ -65,8 +86,11 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $aData
-     * @param $iMuscleGroupMuscleId
+     * update muscle group muscle data
+     *
+     * @param array $aData
+     * @param int $iMuscleGroupMuscleId
+     *
      * @return bool|int
      */
     public function updateMuscleGroupMuscle($aData, $iMuscleGroupMuscleId) {
@@ -80,14 +104,17 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $iMuscleGroupMuscleId
-     * @param $muscleGroupId
+     * delete muscle group muscle
+     *
+     * @param int $iMuscleGroupMuscleId
+     * @param int $muscleGroupId
      *
      * @return bool|int
      */
     public function deleteMuscleGroupMuscle($iMuscleGroupMuscleId, $muscleGroupId){
 		try {
-            return $this->delete("muscle_x_muscle_group_muscle_fk = '" . $iMuscleGroupMuscleId . "' AND muscle_x_muscle_group_muscle_group_fk = '" . $muscleGroupId . "'");
+            return $this->delete("muscle_x_muscle_group_muscle_fk = '" . $iMuscleGroupMuscleId .
+                "' AND muscle_x_muscle_group_muscle_group_fk = '" . $muscleGroupId . "'");
 		} catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -96,7 +123,10 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $iMuscleGroupId
+     * delete all muscle groups muscles by muscle group
+     *
+     * @param int $iMuscleGroupId
+     *
      * @return bool|int
      */
     public function deleteAllMuscleGroupsMusclesByMuscleGroupId($iMuscleGroupId){
@@ -110,7 +140,10 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $iMuscleId
+     * delete all muscle groups by muscle
+     *
+     * @param int $iMuscleId
+     *
      * @return bool|int
      */
     public function deleteAllMuscleGroupsMusclesByMuscleId($iMuscleId){
@@ -123,6 +156,13 @@ class Model_DbTable_MuscleXMuscleGroup extends Model_DbTable_Abstract
         }
     }
 
+    /**
+     * delete muscle group
+     *
+     * @param int $muscleGroupId
+     *
+     * @return bool|int
+     */
     public function deleteMuscleGroupById($muscleGroupId) {
         try {
             return $this->delete("muscle_x_muscle_group_id = '" . $muscleGroupId . "'");

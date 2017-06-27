@@ -6,23 +6,40 @@
  * Time: 10:47
  */
 
-class Model_DbTable_TrainingPlanLayouts extends Model_DbTable_Abstract
+namespace Model\DbTable;
+
+use Zend_Db_Table_Row_Abstract;
+use Nette\NotImplementedException;
+
+/**
+ * Class TrainingPlanLayouts
+ *
+ * @package Model\DbTable
+ */
+class TrainingPlanLayouts extends AbstractDbTable
 {
     /**
      * @var string
      */
     protected $_name 	= 'training_plan_layouts';
+
     /**
      * @var string
      */
     protected $_primary = 'training_plan_layout_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $iTrainingPlanLayoutId
+     * find training plan layout
+     *
+     * @param int $iTrainingPlanLayoutId
+     *
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function findTrainingPlanLayout($iTrainingPlanLayoutId) {
@@ -30,7 +47,10 @@ class Model_DbTable_TrainingPlanLayouts extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $sTrainingPlanLayoutName
+     * find training plan layout by name
+     *
+     * @param string $sTrainingPlanLayoutName
+     *
      * @return null|Zend_Db_Table_Row_Abstract
      */
     public function findTrainingPlanLayoutByName($sTrainingPlanLayoutName)

@@ -6,7 +6,15 @@
  * Time: 09:45
  */
 
-class Auth_Model_Resource_Muscles extends Auth_Model_Resource_Abstract {
+namespace Auth\Model\Resource;
+
+use Auth\Model\Resource\AbstractResource;
+use CAD_Tool_Extractor;
+
+
+
+
+class Muscles extends AbstractResource {
 
     /** @var string ID der aktuellen Resource in der ACL */
     protected $resourceId = 'default:muscles';

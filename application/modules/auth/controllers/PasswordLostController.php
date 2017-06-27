@@ -6,9 +6,24 @@
  * Time: 23:41
  */
 
+namespace Auth;
+
+use \AbstractController;
+use Zend_Validate_EmailAddress;
+use Auth\Model\DbTable\Users;
+use Zend_Db_Table_Row_Abstract;
+use CAD_Tools;
+use CAD_Tool_TemplateHandler;
+use Zend_Mail;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+
+
+
+
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-class Auth_PasswordLostController extends AbstractController
+class PasswordLostController extends AbstractController
 {
 
     public function indexAction()
@@ -23,7 +38,7 @@ class Auth_PasswordLostController extends AbstractController
             $str_email = base64_decode($this->getParam('password_lost_email'));
 
             $obj_valid_email = new Zend_Validate_EmailAddress();
-            $obj_db_users = new Auth_Model_DbTable_Users();
+            $obj_db_users = new Users();
 
             $b_email_valid = $obj_valid_email->isValid($str_email);
             if ($b_email_valid) {
@@ -70,21 +85,21 @@ class Auth_PasswordLostController extends AbstractController
                         $a_data['user_password'] = md5($password);
 
                         if ($obj_db_users->updateUser($a_data, $user->offsetGet('user_id'))) {
-                            Service_GlobalMessageHandler::appendMessage($this->translate('password_successfully_changed_and_send'), Model_Entity_Message::STATUS_OK);
+                            GlobalMessageHandler::appendMessage($this->translate('password_successfully_changed_and_send'), Message::STATUS_OK);
                         } else {
-                            Service_GlobalMessageHandler::appendMessage($this->translate('internal_error_please_try_again_later'), Model_Entity_Message::STATUS_ERROR);
+                            GlobalMessageHandler::appendMessage($this->translate('internal_error_please_try_again_later'), Message::STATUS_ERROR);
                         }
                     } else {
-                        Service_GlobalMessageHandler::appendMessage($this->translate('send_mail_with_new_password_failed'), Model_Entity_Message::STATUS_ERROR);
+                        GlobalMessageHandler::appendMessage($this->translate('send_mail_with_new_password_failed'), Message::STATUS_ERROR);
                     }
                 } else {
-                    Service_GlobalMessageHandler::appendMessage($this->translate('entered_email_does_not_exist'), Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage($this->translate('entered_email_does_not_exist'), Message::STATUS_ERROR);
                 }
             } else {
-                Service_GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Message::STATUS_ERROR);
         }
     }
 }

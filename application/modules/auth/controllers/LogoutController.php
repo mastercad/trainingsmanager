@@ -6,8 +6,15 @@
  * Time: 23:38
  */
 
+namespace Auth;
+
+use \AbstractController;
+
+
+
+
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-class Auth_LogoutController extends AbstractController
+class LogoutController extends AbstractController
 {
 }

@@ -14,23 +14,42 @@
  * 
  */
 
-class Model_DbTable_Users extends Model_DbTable_Abstract
+namespace Model\DbTable;
+
+use Zend_Db_Table_Row_Abstract;
+use Zend_Db_Table_Rowset_Abstract;
+use Exception;
+use Zend_Db_Table;
+
+/**
+ * Class Users
+ *
+ * @package Model\DbTable
+ */
+class Users extends AbstractDbTable
 {
     /**
      * @var string
      */
     protected $_name 	= 'users';
+
     /**
      * @var string
      */
     protected $_primary = 'user_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
         return $this->fetchRow("user_id = '" . $id . "'");
     }
 
     /**
-     * @param $iUserId
+     * find user
+     *
+     * @param int $iUserId
+     *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
     public function findUser($iUserId) {
@@ -44,7 +63,10 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $sUserEmail
+     * find user email
+     *
+     * @param string $sUserEmail
+     *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
     public function findUserByEmail($sUserEmail) {
@@ -58,8 +80,11 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $aData
-     * @param $iUserId
+     * update user data
+     *
+     * @param array $aData
+     * @param int $iUserId
+     *
      * @return bool|int
      */
     public function updateUser($aData, $iUserId) {
@@ -73,7 +98,10 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $aData
+     * save user data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveUser($aData) {
@@ -86,6 +114,11 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
         return false;
 	}
 
+    /**
+     * find test users
+     *
+     * @return \Zend_Db_Table_Rowset_Abstract
+     */
     public function findTestUsers() {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 
@@ -96,7 +129,10 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $iUseId
+     * delete user
+     *
+     * @param int $iUseId
+     *
      * @return int
      */
     public function deleteUser($iUseId) {
@@ -104,20 +140,32 @@ class Model_DbTable_Users extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $str_email
+     * find user by email
+     *
+     * @param string $email
+     *
      * @return null|Zend_Db_Table_Row_Abstract
      */
-    public function checkEmailExists($str_email) {
-		return $this->fetchRow("user_email = '" . $str_email . "' OR user_login = '" . $str_email . "'");
+    public function checkEmailExists($email) {
+		return $this->fetchRow("user_email = '" . $email . "' OR user_login = '" . $email . "'");
 	}
 
     /**
+     * find active users
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findActiveUsers() {
         return $this->fetchAll('user_state_fk = 2', 'user_first_name');
     }
 
+    /**
+     * find all active users in same user group
+     *
+     * @param int $userGroupId
+     *
+     * @return \Zend_Db_Table_Rowset_Abstract
+     */
     public function findAllActiveUsersInSameUserGroup($userGroupId) {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
 

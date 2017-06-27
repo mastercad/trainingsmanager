@@ -6,7 +6,13 @@
  * Time: 22:00
  */
 
-abstract class Service_Options {
+namespace Service;
+
+
+
+
+
+abstract class Options {
 
     protected $hierarchy = [];
 

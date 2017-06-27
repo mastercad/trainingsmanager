@@ -6,7 +6,11 @@
  * Time: 10:06
  */
 
-abstract class Model_Entity_AbstractEntity {
+namespace Model\Entity;
+
+use BadMethodCallException;
+
+abstract class AbstractEntity {
 
     protected $map = [];
 

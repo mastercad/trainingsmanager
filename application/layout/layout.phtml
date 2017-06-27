@@ -51,7 +51,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 <?php
             echo $this->navigation(Zend_Registry::get('navigation'))
-                ->setRole(Auth_Service_Auth::getInstance()->getIdentity()->user_right_group_name)
+                ->setRole(\Auth\Service\Auth::getInstance()->getIdentity()->user_right_group_name)
                 ->setAcl(Zend_Registry::get('acl'))
                 //            ->setFormatOutput(true)
                 ->menu()
@@ -188,7 +188,7 @@
 
         <script type="text/javascript">
             var controller = '<?php echo Zend_Controller_Front::getInstance()->getRequest()->getControllerName();?>';
-            var UserRightGroup = '<?php echo strtoupper(Auth_Service_Auth::getInstance()->getIdentity()->user_right_group_name);?>';
+            var UserRightGroup = '<?php echo strtoupper(\Auth\Service\Auth::getInstance()->getIdentity()->user_right_group_name);?>';
 
             initAuth();
         </script>

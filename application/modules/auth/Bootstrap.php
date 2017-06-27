@@ -5,6 +5,16 @@
  * Date: 12.06.15
  * Time: 23:46
  */
+//namespace Auth;
+
+//use Zend_Application_Module_Bootstrap;
+//use Zend_Loader_Autoloader_Resource;
+//use Zend_Registry;
+use Auth\Service\Auth;
+//use Zend_Db;
+use Auth\Model\Adapter\DbTable;
+use Auth\Plugin\Acl;
+use Auth\Plugin\AccessControl;
 
 define("PROJECT_NAME", "trainingsmanager.byte-artist.de");
 define("PROJECT_URL", "http://trainingsmanager.byte-artist.de");
@@ -20,9 +30,9 @@ class Auth_Bootstrap extends Zend_Application_Module_Bootstrap
             )
         );
 
-        $oModuleAutoLoader->addResourceType('role', 'models/roles', 'Model_Role');
-        $oModuleAutoLoader->addResourceType('assertion', 'models/assertions', 'Model_Assertion');
-        $oModuleAutoLoader->addResourceType('resource', 'models/resources', 'Model_Resource');
+        $oModuleAutoLoader->addResourceType('role', 'models/roles', 'Model\Role');
+        $oModuleAutoLoader->addResourceType('assertion', 'models/assertions', 'Model\Assertion');
+        $oModuleAutoLoader->addResourceType('resource', 'models/resources', 'Model\Resource');
     }
 
     protected function _initGlobalScriptPath()
@@ -32,15 +42,15 @@ class Auth_Bootstrap extends Zend_Application_Module_Bootstrap
 
     protected function _initAuth() {
         $this->bootstrap('frontController');
-        $oAuth = Auth_Service_Auth::getInstance();
+        $oAuth = Auth::getInstance();
 
         $dbAdapter = Zend_Db::factory(Zend_Registry::get('config')->resources->db);
-        $oAuthAdapter = new Auth_Model_Adapter_DbTable($dbAdapter, 'users', 'user_login', 'user_password', 'MD5(?)');
+        $oAuthAdapter = new DbTable($dbAdapter, 'users', 'user_login', 'user_password', 'MD5(?)');
 
-        $oAcl = new Auth_Plugin_Acl($oAuthAdapter);
+        $oAcl = new Acl($oAuthAdapter);
         Zend_Registry::set('acl', $oAcl);
 
         $this->getResource('frontController')->registerPlugin(
-            new Auth_Plugin_AccessControl($oAuth, $oAcl))->setParam('auth', $oAuth);
+            new AccessControl($oAuth, $oAcl))->setParam('auth', $oAuth);
     }
 }

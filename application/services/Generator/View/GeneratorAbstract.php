@@ -6,7 +6,16 @@
  * Time: 19:45
  */
 
-abstract class Service_Generator_View_GeneratorAbstract {
+namespace Service\Generator\View;
+
+use Zend_View_Abstract;
+use Zend_Registry;
+use Auth\Model\Role\Member;
+
+
+
+
+abstract class GeneratorAbstract {
 
     /** @var Zend_View_Abstract */
     private $view = null;
@@ -60,7 +69,7 @@ abstract class Service_Generator_View_GeneratorAbstract {
         $row = $db->findByPrimary($id);
 
         $content = '';
-        $role = new Auth_Model_Role_Member();
+        $role = new Member();
         $resourceClassName = 'Auth_Model_Resource_'.$currentControllerName;
         $resource = new $resourceClassName($row);
         $resourceName = $this->getModuleName().':'.$this->getControllerName();

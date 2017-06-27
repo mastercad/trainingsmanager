@@ -6,7 +6,18 @@
  * Time: 16:15
  */
 
-class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Nette\NotImplementedException;
+use Zend_Db_Table_Abstract;
+
+/**
+ * Class TrainingDiaryXDeviceOption
+ *
+ * @package Model\DbTable
+ */
+class TrainingDiaryXDeviceOption extends AbstractDbTable
 {
     /**
      * @var string
@@ -17,12 +28,18 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_diary_x_device_option_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
+     * find device options by training diary training plan exercise
+     *
      * @param int $trainingDiaryTrainingPlanExerciseId
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceOptionsByTrainingDiaryTrainingPlanExerciseId($trainingDiaryTrainingPlanExerciseId)
@@ -30,11 +47,16 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
         $oSelect = $this->select(Zend_Db_Table_Abstract::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(FALSE);
 
-        $oSelect->joinInner($this->considerTestUserForTableName('device_options'), 'device_option_id = training_diary_x_device_option_device_option_fk')
-            ->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan_exercise'), 'training_diary_x_training_plan_exercise_id = training_diary_x_device_option_t_d_x_t_p_e_fk')
-            ->joinInner($this->considerTestUserForTableName('training_diaries'), 'training_diary_id = training_diary_x_training_plan_exercise_training_diary_fk')
-            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
-            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+        $oSelect->joinInner($this->considerTestUserForTableName('device_options'),
+            'device_option_id = training_diary_x_device_option_device_option_fk')
+            ->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan_exercise'),
+                'training_diary_x_training_plan_exercise_id = training_diary_x_device_option_t_d_x_t_p_e_fk')
+            ->joinInner($this->considerTestUserForTableName('training_diaries'),
+                'training_diary_id = training_diary_x_training_plan_exercise_training_diary_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
+                'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
+            ->joinInner($this->considerTestUserForTableName('exercises'),
+                'exercise_id = training_plan_x_exercise_exercise_fk')
             ->where("training_diary_x_device_option_t_d_x_t_p_e_fk = '" . $trainingDiaryTrainingPlanExerciseId . "'")
         ;
 
@@ -42,6 +64,8 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
     }
 
     /**
+     * find all device options
+     *
      * SELECT
     training_diary_x_device_option_create_date,
     training_diary_x_device_option_device_option_value,
@@ -72,19 +96,26 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
 
     ORDER BY training_diary_id, training_plan_x_exercise_exercise_order
      *
-     * @param null $userId
+     * @param null|int $userId optional
+     * @param null|int $exerciseId optional
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
     public function findAllDeviceOptions($userId = null, $exerciseId = null) {
         $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $select->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan_exercise'), 'training_diary_x_training_plan_exercise_id = training_diary_x_device_option_t_d_x_t_p_e_fk')
-            ->joinInner($this->considerTestUserForTableName('training_diaries'), 'training_diary_id = training_diary_x_training_plan_exercise_training_diary_fk')
-            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
-            ->joinInner($this->considerTestUserForTableName('training_plans'), 'training_plan_id = training_plan_x_exercise_training_plan_fk')
-            ->joinInner($this->considerTestUserForTableName('device_options'), 'device_option_id = training_diary_x_device_option_device_option_fk')
-            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
+        $select->joinInner($this->considerTestUserForTableName('training_diary_x_training_plan_exercise'),
+            'training_diary_x_training_plan_exercise_id = training_diary_x_device_option_t_d_x_t_p_e_fk')
+            ->joinInner($this->considerTestUserForTableName('training_diaries'),
+                'training_diary_id = training_diary_x_training_plan_exercise_training_diary_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
+                'training_plan_x_exercise_id = training_diary_x_training_plan_exercise_t_p_x_e_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plans'),
+                'training_plan_id = training_plan_x_exercise_training_plan_fk')
+            ->joinInner($this->considerTestUserForTableName('device_options'),
+                'device_option_id = training_diary_x_device_option_device_option_fk')
+            ->joinInner($this->considerTestUserForTableName('exercises'),
+                'exercise_id = training_plan_x_exercise_exercise_fk')
             ->joinLeft($this->considerTestUserForTableName('training_plan_x_device_option'),
                 'training_plan_x_device_option_training_plan_exercise_fk = training_plan_x_exercise_id AND ' .
                 'training_plan_x_device_option_device_option_fk = training_diary_x_device_option_device_option_fk')
@@ -92,7 +123,8 @@ class Model_DbTable_TrainingDiaryXDeviceOption extends Model_DbTable_Abstract
             ->columns([
                 'training_diary_x_device_option_create_date',
                 'training_diary_x_device_option_device_option_value',
-                $this->considerTestUserForTableName('training_plan_x_device_option') . '.training_plan_x_device_option_device_option_value',
+                $this->considerTestUserForTableName('training_plan_x_device_option') .
+                '.training_plan_x_device_option_device_option_value',
                 $this->considerTestUserForTableName('training_diaries') . '.training_diary_id',
                 $this->considerTestUserForTableName('exercises') . '.exercise_name',
                 $this->considerTestUserForTableName('device_options') . '.device_option_name'

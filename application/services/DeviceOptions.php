@@ -6,7 +6,14 @@
  * Time: 22:03
  */
 
-class Service_DeviceOptions extends Service_Options {
+namespace Service;
+
+use Service\Options;
+
+
+
+
+class DeviceOptions extends Options {
 
     protected $hierarchy = [
         'device_x_device_option',

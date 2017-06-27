@@ -1,5 +1,17 @@
 <?php
 
+
+namespace Auth\Plugin;
+
+use Zend_Acl;
+use Auth\Model\DbTable\UserRightGroupRights;
+use Auth\Model\DbTable\UserRightGroups;
+use Zend_Acl_Role;
+use CAD_Tool_Extractor;
+use Zend_Acl_Resource;
+
+
+
 	/*
 	 * aufbau:
 	 *
@@ -8,15 +20,15 @@
 	 *
 	 */
 
-class Auth_Plugin_Acl extends Zend_Acl
+class Acl extends Zend_Acl
 {
     const DEFAULT_ROLE = 'guest';
     private $_aDynamicPermissions = array();
 
     public function __construct()
     {
-        $obj_db_user_right_groups_rights = new Auth_Model_DbTable_UserRightGroupRights();
-        $obj_db_user_right_groups = new Auth_Model_DbTable_UserRightGroups();
+        $obj_db_user_right_groups_rights = new UserRightGroupRights();
+        $obj_db_user_right_groups = new UserRightGroups();
 
         $a_user_right_groups_rights = $obj_db_user_right_groups_rights->findUserRightGroupRights();
         $a_user_right_groups = $obj_db_user_right_groups->findUserRightGroups();

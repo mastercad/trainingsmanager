@@ -9,7 +9,7 @@
 require_once ('data/TestCasesTrainingPlan.php');
 require_once (APPLICATION_PATH.'/../tests/AbstractTest.php');
 
-class Test_Service_TrainingsPlan extends Test_AbstractTest
+class Test_Service_TrainingsPlan extends \Test\AbstractTest
 {
     /**
      * mantadory to prevent phpunit output and crash session start

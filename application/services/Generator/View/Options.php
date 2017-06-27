@@ -6,7 +6,14 @@
  * Time: 21:01
  */
 
-abstract class Service_Generator_View_Options extends Service_Generator_View_GeneratorAbstract {
+namespace Service\Generator\View;
+
+use Service\Generator\View\GeneratorAbstract;
+
+
+
+
+abstract class Options extends GeneratorAbstract {
 
     /** @var string Additional Attributes for rendered HTML Element (input / select) */
     protected $additionalElementAttributes = '';

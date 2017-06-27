@@ -19,6 +19,7 @@ resources.layout.layoutPath = APPLICATION_PATH"/layout/"
 resources.frontController.moduleDirectory = APPLICATION_PATH"/modules"
 resources.modules[] = ""
 
+;autoloaderNamespaces[] = 'Auth';
 ;resources.frontController.plugins.devicelayout = "CAD_Controller_Plugin_DeviceLayout"
 
 resources.frontController.defaultModule = "default"

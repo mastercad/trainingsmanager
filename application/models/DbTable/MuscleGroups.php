@@ -1,9 +1,17 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_MuscleGroups
  */
-class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
+class MuscleGroups extends AbstractDbTable
 {
     /**
      * @var string
@@ -14,11 +22,16 @@ class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
      */
     protected $_primary = 'muscle_group_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
+     * find all muscle groups
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllMuscleGroups() {
@@ -26,7 +39,10 @@ class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $iMuscleGroupId
+     * find muscle group
+     *
+     * @param int $iMuscleGroupId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMuscleGroup($iMuscleGroupId) {
@@ -44,7 +60,10 @@ class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $sMuscleGroupName
+     * find muscle group by name
+     *
+     * @param string $sMuscleGroupName
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findMuscleGroupsByName($sMuscleGroupName) {
@@ -58,7 +77,10 @@ class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $aData
+     * save muscle group data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveMuscleGroup($aData) {
@@ -72,8 +94,11 @@ class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $aData
-     * @param $iMuscleGroupId
+     * update muscle group data by given muscle group id
+     *
+     * @param array $aData
+     * @param int $iMuscleGroupId
+     *
      * @return bool|int
      */
     public function updateMuscleGroup($aData, $iMuscleGroupId) {
@@ -87,7 +112,10 @@ class Model_DbTable_MuscleGroups extends Model_DbTable_Abstract
 	}
 
     /**
+     * delte muscle group
+     *
      * @param $iMuscleGroupId
+     *
      * @return bool|int
      */
     public function deleteMuscleGroup($iMuscleGroupId) {

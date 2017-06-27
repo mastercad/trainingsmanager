@@ -6,6 +6,12 @@
  * Time: 10:12
  */
 
-abstract class Service_Abstract {
+namespace Service;
+
+
+
+
+
+abstract class AbstractService {
 
 }

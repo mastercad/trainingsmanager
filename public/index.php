@@ -20,12 +20,27 @@ set_include_path(implode(PATH_SEPARATOR, array(
 function customAutoload($class) {
 
     if (false === strpos($class, 'Zend')) {
+        $modules = [];
+        $modulesDirectoryIterator = new DirectoryIterator(APPLICATION_PATH.'/modules');
+        foreach ($modulesDirectoryIterator as $moduleDirectory) {
+            if (!$moduleDirectory->isDot()
+                && $moduleDirectory->isDir()
+            ) {
+                $modules[strtoupper($moduleDirectory->getBasename())] = $moduleDirectory->getBasename();
+            }
+        }
+
         $map = [
             'Entity' => 'entities',
             'Collection' => 'collections',
+            'Interfaces' => 'interfaces',
             'Interface' => 'interfaces',
             'Service' => 'services',
             'Model' => 'models',
+            'Plugin' => 'plugins',
+            'Role' => 'roles',
+            'Resource' => 'resources',
+            'Assertion' => 'assertions'
         ];
 
         if (false !== (strpos($class, 'Helper'))) {
@@ -36,13 +51,18 @@ function customAutoload($class) {
             }
         }
 
-        $path = preg_split('/\_/', $class);
+        $path = (false !== strpos($class, '_')) ? explode('_', $class) : explode('\\', $class);
         $replacedPath = APPLICATION_PATH;
-
+        $moduleDirectoryFound = false;
         foreach ($path as $pathPiece) {
             if (array_key_exists($pathPiece, $map)) {
                 $pathPiece = str_replace(array_keys($map), array_values($map), $pathPiece);
                 $replacedPath .= '/' . $pathPiece;
+            } else if (!$moduleDirectoryFound
+                && array_key_exists(strtoupper($pathPiece), $modules)
+            ) {
+                $replacedPath .= '/modules/' . $modules[strtoupper($pathPiece)];
+                $moduleDirectoryFound = true;
             } else {
                 $replacedPath .= '/' . $pathPiece;
             }

@@ -1,9 +1,17 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Zend_Db_Table_Row_Abstract;
+use Zend_Db_Table_Rowset_Abstract;
+use Exception;
+use Nette\NotImplementedException;
+
 /**
  * Class Application_Model_DbTable_Muscles
  */
-class Model_DbTable_Muscles extends Model_DbTable_Abstract
+class Muscles extends AbstractDbTable
 {
     /**
      * @var string
@@ -14,11 +22,16 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
      */
     protected $_primary = 'muscle_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
+     * find all muscles
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllMuscles() {
@@ -26,7 +39,10 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
     }
 
     /**
+     * find muscle by name
+     *
      * @param string $muscleName
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findMusclesByName($muscleName) {
@@ -34,7 +50,10 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $iMuscleId
+     * find muscle
+     *
+     * @param int $iMuscleId
+     *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
     public function findMuscle($iMuscleId) {
@@ -47,16 +66,27 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
 		}
 	}
 
-    public function findAllMusclesByMuscleGroupId($id) {
+    /**
+     * find all muscles by muscle group
+     *
+     * @param int $muscleGroupId
+     *
+     * @return \Zend_Db_Table_Rowset_Abstract
+     */
+    public function findAllMusclesByMuscleGroupId($muscleGroupId) {
 
         $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
-        $select->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'), 'muscle_x_muscle_group_muscle_fk = muscle_id AND muscle_x_muscle_group_muscle_group_fk = ' . $id);
+        $select->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'),
+            'muscle_x_muscle_group_muscle_fk = muscle_id AND muscle_x_muscle_group_muscle_group_fk = ' . $muscleGroupId);
 
         return $this->fetchAll($select);
     }
 
     /**
-     * @param $aData
+     * save muscle data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveMuscle($aData) {
@@ -70,8 +100,11 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $aData
-     * @param $iMuscleId
+     * update muscle data by given muscle id
+     *
+     * @param array $aData
+     * @param int $iMuscleId
+     *
      * @return bool|int
      */
     public function updateMuscle($aData, $iMuscleId) {
@@ -85,7 +118,10 @@ class Model_DbTable_Muscles extends Model_DbTable_Abstract
 	}
 
     /**
-     * @param $iMuscleId
+     * delete muscle
+     *
+     * @param int $iMuscleId
+     *
      * @return bool|int
      */
     public function deleteMuscle($iMuscleId) {

@@ -1,6 +1,17 @@
 <?php
 
-class Auth_Plugin_AuthAdapter extends Auth_Model_Adapter_DbTable
+
+namespace Auth\Plugin;
+
+use Auth\Model\Adapter\DbTable;
+use Zend_Registry;
+use Zend_Auth_Result;
+use Auth\Model\DbTable\Users;
+use Zend_Db_Expr;
+
+
+
+class AuthAdapter extends DbTable
 {
     protected $_identity;
     protected $_a_identity;
@@ -84,7 +95,7 @@ class Auth_Plugin_AuthAdapter extends Auth_Model_Adapter_DbTable
         ) {
             $session_id = $_COOKIE['PHPSESSID'];
         }
-        $obj_users = new Auth_Model_DbTable_Users();
+        $obj_users = new Users();
         $last_login = date( "Y-m-d H:i:s");
 
         $data = Array(

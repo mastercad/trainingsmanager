@@ -7,10 +7,15 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Interfaces\OptionsStorageInterface;
+use Nette\NotImplementedException;
+
 /**
  * Class Application_Model_DbTable_Devices
  */
-class Model_DbTable_ExerciseOptions extends Model_DbTable_Abstract implements Interface_OptionsStorageInterface {
+class ExerciseOptions extends AbstractDbTable implements OptionsStorageInterface {
 
     /** @var string */
     protected $_name 	= 'exercise_options';
@@ -18,8 +23,11 @@ class Model_DbTable_ExerciseOptions extends Model_DbTable_Abstract implements In
     /** @var string */
     protected $_primary = 'exercise_option_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**

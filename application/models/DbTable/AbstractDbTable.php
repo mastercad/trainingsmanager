@@ -6,11 +6,20 @@
  * Time: 09:50
  */
 
-//require_once(__DIR__ . '/../../../library/Zend/Db/Table.php');
+namespace Model\DbTable;
 
-abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
+use Zend_Db_Table_Abstract;
+use Zend_Db_Table_Exception;
+use Zend_Auth;
 
-    /** @var */
+/**
+ * Class AbstractDbTable
+ *
+ * @package Model\DbTable
+ */
+abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
+
+    /** @var array */
     protected static $aTableMetaData;
 
     /**
@@ -26,6 +35,13 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
         }
     }
 
+    /**
+     * find row by primary key for current table
+     *
+     * @param $id
+     *
+     * @return mixed
+     */
     abstract function findByPrimary($id);
 
     /**
@@ -36,6 +52,11 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
         return self::$aTableMetaData;
     }
 
+    /**
+     * checks, if current user in one of the test groups
+     *
+     * @return bool
+     */
     public function checkIfTestUser() {
 
         $user = Zend_Auth::getInstance()->getIdentity();
@@ -50,6 +71,13 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
         return false;
     }
 
+    /**
+     * if renames current table with prefix test, if not already done
+     *
+     * @param $tableName
+     *
+     * @return string
+     */
     public function considerTestUserForTableName($tableName) {
         if (true === $this->checkIfTestUser()
             && 0 == preg_match('/^test_/', $tableName)
@@ -63,13 +91,18 @@ abstract class Model_DbTable_Abstract extends Zend_Db_Table_Abstract {
      * notwendig um zwischen einer tabelle und einer test tabelle mit dem selben namen zu syncen und nicht für
      * jede test tabelle ein neues model anlegen zu müssen...
      *
-     * @param $name
+     * @param string $name
+     *
+     * @return $this
      */
     public function setName($name) {
         $this->_name = $name;
         return $this;
     }
 
+    /**
+     * @return string tableName
+     */
     public function getName() {
         return $this->_name;
     }

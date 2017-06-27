@@ -6,6 +6,13 @@
  * Time: 11:03
  */
 
-class Service_Devices extends Service_Abstract {
+namespace Service;
+
+use Service\AbstractService;
+
+
+
+
+class Devices extends AbstractService {
 
 }

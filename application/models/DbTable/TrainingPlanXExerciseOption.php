@@ -6,7 +6,13 @@
  * Time: 14:05
  */
 
-class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
+namespace Model\DbTable;
+
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Zend_Db_Table_Rowset_Abstract;
+
+class TrainingPlanXExerciseOption extends AbstractDbTable
 {
     /**
      * @var string
@@ -17,23 +23,31 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
      */
     protected $_primary = 'training_plan_x_exercise_option_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $iTrainingPlanExerciseId
-     * @param int $exerciseOptionId
+     * find training plan exercise options by training plan exercise and optional exercise option
+     *
+     * @param int $iTrainingPlanExerciseId
+     * @param int $exerciseOptionId optional
      *
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
     public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($iTrainingPlanExerciseId, $exerciseOptionId = null) {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = training_plan_x_exercise_option_training_plan_exercise_fk')
-            ->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
-            ->joinLeft($this->considerTestUserForTableName('exercise_x_exercise_option'), 'exercise_x_exercise_option_exercise_option_fk = training_plan_x_exercise_option_exercise_option_fk AND ' .
-                'exercise_x_exercise_option_exercise_fk = training_plan_x_exercise_exercise_fk')
+        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
+            'training_plan_x_exercise_id = training_plan_x_exercise_option_training_plan_exercise_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_options'),
+                'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_exercise_option'),
+                'exercise_x_exercise_option_exercise_option_fk = training_plan_x_exercise_option_exercise_option_fk '.
+                'AND exercise_x_exercise_option_exercise_fk = training_plan_x_exercise_exercise_fk')
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $iTrainingPlanExerciseId);
 
         if (!empty($exerciseOptionId)) {
@@ -44,7 +58,9 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $trainingPlanXExerciseId
+     * find training plan exercise option by training diary exercise
+     *
+     * @param int $trainingPlanXExerciseId
      *
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
@@ -52,17 +68,22 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect
-            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'), 'training_plan_x_exercise_id = ' . $trainingPlanXExerciseId)
-            ->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
+                'training_plan_x_exercise_id = ' . $trainingPlanXExerciseId)
+            ->joinInner($this->considerTestUserForTableName('exercises'),
+                'exercise_id = training_plan_x_exercise_exercise_fk')
+            ->joinInner($this->considerTestUserForTableName('exercise_options'),
+                'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $trainingPlanXExerciseId);
 
         return $this->fetchAll($oSelect);
     }
 
     /**
-     * @param $iTrainingPlanExerciseId
-     * @param $exerciseOptionId
+     * find training plan exercise options by training plan exercise and exercise option
+     *
+     * @param int $iTrainingPlanExerciseId
+     * @param int $exerciseOptionId
      *
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
@@ -70,7 +91,8 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
 
-        $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'), 'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+        $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'),
+            'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $iTrainingPlanExerciseId)
             ->where('training_plan_x_exercise_option_exercise_option_fk = ?', $exerciseOptionId);
 
@@ -78,7 +100,10 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $aData
+     * save training plan exercise option data
+     *
+     * @param array $aData
+     *
      * @return mixed
      */
     public function saveTrainingPlanExerciseOption($aData) {
@@ -86,8 +111,11 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $aData
-     * @param $iTrainingPlanExerciseOptionId
+     * update training plan exercise option data
+     *
+     * @param array $aData
+     * @param int $iTrainingPlanExerciseOptionId
+     *
      * @return int
      */
     public function updateTrainingPlanExerciseOption($aData, $iTrainingPlanExerciseOptionId) {
@@ -95,13 +123,21 @@ class Model_DbTable_TrainingPlanXExerciseOption extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $iTrainingPlanExerciseOptionId
+     * delete training plan exercise option
+     *
+     * @param int $iTrainingPlanExerciseOptionId
+     *
      * @return int
      */
     public function deleteTrainingPlanExerciseOption($iTrainingPlanExerciseOptionId) {
         return $this->delete('training_plan_x_exercise_option_id = ' . $iTrainingPlanExerciseOptionId);
     }
 
+    /**
+     * delete training plan exercise options by training plan exercise
+     *
+     * @param int $trainingPlanXExerciseId
+     */
     public function deleteTrainingPlanExerciseOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId) {
         $this->delete('training_plan_x_exercise_option_training_plan_exercise_fk = ' . $trainingPlanXExerciseId);
     }

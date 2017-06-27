@@ -6,7 +6,18 @@
  * Time: 21:19
  */
 
-class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Options {
+namespace Service\Generator\View;
+
+use Service\Generator\View\Options;
+use Model\DbTable\ExerciseOptions as ModelDbTableExerciseOptions;
+use Model\DbTable\TrainingPlanXExerciseOption;
+use Model\DbTable\ExerciseXExerciseOption;
+use Zend_Registry;
+
+
+
+
+class ExerciseOptions extends Options {
 
     protected $optionType = 'exercise';
 
@@ -46,7 +57,7 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
         if (0 == strlen(trim($exerciseOptionsContent))
             && $this->isForceGenerateEmptyInput()
         ) {
-            $exerciseOptionDb = new Model_DbTable_ExerciseOptions();
+            $exerciseOptionDb = new ModelDbTableExerciseOptions();
             $exerciseOption = $exerciseOptionDb->findOptionById($this->getOptionId());
             $this->setOptionName($exerciseOption['exercise_option_name']);
             $this->setOptionValue($exerciseOption['exercise_option_default_value']);
@@ -59,7 +70,7 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
      * @return array
      */
     protected function collectOptions() {
-        $trainingPlanXExerciseOptionDb = new Model_DbTable_TrainingPlanXExerciseOption();
+        $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
         $trainingPlanXExerciseOptionCollection = [];
 
         if (! empty($this->getTrainingPlanXExerciseId())) {
@@ -67,7 +78,7 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
         }
         $collectedExerciseOptions = [];
 
-        $exerciseXExerciseOptionDb = new Model_DbTable_ExerciseXExerciseOption();
+        $exerciseXExerciseOptionDb = new ExerciseXExerciseOption();
         $exerciseXExerciseOptionCollection = $exerciseXExerciseOptionDb->findExerciseOptionsForExercise($this->getExerciseId());
 
         foreach ($exerciseXExerciseOptionCollection as $exerciseOption) {
@@ -97,7 +108,7 @@ class Service_Generator_View_ExerciseOptions extends Service_Generator_View_Opti
      */
     public function generateExerciseOptionsSelectContent() {
         $exerciseOptionsContent = '';
-        $exerciseOptionsDb = new Model_DbTable_ExerciseOptions();
+        $exerciseOptionsDb = new ModelDbTableExerciseOptions();
         $exerciseOptionsCollection = $exerciseOptionsDb->findAllOptions();
 //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);

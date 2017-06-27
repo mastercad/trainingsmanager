@@ -1,4 +1,10 @@
 <?php
+
+namespace Auth\Model\DbTable;
+
+use Zend_Db_Table_Abstract;
+use Exception;
+
 /*
  * Created on 17.06.2011
  *
@@ -6,7 +12,7 @@
  * Window - Preferences - PHPeclipse - PHP - Code Templates
  */
 
-class Auth_Model_DbTable_UserRightGroupRights extends Zend_Db_Table_Abstract
+class UserRightGroupRights extends Zend_Db_Table_Abstract
 {
     protected $_name 	= 'user_right_group_rights';
     protected $_primary = 'user_right_group_right_id';

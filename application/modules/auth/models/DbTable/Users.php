@@ -14,7 +14,12 @@
  * 
  */
 
-class Auth_Model_DbTable_Users extends Zend_Db_Table_Abstract
+namespace Auth\Model\DbTable;
+
+use Zend_Db_Table_Abstract;
+use Exception;
+
+class Users extends Zend_Db_Table_Abstract
 {
 	protected $_name 	= 'users';
 	protected $_primary = 'user_id';

@@ -1,18 +1,29 @@
 <?php
 
+namespace Model\DbTable;
+
+use Zend_Db_Table_Row_Abstract;
+use Zend_Db_Table_Rowset_Abstract;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_UserRightGroups
  */
-class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
+class UserRightGroups extends AbstractDbTable {
+
     /**
      * @var string
      */
     protected $_name 	= 'user_right_groups';
+
     /**
      * @var string
      */
     protected $_primary = 'user_right_group_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
         $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
@@ -22,6 +33,8 @@ class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
     }
 
     /**
+     * find all user right groups
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
 	public function findAllUserRightGroups() {
@@ -35,7 +48,10 @@ class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
 	}
 
     /**
-     * @param $aOptions
+     * find user right group by options
+     *
+     * @param array $aOptions
+     *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
     public function findUserRightGroup($aOptions) {
@@ -59,7 +75,10 @@ class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
 	}
 
     /**
-     * @param $aData
+     * save user right group data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveUserRightGroup($aData) {
@@ -73,8 +92,11 @@ class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
 	}
 
     /**
-     * @param $aData
-     * @param $iUserRightGroupId
+     * update user right group data
+     *
+     * @param array $aData
+     * @param int $iUserRightGroupId
+     *
      * @return bool
      */
     public function updateUserRightGroup($aData, $iUserRightGroupId) {
@@ -88,7 +110,10 @@ class Model_DbTable_UserRightGroups extends Model_DbTable_Abstract {
 	}
 
     /**
-     * @param $iUserRightGroupId
+     * delete user right group
+     *
+     * @param int $iUserRightGroupId
+     *
      * @return bool|int
      */
     public function deleteUserRightGroup($iUserRightGroupId) {

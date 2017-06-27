@@ -6,7 +6,14 @@
  * Time: 19:56
  */
 
-class Service_Generator_View_DropDown extends Service_Generator_View_GeneratorAbstract {
+namespace Service\Generator\View;
+
+use Service\Generator\View\GeneratorAbstract;
+
+
+
+
+class DropDown extends GeneratorAbstract {
 
 
 }

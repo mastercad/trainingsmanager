@@ -6,7 +6,13 @@
  * Time: 00:42
  */
 
-class Service_Widget {
+namespace Service;
+
+
+
+
+
+class Widget {
 
     public function generateWidgetContent($widget) {
 

@@ -9,8 +9,20 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use \Model\DbTable\DeviceGroups;
+use \Model\DbTable\Devices;
+use \Model\DbTable\DeviceXDeviceGroup;
+use \Model\Entity\Message;
+use \Service\GlobalMessageHandler;
+
+/**
+ * Class DeviceGroupsController
+ */
 class DeviceGroupsController extends AbstractController
 {
+    /**
+     * initial function for controller
+     */
     public function init() {
         if (!$this->getParam('ajax')) {
             $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
@@ -20,8 +32,11 @@ class DeviceGroupsController extends AbstractController
         }
     }
 
+    /**
+     * index action
+     */
     public function indexAction() {
-        $deviceGroupsDb = new Model_DbTable_DeviceGroups();
+        $deviceGroupsDb = new DeviceGroups();
 
         $deviceGroupsCollection = $deviceGroupsDb->findAllDeviceGroups()->toArray();
         $deviceGroupsContent = "Es wurden leider keine Gerätegruppen gefunden!";
@@ -38,11 +53,14 @@ class DeviceGroupsController extends AbstractController
         $this->view->assign('deviceGroupsContent', $deviceGroupsContent);
     }
 
+    /**
+     * show action
+     */
     public function showAction() {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
-            $deviceGroupDb = new Model_DbTable_DeviceGroups();
+            $deviceGroupDb = new DeviceGroups();
             $deviceGroup = $deviceGroupDb->findDeviceGroup($id);
 
             if ($deviceGroup instanceof Zend_Db_Table_Row_Abstract) {
@@ -54,11 +72,18 @@ class DeviceGroupsController extends AbstractController
         }
     }
 
-    private function generateDevicesContent($id) {
+    /**
+     * generates devices content
+     *
+     * @param $deviceId
+     *
+     * @return string
+     */
+    private function generateDevicesContent($deviceId) {
         $content = '';
 
-        $devicesDb = new Model_DbTable_Devices();
-        $devicesCollection = $devicesDb->findAllDevicesByDeviceGroupId($id);
+        $devicesDb = new Devices();
+        $devicesCollection = $devicesDb->findAllDevicesByDeviceGroupId($deviceId);
 
         foreach ($devicesCollection as $device) {
             $this->view->assign('name', $device->offsetGet('device_name'));
@@ -69,10 +94,16 @@ class DeviceGroupsController extends AbstractController
         return $content;
     }
 
+    /**
+     * new action
+     */
     public function newAction() {
         $this->forward('edit');
     }
 
+    /**
+     * edit action
+     */
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
@@ -82,8 +113,8 @@ class DeviceGroupsController extends AbstractController
         {
             $i_geraetegruppe_id = $params['id'];
 
-            $obj_db_geraetegruppen = new Model_DbTable_DeviceGroups();
-            $obj_db_geraetegruppe_geraete = new Model_DbTable_DeviceXDeviceGroup();
+            $obj_db_geraetegruppen = new DeviceGroups();
+            $obj_db_geraetegruppe_geraete = new DeviceXDeviceGroup();
 
             $a_geraetegruppe = $obj_db_geraetegruppen->findDeviceGroup($i_geraetegruppe_id);
             $devicesCollection = $obj_db_geraetegruppe_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
@@ -100,6 +131,9 @@ class DeviceGroupsController extends AbstractController
         }
     }
 
+    /**
+     * delete action
+     */
     public function deleteAction() {
         $params = $this->getRequest()->getParams();
 
@@ -109,15 +143,15 @@ class DeviceGroupsController extends AbstractController
         ) {
             $i_geraetegruppe_id = $params['id'];
 
-            $obj_db_geraetegruppen = new Model_DbTable_DeviceGroups();
-            $obj_db_geraetegruppen_geraete = new Model_DbTable_DeviceXDeviceGroup();
+            $obj_db_geraetegruppen = new DeviceGroups();
+            $obj_db_geraetegruppen_geraete = new DeviceXDeviceGroup();
             $a_geraete = $obj_db_geraetegruppen_geraete->findDevicesByDeviceGroupId($i_geraetegruppe_id);
 
             if ($obj_db_geraetegruppen->deleteDeviceGroup($i_geraetegruppe_id)) {
                 if (is_array($a_geraete)
                     && 0 < count($a_geraete)
                 ) {
-                    foreach ($a_geraete as $a_geraet) {
+//                    foreach ($a_geraete as $a_geraet) {
 //                        $a_uebungen = $obj_db_uebungen->findExerciseForDevice($a_geraet['geraet_id']);
 //                        if(is_array($a_uebungen) &&
 //                           count($a_uebungen) > 0)
@@ -128,32 +162,35 @@ class DeviceGroupsController extends AbstractController
 //                                $obj_db_uebungen->deleteExercise($a_uebung['uebung_id']);
 //                            }
 //                        }
-                    }
+//                    }
                 }
 
                 $obj_db_geraetegruppen_geraete->deleteAllDeviceGroupDevicesByDeviceGroupId($i_geraetegruppe_id);
 
-                Service_GlobalMessageHandler::appendMessage("Geraetegruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!", Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage("Geraetegruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!", Message::STATUS_OK);
 
                 $bilder_pfad = getcwd() . '/images/content/dynamisch/device-groups/' . $i_geraetegruppe_id . '/';
 
                 $obj_file = new CAD_File();
                 $obj_file->cleanDirRek($bilder_pfad, 2);
             } else {
-                Service_GlobalMessageHandler::appendMessage("Gerätegruppe konnte nicht gelöscht werden!", Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage("Gerätegruppe konnte nicht gelöscht werden!", Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage("Falscher Aufruf!", Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage("Falscher Aufruf!", Message::STATUS_ERROR);
         }
     }
 
+    /**
+     * save action
+     */
     public function saveAction() {
         $params = $this->getRequest()->getParams();
         $userId = $this->findCurrentUserId();
 
         if (isset($params)) {
-            $deviceGroupsDb = new Model_DbTable_DeviceGroups();
-            $deviceXDeviceGroupDb = new Model_DbTable_DeviceXDeviceGroup();
+            $deviceGroupsDb = new DeviceGroups();
+            $deviceXDeviceGroupDb = new DeviceXDeviceGroup();
 
             $deviceGroupName = '';
             $deviceGroupId = 0;
@@ -219,7 +256,7 @@ class DeviceGroupsController extends AbstractController
             if (0 == strlen(trim($deviceGroupName))
                 && !$deviceGroupId
             ) {
-                Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe benötigt einen Namen', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Diese Geraetegruppe benötigt einen Namen', Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if (0 < strlen(trim($deviceGroupName))
                 && !$deviceGroupId
@@ -228,7 +265,7 @@ class DeviceGroupsController extends AbstractController
             }
 
             if ($countDevicesInDeviceGroup <= 0) {
-                Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe benötigt mindestens ein Geraet', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Diese Geraetegruppe benötigt mindestens ein Geraet', Message::STATUS_ERROR);
                 $hasErrors = true;
             }
 
@@ -241,7 +278,7 @@ class DeviceGroupsController extends AbstractController
                 if (is_array($deviceGroupDevicesCurrent)
                     && 0 < count($deviceGroupDevicesCurrent)
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Geraetegruppe "' . $deviceGroupName . '" existiert bereits!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Geraetegruppe "' . $deviceGroupName . '" existiert bereits!', Message::STATUS_ERROR);
                     $hasErrors = true;
                 }
             }
@@ -289,7 +326,7 @@ class DeviceGroupsController extends AbstractController
                     $data['device_group_update_user_fk'] = $userId;
 
                     $deviceGroupsDb->updateDeviceGroup($data, $deviceGroupId);
-                    Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde erfolgreich bearbeitet!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde erfolgreich bearbeitet!', Message::STATUS_OK);
                 // neu anlegen
                 } else if (is_array($data)
                     && 0 < count($data)
@@ -306,14 +343,14 @@ class DeviceGroupsController extends AbstractController
                     $data['device_group_create_user_fk'] = $userId;
 
                     $deviceGroupId = $deviceGroupsDb->saveDeviceGroup($data);
-                    Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde erfolgreich angelegt!', Message::STATUS_OK);
                 }
 
                 if (0 == count($deviceGroupDevicesInserts)
                     && 0 == count($deviceGroupDevicesDeletes)
                     && 0 < $deviceGroupId
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde nicht geändert!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde nicht geändert!', Message::STATUS_ERROR);
                 }
 
                 if ($deviceGroupId > 0 &&
@@ -321,7 +358,7 @@ class DeviceGroupsController extends AbstractController
                         count($deviceGroupDevicesInserts) > 0 ||
                         count($deviceGroupDevicesDeletes) > 0)
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Die Geraete der Geraetegruppen wurden erfolgreich geändert!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Die Geraete der Geraetegruppen wurden erfolgreich geändert!', Message::STATUS_OK);
                 }
 
                 if ($deviceGroupId) {
@@ -340,10 +377,10 @@ class DeviceGroupsController extends AbstractController
                     }
                 }
             } else {
-                Service_GlobalMessageHandler::appendMessage('Es gabe einen Fehler bei Geraetegruppe speichern!', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Es gabe einen Fehler bei Geraetegruppe speichern!', Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Geraetegruppe speichern!', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Falscher Aufruf von Geraetegruppe speichern!', Message::STATUS_ERROR);
         }
     }
 }

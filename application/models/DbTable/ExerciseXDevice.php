@@ -1,9 +1,17 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Nette\NotImplementedException;
+use Zend_Db_Table_Rowset_Abstract;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
+class ExerciseXDevice extends AbstractDbTable {
     /**
      * @var string
      */
@@ -13,12 +21,18 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
      */
     protected $_primary = 'exercise_x_device_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
-     * @param $exerciseId
+     * find all devices for exercise (current one row)
+     *
+     * @param int $exerciseId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findDeviceForExercise($exerciseId) {
@@ -37,6 +51,11 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
         return false;
     }
 
+    /**
+     * find all devices, who have exercise
+     *
+     * @return bool|\Zend_Db_Table_Rowset_Abstract
+     */
     public function findDevicesWithExercises()
     {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
@@ -59,6 +78,13 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
         return false;
     }
 
+    /**
+     * find all exercises without devices
+     *
+     * @return null|\Zend_Db_Table_Row_Abstract
+     *
+     * @throws \Zend_Db_Select_Exception
+     */
     public function findExercisesWithoutDevices()
     {
         $select = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
@@ -72,7 +98,10 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $deviceId
+     * find all exercises for given device
+     *
+     * @param int $deviceId
+     *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
     public function findExercisesForDevice($deviceId) {
@@ -86,7 +115,10 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
+     * save given exercise device data
+     *
+     * @param array $aData
+     *
      * @return bool|mixed
      */
     public function saveExerciseXDevice($aData) {
@@ -100,8 +132,11 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $aData
-     * @param $exerciseXDeviceId
+     * update exercise device  with given data by given exercise device id
+     *
+     * @param array $aData
+     * @param int $exerciseXDeviceId
+     *
      * @return bool|int
      */
     public function updateExerciseXDevice($aData, $exerciseXDeviceId) {
@@ -115,7 +150,10 @@ class Model_DbTable_ExerciseXDevice extends Model_DbTable_Abstract {
     }
 
     /**
-     * @param $exerciseXDeviceId
+     * delete exercise device by given exercise device id
+     *
+     * @param int $exerciseXDeviceId
+     *
      * @return bool|int
      */
     public function deleteExerciseXDevice($exerciseXDeviceId) {

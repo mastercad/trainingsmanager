@@ -6,7 +6,15 @@
  * Time: 10:12
  */
 
-class Service_Exercise extends Service_Abstract {
+namespace Service;
+
+use Service\AbstractService;
+use Model\DbTable\Exercises;
+
+
+
+
+class Exercise extends AbstractService {
 
     /** @var Zend_Db_Table_Abstract */
     private $storage = null;
@@ -37,7 +45,7 @@ class Service_Exercise extends Service_Abstract {
      */
     private function useStorage() {
         if (is_null($this->storage)) {
-            $this->storage = new Model_DbTable_Exercises();
+            $this->storage = new Exercises();
         }
         return $this->getStorage();
     }

@@ -6,7 +6,15 @@
  * Time: 23:24
  */
 
-abstract class Auth_Model_Resource_Abstract implements Zend_Acl_Resource_Interface {
+namespace Auth\Model\Resource;
+
+use Zend_Acl_Resource_Interface;
+use Zend_Db_Table_Row_Abstract;
+
+
+
+
+abstract class AbstractResource implements Zend_Acl_Resource_Interface {
 
     /** @var int|null  */
     private $memberId = null;

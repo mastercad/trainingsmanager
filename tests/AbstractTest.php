@@ -5,8 +5,9 @@
  * Date: 18.05.17
  * Time: 20:06
  */
+namespace Test;
 
-class Test_AbstractTest extends \PHPUnit\Framework\TestCase {
+class AbstractTest extends \PHPUnit\Framework\TestCase {
 
     protected static $currentTempDatabaseName = null;
 

@@ -7,19 +7,33 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Nette\NotImplementedException;
+use Zend_Db_Table_Row_Abstract;
+use Zend_Db_Table_Rowset_Abstract;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_Devices
  */
-class Model_DbTable_Devices extends Model_DbTable_Abstract {
+class Devices extends AbstractDbTable {
 
-    /** @var string */
+    /** @var string tableName */
     protected $_name 	= 'devices';
 
-    /** @var string */
+    /** @var string primary key */
     protected $_primary = 'device_id';
 
-    function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+    /**
+     * @inheritdoc
+     */
+    function findByPrimary($deviceId) {
+        $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $select->where('device_id = ?', $deviceId);
+
+        return $this->fetchRow($select);
     }
 
     /**
@@ -46,8 +60,10 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
     public function findDeviceAndDeviceGroupByName($sDeviceName) {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id')
-            ->joinLeft($this->considerTestUserForTableName('device_group'), 'device_group_id = device_x_device_group_device_group_fk')
+        $oSelect->joinLeft($this->considerTestUserForTableName('device_x_device_group'),
+            'device_x_device_group_device_fk = device_id')
+            ->joinLeft($this->considerTestUserForTableName('device_group'),
+                'device_group_id = device_x_device_group_device_group_fk')
             ->order(array('device_group_name', 'device_name'))
             ->where("device_name LIKE('" . $sDeviceName . "')");
         
@@ -57,7 +73,8 @@ class Model_DbTable_Devices extends Model_DbTable_Abstract {
     public function findAllDevicesByDeviceGroupId($id) {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id AND device_x_device_group_device_group_fk = ' . $id)
+        $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_group'),
+            'device_x_device_group_device_fk = device_id AND device_x_device_group_device_group_fk = ' . $id)
             ->order(array('device_name'));
 
         return $this->fetchAll($oSelect);

@@ -7,10 +7,17 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Interfaces\OptionsStorageInterface;
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Exception;
+
 /**
  * Class Application_Model_DbTable_Devices
  */
-class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Interface_OptionsStorageInterface {
+class DeviceOptions extends AbstractDbTable implements OptionsStorageInterface {
 
     /** @var string */
     protected $_name 	= 'device_options';
@@ -18,8 +25,11 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
     /** @var string */
     protected $_primary = 'device_option_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**
@@ -36,11 +46,19 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
         return $this->fetchRow('device_option_id = "' . $deviceOptionId . '"');
     }
 
+    /**
+     * find device options by given device id
+     *
+     * @param $deviceId
+     *
+     * @return bool|\Zend_Db_Table_Rowset_Abstract
+     */
     public function findDeviceOptionsByDeviceId($deviceId) {
         try {
             $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-            $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = ' . $deviceId)
+            $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_option'),
+                'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = ' . $deviceId)
                 ->where('device_x_device_option_device_fk = ?', $deviceId);
 
             return $this->fetchAll($oSelect);
@@ -61,9 +79,12 @@ class Model_DbTable_DeviceOptions extends Model_DbTable_Abstract implements Inte
     public function findDeviceOptionsByExerciseId($exerciseId) {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $select->joinInner($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = ' . $exerciseId)
-            ->joinInner($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_device_fk = exercise_x_device_device_fk')
-            ->joinLeft($this->considerTestUserForTableName('exercise_x_device_option'), 'exercise_x_device_option_device_option_fk = device_option_id AND exercise_x_device_option_exercise_fk = ' . $exerciseId)
+        $select->joinInner($this->considerTestUserForTableName('exercise_x_device'),
+            'exercise_x_device_exercise_fk = ' . $exerciseId)
+            ->joinInner($this->considerTestUserForTableName('device_x_device_option'),
+                'device_x_device_option_device_fk = exercise_x_device_device_fk')
+            ->joinLeft($this->considerTestUserForTableName('exercise_x_device_option'),
+                'exercise_x_device_option_device_option_fk = device_option_id AND exercise_x_device_option_exercise_fk = ' . $exerciseId)
             ->where('device_option_id = device_x_device_option_device_option_fk');
 
         return $this->fetchAll($select);

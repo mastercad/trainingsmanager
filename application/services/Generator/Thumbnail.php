@@ -6,7 +6,14 @@
  * Time: 22:57
  */
 
-class Service_Generator_Thumbnail {
+namespace Service\Generator;
+
+use Exception;
+
+
+
+
+class Thumbnail {
 
     private $sourceFilePathName = null;
 

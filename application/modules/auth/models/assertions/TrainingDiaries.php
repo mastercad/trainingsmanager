@@ -6,6 +6,13 @@
  * Time: 09:50
  */
 
+namespace Auth\Model\Assertion;
+
+use Auth\Model\Assertion\AbstractAssertion;
+
+
+
+
 /**
  * klasse hatte das interface Zend_Acl_Assert_Interface implementiert, da diese assert funktion aber vorschreibt
  * die zend interfaces zu übergeben als parameter, die klasse aber speziefisch für eine spezielle rolle und eine
@@ -16,7 +23,7 @@
  * Class Application_Model_RecipeAssertion
  */
 
-class Auth_Model_Assertion_TrainingDiaries extends Auth_Model_Assertion_Abstract {
+class TrainingDiaries extends AbstractAssertion {
 
 
     /**

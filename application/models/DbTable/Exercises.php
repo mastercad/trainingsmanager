@@ -1,9 +1,18 @@
 <?php
 
+
+namespace Model\DbTable;
+
+use Model\DbTable\AbstractDbTable;
+use Zend_Db_Table;
+use Exception;
+
+
+
 /**
  * Class Application_Model_DbTable_Exercises
  */
-class Model_DbTable_Exercises extends Model_DbTable_Abstract
+class Exercises extends AbstractDbTable
 {
     /** @var string */
     protected $_name 	= 'exercises';

@@ -6,7 +6,15 @@
  * Time: 23:00
  */
 
-class Auth_Model_Assertion_Abstract implements Zend_Acl_Assert_Interface {
+namespace Auth\Model\Assertion;
+
+use Zend_Acl_Assert_Interface;
+use Zend_Acl;
+use Zend_Acl_Role_Interface;
+use Zend_Acl_Resource_Interface;
+use Zend_Acl_Role;
+
+class AbstractAssertion implements Zend_Acl_Assert_Interface {
 
     private $_aGlobalRights = array(
         'admin',

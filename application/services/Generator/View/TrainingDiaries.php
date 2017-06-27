@@ -6,9 +6,20 @@
  * Time: 19:31
  */
 
+namespace Service\Generator\View;
+
+use Service\Generator\View\GeneratorAbstract;
+use Model\DbTable\ExerciseXMuscle;
+use QRcode;
+use Service\Generator\View\ExerciseOptions;
+use Service\Generator\View\DeviceOptions;
+
+
+
+
 require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
 
-class Service_Generator_View_TrainingDiaries extends Service_Generator_View_GeneratorAbstract{
+class TrainingDiaries extends GeneratorAbstract{
 
     private $exercisesCount = 0;
 
@@ -37,7 +48,7 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
         $usedMusclesCollection = array();
         $usedMuscleMinScore = null;
         $usedMuscleMaxScore = null;
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $usedMusclesByExercise = $exerciseXMuscleDb->findMusclesForExercise(
             $trainingDiaryExercise->training_plan_x_exercise_exercise_fk);
 
@@ -102,7 +113,7 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
 
     public function generateExerciseOptionsContent($trainingDiaryXExercise) {
 
-        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->getView());
+        $exerciseOptionsService = new ExerciseOptions($this->getView());
         $exerciseOptionsService->setShowTrainingProgress(true);
         $exerciseOptionsService->setAllowEdit(true);
         // bereits ein value durch eine übung gesetzt
@@ -118,7 +129,7 @@ class Service_Generator_View_TrainingDiaries extends Service_Generator_View_Gene
 
     public function generateDeviceOptionsContent($trainingDiaryXExercise) {
 
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->getView());
+        $deviceOptionsService = new DeviceOptions($this->getView());
         $deviceOptionsService->setShowTrainingProgress(true);
         $deviceOptionsService->setAllowEdit(true);
 

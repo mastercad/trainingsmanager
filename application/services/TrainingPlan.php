@@ -6,9 +6,23 @@
  * Time: 22:15
  */
 
+namespace Service;
+
+use Model\DbTable\TrainingPlans;
+use Model\DbTable\TrainingPlanXExercise;
+use Model\DbTable\TrainingPlanXExerciseOption;
+use Model\DbTable\TrainingPlanXDeviceOption;
+use Zend_Db_Table_Row_Abstract;
+use Model\DbTable\TrainingPlanLayouts;
+use Model\DbTable\TrainingDiaryXTrainingPlan;
+use Zend_Auth;
+
+
+
+
 require_once __DIR__ . '/../models/DbTable/Exercises.php';
 
-class Service_TrainingPlan {
+class TrainingPlan {
 
     /** @var Model_DbTable_Exercises */
     private $_oExerciseStorage = null;
@@ -29,7 +43,7 @@ class Service_TrainingPlan {
         static $trainingPlanCount = 0;
         ++$trainingPlanCount;
         $trainingPlanShouldDeleted = array_key_exists('deleted', $trainingPlan) && 1 == $trainingPlan['deleted'];
-        $trainingPlanDb = new Model_DbTable_TrainingPlans();
+        $trainingPlanDb = new TrainingPlans();
         $trainingPlanId = intval($trainingPlan['trainingPlanId']);
         $trainingPlanName = trim($trainingPlan['trainingPlanName']);
         $trainingPlanType = (array_key_exists('type', $trainingPlan) && 'parent' == $trainingPlan['type']) ? 'parent' : 'normal';
@@ -119,8 +133,8 @@ class Service_TrainingPlan {
      */
     public function deleteTrainingPlan($trainingPlanId)
     {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+        $trainingPlansDb = new TrainingPlans();
+        $trainingPlanXExerciseDb = new TrainingPlanXExercise();
 
         $trainingPlanExercisesCollection = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanId);
         foreach ($trainingPlanExercisesCollection as $trainingPlanXExercise) {
@@ -131,9 +145,9 @@ class Service_TrainingPlan {
     }
 
     public function deleteTrainingPlanExercise($trainingPlanXExerciseId) {
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
-        $trainingPlanXExerciseOptionDb = new Model_DbTable_TrainingPlanXExerciseOption();
-        $trainingPlanXDeviceOptionDb = new Model_DbTable_TrainingPlanXDeviceOption();
+        $trainingPlanXExerciseDb = new TrainingPlanXExercise();
+        $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
+        $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
 
         $trainingPlanXExerciseOptionDb->deleteTrainingPlanExerciseOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId);
         $trainingPlanXDeviceOptionDb->deleteTrainingPlanDeviceOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId);
@@ -153,7 +167,7 @@ class Service_TrainingPlan {
 
     private function saveExercise($exercise, $trainingPlanId, $currentTrainingPlanXExerciseCollection, $resetExerciseOrderCount = false) {
 
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+        $trainingPlanXExerciseDb = new TrainingPlanXExercise();
 
         $trainingPlanXExerciseId = $exercise['trainingPlanExerciseId'];
         $exerciseId = $exercise['exerciseId'];
@@ -234,7 +248,7 @@ class Service_TrainingPlan {
     private function processExerciseOptions($exerciseOptions, $exerciseId, $trainingPlanXExerciseId, $currentTrainingPlanXExerciseCollection) {
 
         $userId = $this->findCurrentUserId();
-        $trainingPlanXExerciseOptionDb = new Model_DbTable_TrainingPlanXExerciseOption();
+        $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
 
         foreach ($exerciseOptions as $exerciseOption) {
             $exerciseOptionId = $exerciseOption['exerciseOptionId'];
@@ -279,7 +293,7 @@ class Service_TrainingPlan {
     private function processDeviceOptions($deviceOptions, $exerciseId, $trainingPlanXExerciseId, $currentTrainingPlanXExerciseCollection) {
 
         $userId = $this->findCurrentUserId();
-        $trainingPlanXDeviceOptionDb = new Model_DbTable_TrainingPlanXDeviceOption();
+        $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
 
         foreach ($deviceOptions as $deviceOption) {
             $deviceOptionId = $deviceOption['deviceOptionId'];
@@ -323,9 +337,9 @@ class Service_TrainingPlan {
 
     private function collectCurrentExercisesByTrainingPlan($trainingPlanId) {
 
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
-        $trainingPlanXExerciseOptionDb = new Model_DbTable_TrainingPlanXExerciseOption();
-        $trainingPlanXDeviceOptionDb = new Model_DbTable_TrainingPlanXDeviceOption();
+        $trainingPlanXExerciseDb = new TrainingPlanXExercise();
+        $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
+        $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
 
         $currentTrainingPlanXExercisesInDb = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanId);
         $currentTrainingPlanXExerciseCollection = [];
@@ -356,7 +370,7 @@ class Service_TrainingPlan {
     }
 
     public function createBaseTrainingPlan($iUserId) {
-        $oTrainingsplanLayouts = new Model_DbTable_TrainingPlanLayouts();
+        $oTrainingsplanLayouts = new TrainingPlanLayouts();
         $oTrainingsplanLayout = $oTrainingsplanLayouts->findTrainingPlanLayoutByName('Normal');
         $iTrainingsplanLayoutId = $oTrainingsplanLayout->training_plan_layout_id;
 
@@ -388,12 +402,12 @@ class Service_TrainingPlan {
      * @return int
      */
     private function deactivateAllCurrentTrainingPlans($userId) {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $trainingPlansDb->update(['training_plan_active' => 0], 'training_plan_user_fk = "' . $userId . '"');
     }
 
     public function createSplitTrainingPlan($iUserId) {
-        $oTrainingsplanLayouts = new Model_DbTable_TrainingPlanLayouts();
+        $oTrainingsplanLayouts = new TrainingPlanLayouts();
         $oTrainingsplanLayout = $oTrainingsplanLayouts->findTrainingPlanLayoutByName('Split');
         $iTrainingsplanLayoutId = $oTrainingsplanLayout->training_plan_layout_id;
 
@@ -436,7 +450,7 @@ class Service_TrainingPlan {
     }
 
     public function createTrainingPlan($aData) {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
 
         $trainingPlanId = $trainingPlansDb->insert($aData);
 
@@ -447,8 +461,8 @@ class Service_TrainingPlan {
      * search current active training plan
      */
     public function searchCurrentTrainingPlan($userId) {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
-        $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
+        $trainingPlansDb = new TrainingPlans();
+        $trainingDiaryXTrainingPlanDb = new TrainingDiaryXTrainingPlan();
         $currentOpenTrainingDiary = $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlanByUserId($userId);
 
         /** current open training diary entry found! */
@@ -499,7 +513,7 @@ class Service_TrainingPlan {
      * @return int
      */
     public function createTrainingPlanFromTemplate($trainingPlanId, $userId) {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $trainingPlanCollection = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId);
         $primaryTrainingPlanId = null;
 
@@ -538,7 +552,7 @@ class Service_TrainingPlan {
      * @param $newTrainingPlanId
      */
     private function copyExercisesFromTrainingPlan($origTrainingPlanId, $newTrainingPlanId) {
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+        $trainingPlanXExerciseDb = new TrainingPlanXExercise();
         $trainingPlanExerciseCollection = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($origTrainingPlanId);
 
         foreach ($trainingPlanExerciseCollection as $trainingPlanExercise) {
@@ -562,7 +576,7 @@ class Service_TrainingPlan {
      * @param $newTrainingPlanExerciseId
      */
     private function copyExerciseOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) {
-        $trainingPlanXExerciseOptionsDb = new Model_DbTable_TrainingPlanXExerciseOption();
+        $trainingPlanXExerciseOptionsDb = new TrainingPlanXExerciseOption();
         $trainingPlanXExerciseOptionCollection = $trainingPlanXExerciseOptionsDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($origTrainingPlanExerciseId);
 
         foreach ($trainingPlanXExerciseOptionCollection as $trainingPlanXExerciseOption) {
@@ -582,7 +596,7 @@ class Service_TrainingPlan {
      * @param $newTrainingPlanExerciseId
      */
     private function copyDeviceOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) {
-        $trainingPlanXDeviceOptionsDb = new Model_DbTable_TrainingPlanXDeviceOption();
+        $trainingPlanXDeviceOptionsDb = new TrainingPlanXDeviceOption();
         $trainingPlanXDeviceOptionCollection = $trainingPlanXDeviceOptionsDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($origTrainingPlanExerciseId);
 
         foreach ($trainingPlanXDeviceOptionCollection as $trainingPlanXDeviceOption) {

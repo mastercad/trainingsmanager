@@ -1,11 +1,20 @@
 <?php
-	/**
-	 * 
-	 * @author Andreas Kempe / andreas.kempe@byte-artist.de
-	 *
-	 */
+/**
+ *
+ * @author Andreas Kempe / andreas.kempe@byte-artist.de
+ *
+ */
 
-class Auth_Service_Auth extends Zend_Auth
+namespace Auth\Service;
+
+use Zend_Auth;
+
+/**
+ * Class Auth
+ *
+ * @package Auth\Service
+ */
+class Auth extends Zend_Auth
 {
     public $b_logged_in = false;
 

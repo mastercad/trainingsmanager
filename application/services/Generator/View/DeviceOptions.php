@@ -6,7 +6,21 @@
  * Time: 21:18
  */
 
-class Service_Generator_View_DeviceOptions extends Service_Generator_View_Options {
+namespace Service\Generator\View;
+
+use Service\Generator\View\Options;
+use Model\DbTable\DeviceOptions as ModelDbTableDeviceOptions;
+use Model\DbTable\TrainingDiaryXDeviceOption;
+use Model\DbTable\DeviceXDeviceOption;
+use Model\DbTable\TrainingPlanXDeviceOption;
+use Model\DbTable\ExerciseXDeviceOption;
+use Zend_Db_Table_Row;
+use Zend_Registry;
+
+
+
+
+class DeviceOptions extends Options {
 
     protected $optionType = 'device';
 
@@ -53,7 +67,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
         if (0 == strlen(trim($deviceOptionsContent))
             && $this->isForceGenerateEmptyInput()
         ) {
-            $deviceOptionDb = new Model_DbTable_DeviceOptions();
+            $deviceOptionDb = new ModelDbTableDeviceOptions();
             $deviceOption = $deviceOptionDb->findOptionById($this->getOptionId());
             $this->setOptionName($deviceOption['device_option_name']);
             $this->setOptionValue($deviceOption['device_option_default_value']);
@@ -66,9 +80,9 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
      * @return array
      */
     protected function collectOptions() {
-        $trainingDiaryXDeviceOptionDb = new Model_DbTable_TrainingDiaryXDeviceOption();
-        $deviceXDeviceOptionDb = new Model_DbTable_DeviceXDeviceOption();
-        $deviceOptionsDb = new Model_DbTable_DeviceOptions();
+        $trainingDiaryXDeviceOptionDb = new TrainingDiaryXDeviceOption();
+        $deviceXDeviceOptionDb = new DeviceXDeviceOption();
+        $deviceOptionsDb = new ModelDbTableDeviceOptions();
         $trainingDiaryXDeviceOptionCollection = [];
 
         if (!empty($this->getTrainingDiaryXTrainingPlanExerciseId())) {
@@ -76,7 +90,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
                 $this->getTrainingDiaryXTrainingPlanExerciseId());
         }
 
-        $trainingPlanXDeviceOptionDb = new Model_DbTable_TrainingPlanXDeviceOption();
+        $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
 
         $trainingPlanXDeviceOptionCollection = [];
 
@@ -86,7 +100,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
         }
         $collectedDeviceOptions = [];
 
-        $exerciseXDeviceOptionDb = new Model_DbTable_ExerciseXDeviceOption();
+        $exerciseXDeviceOptionDb = new ExerciseXDeviceOption();
 
         if (empty($this->getOptionId())
             && !empty($this->getDeviceId())
@@ -99,7 +113,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
                 $collectedDeviceOptions[$deviceOption->offsetGet('device_option_id')] = $deviceOption->toArray();
             }
         } else {
-            $deviceXDeviceOptionDb = new Model_DbTable_DeviceXDeviceOption();
+            $deviceXDeviceOptionDb = new DeviceXDeviceOption();
             $deviceXDeviceOption = $deviceXDeviceOptionDb->findDeviceOption($this->getOptionId(), $this->getDeviceId());
 
             if ($deviceXDeviceOption instanceof Zend_Db_Table_Row) {
@@ -170,7 +184,7 @@ class Service_Generator_View_DeviceOptions extends Service_Generator_View_Option
      */
     public function generateDeviceOptionsSelectContent() {
         $deviceOptionsContent = '';
-        $deviceOptionsDb = new Model_DbTable_DeviceOptions();
+        $deviceOptionsDb = new ModelDbTableDeviceOptions();
         $deviceOptionsCollection = $deviceOptionsDb->findAllOptions();
 //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);

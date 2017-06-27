@@ -6,6 +6,12 @@
  * Time: 22:39
  */
 
-class Service_Users {
+namespace Service;
+
+
+
+
+
+class Users {
 
 }

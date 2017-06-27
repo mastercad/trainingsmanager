@@ -7,10 +7,18 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Zend_Db_Table_Rowset_Abstract;
+use Exception;
+
+
+
+
 /**
  * Class Application_Model_DbTable_DeviceGroups
  */
-class Model_DbTable_Widgets extends Model_DbTable_Abstract
+class Widgets extends AbstractDbTable
 {
     /** @var string */
     protected $_name 	= 'widgets';
@@ -18,11 +26,16 @@ class Model_DbTable_Widgets extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'widget_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
         return $this->fetchRow('widget_id = ' . intval($id));
     }
 
     /**
+     * find all widgets
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllWidgets() {
@@ -30,7 +43,9 @@ class Model_DbTable_Widgets extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $aData
+     * save widgets data
+     *
+     * @param array $aData
      *
      * @return bool|mixed
      */
@@ -45,8 +60,10 @@ class Model_DbTable_Widgets extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $aData
-     * @param $widgetId
+     * update widget data
+     *
+     * @param array $aData
+     * @param int $widgetId
      *
      * @return bool|int
      */
@@ -61,7 +78,9 @@ class Model_DbTable_Widgets extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $widgetId
+     * delete widget
+     *
+     * @param int $widgetId
      *
      * @return bool|int
      */

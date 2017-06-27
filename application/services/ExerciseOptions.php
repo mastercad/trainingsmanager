@@ -6,7 +6,14 @@
  * Time: 22:03
  */
 
-class Service_ExerciseOptions extends Service_Options {
+namespace Service;
+
+use Service\Options;
+
+
+
+
+class ExerciseOptions extends Options {
 
     protected $hierarchy = [
         'exercise_x_exercise_option',

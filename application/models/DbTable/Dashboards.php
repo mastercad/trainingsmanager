@@ -7,10 +7,16 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Exception;
+use Zend_Db_Table_Row_Abstract;
+use Zend_Db_Table_Rowset_Abstract;
+
 /**
  * Class Application_Model_DbTable_DeviceGroups
  */
-class Model_DbTable_Dashboards extends Model_DbTable_Abstract
+class Dashboards extends AbstractDbTable
 {
     /** @var string */
     protected $_name 	= 'dashboards';
@@ -18,11 +24,16 @@ class Model_DbTable_Dashboards extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'dashboard_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
         return $this->fetchRow('dashboard_id = ' . intval($id));
     }
 
     /**
+     * find all dashboards in database
+     *
      * @return Zend_Db_Table_Rowset_Abstract
      */
     public function findAllDashboards() {
@@ -30,7 +41,9 @@ class Model_DbTable_Dashboards extends Model_DbTable_Abstract
     }
 
     /**
-     * @param $userId
+     * find current active dashboard for given user
+     *
+     * @param int $userId
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
@@ -45,6 +58,8 @@ class Model_DbTable_Dashboards extends Model_DbTable_Abstract
     }
 
     /**
+     * insert the given data in dashboard table
+     *
      * @param $aData
      *
      * @return bool|mixed
@@ -60,6 +75,8 @@ class Model_DbTable_Dashboards extends Model_DbTable_Abstract
     }
 
     /**
+     * update the dashboard by given id with given data
+     *
      * @param $aData
      * @param $dashboardId
      *
@@ -76,6 +93,8 @@ class Model_DbTable_Dashboards extends Model_DbTable_Abstract
     }
 
     /**
+     * delete given dashboard
+     *
      * @param $dashboardId
      *
      * @return bool|int

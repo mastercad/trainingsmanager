@@ -7,10 +7,20 @@
  * To change this template use File | Settings | File Templates.
  */
 
+namespace Model\DbTable;
+
+use Model\DbTable\AbstractDbTable;
+use Nette\NotImplementedException;
+use Zend_Db_Table;
+use Exception;
+
+
+
+
 /**
  * Class Application_Model_DbTable_DeviceGroupDevices
  */
-class Model_DbTable_DeviceXDeviceGroup extends Model_DbTable_Abstract
+class DeviceXDeviceGroup extends AbstractDbTable
 {
     /** @var string */
     protected $_name 	= 'device_x_device_group';
@@ -18,8 +28,11 @@ class Model_DbTable_DeviceXDeviceGroup extends Model_DbTable_Abstract
     /** @var string */
     protected $_primary = 'device_x_device_group_id';
 
+    /**
+     * @inheritdoc
+     */
     function findByPrimary($id) {
-        // TODO: Implement findByPrimary() method.
+        throw new NotImplementedException('Function findByPrimary not implemented yet!');
     }
 
     /**

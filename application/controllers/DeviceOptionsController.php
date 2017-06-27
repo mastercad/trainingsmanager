@@ -9,6 +9,11 @@
 
 require_once(APPLICATION_PATH . '/controllers/OptionsController.php');
 
+use \Model\DbTable\DeviceOptions;
+
+/**
+ * Class DeviceOptionsController
+ */
 class DeviceOptionsController extends OptionsController {
 
     protected $map = [
@@ -17,8 +22,13 @@ class DeviceOptionsController extends OptionsController {
         'option_value' => 'device_option_default_value',
     ];
 
+    /**
+     * return device options storage
+     *
+     * @return \Model\DbTable\DeviceOptions
+     */
     protected function useOptionsStorage()
     {
-        return new Model_DbTable_DeviceOptions();
+        return new DeviceOptions();
     }
 }

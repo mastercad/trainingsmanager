@@ -1,8 +1,30 @@
 <?php
 
-class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
+
+namespace Auth\Plugin;
+
+use Model\DbTable\AbstractDbTable;
+use Zend_Controller_Plugin_Abstract;
+use Auth\Service\Auth;
+use Zend_Acl;
+use Zend_Controller_Request_Abstract;
+use Zend_Session_Namespace;
+use Zend_Session;
+use Zend_Filter_StripTags;
+use Auth\Plugin\AuthAdapter;
+use Zend_Registry;
+use stdClass;
+use CAD_Tool_Extractor;
+use Auth\Model\DbTable\Users;
+use Auth\Model\Role\Member;
+use Service\GlobalMessageHandler;
+use Service\Translator;
+
+
+
+class AccessControl extends Zend_Controller_Plugin_Abstract
 {
-    /** @var Auth_Service_Auth|null Auth_Service_Auth */
+    /** @var Auth|null $_auth */
     protected $_auth = null;
 
     /** @var null|Zend_Acl  */
@@ -19,7 +41,7 @@ class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
     protected $_controller;
     protected $_currentRole = 'guest';
 
-    public function __construct(Auth_Service_Auth $auth, Zend_Acl $acl)
+    public function __construct(Auth $auth, Zend_Acl $acl)
     {
         $this->_auth = $auth;
         $this->_acl  = $acl;
@@ -117,7 +139,7 @@ class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
             && $username
             && $password
         ) {
-            $authAdapter = new Auth_Plugin_AuthAdapter();
+            $authAdapter = new AuthAdapter();
 
             $authAdapter->setIdentity($username);
             $authAdapter->setCredential($password);
@@ -236,7 +258,7 @@ class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
 
                 $obj_user->user_last_login = $time;
 
-                $obj_db_users = new Auth_Model_DbTable_Users();
+                $obj_db_users = new Users();
                 $obj_db_users->updateUser($a_data, $obj_user->user_id);
 
                 $this->_auth->getStorage()->write($obj_user);
@@ -320,15 +342,15 @@ class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
 
             if ($id) {
                 $currentControllerName = $this->convertControllerName($controller);
-                $dbClassName = 'Model_DbTable_'.$currentControllerName;
+                $dbClassName = 'Model\DbTable\\'.$currentControllerName;
 
                 if (class_exists($dbClassName)) {
-                    /** @var Model_DbTable_Abstract $db */
+                    /** @var AbstractDbTable $db */
                     $db = new $dbClassName();
                     $row = $db->findByPrimary($id);
 
-                    $role = new Auth_Model_Role_Member();
-                    $resourceClassName = 'Auth_Model_Resource_' . $currentControllerName;
+                    $role = new Member();
+                    $resourceClassName = 'Auth\Model\Resource\\' . $currentControllerName;
                     $resource = new $resourceClassName($row);
                     $resourceName = $module . ':' . $controller;
 
@@ -384,12 +406,12 @@ class Auth_Plugin_AccessControl extends Zend_Controller_Plugin_Abstract
     }
 
     private function translate($key) {
-        Service_GlobalMessageHandler::getMessageEntity()->setState(300);
-        $translator = new Service_Translator();
+        GlobalMessageHandler::getMessageEntity()->setState(300);
+        $translator = new Translator();
         return $translator->getTranslation()->translate($key);
     }
 
     private function persistMessage($key) {
-        Service_GlobalMessageHandler::getMessageEntity()->setMessage($this->translate($key));
+        GlobalMessageHandler::getMessageEntity()->setMessage($this->translate($key));
     }
 }

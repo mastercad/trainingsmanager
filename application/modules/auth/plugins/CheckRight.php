@@ -1,5 +1,14 @@
 <?php
-    class Auth_Plugin_CheckRight extends Zend_Controller_Plugin_Abstract
+
+
+namespace Auth\Plugin;
+
+use Zend_Controller_Plugin_Abstract;
+use Zend_Registry;
+use Zend_Auth;
+
+
+    class CheckRight extends Zend_Controller_Plugin_Abstract
     {
     	public static function hasRight($module, $controller = 'index', $action = 'index')
     	{
