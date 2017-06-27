@@ -2,10 +2,32 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Model\DbTable\TrainingPlans;
+use Auth\Model\Role\Member as MemberRole;
+use Auth\Model\Resource\TrainingPlans as TrainingPlansResource;
+use Auth\Plugin\CheckRight;
+use Service\Generator\View\TrainingPlan as TrainingPlanViewGenerator;
+use Model\DbTable\ExerciseXMuscle;
+use Model\DbTable\Exercises;
+use Service\Generator\Thumbnail;
+use Service\Generator\View\DeviceOptions as DeviceOptionsViewGenerator;
+use Service\Generator\View\ExerciseOptions as ExerciseOptionsViewGenerator;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+use Model\DbTable\Users;
+use Service\TrainingPlan as TrainingPlanService;
+use Service\Interpolate;
+
+/**
+ * Class TrainingPlansController
+ */
 class TrainingPlansController extends AbstractController {
 
     private $trainingPlanTabHeaderContent = '';
 
+    /**
+     * initial function for controller
+     */
     public function init() {
         if (!$this->getParam('ajax')) {
             $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_training_plan_accordion.js',
@@ -22,19 +44,18 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     * wenn admin und höher, liste aller aktiven trainingspläne
-     * wenn nur user, seinen aktiven training-plans
+     * index action
      */
     public function indexAction() {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $id = intval($this->getParam('id'));
         $currentTrainingPlan = false;
         $trainingPlanContent = $this->translate('training_plans_default_content');
 
         if (0 < $id) {
             $currentTrainingPlan = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($id);
-            $role = new Auth_Model_Role_Member();
-            $resource = new Auth_Model_Resource_TrainingPlans($currentTrainingPlan->current());
+            $role = new MemberRole();
+            $resource = new TrainingPlansResource($currentTrainingPlan->current());
             $resourceName = $this->getRequest()->getModuleName().':'.$this->getRequest()->getControllerName();
 
             Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'show');
@@ -49,9 +70,9 @@ class TrainingPlansController extends AbstractController {
         if (0 < count($currentTrainingPlan)
             && false !== $currentTrainingPlan
         ) {
-            $this->view->assign('allowedToInterpolate', Auth_Plugin_CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary'));
+            $this->view->assign('allowedToInterpolate', CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary'));
 
-            $trainingPlanGenerator = new Service_Generator_View_TrainingPlan($this->view);
+            $trainingPlanGenerator = new TrainingPlanViewGenerator($this->view);
             $trainingPlanGenerator->setControllerName($this->getRequest()->getControllerName())
                 ->setActionName($this->getRequest()->getActionName())
                 ->setModuleName($this->getRequest()->getModuleName());
@@ -64,16 +85,21 @@ class TrainingPlansController extends AbstractController {
         $this->view->assign('oldTrainingPlans', $this->generateOldTrainingPlansDropDown($oldTrainingPlans));
     }
 
+    /**
+     * get training plan action
+     *
+     * @throws \Zend_Exception
+     */
     public function getTrainingPlanAction() {
         $id = intval($this->getParam('id'));
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $currentTrainingPlan = false;
         $trainingPlanContent = '';
 
         if (0 < $id) {
             $currentTrainingPlan = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($id);
-            $role = new Auth_Model_Role_Member();
-            $resource = new Auth_Model_Resource_TrainingPlans($currentTrainingPlan->current());
+            $role = new MemberRole();
+            $resource = new TrainingPlansResource($currentTrainingPlan->current());
             $resourceName = $this->getRequest()->getModuleName().':'.$this->getRequest()->getControllerName();
 
             Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'show');
@@ -84,9 +110,9 @@ class TrainingPlansController extends AbstractController {
         }
 
         if (false !== $currentTrainingPlan) {
-            $this->view->assign('allowedToInterpolate', Auth_Plugin_CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary'));
+            $this->view->assign('allowedToInterpolate', CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary'));
 
-            $trainingPlanGenerator = new Service_Generator_View_TrainingPlan($this->view);
+            $trainingPlanGenerator = new TrainingPlanViewGenerator($this->view);
             $trainingPlanGenerator->setControllerName($this->getRequest()->getControllerName())
                 ->setActionName($this->getRequest()->getActionName())
                 ->setModuleName($this->getRequest()->getModuleName());
@@ -97,6 +123,8 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
+     * generate drop down with old training plans
+     *
      * @param \Zend_Db_Table_Rowset_Abstract $trainingPlans
      *
      * @return string
@@ -119,6 +147,8 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
+     * generate muscle rating content
+     *
      * @param Zend_Db_Table_Row $exercise
      *
      * @todo hier werden nur alle muskeln geholt, die für die übung abgelegt wurden, es müssen aber auch alle
@@ -131,7 +161,7 @@ class TrainingPlansController extends AbstractController {
     private function generateMuscleRatingContent($exercise) {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $muscleGroupCollection = $exerciseXMuscleDb->findMuscleGroupsForExercise($exerciseId);
 
         $content = '';
@@ -147,6 +177,8 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
+     * generate exercise muscle group content
+     *
      * @param Zend_Db_Table_Row $exercise
      *
      * @todo hier werden nur alle muskeln geholt, die für die übung abgelegt wurden, es müssen aber auch alle
@@ -157,7 +189,7 @@ class TrainingPlansController extends AbstractController {
      * @return string
      */
     public function generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId) {
-        $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+        $exerciseXMuscleDb = new ExerciseXMuscle();
         $musclesInMuscleGroupForExerciseCollection = $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
         $musclesInMuscleGroupContent = '';
 
@@ -176,11 +208,10 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     * wenn admin und höher, liste aller aktiven trainingspläne
-     * wenn nur user, seinen aktiven training-plans
+     * archive action
      */
     public function archiveAction() {
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $trainingPlansCollection = $trainingPlansDb->findAllActiveTrainingPlans();
 
         if (false !== $trainingPlansCollection) {
@@ -200,7 +231,7 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     *
+     * show action
      */
     public function showAction() {
         $aParams = $this->getAllParams();
@@ -211,14 +242,14 @@ class TrainingPlansController extends AbstractController {
             && 0 < $aParams['id']
         ) {
             $trainingPlanId = $aParams['id'];
-            $trainingPlansDb = new Model_DbTable_TrainingPlans();
+            $trainingPlansDb = new TrainingPlans();
             $trainingPlan = $trainingPlansDb->findTrainingPlan($trainingPlanId);
-            $trainingPlanService = new Service_Generator_View_TrainingPlan($this->view);
+            $trainingPlanService = new TrainingPlanViewGenerator($this->view);
 
             $this->view->assign('trainingPlanContent',
                 $trainingPlanService->generateTrainingPlanContent($trainingPlanId,
                     $trainingPlan->offsetGet('training_plan_training_plan_layout_fk')));
-            $this->view->assign('allowedToInterpolate', Auth_Plugin_CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary'));
+            $this->view->assign('allowedToInterpolate', CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary'));
 
             $this->view->assign('training_plan_id',$trainingPlanId);
         } else {
@@ -226,6 +257,9 @@ class TrainingPlansController extends AbstractController {
         }
     }
 
+    /**
+     * get training plan for split action
+     */
     public function getTrainingPlanForSplitAction() {
         $aParams = $this->getAllParams();
 
@@ -277,7 +311,7 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     *
+     * get exercise action
      */
     public function getExerciseAction() {
         if (0 < ($id = $this->getParam('id'))) {
@@ -316,17 +350,25 @@ class TrainingPlansController extends AbstractController {
         }
     }
 
+    /**
+     * generate exercise content for edit
+     *
+     * @param $id
+     *
+     * @return string
+     */
     private function generateExerciseForEditContent($id) {
-        $exercisesDb = new Model_DbTable_Exercises();
+        $exercisesDb = new Exercises();
         $exercise = $exercisesDb->findByPrimary($id);
-        $previewPicture = '/images/content/dynamisch/exercises/' . $exercise->offsetGet('exercise_id') . '/' . $exercise->offsetGet('exercise_preview_picture');
+        $previewPicture = '/images/content/dynamisch/exercises/' . $exercise->offsetGet('exercise_id') . '/' .
+            $exercise->offsetGet('exercise_preview_picture');
         $previewPictureSource = '/images/content/statisch/grafiken/kein_bild.png';
         $count = $this->getParam('counter');
 
         if (is_file(getcwd() . '/' . $previewPicture)
             && is_readable(getcwd() . '/' . $previewPicture)
         ) {
-            $thumbnailService = new Service_Generator_Thumbnail();
+            $thumbnailService = new Thumbnail();
             $thumbnailService->setThumbWidth(1024);
             $thumbnailService->setThumbHeight(768);
             $thumbnailService->setSourceFilePathName(getcwd() . '/' . $previewPicture);
@@ -336,7 +378,7 @@ class TrainingPlansController extends AbstractController {
         $this->view->assign('previewSource', $previewPictureSource);
         $this->view->assign('exercise_description', $exercise->offsetGet('exercise_description'));
 
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService = new DeviceOptionsViewGenerator($this->view);
         $deviceOptionsService->setExerciseId($id);
 
         if (isset($exercise['device_option_id'])) {
@@ -349,7 +391,7 @@ class TrainingPlansController extends AbstractController {
         $deviceOptionsService->setShowDelete(true);
         $this->view->assign('deviceOptionContent', $deviceOptionsService->generate());
 
-        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        $exerciseOptionsService = new ExerciseOptionsViewGenerator($this->view);
         $exerciseOptionsService->setExerciseId($id);
 
         if (isset($exercise['device_option_id'])) {
@@ -372,7 +414,7 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     *
+     * get device option action
      */
     public function getDeviceOptionAction() {
         $deviceOptionId = intval($this->getParam('deviceOptionId'));
@@ -380,7 +422,7 @@ class TrainingPlansController extends AbstractController {
         $deviceId = intval($this->getParam('deviceId'));
         $trainingPlanExerciseId = intval($this->getParam('trainingPlanExerciseId'));
 
-        $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
+        $deviceOptionsService = new DeviceOptionsViewGenerator($this->view);
         $deviceOptionsService->setTrainingPlanXExerciseId($trainingPlanExerciseId);
         $deviceOptionsService->setExerciseId($exerciseId);
         $deviceOptionsService->setOptionId($deviceOptionId);
@@ -393,14 +435,14 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     *
+     * get exercise option action
      */
     public function getExerciseOptionAction() {
         $exerciseOptionId = intval($this->getParam('exerciseOptionId'));
         $exerciseId = intval($this->getParam('exerciseId'));
         $trainingPlanExerciseId = intval($this->getParam('trainingPlanExerciseId'));
 
-        $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+        $exerciseOptionsService = new ExerciseOptionsViewGenerator($this->view);
         $exerciseOptionsService->setTrainingPlanXExerciseId($trainingPlanExerciseId);
         $exerciseOptionsService->setExerciseId($exerciseId);
         $exerciseOptionsService->setOptionId($exerciseOptionId);
@@ -412,7 +454,7 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     *
+     * get exercise proposals action
      */
     public function getExerciseProposalsAction() {
 
@@ -421,7 +463,7 @@ class TrainingPlansController extends AbstractController {
 
         if (array_key_exists('search', $aParams)) {
             $search = base64_decode($aParams['search']);
-            $exercisesDb = new Model_DbTable_Exercises();
+            $exercisesDb = new Exercises();
             $exercisesCollection = $exercisesDb->findExercisesByName('%' . $search . '%');
             $proposalContent = '';
             if ($exercisesCollection instanceof Zend_Db_Table_Rowset) {
@@ -438,7 +480,7 @@ class TrainingPlansController extends AbstractController {
     }
 
     /**
-     *
+     * new action
      */
     public function newAction() {
         $trainingPlanId = null;
@@ -449,26 +491,26 @@ class TrainingPlansController extends AbstractController {
 
         // wenn ein vorhandener training-plans abgerufen werden soll
         if (0 < $trainingPlanId) {
-            $messageEntity = new Model_Entity_Message();
+            $messageEntity = new Message();
             $messageEntity->setRedirectId($trainingPlanId)
                 ->setMessage('Trainingsplan erfolgreich angelegt!')
-                ->setState(Model_Entity_Message::STATUS_OK);
-            Service_GlobalMessageHandler::setMessageEntity($messageEntity);
+                ->setState(Message::STATUS_OK);
+            GlobalMessageHandler::setMessageEntity($messageEntity);
         }
     }
 
     /**
-     *
+     * edit action
      */
     public function editAction() {
         $trainingPlanId = intval($this->getParam('id'));
 
         // wenn ein vorhandener training-plans abgerufen werden soll
         if (0 < $trainingPlanId) {
-            $deviceOptionsService = new Service_Generator_View_DeviceOptions($this->view);
-            $trainingPlanService = new Service_Generator_View_TrainingPlan($this->view);
+            $deviceOptionsService = new DeviceOptionsViewGenerator($this->view);
+            $trainingPlanService = new TrainingPlanViewGenerator($this->view);
             $this->view->assign('deviceOptionsSelectContent', $deviceOptionsService->generateDeviceOptionsSelectContent());
-            $exerciseOptionsService = new Service_Generator_View_ExerciseOptions($this->view);
+            $exerciseOptionsService = new ExerciseOptionsViewGenerator($this->view);
             $this->view->assign('exerciseOptionsSelectContent', $exerciseOptionsService->generateExerciseOptionsSelectContent());
             $this->view->assign('trainingPlanContent', $trainingPlanService->generateTrainingPlanForEditContent($trainingPlanId));
 
@@ -481,35 +523,44 @@ class TrainingPlansController extends AbstractController {
         }
     }
 
+    /**
+     * consider current training plan owner
+     *
+     * @param $trainingPlanId
+     *
+     * @return string
+     */
     private function considerCurrentTrainingPlanOwner($trainingPlanId) {
         $userId = $this->findCurrentUserId();
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $trainingPlan = $trainingPlansDb->findByPrimary($trainingPlanId);
         $content = '';
 
         if ($trainingPlan instanceof Zend_Db_Table_Row_Abstract
             && $userId != $trainingPlan->offsetGet('training_plan_user_fk')
         ) {
-            $usersDb = new Model_DbTable_Users();
+            $usersDb = new Users();
             $trainingPlanUser = $usersDb->findUser($trainingPlan->offsetGet('training_plan_user_fk'));
-            $content = 'Bearbeitet wird der Trainingsplan von ' . $trainingPlanUser->offsetGet('user_first_name') . ' ' . $trainingPlanUser->offsetGet('user_last_name');
+            $content = 'Bearbeitet wird der Trainingsplan von ' . $trainingPlanUser->offsetGet('user_first_name') .
+                ' ' . $trainingPlanUser->offsetGet('user_last_name');
         }
         return $content;
     }
 
+    /**
+     * save action
+     */
     public function saveAction() {
 
         if (null !== ($trainingPlanCollection = $this->getParam('trainingPlanCollection', null))) {
-            $trainingPlanService = new Service_TrainingPlan();
+            $trainingPlanService = new TrainingPlanService();
             $trainingPlanService->saveTrainingPlan($trainingPlanCollection, $this->getParam('trainingPlanUserId'));
-            Service_GlobalMessageHandler::appendMessage('Trainingsplan erfolgreich angepasst!', Model_Entity_Message::STATUS_OK);
+            GlobalMessageHandler::appendMessage('Trainingsplan erfolgreich angepasst!', Message::STATUS_OK);
         }
     }
 
     /**
-     * zum auswählen des grundlayouts des training_planes
-     *  - normal
-     *  - split
+     * select training plan layout, i think is obsolete
      */
     public function selectLayoutAction() {
         $this->view->assign('userSelect', $this->generateUserSelectContent());
@@ -519,7 +570,7 @@ class TrainingPlansController extends AbstractController {
     private function generateUserSelectContent()
     {
         $usersCollection = false;
-        $usersDb = new Model_DbTable_Users();
+        $usersDb = new Users();
         $currentUser = Zend_Auth::getInstance()->getIdentity();
         $currentUserRightGroupName = strtoupper($currentUser->user_right_group_name);
         if ('ADMIN' == $currentUserRightGroupName
@@ -552,17 +603,25 @@ class TrainingPlansController extends AbstractController {
         return $content;
     }
 
+    /**
+     * generate content for select training plan
+     *
+     * @param null $userId
+     *
+     * @return string
+     */
     private function generateTrainingPlanSelectContent($userId = null)
     {
         $trainingPlanSelectContent = '';
-        $trainingPlansDb = new Model_DbTable_TrainingPlans();
+        $trainingPlansDb = new TrainingPlans();
         $userTrainingPlansFound = false;
         if (0 < $userId) {
             $trainingPlanCollection = $trainingPlansDb->findAllSingleOrParentTrainingPlansForUser($userId);
 
             foreach ($trainingPlanCollection as $trainingPlan) {
                 $userTrainingPlansFound = true;
-                $this->view->assign('optionText', $trainingPlan->offsetGet('training_plan_name') . ' - ' . date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))));
+                $this->view->assign('optionText', $trainingPlan->offsetGet('training_plan_name') . ' - ' .
+                    date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))));
                 $this->view->assign('optionValue', $trainingPlan->offsetGet('training_plan_id'));
                 $trainingPlanSelectContent .= $this->view->render('loops/option.phtml');
             }
@@ -577,7 +636,8 @@ class TrainingPlansController extends AbstractController {
                 $trainingPlanSelectContent .= '<hr />';
             }
             foreach ($trainingPlanCollection as $trainingPlan) {
-                $this->view->assign('optionText', $trainingPlan->offsetGet('training_plan_name') . ' - ' . date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))));
+                $this->view->assign('optionText', $trainingPlan->offsetGet('training_plan_name') . ' - ' .
+                    date('Y-m-d', strtotime($trainingPlan->offsetGet('training_plan_create_date'))));
                 $this->view->assign('optionValue', $trainingPlan->offsetGet('training_plan_id'));
                 $trainingPlanSelectContent .= $this->view->render('loops/option.phtml');
             }
@@ -589,14 +649,22 @@ class TrainingPlansController extends AbstractController {
         return $this->view->render('globals/select.phtml');
     }
 
+    /**
+     * get training plan select action
+     */
     public function getTrainingPlanSelectAction() {
         $userId = intval($this->getParam('user_id'));
         $this->view->assign('trainingPlanSelectContent', $this->generateTrainingPlanSelectContent($userId));
     }
 
+    /**
+     * create layout action
+     *
+     * @return bool|int|mixed
+     */
     public function createLayoutAction() {
         $aParams = $this->getAllParams();
-        $trainingPlanService = new Service_TrainingPlan();
+        $trainingPlanService = new TrainingPlanService();
         $trainingPlanId = null;
         $trainingPlanUserId = $this->getParam('trainingPlanUserId');
 
@@ -625,29 +693,37 @@ class TrainingPlansController extends AbstractController {
         return false;
     }
 
+    /**
+     * interpolate training diary action
+     *
+     * interpolates current training plan with fake training diary exercises entries
+     */
     public function interpolateTrainingDiaryAction() {
 //        $userId = intval($this->getParam('userId'));
         $userId = $this->findCurrentUserId();
 
         if (0 < $userId
-            && true === Auth_Plugin_CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary')
+            && true === CheckRight::hasRight('default', 'training-plans', 'interpolate-training-diary')
         ) {
-            $interpolateService = new Service_Interpolate();
+            $interpolateService = new Interpolate();
             $result = $interpolateService->trainingDiary($userId);
 
             if ($result) {
-                Service_GlobalMessageHandler::appendMessage('Trainingstagebucheinträge erfolgreich genertiert!', Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage('Trainingstagebucheinträge erfolgreich genertiert!', Message::STATUS_OK);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage('Ihnen fehlen die notwendigen Rechte, um diese Aktion auszuführen!', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Ihnen fehlen die notwendigen Rechte, um diese Aktion auszuführen!', Message::STATUS_ERROR);
         }
     }
 
+    /**
+     * delete action
+     */
     public function deleteAction() {
         $id = intval($this->getParam('id'));
 
         if (0 < $id) {
-            $trainingPlanService = new Service_TrainingPlan();
+            $trainingPlanService = new TrainingPlanService();
             $trainingPlanService->deleteTrainingPlan($id);
         }
     }

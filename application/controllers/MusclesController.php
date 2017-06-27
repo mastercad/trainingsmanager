@@ -7,6 +7,17 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Model\DbTable\Muscles;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+use Model\DbTable\MuscleXMuscleGroup;
+use Model\DbTable\MuscleGroups;
+use Model\DbTable\Exercises;
+use Model\DbTable\ExerciseXMuscle;
+
+/**
+ * Class MusclesController
+ */
 class MusclesController extends AbstractController
 {
     public function init() {
@@ -22,7 +33,7 @@ class MusclesController extends AbstractController
      * shows overview over all stored muscles in database
      */
     public function indexAction() {
-        $musclesDb = new Model_DbTable_Muscles();
+        $musclesDb = new Muscles();
         $musclesCollection = $musclesDb->findAllMuscles();
 
         $musclesContent = $this->translate('label_no_muscles_found');
@@ -42,11 +53,14 @@ class MusclesController extends AbstractController
         $this->view->assign('musclesContent', $musclesContent);
     }
 
+    /**
+     * show action
+     */
     public function showAction() {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
-            $musclesDb = new Model_DbTable_Muscles();
+            $musclesDb = new Muscles();
             $muscle = $musclesDb->findMuscle($id);
             if ($muscle instanceof Zend_Db_Table_Row_Abstract) {
                 $this->view->assign('name', $muscle->offsetGet('muscle_name'));
@@ -57,27 +71,33 @@ class MusclesController extends AbstractController
     }
 
     /**
-     *
+     * delete action
      */
     public function deleteAction() {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
-            $musclesDb = new Model_DbTable_Muscles();
+            $musclesDb = new Muscles();
             $result = $musclesDb->deleteMuscle($id);
 
             if ($result) {
-                Service_GlobalMessageHandler::appendMessage('Muskel erfolgreich gelöscht', Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage('Muskel erfolgreich gelöscht', Message::STATUS_OK);
             } else {
-                Service_GlobalMessageHandler::appendMessage('Muskel konnte nicht gelöscht werden', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Muskel konnte nicht gelöscht werden', Message::STATUS_ERROR);
             }
         }
     }
 
+    /**
+     * new action
+     */
     public function newAction() {
         $this->forward('edit');
     }
-    
+
+    /**
+     * edit action
+     */
     public function editAction()
     {
         $params = $this->getRequest()->getParams();
@@ -87,32 +107,40 @@ class MusclesController extends AbstractController
             && 0 < $params['id']
         ) {
             $muscleId = $params['id'];
-            $musclesDb = new Model_DbTable_Muscles();
+            $musclesDb = new Muscles();
             $muscle = $musclesDb->findMuscle($muscleId);
             
             $this->view->assign($muscle->toArray());
         }
     }
-    
+
+    /**
+     * get muscles for edit action
+     */
     public function getMuscleForEditAction() {
         $params = $this->getRequest()->getParams();
         
         if (isset($params['id'])) {
             $muscleGroupId = $params['id'];
-            $muscleXMuscleGroupDb = new Model_DbTable_MuscleXMuscleGroup();
+            $muscleXMuscleGroupDb = new MuscleXMuscleGroup();
             $musclesCollection = $muscleXMuscleGroupDb->findMusclesByMuscleGroupId($muscleGroupId);
             
             $this->view->assign('musclesCollection', $musclesCollection);
         }
         $this->view->assign('musclesContent', $this->view->render('loops/muscle-edit.phtml'));
     }
-    
+
+    /**
+     * get muscle proposals action
+     *
+     * @throws \Zend_Exception
+     */
     public function getMuscleProposalsAction() {
         $params = $this->getRequest()->getParams();
         
         if (isset($params['search'])) {
             $search = '%' . base64_decode($params['search']) . '%';
-            $musclesDb = new Model_DbTable_Muscles();
+            $musclesDb = new Muscles();
             $musclesCollection = $musclesDb->findMusclesByName($search);
 
             $muscleProposalsContent = Zend_Registry::get('Zend_Translate')->translate('label_no_muscles_found');
@@ -133,18 +161,18 @@ class MusclesController extends AbstractController
             $this->view->assign('muscleProposalsContent', $muscleProposalsContent);
         }
     }
-    
+
+    /**
+     * save action
+     */
     public function saveAction()
     {
         $params = $this->getRequest()->getParams();
-        $messageCollection = array();
-
-        $user = Zend_Auth::getInstance()->getIdentity();
 
         $userId = $this->findCurrentUserId();
 
         if (isset($params)) {
-            $musclesDb = new Model_DbTable_Muscles();
+            $musclesDb = new Muscles();
             
             $muscleName = '';
             $muscleId = 0;
@@ -164,7 +192,7 @@ class MusclesController extends AbstractController
             if (0 == strlen(trim($muscleName))
                && !$muscleId
             ) {
-                Service_GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_needs_name'), Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_needs_name'), Message::STATUS_ERROR);
                 $hasError = true;
             } else if(0 < strlen(trim($muscleName))) {
                 $data['muscle_name'] = $muscleName;
@@ -178,7 +206,7 @@ class MusclesController extends AbstractController
             ) {
                 $muscleCurrent = $musclesDb->findMusclesByName($muscleName);
                 if (0 < count($muscleCurrent)) {
-                    Service_GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_already_exists'), Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_already_exists'), Message::STATUS_ERROR);
                     $hasError = true;
                 }
             }
@@ -226,7 +254,7 @@ class MusclesController extends AbstractController
                     $data['muscle_update_user_fk'] = $userId;
 
                     $musclesDb->updateMuscle($data, $muscleId);
-                    Service_GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_edited_successfully'), Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_edited_successfully'), Message::STATUS_OK);
                 }
                 // neu anlegen
                 else if(count($data) > 0)
@@ -245,12 +273,12 @@ class MusclesController extends AbstractController
                     $muscleId = $musclesDb->saveMuscle($data);
 
                     if ($muscleId) {
-                        Service_GlobalMessageHandler::appendMessage('Dieser Muskel wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
+                        GlobalMessageHandler::appendMessage('Dieser Muskel wurde erfolgreich angelegt!', Message::STATUS_OK);
 //                    } else {
-//                        Service_GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Model_Entity_Message::STATUS_ERROR);
+//                        GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Message::STATUS_ERROR);
                     }
                 } else {
-                    Service_GlobalMessageHandler::appendMessage('Dieser Muskel wurde nicht geändert!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Dieser Muskel wurde nicht geändert!', Message::STATUS_ERROR);
                 }
                 
                 if ($muscleId) {
@@ -270,13 +298,16 @@ class MusclesController extends AbstractController
                     */
                 }
 //            } else {
-//                Service_GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Model_Entity_Message::STATUS_ERROR);
+//                GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Muskel speichern!', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Falscher Aufruf von Muskel speichern!', Message::STATUS_ERROR);
         }
     }
-    
+
+    /**
+     * delete muscle action
+     */
     public function deleteMuscleAction()
     {
         $params = $this->getRequest()->getParams();
@@ -289,11 +320,11 @@ class MusclesController extends AbstractController
             $i_muskel_id = $params['id'];
             $b_fehler = false;
             
-            $obj_db_muskeln = new Model_DbTable_Muscles();
-            $obj_db_muskelgruppen = new Model_DbTable_MuscleGroups();
-            $obj_db_muskelgruppen_muskeln = new Model_DbTable_MuscleGroupMuscles();
-            $obj_db_uebungen = new Model_DbTable_Exercises();
-            $obj_db_uebung_muskelgruppen = new Model_DbTable_ExerciseMuscleGroups();
+            $obj_db_muskeln = new Muscles();
+            $obj_db_muskelgruppen = new MuscleGroups();
+            $obj_db_muskelgruppen_muskeln = new MuscleXMuscleGroup();
+            $obj_db_uebungen = new Exercises();
+            $obj_db_uebung_muskelgruppen = new ExerciseXMuscle();
             
             if($obj_db_muskeln->deleteMuscle($i_muskel_id))
             {

@@ -9,6 +9,11 @@
 
 require_once(APPLICATION_PATH . '/controllers/OptionsController.php');
 
+use \Model\DbTable\ExerciseOptions;
+
+/**
+ * Class ExerciseOptionsController
+ */
 class ExerciseOptionsController extends OptionsController {
 
     protected $map = [
@@ -19,6 +24,6 @@ class ExerciseOptionsController extends OptionsController {
 
     protected function useOptionsStorage()
     {
-        return new Model_DbTable_ExerciseOptions();
+        return new ExerciseOptions();
     }
 }

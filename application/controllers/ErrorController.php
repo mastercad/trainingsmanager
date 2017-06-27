@@ -2,8 +2,16 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+/**
+ * Class ErrorController
+ */
 class ErrorController extends AbstractController {
 
+    /**
+     * error action
+     *
+     * @throws \Zend_Controller_Response_Exception
+     */
     public function errorAction() {
         $errors = $this->_getParam('error_handler');
         
@@ -46,6 +54,9 @@ class ErrorController extends AbstractController {
         $this->view->request = $errors->request;
     }
 
+    /**
+     * no access action
+     */
     public function noAccessAction()
     {
         $a_params = $this->getRequest()->getParams();
@@ -55,6 +66,9 @@ class ErrorController extends AbstractController {
 //        echo "</pre>";
     }
 
+    /**
+     * login fail action
+     */
     public function loginFailAction()
     {
         $a_params = $this->getRequest()->getParams();
@@ -62,7 +76,14 @@ class ErrorController extends AbstractController {
         echo "Login fehlgeschlagen!<br />";
     }
 
-    public function getLog() {
+    /**
+     * return log object
+     *
+     * @return bool|mixed
+     *
+     * @throws \Zend_Exception
+     */
+    private function getLog() {
         $bootstrap = $this->getInvokeArg('bootstrap');
         if (true === $bootstrap->hasResource('Log')) {
             return $bootstrap->getResource('Log');

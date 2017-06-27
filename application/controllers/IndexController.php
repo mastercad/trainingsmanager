@@ -2,8 +2,27 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Model\DbTable\Dashboards;
+use Model\DbTable\DashboardXWidget;
+use Model\DbTable\Exercises;
+use Model\DbTable\Widgets;
+use Model\DbTable\TrainingDiaryXTrainingPlanExercise;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+use Service\TrainingPlan as TrainingPlanService;
+use Model\DbTable\TrainingDiaryXTrainingPlan;
+use Model\DbTable\TrainingDiaryXExerciseOption;
+use Model\DbTable\TrainingDiaryXDeviceOption;
+use Model\DbTable\TrainingPlanXExercise;
+
+/**
+ * Class IndexController
+ */
 class IndexController extends AbstractController {
 
+    /**
+     * initial function for controller
+     */
     public function init() {
         if (!$this->getParam('ajax')) {
             $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
@@ -13,6 +32,9 @@ class IndexController extends AbstractController {
         }
     }
 
+    /**
+     * index action
+     */
     public function indexAction() {
 
         $user = Zend_Auth::getInstance()->getIdentity();
@@ -27,10 +49,15 @@ class IndexController extends AbstractController {
         }
     }
 
+    /**
+     * generate widgets content
+     *
+     * @return string
+     */
     private function generateWidgetsContent() {
 
-        $dashboardsDb = new Model_DbTable_Dashboards();
-        $dashboardXWidgetDb = new Model_DbTable_DashboardXWidget();
+        $dashboardsDb = new Dashboards();
+        $dashboardXWidgetDb = new DashboardXWidget();
         $dashboard = $dashboardsDb->findActiveDashboardByUserId($this->findCurrentUserId());
         $widgetContent = '';
 
@@ -49,7 +76,7 @@ class IndexController extends AbstractController {
                     $exerciseId = null;
 
                     if ('ALL' !== strtoupper($type)) {
-                        $exercisesDb = new Model_DbTable_Exercises();
+                        $exercisesDb = new Exercises();
                         $exercises = $exercisesDb->findExercisesByName($type);
                         if ($exercises instanceof Zend_Db_Table_Rowset_Abstract
                             && 0 < count($exercises)
@@ -64,26 +91,32 @@ class IndexController extends AbstractController {
         return $widgetContent;
     }
 
+    /**
+     * welcome content action
+     */
     public function welcomeContentAction() {
 
     }
 
     /**
-     *
+     * delete widget action
      */
     public function deleteWidgetAction() {
         $id = intval($this->getParam('id'));
 
         if (0 < $id) {
-            $dashboardXWidgetDb = new Model_DbTable_DashboardXWidget();
+            $dashboardXWidgetDb = new DashboardXWidget();
             $dashboardXWidgetDb->deleteDashboard($id);
         }
     }
 
+    /**
+     * get widget settings content action
+     */
     public function getWidgetSettingsContentAction() {
-        $dashboardsDb = new Model_DbTable_Dashboards();
-        $widgetsDb = new Model_DbTable_Widgets();
-        $dashboardXWidgetDb = new Model_DbTable_DashboardXWidget();
+        $dashboardsDb = new Dashboards();
+        $widgetsDb = new Widgets();
+        $dashboardXWidgetDb = new DashboardXWidget();
         $widgetsInDashboard = [];
         $widgetsContent = '';
 
@@ -107,17 +140,20 @@ class IndexController extends AbstractController {
         $this->view->assign('widgetsContent', $widgetsContent);
     }
 
+    /**
+     * load widget edit content action
+     */
     public function loadWidgetEditContentAction() {
         $id = intval($this->getParam('id'));
         $content = '';
 
         if (0 < $id) {
-            $widgetsDb = new Model_DbTable_Widgets();
+            $widgetsDb = new Widgets();
             $widget = $widgetsDb->findByPrimary($id);
 
             if ('ÜBUNGSFORTSCHRITT' == strtoupper($widget->offsetGet('widget_name'))) {
-                $dashboardsDb = new Model_DbTable_Dashboards();
-                $dashboardXWidgetDb = new Model_DbTable_DashboardXWidget();
+                $dashboardsDb = new Dashboards();
+                $dashboardXWidgetDb = new DashboardXWidget();
                 $dashboard = $dashboardsDb->findActiveDashboardByUserId($this->findCurrentUserId());
                 $currentEnabledWidgets = [];
                 $allSelected = false;
@@ -134,7 +170,7 @@ class IndexController extends AbstractController {
                     }
                 }
 
-                $trainingDiaryXTrainingPlanExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
+                $trainingDiaryXTrainingPlanExerciseDb = new TrainingDiaryXTrainingPlanExercise();
                 $trainingDiaryXTrainingPlanExercises = $trainingDiaryXTrainingPlanExerciseDb->findTrainingDiaryTrainingPlanExercises($this->findCurrentUserId());
 
                 if (!$allSelected
@@ -162,13 +198,16 @@ class IndexController extends AbstractController {
                     $this->view->assign('exerciseOptionsDropDownContent', $exerciseOptionsDropDownContent);
                     $content = $this->view->render('loops/widget-progress-edit.phtml');
                 } else {
-                    Service_GlobalMessageHandler::appendMessage('Es sind bereits alle verfügbaren Typen dieses Widgets auf dem Dashboard aktiviert!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Es sind bereits alle verfügbaren Typen dieses Widgets auf dem Dashboard aktiviert!', Message::STATUS_ERROR);
                 }
             }
         }
         $this->view->assign('content', $content);
     }
 
+    /**
+     * load widget content action
+     */
     public function loadWidgetContentAction() {
         $widgetId = intval($this->getParam('id'));
         $content = '';
@@ -183,11 +222,11 @@ class IndexController extends AbstractController {
             if (!empty($type)) {
                 $type = base64_decode($type);
                 if ('ALL' !== strtoupper($type)) {
-                    $exercisesDb = new Model_DbTable_Exercises();
+                    $exercisesDb = new Exercises();
                     $exerciseId = $exercisesDb->findExercisesByName($type)->current()->offsetGet('exercise_id');
                 }
             }
-            $widgetsDb = new Model_DbTable_Widgets();
+            $widgetsDb = new Widgets();
             $widget = $widgetsDb->findByPrimary($widgetId);
             $this->view->assign($widget->toArray());
 
@@ -198,8 +237,16 @@ class IndexController extends AbstractController {
         $this->view->assign('content', $content);
     }
 
-    private function registerWidget($id, $type = null) {
-        $dashboardsDb = new Model_DbTable_Dashboards();
+    /**
+     * register widget
+     *
+     * @param      $widgetId
+     * @param null $type
+     *
+     * @return mixed
+     */
+    private function registerWidget($widgetId, $type = null) {
+        $dashboardsDb = new Dashboards();
         $dashboard = $dashboardsDb->findActiveDashboardByUserId($this->findCurrentUserId());
         $dashboardId = null;
 
@@ -217,9 +264,9 @@ class IndexController extends AbstractController {
         }
 
         $order = intval($this->getParam('order', 0));
-        $dashboardXWidgetDb = new Model_DbTable_DashboardXWidget();
+        $dashboardXWidgetDb = new DashboardXWidget();
         $data = [
-            'dashboard_x_widget_widget_fk' => $id,
+            'dashboard_x_widget_widget_fk' => $widgetId,
             'dashboard_x_widget_dashboard_fk' => $dashboardId,
             'dashboard_x_widget_create_date' => date('Y-m-d H:i:s'),
             'dashboard_x_widget_create_user_fk' => $this->findCurrentUserId(),
@@ -232,6 +279,13 @@ class IndexController extends AbstractController {
         return $dashboardXWidgetDb->insert($data);
     }
 
+    /**
+     * collect widgets, given from db result
+     *
+     * @param $widgetsInDb
+     *
+     * @return array
+     */
     private function collectWidgets($widgetsInDb) {
         $widgetsCollection = [];
 
@@ -244,10 +298,15 @@ class IndexController extends AbstractController {
         return $widgetsCollection;
     }
 
+    /**
+     * generate active training diary content
+     *
+     * @return string
+     */
     private function generateActiveTrainingDiaryContent() {
 
         $content = '';
-        $trainingPlanService = new Service_TrainingPlan();
+        $trainingPlanService = new TrainingPlanService();
         $currentTrainingPlan = $trainingPlanService->searchCurrentTrainingPlan($this->findCurrentUserId());
 
         if ($currentTrainingPlan instanceof Zend_Db_Table_Row_Abstract) {
@@ -257,6 +316,13 @@ class IndexController extends AbstractController {
         return $content;
     }
 
+    /**
+     * generate current training plan content
+     *
+     * @param $trainingPlanRow
+     *
+     * @return string
+     */
     private function generateCurrentTrainingPlanContent($trainingPlanRow) {
         $exercisesContent = '';
         $trainingPlanId = $trainingPlanRow->offsetGet('training_plan_id');
@@ -266,10 +332,10 @@ class IndexController extends AbstractController {
         if ($trainingPlanRow->offsetExists('training_diary_x_training_plan_id')
             && 0 < $trainingPlanRow->offsetGet('training_diary_x_training_plan_id')
         ) {
-            $trainingDiaryXTrainingPlanExercise = new Model_DbTable_TrainingDiaryXTrainingPlan();
+            $trainingDiaryXTrainingPlanExercise = new TrainingDiaryXTrainingPlan();
             $exercisesCollection = $trainingDiaryXTrainingPlanExercise->findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId($trainingPlanRow->offsetGet('training_diary_x_training_plan_id'));
         } else {
-            $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+            $trainingPlanXExerciseDb = new TrainingPlanXExercise();
             $exercisesCollection = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanRow->offsetGet('training_plan_id'));
         }
 
@@ -282,6 +348,13 @@ class IndexController extends AbstractController {
         return $this->view->render('index/current-training-plan.phtml');
     }
 
+    /**
+     * generate charts content
+     *
+     * @param null $exerciseId
+     *
+     * @return string
+     */
     private function generateChartsContent($exerciseId = null) {
         $chartDataCollection = $this->collectDataForExerciseChart($exerciseId);
 
@@ -293,9 +366,16 @@ class IndexController extends AbstractController {
         return $chartContent;
     }
 
+    /**
+     * collect data for exercise chart
+     *
+     * @param $exerciseId
+     *
+     * @return array
+     */
     private function collectDataForExerciseChart($exerciseId) {
-        $trainingDiaryExerciseOptionDb = new Model_DbTable_TrainingDiaryXExerciseOption();
-        $trainingDiaryDeviceOptionDb = new Model_DbTable_TrainingDiaryXDeviceOption();
+        $trainingDiaryExerciseOptionDb = new TrainingDiaryXExerciseOption();
+        $trainingDiaryDeviceOptionDb = new TrainingDiaryXDeviceOption();
 
         $exerciseOptionCollection = $trainingDiaryExerciseOptionDb->findAllExerciseOptions($this->findCurrentUserId(), $exerciseId);
         $deviceOptionCollection = $trainingDiaryDeviceOptionDb->findAllDeviceOptions($this->findCurrentUserId(), $exerciseId);
@@ -339,6 +419,14 @@ class IndexController extends AbstractController {
         return $data;
     }
 
+    /**
+     * generate chart content
+     *
+     * @param $exerciseName
+     * @param $chartData
+     *
+     * @return string
+     */
     private function generateChartContent($exerciseName, $chartData) {
         $chartCount = uniqid();
         $columns = [];

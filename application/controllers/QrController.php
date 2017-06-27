@@ -9,13 +9,14 @@
 require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
-
 /**
  * Class QrController
  */
 class QrController extends AbstractController
 {
     /**
+     * get image for url action
+     *
      * @param string $sUrl
      */
     public function getImageForUrlAction($sUrl = 'TESTIMAGE!')

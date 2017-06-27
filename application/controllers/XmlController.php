@@ -2,8 +2,14 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+/**
+ * Class XmlController
+ */
 class XmlController extends AbstractController
 {
+    /**
+     * initial function for controller
+     */
     public function init()
     {
     	$this->_helper->getHelper('contextSwitch')
@@ -19,10 +25,19 @@ class XmlController extends AbstractController
     	}
     }
 
+    /**
+     * index action
+     */
     public function indexAction()
     {
     }
-    
+
+    /**
+     * create site map action
+     *
+     * @throws \Zend_Controller_Exception
+     * @throws \Zend_Filter_Exception
+     */
     public function createSitemapAction()
     {
 		$this->view->layout()->disableLayout();

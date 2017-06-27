@@ -9,11 +9,29 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Model\DbTable\TrainingPlans;
+use Model\DbTable\TrainingDiaryXTrainingPlan;
+use Model\DbTable\TrainingDiaryXTrainingPlanExercise;
+use Model\DbTable\TrainingDiaries;
+use Model\DbTable\ExerciseXMuscle;
+use Model\DbTable\TrainingDiaryXExerciseOption;
+use Model\DbTable\TrainingDiaryXDeviceOption;
+use Service\Generator\View\TrainingDiaries as TrainingDiariesViewGenerator;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+use Model\DbTable\TrainingPlanXExercise;
+
+/**
+ * Class TrainingDiariesController
+ */
 class TrainingDiariesController extends AbstractController {
     protected $_iMinBeanspruchterMuskel = null;
     protected $_iMaxBeanspruchterMuskel = null;
     protected $_aBeanspruchteMuskeln = array();
 
+    /**
+     * initial function for controller
+     */
     public function init() {
         if (!$this->getParam('ajax')) {
             $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_training_plan_accordion.js',
@@ -23,6 +41,9 @@ class TrainingDiariesController extends AbstractController {
         }
     }
 
+    /**
+     * index action
+     */
     public function indexAction() {
     }
 
@@ -47,7 +68,7 @@ class TrainingDiariesController extends AbstractController {
 
         if (array_key_exists('id', $aParams)) {
             $trainingPlanId = $aParams['id'];
-            $oTrainingsplaeneStorage = new Model_DbTable_TrainingPlans();
+            $oTrainingsplaeneStorage = new TrainingPlans();
 
             // erst informationen zum plan ziehen
             $oTrainingsplanRow = $oTrainingsplaeneStorage->findFirstExerciseInTrainingPlan($trainingPlanId);
@@ -67,7 +88,7 @@ class TrainingDiariesController extends AbstractController {
                         "Sammlung aus!";
                     $this->redirect('/training-plans/show/id/' . $trainingPlanId, $aParams);
                 } else {
-                    $trainingDiaryXTrainingPlanStorage = new Model_DbTable_TrainingDiaryXTrainingPlan();
+                    $trainingDiaryXTrainingPlanStorage = new TrainingDiaryXTrainingPlan();
 
                     // checken ob ein anderer alter training-plans offen ist
                     /** @todo ausformulieren */
@@ -80,7 +101,7 @@ class TrainingDiariesController extends AbstractController {
                     if (! $oAktuellesTrainingstagebuch->count()) {
                         echo "Habe noch keinen Trainingstagebucheintrag für diesen Trainingsplan, der aber offen ist!";
 
-                        $trainingDiariesDb = new Model_DbTable_TrainingDiaries();
+                        $trainingDiariesDb = new TrainingDiaries();
                         $data = [
                             'training_diary_create_date' => date('Y-m-d H:i:s'),
                             'training_diary_create_user_fk' => $iUserId
@@ -118,11 +139,20 @@ class TrainingDiariesController extends AbstractController {
         }
     }
 
+    /**
+     * create training diary exercise entry
+     *
+     * @param int $trainingPlanXExerciseId
+     * @param int $trainingDiaryId
+     * @param int $trainingDiaryXTrainingPlanId
+     *
+     * @return mixed
+     */
     private function createTrainingDiaryExerciseEntry($trainingPlanXExerciseId, $trainingDiaryId, $trainingDiaryXTrainingPlanId)
     {
         $iUserId = $this->findCurrentUserId();
 
-        $trainingDiaryXTrainingPlanExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
+        $trainingDiaryXTrainingPlanExerciseDb = new TrainingDiaryXTrainingPlanExercise();
 
         $data = [
             'training_diary_x_training_plan_exercise_t_p_x_e_fk' => $trainingPlanXExerciseId,
@@ -134,6 +164,9 @@ class TrainingDiariesController extends AbstractController {
         return $trainingDiaryXTrainingPlanExerciseDb->insert($data);
     }
 
+    /**
+     * show action
+     */
     public function showAction() {
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jquery.touchSwipe.min.js',
             'text/javascript');
@@ -144,7 +177,7 @@ class TrainingDiariesController extends AbstractController {
             && 0 < $aParams['id']
         ) {
             $trainingPlanId = $aParams['id'];
-            $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
+            $trainingDiaryXTrainingPlanDb = new TrainingDiaryXTrainingPlan();
             $trainingDiaryExerciseCollection = $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(
                 $trainingPlanId, $this->findCurrentUserId()
             );
@@ -152,7 +185,7 @@ class TrainingDiariesController extends AbstractController {
             if (0 < count($trainingDiaryExerciseCollection)) {
                 $trainingsExercise = null;
                 $sContent = '';
-                $exerciseXMuscleDb = new Model_DbTable_ExerciseXMuscle();
+                $exerciseXMuscleDb = new ExerciseXMuscle();
                 $aBeanspruchteMuskeln = array();
                 $iMinBeanspruchterMuskel = null;
                 $iMaxBeanspruchterMuskel = null;
@@ -181,7 +214,7 @@ class TrainingDiariesController extends AbstractController {
                                 $iMaxBeanspruchterMuskel = $aBeanspruchteMuskeln[$oBeanspruchterMuskelFuerUebung->muskel_name];
                             }
                         }
-                        $sContent .= $this->generateViewForTrainingsplan($oTrainingstagebuchTrainingsplanRow);
+                        $sContent .= $this->generateViewForTrainingPlan($oTrainingstagebuchTrainingsplanRow);
                     }
                 }
                 $aViewContent = $this->getTrainingPlanInfo($trainingsExercise);
@@ -200,6 +233,9 @@ class TrainingDiariesController extends AbstractController {
         }
     }
 
+    /**
+     * show exercise action
+     */
     public function showExerciseAction() {
 
         $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jquery.touchSwipe.min.js', 'text/javascript');
@@ -211,7 +247,7 @@ class TrainingDiariesController extends AbstractController {
             $this->_iMaxBeanspruchterMuskel = null;
             $trainingPlanExerciseId = $aParams['id'];
 
-            $trainingPlanXExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
+            $trainingPlanXExerciseDb = new TrainingDiaryXTrainingPlan();
             $trainingPlanXExerciseCollection = $trainingPlanXExerciseDb->findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId($trainingDiaryXTrainingPlanId);
 
             $exercisesContent = '';
@@ -220,7 +256,7 @@ class TrainingDiariesController extends AbstractController {
 
             if (0 < count($trainingPlanXExerciseCollection)) {
                 foreach ($trainingPlanXExerciseCollection as $trainingPlanXExercise) {
-                    $trainingDiaryViewGenerator = new Service_Generator_View_TrainingDiaries($this->view);
+                    $trainingDiaryViewGenerator = new TrainingDiariesViewGenerator($this->view);
                     $trainingDiaryViewGenerator->setExercisesCount(count($trainingPlanXExerciseCollection));
                     $exercisesContent .= $trainingDiaryViewGenerator->generateExerciseContent($trainingPlanXExercise);
                     $aViewContent = $this->getExerciseInfo($trainingPlanXExercise);
@@ -246,11 +282,17 @@ class TrainingDiariesController extends AbstractController {
         }
     }
 
+    /**
+     * edit action
+     */
     public function editAction() {
         // hier kann man die übung bearbeiten, vielleicht ist das unnötig, oder man hat hier die ansicht einer
         // übung des aktuellen trainingsplanes drin
     }
 
+    /**
+     * save action
+     */
     public function saveAction() {
 
         if (0 < $this->getParam('trainingDiaryExerciseInformation')) {
@@ -268,7 +310,7 @@ class TrainingDiariesController extends AbstractController {
             }
 
             $exerciseOptions = $trainingPlanDiaryExerciseInformation['exerciseOptions'];
-            $trainingDiaryXExerciseOptionDb = new Model_DbTable_TrainingDiaryXExerciseOption();
+            $trainingDiaryXExerciseOptionDb = new TrainingDiaryXExerciseOption();
             $currentExerciseOptionsInDb = $trainingDiaryXExerciseOptionDb->findExerciseOptionsByTrainingDiaryTrainingPlanExerciseId($trainingDiaryXTrainingPlanExerciseId);
             $currentTrainingDiaryXExerciseOptionsCollection = [];
 
@@ -277,7 +319,7 @@ class TrainingDiariesController extends AbstractController {
             }
 
             $deviceOptions = $trainingPlanDiaryExerciseInformation['deviceOptions'];
-            $trainingDiaryXDeviceOptionDb = new Model_DbTable_TrainingDiaryXDeviceOption();
+            $trainingDiaryXDeviceOptionDb = new TrainingDiaryXDeviceOption();
             $currentDeviceOptionsInDb = $trainingDiaryXDeviceOptionDb->findDeviceOptionsByTrainingDiaryTrainingPlanExerciseId($trainingDiaryXTrainingPlanExerciseId);
             $currentTrainingDiaryXDeviceOptionsCollection = [];
 
@@ -291,7 +333,7 @@ class TrainingDiariesController extends AbstractController {
                     $exerciseOptionId = $exerciseOption['exerciseOptionId'];
 
                     if (empty($exerciseOptionValue)) {
-                        Service_GlobalMessageHandler::appendMessage('Option not allowed to be empty!', Model_Entity_Message::STATUS_ERROR);
+                        GlobalMessageHandler::appendMessage('Option not allowed to be empty!', Message::STATUS_ERROR);
                         $hasErrors = true;
                     } else {
                         if (array_key_exists($exerciseOptionId, $currentTrainingDiaryXExerciseOptionsCollection)) {
@@ -325,7 +367,7 @@ class TrainingDiariesController extends AbstractController {
                     $deviceOptionId = $deviceOption['deviceOptionId'];
                     $deviceOptionValue = $deviceOption['deviceOptionValue'];
                     if (empty($deviceOptionValue)) {
-                        Service_GlobalMessageHandler::appendMessage('Option not allowed to be empty!', Model_Entity_Message::STATUS_ERROR);
+                        GlobalMessageHandler::appendMessage('Option not allowed to be empty!', Message::STATUS_ERROR);
                         $hasErrors = true;
                     } else {
                         if (array_key_exists($deviceOptionId, $currentTrainingDiaryXDeviceOptionsCollection)) {
@@ -360,11 +402,11 @@ class TrainingDiariesController extends AbstractController {
                 'training_diary_x_training_plan_exercise_update_user_fk' => $userId
             ];
 
-            $trainingDiaryXTrainingPlanExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
+            $trainingDiaryXTrainingPlanExerciseDb = new TrainingDiaryXTrainingPlanExercise();
             $trainingDiaryXTrainingPlanExerciseDb->update($data, 'training_diary_x_training_plan_exercise_id = ' . $trainingDiaryXTrainingPlanExerciseId);
 
             if (false === $hasErrors) {
-                Service_GlobalMessageHandler::appendMessage('Übung erfolgreich beendet!', Model_Entity_Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage('Übung erfolgreich beendet!', Message::STATUS_OK);
             }
 
             if ($this->considerLastExerciseInTrainingDiary($trainingDiaryXTrainingPlanExerciseId)) {
@@ -382,12 +424,12 @@ class TrainingDiariesController extends AbstractController {
      */
     private function considerLastExerciseInTrainingDiary($trainingDiaryXTrainingPlanExerciseId)
     {
-        $trainingPlanXExerciseDb = new Model_DbTable_TrainingDiaryXTrainingPlanExercise();
+        $trainingPlanXExerciseDb = new TrainingDiaryXTrainingPlanExercise();
         $trainingDiary = $trainingPlanXExerciseDb->checkTrainingDiaryFinished($trainingDiaryXTrainingPlanExerciseId)->toArray();
         $userId = $this->findCurrentUserId();
 
         if ($trainingDiary['trainingPlanIsFinished']) {
-            $trainingDiaryXTrainingPlanDb = new Model_DbTable_TrainingDiaryXTrainingPlan();
+            $trainingDiaryXTrainingPlanDb = new TrainingDiaryXTrainingPlan();
             $data = [
                 'training_diary_x_training_plan_update_date' => date('Y-m-d H:i:s'),
                 'training_diary_x_training_plan_update_user_fk' => $userId,
@@ -400,6 +442,9 @@ class TrainingDiariesController extends AbstractController {
         return false;
     }
 
+    /**
+     * get exercise action
+     */
     public function getExerciseAction() {
         $this->view->layout()->disableLayout();
         $aParams = $this->getAllParams();
@@ -412,12 +457,12 @@ class TrainingDiariesController extends AbstractController {
             $this->_iMinBeanspruchterMuskel = null;
             $this->_iMaxBeanspruchterMuskel = null;
             $trainingPlanExerciseId = $aParams['id'];
-            $trainingPlanXExerciseDb = new Model_DbTable_TrainingPlanXExercise();
+            $trainingPlanXExerciseDb = new TrainingPlanXExercise();
             $trainingDiaryExercise =
                 $trainingPlanXExerciseDb->findTrainingDiaryByTrainingPlanExerciseId($trainingPlanExerciseId);
 
             if ($trainingDiaryExercise) {
-                $trainingDiaryViewGenerator = new Service_Generator_View_TrainingDiaries($this->view);
+                $trainingDiaryViewGenerator = new TrainingDiariesViewGenerator($this->view);
                 $sContent = $trainingDiaryViewGenerator->generateExerciseContent($trainingDiaryExercise);
                 $aViewContent = $this->getExerciseInfo($trainingDiaryExercise);
 
@@ -429,6 +474,13 @@ class TrainingDiariesController extends AbstractController {
         }
     }
 
+    /**
+     * get info from training plan by training plan db table row
+     *
+     * @param $oTrainingstagebuchTrainingsplanRow
+     *
+     * @return array
+     */
     private function getTrainingPlanInfo($oTrainingstagebuchTrainingsplanRow) {
         $aViewContent = array();
         $aTrainingsplanIds = array();
@@ -436,7 +488,7 @@ class TrainingDiariesController extends AbstractController {
         $aViewContent['nextTrainingsplanId'] = null;
 
         if (false === empty($oTrainingstagebuchTrainingsplanRow->training_plan_parent_fk)) {
-            $oTrainingsplaeneStorage = new Model_DbTable_TrainingPlans();
+            $oTrainingsplaeneStorage = new TrainingPlans();
             $oChildTrainingsplaene = $oTrainingsplaeneStorage->findChildTrainingPlans($oTrainingstagebuchTrainingsplanRow->training_plan_parent_fk);
             if (false !== $oChildTrainingsplaene) {
                 foreach ($oChildTrainingsplaene as $oChildTrainingsplan) {
@@ -460,44 +512,53 @@ class TrainingDiariesController extends AbstractController {
         return $aViewContent;
     }
 
-    public function getExerciseInfo($oTrainingstagebuchUebungRow) {
+    /**
+     * get exercise info by training plan exercise row
+     *
+     * @param Zend_Db_Table_Row_Abstract $trainingPlanXExerciseRow
+     *
+     * @return array
+     */
+    public function getExerciseInfo($trainingPlanXExerciseRow) {
         $aViewContent = array();
-        $aUebungIds = array();
+        $exerciseIds = array();
         $aViewContent['prevTrainingsplanUebungId'] = null;
         $aViewContent['nextTrainingsplanUebungId'] = null;
 
-        if (false === empty($oTrainingstagebuchUebungRow->training_plan_id)) {
-            $oTrainingsplaeneStorage = new Model_DbTable_TrainingPlanXExercise();
-            $oUebungen = $oTrainingsplaeneStorage->findExercisesByTrainingPlanId($oTrainingstagebuchUebungRow->training_plan_id);
-            if (false !== $oUebungen) {
-                foreach ($oUebungen as $oUebung) {
-                    $aUebungIds[] = $oUebung->training_plan_x_exercise_id;
+        if (false === empty($trainingPlanXExerciseRow->training_plan_id)) {
+            $trainingPlansDb = new TrainingPlanXExercise();
+            $exercises = $trainingPlansDb->findExercisesByTrainingPlanId($trainingPlanXExerciseRow->training_plan_id);
+            if (false !== $exercises) {
+                foreach ($exercises as $exercise) {
+                    $exerciseIds[] = $exercise->training_plan_x_exercise_id;
                 }
             }
         }
-        $aViewContent['count'] = count($aUebungIds);
+        $aViewContent['count'] = count($exerciseIds);
         if (0 < $aViewContent['count']) {
-            $aViewContent['actualPos'] = array_search($oTrainingstagebuchUebungRow->training_plan_x_exercise_id,
-                $aUebungIds);
+            $aViewContent['actualPos'] = array_search($trainingPlanXExerciseRow->training_plan_x_exercise_id,
+                $exerciseIds);
             if (0 < $aViewContent['actualPos']) {
-                $aViewContent['prevTrainingsplanUebungId'] = $aUebungIds[$aViewContent['actualPos'] - 1];
+                $aViewContent['prevTrainingsplanUebungId'] = $exerciseIds[$aViewContent['actualPos'] - 1];
             }
             if ($aViewContent['actualPos'] < ($aViewContent['count'] - 1)) {
-                $aViewContent['nextTrainingsplanUebungId'] = $aUebungIds[$aViewContent['actualPos'] + 1];
+                $aViewContent['nextTrainingsplanUebungId'] = $exerciseIds[$aViewContent['actualPos'] + 1];
             }
         }
-        $aViewContent['trainingsplanUebungId'] = $oTrainingstagebuchUebungRow->training_plan_x_exercise_id;
+        $aViewContent['trainingsplanUebungId'] = $trainingPlanXExerciseRow->training_plan_x_exercise_id;
 
         return $aViewContent;
     }
 
     /**
-     * @param \Zend_Db_Table_Row_Abstract $oTrainingstagebuchTrainingsplanRow
+     * generate view for training plan
+     *
+     * @param \Zend_Db_Table_Row_Abstract $trainingDiaryXTrainingPlanRow
      *
      * @return string
      */
-    public function generateViewForTrainingsplan($oTrainingstagebuchTrainingsplanRow) {
-        $this->view->assign($oTrainingstagebuchTrainingsplanRow->toArray());
+    private function generateViewForTrainingPlan($trainingDiaryXTrainingPlanRow) {
+        $this->view->assign($trainingDiaryXTrainingPlanRow->toArray());
 
         return $this->view->render('training-diaries/partials/training-diary-training-plan-partial.phtml');
     }

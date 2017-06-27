@@ -9,6 +9,13 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Interfaces\OptionsStorageInterface;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+
+/**
+ * Class OptionsController
+ */
 abstract class OptionsController extends AbstractController {
 
     private $optionsStorage = null;
@@ -16,7 +23,7 @@ abstract class OptionsController extends AbstractController {
     protected $map = [];
 
     /**
-     * @return Interface_OptionsStorageInterface
+     * @return OptionsStorageInterface
      */
     protected abstract function useOptionsStorage();
 
@@ -29,6 +36,9 @@ abstract class OptionsController extends AbstractController {
         }
     }
 
+    /**
+     * index action
+     */
     public function indexAction() {
         $optionsCollection = $this->useOptionsStorage()->findAllOptions();
         $optionsContent = 'Es konnten leider keine optionen gefunden werden!';
@@ -45,10 +55,16 @@ abstract class OptionsController extends AbstractController {
         $this->view->assign('optionsContent', $optionsContent);
     }
 
+    /**
+     * new action
+     */
     public function newAction() {
         $this->forward('edit');
     }
 
+    /**
+     * edit action
+     */
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
@@ -84,6 +100,9 @@ abstract class OptionsController extends AbstractController {
         $this->view->assign('optionContent', $optionContent);
     }
 
+    /**
+     * show action
+     */
     public function showAction() {
 
         $optionId = intval($this->getParam('id'));
@@ -99,6 +118,9 @@ abstract class OptionsController extends AbstractController {
         }
     }
 
+    /**
+     * save action
+     */
     public function saveAction() {
         if ($this->getRequest()->isPost()) {
             $optionId = $this->getParam('id');
@@ -107,29 +129,32 @@ abstract class OptionsController extends AbstractController {
             $messages = [];
 
             if (!$optionName) {
-                Service_GlobalMessageHandler::appendMessage('Es muss ein name angegeben werden', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Es muss ein name angegeben werden', Message::STATUS_ERROR);
                 $this->view->assign('json_string', json_encode($messages));
-                return false;
-            }
-
-            $data = [
-                $this->map['option_name'] => $optionName,
-                $this->map['option_value'] => $optionValue
-            ];
-
-            if (is_numeric($optionId)
-                && 0 < $optionId
-            ) {
-                $this->useOptionsStorage()->updateOption($data, $optionId);
             } else {
-                $optionId = $this->useOptionsStorage()->insertOption($data);
+
+                $data = [
+                    $this->map['option_name'] => $optionName,
+                    $this->map['option_value'] => $optionValue
+                ];
+
+                if (is_numeric($optionId)
+                    && 0 < $optionId
+                ) {
+                    $this->useOptionsStorage()->updateOption($data, $optionId);
+                } else {
+                    $optionId = $this->useOptionsStorage()->insertOption($data);
+                }
+                GlobalMessageHandler::appendMessage('Option erfolgreich gespeichert', Message::STATUS_OK);
             }
-            Service_GlobalMessageHandler::appendMessage('Option erfolgreich gespeichert', Model_Entity_Message::STATUS_OK);
         } else {
-            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf dieser Seite', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Falscher Aufruf dieser Seite', Message::STATUS_ERROR);
         }
     }
 
+    /**
+     * delete action
+     */
     public function deleteAction() {
 
         $optionId = intval($this->getParam('id'));

@@ -8,10 +8,15 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Service\Reset;
+
+/**
+ * Class ResetController
+ */
 class ResetController extends AbstractController {
 
     public function indexAction() {
-        $resetService = new Service_Reset();
+        $resetService = new Reset();
         $resetService->cleanTestActivities();
     }
 }

@@ -7,8 +7,19 @@
 
 require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 
+use Model\DbTable\MuscleGroups;
+use Model\DbTable\Muscles;
+use Model\DbTable\MuscleXMuscleGroup;
+use Model\DbTable\Exercises;
+use Model\DbTable\ExerciseXMuscle;
+use Service\GlobalMessageHandler;
+use Model\Entity\Message;
+
 class MuscleGroupsController extends AbstractController {
 
+    /**
+     * initial function for controller
+     */
     public function init() {
         if (!$this->getParam('ajax')) {
             $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
@@ -18,8 +29,11 @@ class MuscleGroupsController extends AbstractController {
         }
     }
 
+    /**
+     * index action
+     */
     public function indexAction() {
-        $muscleGroupsDb = new Model_DbTable_MuscleGroups();
+        $muscleGroupsDb = new MuscleGroups();
 
         $muscleGroupsCollection = $muscleGroupsDb->findAllMuscleGroups()->toArray();
         $muscleGroupsContent = "Es wurden leider keine Muskelgruppen gefunden!";
@@ -36,11 +50,14 @@ class MuscleGroupsController extends AbstractController {
         $this->view->assign('muscleGroupsContent', $muscleGroupsContent);
     }
 
+    /**
+     * show action
+     */
     public function showAction() {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
-            $musclesDb = new Model_DbTable_MuscleGroups();
+            $musclesDb = new MuscleGroups();
             $muscle = $musclesDb->findMuscleGroup($id);
 
             if ($muscle instanceof Zend_Db_Table_Row_Abstract) {
@@ -52,11 +69,18 @@ class MuscleGroupsController extends AbstractController {
         }
     }
 
-    private function generateMusclesContent($id) {
+    /**
+     * generates muscles content
+     *
+     * @param $muscleGroupId
+     *
+     * @return string
+     */
+    private function generateMusclesContent($muscleGroupId) {
         $content = '';
 
-        $musclesDb = new Model_DbTable_Muscles();
-        $musclesCollection = $musclesDb->findAllMusclesByMuscleGroupId($id);
+        $musclesDb = new Muscles();
+        $musclesCollection = $musclesDb->findAllMusclesByMuscleGroupId($muscleGroupId);
 
         foreach ($musclesCollection as $muscle) {
             $this->view->assign('name', $muscle->offsetGet('muscle_name'));
@@ -68,22 +92,28 @@ class MuscleGroupsController extends AbstractController {
     }
 
     /**
-     *
+     * delete muscle action
      */
     public function deleteMuscleAction() {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
-            $musclesDb = new Model_DbTable_Muscles();
+            $musclesDb = new Muscles();
             $result = $musclesDb->deleteMuscle($id);
             echo $result;
         }
     }
 
+    /**
+     * new action
+     */
     public function newAction() {
         $this->forward('edit');
     }
 
+    /**
+     * edit action
+     */
     public function editAction() {
         $params = $this->getRequest()->getParams();
 
@@ -93,7 +123,7 @@ class MuscleGroupsController extends AbstractController {
         ) {
             $muscleGroupId = $params['id'];
 
-            $muscleXMuscleGroupDb = new Model_DbTable_MuscleXMuscleGroup();
+            $muscleXMuscleGroupDb = new MuscleXMuscleGroup();
             $muscleCollection = $muscleXMuscleGroupDb->findMusclesByMuscleGroupId($muscleGroupId);
             $this->view->assign('musclesCollection', $muscleCollection);
 
@@ -111,13 +141,16 @@ class MuscleGroupsController extends AbstractController {
 
             $this->view->assign('muscle_collection_content', $content);
 
-            $muscleGroupDb = new Model_DbTable_MuscleGroups();
+            $muscleGroupDb = new MuscleGroups();
             $muscleGroup = $muscleGroupDb->findMuscleGroup($muscleGroupId);
 
             $this->view->assign($muscleGroup->toArray());
         }
     }
 
+    /**
+     * delete action
+     */
     public function deleteAction() {
         $a_params = $this->getRequest()->getParams();
         $messagesCollection = array();
@@ -128,10 +161,10 @@ class MuscleGroupsController extends AbstractController {
         ) {
             $i_muskelgruppe_id = $a_params['id'];
 
-            $obj_db_uebungen = new Model_DbTable_Exercises();
-            $obj_db_muskelgruppen = new Model_DbTable_MuscleGroups();
-            $obj_db_uebung_muskelgruppen = new Model_DbTable_ExerciseXMuscle();
-            $obj_db_muskelgruppen_muskeln = new Model_DbTable_MuscleXMuscleGroup();
+            $obj_db_uebungen = new Exercises();
+            $obj_db_muskelgruppen = new MuscleGroups();
+            $obj_db_uebung_muskelgruppen = new ExerciseXMuscle();
+            $obj_db_muskelgruppen_muskeln = new MuscleXMuscleGroup();
 
 //            $a_uebungen = $obj_db_uebung_muskelgruppen->findExercisesForMuscleGroup($i_muskelgruppe_id);
 
@@ -172,7 +205,7 @@ class MuscleGroupsController extends AbstractController {
     }
 
     /**
-     * eine liste der muscle-groups für die übung zurück geben
+     * get muscle groups for edit action
      *
      * @access public
      * @
@@ -183,7 +216,7 @@ class MuscleGroupsController extends AbstractController {
 
         if (true === isset($aParams['id'])) {
             $iUebungId = $aParams['id'];
-            $oUebungMuskelnStorage = new Model_DbTable_ExerciseXMuscle();
+            $oUebungMuskelnStorage = new ExerciseXMuscle();
             $aUebungMuskeln = $oUebungMuskelnStorage->findMusclesForExercise($iUebungId);
             $aMuskelGruppen = array();
 
@@ -234,7 +267,7 @@ class MuscleGroupsController extends AbstractController {
 
         if (isset($params['search'])) {
             $search = base64_decode($params['search']) . '%';
-            $muscleGroupsDb = new Model_DbTable_MuscleGroups();
+            $muscleGroupsDb = new MuscleGroups();
 
             $muscleGroupsProposals = $muscleGroupsDb->findMuscleGroupsByName($search);
             $this->view->assign('muscleGroupProposals', $muscleGroupsProposals);
@@ -250,8 +283,8 @@ class MuscleGroupsController extends AbstractController {
 
         if ($this->getRequest()->isPost()) {
 
-            $muscleGroupsDb = new Model_DbTable_MuscleGroups();
-            $muscleXMuscleGroupsDb = new Model_DbTable_MuscleXMuscleGroup();
+            $muscleGroupsDb = new MuscleGroups();
+            $muscleXMuscleGroupsDb = new MuscleXMuscleGroup();
 
             $muscleGroupName = '';
             $muscleGroupId = 0;
@@ -331,7 +364,7 @@ class MuscleGroupsController extends AbstractController {
             if (0 == strlen(trim($muscleGroupName))
                 && ! $muscleGroupId
             ) {
-                Service_GlobalMessageHandler::appendMessage('Diese Muskelgruppe benötigt einen Namen', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Diese Muskelgruppe benötigt einen Namen', Message::STATUS_ERROR);
                 $hasErrors = true;
             } else if (0 < strlen(trim($muscleGroupName))
                 && ! $muscleGroupId
@@ -340,7 +373,7 @@ class MuscleGroupsController extends AbstractController {
             }
 
             if ($countMuscleGroups <= 0) {
-                Service_GlobalMessageHandler::appendMessage('Diese Muskelgruppe benötigt mindestens einen beanspruchten Muskel', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Diese Muskelgruppe benötigt mindestens einen beanspruchten Muskel', Message::STATUS_ERROR);
                 $hasErrors = true;
             }
 
@@ -353,7 +386,7 @@ class MuscleGroupsController extends AbstractController {
                 if (is_array($muscleGroupsCurrent)
                     && 0 < count($muscleGroupsCurrent)
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Muskelgruppe "' . $muscleGroupName . '" existiert bereits!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Muskelgruppe "' . $muscleGroupName . '" existiert bereits!', Message::STATUS_ERROR);
                     $hasErrors = true;
                 }
             }
@@ -399,7 +432,7 @@ class MuscleGroupsController extends AbstractController {
                     $data['muscle_group_update_user_fk'] = $userId;
 
                     $muscleGroupsDb->updateMuscleGroup($data, $muscleGroupId);
-                    Service_GlobalMessageHandler::appendMessage('Diese Muskelgruppe wurde erfolgreich bearbeitet!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Diese Muskelgruppe wurde erfolgreich bearbeitet!', Message::STATUS_OK);
                 } // muskelgruppe neu anlegen
                 else if (is_array($data)
                     && 0 < count($data)
@@ -416,14 +449,14 @@ class MuscleGroupsController extends AbstractController {
                     $data['muscle_group_create_user_fk'] = $userId;
 
                     $muscleGroupId = $muscleGroupsDb->saveMuscleGroup($data);
-                    Service_GlobalMessageHandler::appendMessage('Diese Muskelgruppe wurde erfolgreich angelegt!', Model_Entity_Message::STATUS_OK);
+                    GlobalMessageHandler::appendMessage('Diese Muskelgruppe wurde erfolgreich angelegt!', Message::STATUS_OK);
                 }
 
                 if (0 === count($muscleXMuscleGroupsInsert)
                     && 0 === count($muscleXMuscleGroupsUpdates)
                     && 0 === count($muscleXMuscleGroupsDeletes)
                 ) {
-                    Service_GlobalMessageHandler::appendMessage('Diese Muskelgruppe wurde nicht geändert!', Model_Entity_Message::STATUS_ERROR);
+                    GlobalMessageHandler::appendMessage('Diese Muskelgruppe wurde nicht geändert!', Message::STATUS_ERROR);
                 } else if ($muscleGroupId) {
 
                     foreach ($muscleXMuscleGroupsInsert as $muscleXMuscleGroupMuscle) {
@@ -451,10 +484,10 @@ class MuscleGroupsController extends AbstractController {
                     }
                 }
             } else {
-                Service_GlobalMessageHandler::appendMessage('Es gabe einen Fehler beim Muskelgruppe speichern!', Model_Entity_Message::STATUS_ERROR);
+                GlobalMessageHandler::appendMessage('Es gabe einen Fehler beim Muskelgruppe speichern!', Message::STATUS_ERROR);
             }
         } else {
-            Service_GlobalMessageHandler::appendMessage('Falscher Aufruf von Muskelgruppe speichern!', Model_Entity_Message::STATUS_ERROR);
+            GlobalMessageHandler::appendMessage('Falscher Aufruf von Muskelgruppe speichern!', Message::STATUS_ERROR);
         }
     }
 }
