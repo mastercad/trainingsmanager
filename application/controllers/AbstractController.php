@@ -4,6 +4,13 @@
  * User: mastercad
  * Date: 19.03.17
  * Time: 07:39
+ * PHP Version: 5.5
+ *
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
 
 use \Auth\Model\Role\Member;

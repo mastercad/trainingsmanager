@@ -4,8 +4,22 @@
  * User: mastercad
  * Date: 18.05.17
  * Time: 20:06
+ * PHP Version: 5.5
+ *
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
+
 namespace Test;
+
+use Zend_Db_Adapter_Pdo_Mysql;
+use Zend_Session;
+use Zend_Registry;
+use Zend_Db_Table;
+use Zend_Db_Adapter_Abstract;
 
 class AbstractTest extends \PHPUnit\Framework\TestCase {
 

@@ -4,7 +4,15 @@
  * User: mastercad
  * Date: 23.04.17
  * Time: 10:19
+ * PHP Version: 5.5
+ *
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
+
 namespace Test\Model\Entity;
 
 use Model\Entity\Message;
