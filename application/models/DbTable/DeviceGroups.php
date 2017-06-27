@@ -9,7 +9,6 @@
 
 namespace Model\DbTable;
 
-use Nette\NotImplementedException;
 use Zend_Db_Table_Rowset_Abstract;
 use Zend_Db_Table_Row_Abstract;
 use Exception;
@@ -24,13 +23,6 @@ class DeviceGroups extends AbstractDbTable
 
     /** @var string */
     protected $_primary = 'device_group_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find all device groups

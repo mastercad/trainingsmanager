@@ -10,7 +10,6 @@ namespace Model\DbTable;
 
 use Zend_Db_Table_Row_Abstract;
 use Zend_Db_Table_Rowset_Abstract;
-use Nette\NotImplementedException;
 use Zend_Db_Table_Abstract;
 
 /**
@@ -29,13 +28,6 @@ class TrainingDiaryTrainingPlans extends AbstractDbTable
      * @var string
      */
     protected $_primary = 'trainingstagebuch_trainingsplan_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find actual training diary by training plan exercise

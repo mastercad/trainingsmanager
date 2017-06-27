@@ -1,10 +1,8 @@
 <?php
 
-
 namespace Model\DbTable;
 
 use Zend_Db_Table_Rowset_Abstract;
-use Nette\NotImplementedException;
 use Zend_Db_Table;
 use Exception;
 
@@ -22,13 +20,6 @@ class MuscleXMuscleGroup extends AbstractDbTable
      * @var string
      */
     protected $_primary = 'muscle_x_muscle_group_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find muscles by muscle group

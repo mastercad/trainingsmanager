@@ -9,7 +9,6 @@
 namespace Model\DbTable;
 
 use Zend_Db_Table_Rowset_Abstract;
-use Nette\NotImplementedException;
 use Zend_Db_Table_Abstract;
 
 /**
@@ -27,13 +26,6 @@ class TrainingDiaryXDeviceOption extends AbstractDbTable
      * @var string
      */
     protected $_primary = 'training_diary_x_device_option_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find device options by training diary training plan exercise

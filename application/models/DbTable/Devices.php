@@ -9,7 +9,6 @@
 
 namespace Model\DbTable;
 
-use Nette\NotImplementedException;
 use Zend_Db_Table_Row_Abstract;
 use Zend_Db_Table_Rowset_Abstract;
 use Zend_Db_Table;
@@ -25,16 +24,6 @@ class Devices extends AbstractDbTable {
 
     /** @var string primary key */
     protected $_primary = 'device_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($deviceId) {
-        $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
-        $select->where('device_id = ?', $deviceId);
-
-        return $this->fetchRow($select);
-    }
 
     /**
      * @return Zend_Db_Table_Rowset_Abstract

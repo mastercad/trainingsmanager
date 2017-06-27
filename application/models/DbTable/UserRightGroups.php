@@ -22,17 +22,6 @@ class UserRightGroups extends AbstractDbTable {
     protected $_primary = 'user_right_group_id';
 
     /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
-
-        $select->where($this->considerTestUserForTableName('user_right_group_id') . ' = ?', $id);
-
-        return $this->fetchRow($select);
-    }
-
-    /**
      * find all user right groups
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract

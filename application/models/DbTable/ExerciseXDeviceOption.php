@@ -1,10 +1,8 @@
 <?php
 
-
 namespace Model\DbTable;
 
 use Zend_Db_Table_Rowset_Abstract;
-use Nette\NotImplementedException;
 use Zend_Db_Table;
 use Exception;
 
@@ -20,13 +18,6 @@ class ExerciseXDeviceOption extends AbstractDbTable {
      * @var string
      */
     protected $_primary = 'exercise_x_device_option_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find device options for exercise

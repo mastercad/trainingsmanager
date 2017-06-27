@@ -10,7 +10,6 @@
 namespace Model\DbTable;
 
 use Interfaces\OptionsStorageInterface;
-use Nette\NotImplementedException;
 
 /**
  * Class Application_Model_DbTable_Devices
@@ -22,13 +21,6 @@ class ExerciseOptions extends AbstractDbTable implements OptionsStorageInterface
 
     /** @var string */
     protected $_primary = 'exercise_option_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * @inheritdoc

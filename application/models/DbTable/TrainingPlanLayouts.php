@@ -9,7 +9,6 @@
 namespace Model\DbTable;
 
 use Zend_Db_Table_Row_Abstract;
-use Nette\NotImplementedException;
 
 /**
  * Class TrainingPlanLayouts
@@ -27,13 +26,6 @@ class TrainingPlanLayouts extends AbstractDbTable
      * @var string
      */
     protected $_primary = 'training_plan_layout_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find training plan layout

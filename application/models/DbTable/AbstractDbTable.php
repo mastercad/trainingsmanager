@@ -38,11 +38,16 @@ abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
     /**
      * find row by primary key for current table
      *
-     * @param $id
+     * @param $primary
      *
      * @return mixed
      */
-    abstract function findByPrimary($id);
+    function findByPrimary($primary) {
+        $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        $select->where($this->_primary[1] . ' = ?', intval($primary));
+
+        return $this->fetchRow($select);
+    }
 
     /**
      * @return mixed

@@ -8,7 +8,6 @@
 
 namespace Model\DbTable;
 
-use Nette\NotImplementedException;
 use Zend_Db_Table;
 use Zend_Db_Table_Rowset_Abstract;
 
@@ -22,13 +21,6 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      * @var string
      */
     protected $_primary = 'training_plan_x_exercise_option_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find training plan exercise options by training plan exercise and optional exercise option

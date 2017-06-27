@@ -12,9 +12,6 @@ namespace Model\DbTable;
 use Zend_Db_Table_Rowset_Abstract;
 use Exception;
 
-
-
-
 /**
  * Class Application_Model_DbTable_DeviceGroups
  */
@@ -25,13 +22,6 @@ class Widgets extends AbstractDbTable
 
     /** @var string */
     protected $_primary = 'widget_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        return $this->fetchRow('widget_id = ' . intval($id));
-    }
 
     /**
      * find all widgets

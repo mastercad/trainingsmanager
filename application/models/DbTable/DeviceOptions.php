@@ -10,7 +10,6 @@
 namespace Model\DbTable;
 
 use Interfaces\OptionsStorageInterface;
-use Nette\NotImplementedException;
 use Zend_Db_Table;
 use Exception;
 
@@ -24,13 +23,6 @@ class DeviceOptions extends AbstractDbTable implements OptionsStorageInterface {
 
     /** @var string */
     protected $_primary = 'device_option_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * @inheritdoc

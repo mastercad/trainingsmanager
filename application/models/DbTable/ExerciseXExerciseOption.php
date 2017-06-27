@@ -1,9 +1,7 @@
 <?php
 
-
 namespace Model\DbTable;
 
-use Nette\NotImplementedException;
 use Zend_Db_Table_Rowset_Abstract;
 use Zend_Db_Table;
 use Exception;
@@ -20,13 +18,6 @@ class ExerciseXExerciseOption extends AbstractDbTable {
      * @var string
      */
     protected $_primary = 'exercise_x_exercise_option_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find exercise options for exercise

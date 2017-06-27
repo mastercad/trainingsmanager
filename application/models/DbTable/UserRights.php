@@ -4,7 +4,6 @@ namespace Model\DbTable;
 
 use Zend_Db_Table_Row_Abstract;
 use Exception;
-use Nette\NotImplementedException;
 
 /**
  * Class Application_Model_DbTable_UserRights
@@ -18,13 +17,6 @@ class UserRights extends AbstractDbTable {
      * @var string
      */
     protected $_primary = 'user_right_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find user rights

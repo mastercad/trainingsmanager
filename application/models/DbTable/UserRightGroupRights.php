@@ -10,7 +10,6 @@ namespace Model\DbTable;
 
 use Zend_Db_Table_Rowset_Abstract;
 use Exception;
-use Nette\NotImplementedException;
 
 /**
  * Class Application_Model_DbTable_UserRightGroupsRight
@@ -25,13 +24,6 @@ class UserRightGroupRights extends AbstractDbTable
      * @var string
      */
     protected $_primary = 'user_right_group_right_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * find all user right group rights

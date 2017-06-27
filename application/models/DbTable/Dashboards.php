@@ -25,13 +25,6 @@ class Dashboards extends AbstractDbTable
     protected $_primary = 'dashboard_id';
 
     /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        return $this->fetchRow('dashboard_id = ' . intval($id));
-    }
-
-    /**
      * find all dashboards in database
      *
      * @return Zend_Db_Table_Rowset_Abstract

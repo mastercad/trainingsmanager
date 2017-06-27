@@ -39,13 +39,6 @@ class Users extends AbstractDbTable
     protected $_primary = 'user_id';
 
     /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        return $this->fetchRow("user_id = '" . $id . "'");
-    }
-
-    /**
      * find user
      *
      * @param int $iUserId

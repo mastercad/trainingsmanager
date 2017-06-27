@@ -5,7 +5,6 @@ namespace Model\DbTable;
 
 use Zend_Db_Table_Row_Abstract;
 use Zend_Db_Table_Rowset_Abstract;
-use Nette\NotImplementedException;
 use Zend_Db_Table;
 use Exception;
 
@@ -19,13 +18,6 @@ class ExerciseTypes extends AbstractDbTable
 
     /** @var string */
     protected $_primary = 'exercise_type_id';
-
-    /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        throw new NotImplementedException('Function findByPrimary not implemented yet!');
-    }
 
     /**
      * search all available exercises

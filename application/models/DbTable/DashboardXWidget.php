@@ -24,13 +24,6 @@ class DashboardXWidget extends AbstractDbTable
     protected $_primary = 'dashboard_x_widget_id';
 
     /**
-     * @inheritdoc
-     */
-    function findByPrimary($id) {
-        return $this->fetchRow('dashboard_x_widget_id = ' . intval($id));
-    }
-
-    /**
      * find all widgets by given dashboard
      *
      * @param int $dashboardId
