@@ -8,31 +8,52 @@
 
 namespace Service;
 
-
-
-
-
+/**
+ * Class Options
+ *
+ * @package Service
+ */
 abstract class Options
 {
 
+    /**
+     * @var array
+     */
     protected $hierarchy = [];
 
+    /**
+     * @var null
+     */
     protected $storage = null;
 
+    /**
+     * @var
+     */
     protected $storageClassName;
 
-    protected function getStorage() 
+    /**
+     * @return null
+     */
+    protected function getStorage()
     {
         return $this->storage;
     }
 
-    protected function setStorage($storage) 
+    /**
+     * @param $storage
+     *
+     * @return $this
+     */
+    protected function setStorage($storage)
     {
         $this->storage = $storage;
         return $this;
     }
 
-    protected function useStorage() 
+    /**
+     * @return null
+     */
+    protected function useStorage()
     {
         if (is_null($this->storage)) {
             $this->storage = new $this->storageClassName();

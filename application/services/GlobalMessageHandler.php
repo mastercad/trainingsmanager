@@ -19,12 +19,12 @@ class GlobalMessageHandler
 {
 
     /**
-     * @var Message 
+     * @var Message
      */
     static private $messageEntity = null;
 
     /**
-     * @var bool 
+     * @var bool
      */
     static private $init = false;
 

@@ -8,12 +8,11 @@
 
 namespace Service;
 
-use Service\AbstractService;
-
-
-
-
+/**
+ * Class Devices
+ *
+ * @package Service
+ */
 class Devices extends AbstractService
 {
-
 }

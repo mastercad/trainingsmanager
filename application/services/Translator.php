@@ -10,20 +10,23 @@ namespace Service;
 
 use Zend_Translate;
 
-
-
-
+/**
+ * Class Translator
+ *
+ * @package Service
+ */
 class Translator
 {
-
     /**
-     * @var  Zend_Translate 
+     * @var  Zend_Translate
      */
     private $translation;
+
     /**
      * @var array
      */
     private $userDefinedLanguages = [];
+
     /**
      * @var null
      */
@@ -36,7 +39,10 @@ class Translator
 
     ];
 
-    public function __construct() 
+    /**
+     *
+     */
+    public function __construct()
     {
         $this->initTranslation();
     }
@@ -44,9 +50,8 @@ class Translator
     /**
      *
      */
-    private function initTranslation() 
+    private function initTranslation()
     {
-
         $this->prepareLanguage();
 
         $baseTranslationPath = APPLICATION_PATH . '/../languages/';
@@ -70,7 +75,7 @@ class Translator
      * second prio is HTTP_ACCEPT_LANGUAGE in SERVER vars
      * third set fallback to "en"
      */
-    private function prepareLanguage() 
+    private function prepareLanguage()
     {
 
         if (!$this->favoriteLanguage) {
@@ -84,9 +89,9 @@ class Translator
             foreach ($foundLanguages as $pos => $language) {
                 if (preg_match('/([a-z\-\_]*);q=([0-9\.]*)/i', $language, $matches)) {
                     $this->addUserDefinedLanguage($matches[1], $matches[2]);
-                } else if (preg_match('/([a-z\-\_]*)=([0-9\.]*)/i', $language, $matches)) {
+                } elseif (preg_match('/([a-z\-\_]*)=([0-9\.]*)/i', $language, $matches)) {
                     $this->addUserDefinedLanguage($matches[1], $matches[2]);
-                } else if (preg_match('/([a-z\-\_]*)/i', $language, $matches)) {
+                } elseif (preg_match('/([a-z\-\_]*)/i', $language, $matches)) {
                     $this->addUserDefinedLanguage($matches[1], $pos + 1);
                 }
             }
@@ -102,7 +107,7 @@ class Translator
      * @param     $lang
      * @param int  $pos
      */
-    protected function addUserDefinedLanguage($lang, $pos = 1) 
+    protected function addUserDefinedLanguage($lang, $pos = 1)
     {
         $this->userDefinedLanguages[$pos . '#' . $lang] = $lang;
         krsort($this->userDefinedLanguages);
@@ -115,7 +120,7 @@ class Translator
      *
      * @return $this
      */
-    protected function addTranslationSource($translationSource) 
+    protected function addTranslationSource($translationSource)
     {
         $this->translationSources[] = $translationSource;
         return $this;
@@ -126,7 +131,7 @@ class Translator
      *
      * @return $this
      */
-    protected function setTranslation($translation) 
+    protected function setTranslation($translation)
     {
         $this->translation = $translation;
         return $this;
@@ -135,7 +140,7 @@ class Translator
     /**
      * @return \Zend_Translate
      */
-    public function getTranslation() 
+    public function getTranslation()
     {
         return $this->translation;
     }
@@ -143,7 +148,7 @@ class Translator
     /**
      * @return \Zend_Translate_Adapter
      */
-    protected function getTranslator() 
+    protected function getTranslator()
     {
         return $this->getTranslation()->getAdapter();
     }
@@ -154,7 +159,7 @@ class Translator
      *
      * @return string
      */
-    protected function translate($tag, $locale = null) 
+    protected function translate($tag, $locale = null)
     {
         return $this->getTranslator()->translate($tag, $locale);
     }

@@ -8,11 +8,11 @@
 
 namespace Service;
 
-
-
-
-
+/**
+ * Class Users
+ *
+ * @package Service
+ */
 class Users
 {
-
 }

@@ -8,13 +8,11 @@
 
 namespace Service\Generator\View;
 
-use Service\Generator\View\GeneratorAbstract;
-
-
-
-
+/**
+ * Class DropDown
+ *
+ * @package Service\Generator\View
+ */
 class DropDown extends GeneratorAbstract
 {
-
-
 }

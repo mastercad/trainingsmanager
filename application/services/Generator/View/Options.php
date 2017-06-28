@@ -8,55 +8,50 @@
 
 namespace Service\Generator\View;
 
-use Service\Generator\View\GeneratorAbstract;
-
-
-
-
 abstract class Options extends GeneratorAbstract
 {
 
     /**
-     * @var string Additional Attributes for rendered HTML Element (input / select) 
+     * @var string Additional Attributes for rendered HTML Element (input / select)
      */
     protected $additionalElementAttributes = '';
 
     protected $optionType = "NONE";
 
     /**
-     * @var array keys and priority who extracted from option collection 
+     * @var array keys and priority who extracted from option collection
      */
     protected $optionValuePriorities = [];
 
     private $optionId = null;
 
     /**
-     * @var string|int value of option int or pipe separated integers 
+     * @var string|int value of option int or pipe separated integers
      */
     private $optionValue = null;
 
     /**
-     * @var string name of current Option 
+     * @var string name of current Option
      */
     private $optionName = null;
 
     /**
-     * @var string content for label of parent element 
+     * @var string content for label of parent element
      */
     private $optionSelectText = null;
 
     /**
-     * @var string (CSS) class Name in HTML Element 
+     * @var string (CSS) class Name in HTML Element
      */
     private $optionClassName = null;
 
     /**
-     * @var string (CSS) class Name in HTML Parent Element (e.g Select) 
+     * @var string (CSS) class Name in HTML Parent Element (e.g Select)
      */
     private $optionSelectClassName = null;
 
     /**
-     * @var int unique ID of input field in html (e.g. TrainingPlanXExerciseOptionId or TrainingPlanXDeviceOptionId 
+     * @var int unique ID of input field in html (e.g. TrainingPlanXExerciseOptionId or TrainingPlanXDeviceOptionId
      */
     private $inputFieldUniqueId = null;
 
@@ -69,47 +64,47 @@ abstract class Options extends GeneratorAbstract
     private $trainingDiaryXTrainingPlanExerciseId = null;
 
     /**
-     * @var string|int selected value for option values 
+     * @var string|int selected value for option values
      */
     private $selectedOptionValue = null;
 
     /**
-     * @var int selected option key for option values  
+     * @var int selected option key for option values
      */
     private $selectedOptionKey = null;
 
     /**
-     * @var bool should delete Button show for option element 
+     * @var bool should delete Button show for option element
      */
     private $showDelete = false;
 
     /**
-     * @var bool generates empty input, if no values set for option 
+     * @var bool generates empty input, if no values set for option
      */
     private $forceGenerateEmptyInput = false;
 
     /**
-     * @var bool  
+     * @var bool
      */
     private $exerciseFinished = false;
 
     /**
-     * @var string|int 
+     * @var string|int
      */
     private $baseOptionValue = null;
 
     /**
-     * @var bool  
+     * @var bool
      */
     private $showTrainingProgress = false;
 
     /**
-     * @var bool  
+     * @var bool
      */
     private $allowEdit = false;
 
     /**
-     * @var bool  
+     * @var bool
      */
     private $convertDropDownValues = true;
 
@@ -124,50 +119,41 @@ abstract class Options extends GeneratorAbstract
      *
      * @return null
      */
-    protected function extractOptionValue($option) 
+    protected function extractOptionValue($option)
     {
         $optionValuePriorities = $this->getOptionValuePriorities();
         if (!empty($this->getTrainingDiaryXTrainingPlanExerciseId())) {
             return $option[$optionValuePriorities[0]];
-        } else if (!empty($this->getTrainingPlanXExerciseId())) {
+        } elseif (!empty($this->getTrainingPlanXExerciseId())) {
             return $option[$optionValuePriorities[1]];
-        } else if (!empty($this->getExerciseId())) {
+        } elseif (!empty($this->getExerciseId())) {
             return $option[$optionValuePriorities[2]];
-        } else if (!empty($this->getDeviceId())) {
+        } elseif (!empty($this->getDeviceId())) {
             return $option[$optionValuePriorities[3]];
         }
-        //        foreach ($this->getOptionValuePriorities() as $priority) {
-        //            if (array_key_exists($priority, $option)) {
-        //                return $option[$priority];
-        //            }
-        //        }
         return null;
     }
 
-    protected function generateSelectOption() 
+    protected function generateSelectOption()
     {
-
     }
 
-    protected function generateInputOption() 
+    protected function generateInputOption()
     {
-
     }
 
-    public function generateOptionContent() 
+    public function generateOptionContent()
     {
-
     }
 
-    public function generateOptionContentForEdit() 
+    public function generateOptionContentForEdit()
     {
-
     }
 
     /**
      * @return string
      */
-    protected function generateOptionInputContent() 
+    protected function generateOptionInputContent()
     {
         $optionId = uniqid('option_id_');
         $this->getView()->assign('optionLabelText', $this->getOptionName());
@@ -190,7 +176,7 @@ abstract class Options extends GeneratorAbstract
             if ($this->isShowTrainingProgress()) {
                 if ($this->getSelectedOptionValue() < $this->getBaseOptionValue()) {
                     $this->getView()->assign('selectClass', 'negative');
-                } else if ($this->getSelectedOptionValue() == $this->getBaseOptionValue()) {
+                } elseif ($this->getSelectedOptionValue() == $this->getBaseOptionValue()) {
                     $this->getView()->assign('selectClass', 'current');
                 } else {
                     $this->getView()->assign('selectClass', 'positive');
@@ -199,7 +185,7 @@ abstract class Options extends GeneratorAbstract
 
             if ($this->isExerciseFinished()) {
                 return '<label>' . $this->getOptionName() . ':</label> ' . $this->getSelectedOptionValue();
-            } else if ($this->isConvertDropDownValues()
+            } elseif ($this->isConvertDropDownValues()
                 && false != strpos($this->getOptionValue(), '|')
             ) {
                 $this->getView()->assign('optionClassName', $this->getOptionClassName() . ' custom-drop-down');
@@ -210,7 +196,8 @@ abstract class Options extends GeneratorAbstract
                     $this->getView()->assign('optionValue', $optionKey);
                     $this->getView()->assign('optionText', $optionValue);
                     $this->receiveCurrentOptionClass(
-                        $optionValue, $this->getSelectedOptionValue(),
+                        $optionValue,
+                        $this->getSelectedOptionValue(),
                         $this->getBaseOptionValue()
                     );
                     $optionRowContent .= $this->getView()->render('loops/option.phtml');
@@ -229,12 +216,20 @@ abstract class Options extends GeneratorAbstract
         }
     }
 
+    /**
+     * @param $currentValue
+     * @param $selectedValue
+     * @param $baseValue
+     *
+     * @return $this
+     * @throws \Zend_View_Exception
+     */
     private function receiveCurrentOptionClass($currentValue, $selectedValue, $baseValue)
     {
         if ($this->isShowTrainingProgress()) {
             if ($currentValue < $baseValue) {
                 $this->getView()->assign('optionClass', 'negative');
-            } else if ($currentValue == $baseValue) {
+            } elseif ($currentValue == $baseValue) {
                 $this->getView()->assign('optionClass', 'current');
             } else {
                 $this->getView()->assign('optionClass', 'positive');
@@ -246,7 +241,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return string
      */
-    public function getAdditionalElementAttributes() 
+    public function getAdditionalElementAttributes()
     {
         return $this->additionalElementAttributes;
     }
@@ -254,7 +249,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param string $additionalElementAttributes
      */
-    public function setAdditionalElementAttributes($additionalElementAttributes) 
+    public function setAdditionalElementAttributes($additionalElementAttributes)
     {
         $this->additionalElementAttributes = $additionalElementAttributes;
     }
@@ -262,7 +257,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return string
      */
-    public function getOptionType() 
+    public function getOptionType()
     {
         return $this->optionType;
     }
@@ -270,7 +265,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param string $optionType
      */
-    public function setOptionType($optionType) 
+    public function setOptionType($optionType)
     {
         $this->optionType = $optionType;
     }
@@ -278,7 +273,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return array
      */
-    public function getOptionValuePriorities() 
+    public function getOptionValuePriorities()
     {
         return $this->optionValuePriorities;
     }
@@ -286,7 +281,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param array $optionValuePriorities
      */
-    public function setOptionValuePriorities($optionValuePriorities) 
+    public function setOptionValuePriorities($optionValuePriorities)
     {
         $this->optionValuePriorities = $optionValuePriorities;
     }
@@ -294,7 +289,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return null
      */
-    public function getOptionId() 
+    public function getOptionId()
     {
         return $this->optionId;
     }
@@ -302,7 +297,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param null $optionId
      */
-    public function setOptionId($optionId) 
+    public function setOptionId($optionId)
     {
         $this->optionId = $optionId;
     }
@@ -310,7 +305,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return int|string
      */
-    public function getOptionValue() 
+    public function getOptionValue()
     {
         return $this->optionValue;
     }
@@ -318,7 +313,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param int|string $optionValue
      */
-    public function setOptionValue($optionValue) 
+    public function setOptionValue($optionValue)
     {
         $this->optionValue = $optionValue;
     }
@@ -326,7 +321,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return int
      */
-    public function getInputFieldUniqueId() 
+    public function getInputFieldUniqueId()
     {
         return $this->inputFieldUniqueId;
     }
@@ -334,7 +329,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param int $inputFieldUniqueId
      */
-    public function setInputFieldUniqueId($inputFieldUniqueId) 
+    public function setInputFieldUniqueId($inputFieldUniqueId)
     {
         $this->inputFieldUniqueId = $inputFieldUniqueId;
     }
@@ -342,7 +337,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return null
      */
-    public function getDeviceId() 
+    public function getDeviceId()
     {
         return $this->deviceId;
     }
@@ -350,7 +345,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param null $deviceId
      */
-    public function setDeviceId($deviceId) 
+    public function setDeviceId($deviceId)
     {
         $this->deviceId = $deviceId;
     }
@@ -358,7 +353,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return null
      */
-    public function getExerciseId() 
+    public function getExerciseId()
     {
         return $this->exerciseId;
     }
@@ -366,7 +361,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param null $exerciseId
      */
-    public function setExerciseId($exerciseId) 
+    public function setExerciseId($exerciseId)
     {
         $this->exerciseId = $exerciseId;
     }
@@ -374,7 +369,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return null
      */
-    public function getTrainingPlanXExerciseId() 
+    public function getTrainingPlanXExerciseId()
     {
         return $this->trainingPlanXExerciseId;
     }
@@ -382,7 +377,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param null $trainingPlanXExerciseId
      */
-    public function setTrainingPlanXExerciseId($trainingPlanXExerciseId) 
+    public function setTrainingPlanXExerciseId($trainingPlanXExerciseId)
     {
         $this->trainingPlanXExerciseId = $trainingPlanXExerciseId;
     }
@@ -390,7 +385,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return null
      */
-    public function getTrainingDiaryXTrainingPlanExerciseId() 
+    public function getTrainingDiaryXTrainingPlanExerciseId()
     {
         return $this->trainingDiaryXTrainingPlanExerciseId;
     }
@@ -398,7 +393,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param null $trainingDiaryXTrainingPlanExerciseId
      */
-    public function setTrainingDiaryXTrainingPlanExerciseId($trainingDiaryXTrainingPlanExerciseId) 
+    public function setTrainingDiaryXTrainingPlanExerciseId($trainingDiaryXTrainingPlanExerciseId)
     {
         $this->trainingDiaryXTrainingPlanExerciseId = $trainingDiaryXTrainingPlanExerciseId;
     }
@@ -406,7 +401,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return int|string
      */
-    public function getSelectedOptionValue() 
+    public function getSelectedOptionValue()
     {
         return $this->selectedOptionValue;
     }
@@ -414,7 +409,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param int|string $selectedOptionValue
      */
-    public function setSelectedOptionValue($selectedOptionValue) 
+    public function setSelectedOptionValue($selectedOptionValue)
     {
         $this->selectedOptionValue = $selectedOptionValue;
     }
@@ -422,7 +417,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return int
      */
-    public function getSelectedOptionKey() 
+    public function getSelectedOptionKey()
     {
         return $this->selectedOptionKey;
     }
@@ -430,7 +425,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param int $selectedOptionKey
      */
-    public function setSelectedOptionKey($selectedOptionKey) 
+    public function setSelectedOptionKey($selectedOptionKey)
     {
         $this->selectedOptionKey = $selectedOptionKey;
     }
@@ -438,7 +433,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return string
      */
-    public function getOptionName() 
+    public function getOptionName()
     {
         return $this->optionName;
     }
@@ -446,7 +441,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param string $optionName
      */
-    public function setOptionName($optionName) 
+    public function setOptionName($optionName)
     {
         $this->optionName = $optionName;
     }
@@ -454,7 +449,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return string
      */
-    public function getOptionClassName() 
+    public function getOptionClassName()
     {
         return $this->optionClassName;
     }
@@ -462,7 +457,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param string $optionClassName
      */
-    public function setOptionClassName($optionClassName) 
+    public function setOptionClassName($optionClassName)
     {
         $this->optionClassName = $optionClassName;
     }
@@ -470,7 +465,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return boolean
      */
-    public function isShowDelete() 
+    public function isShowDelete()
     {
         return $this->showDelete;
     }
@@ -478,7 +473,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param boolean $showDelete
      */
-    public function setShowDelete($showDelete) 
+    public function setShowDelete($showDelete)
     {
         $this->showDelete = $showDelete;
     }
@@ -486,7 +481,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return boolean
      */
-    public function isForceGenerateEmptyInput() 
+    public function isForceGenerateEmptyInput()
     {
         return $this->forceGenerateEmptyInput;
     }
@@ -494,7 +489,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param boolean $forceGenerateEmptyInput
      */
-    public function setForceGenerateEmptyInput($forceGenerateEmptyInput) 
+    public function setForceGenerateEmptyInput($forceGenerateEmptyInput)
     {
         $this->forceGenerateEmptyInput = $forceGenerateEmptyInput;
     }
@@ -502,7 +497,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return string
      */
-    public function getOptionSelectClassName() 
+    public function getOptionSelectClassName()
     {
         return $this->optionSelectClassName;
     }
@@ -510,7 +505,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param string $optionSelectClassName
      */
-    public function setOptionSelectClassName($optionSelectClassName) 
+    public function setOptionSelectClassName($optionSelectClassName)
     {
         $this->optionSelectClassName = $optionSelectClassName;
     }
@@ -518,7 +513,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return string
      */
-    public function getOptionSelectText() 
+    public function getOptionSelectText()
     {
         return $this->optionSelectText;
     }
@@ -526,7 +521,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @param string $optionSelectText
      */
-    public function setOptionSelectText($optionSelectText) 
+    public function setOptionSelectText($optionSelectText)
     {
         $this->optionSelectText = $optionSelectText;
     }
@@ -534,7 +529,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return boolean
      */
-    public function isExerciseFinished() 
+    public function isExerciseFinished()
     {
         return $this->exerciseFinished;
     }
@@ -544,7 +539,7 @@ abstract class Options extends GeneratorAbstract
      *
      * @return $this
      */
-    public function setExerciseFinished($exerciseFinished) 
+    public function setExerciseFinished($exerciseFinished)
     {
         $this->exerciseFinished = $exerciseFinished;
         return $this;
@@ -553,7 +548,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return int|string
      */
-    public function getBaseOptionValue() 
+    public function getBaseOptionValue()
     {
         return $this->baseOptionValue;
     }
@@ -563,7 +558,7 @@ abstract class Options extends GeneratorAbstract
      *
      * @return $this
      */
-    public function setBaseOptionValue($baseOptionValue) 
+    public function setBaseOptionValue($baseOptionValue)
     {
         $this->baseOptionValue = $baseOptionValue;
         return $this;
@@ -572,7 +567,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return boolean
      */
-    public function isShowTrainingProgress() 
+    public function isShowTrainingProgress()
     {
         return $this->showTrainingProgress;
     }
@@ -582,7 +577,7 @@ abstract class Options extends GeneratorAbstract
      *
      * @return $this
      */
-    public function setShowTrainingProgress($showTrainingProgress) 
+    public function setShowTrainingProgress($showTrainingProgress)
     {
         $this->showTrainingProgress = $showTrainingProgress;
         return $this;
@@ -591,7 +586,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return boolean
      */
-    public function isAllowEdit() 
+    public function isAllowEdit()
     {
         return $this->allowEdit;
     }
@@ -601,7 +596,7 @@ abstract class Options extends GeneratorAbstract
      *
      * @return $this
      */
-    public function setAllowEdit($allowEdit) 
+    public function setAllowEdit($allowEdit)
     {
         $this->allowEdit = $allowEdit;
         return $this;
@@ -610,7 +605,7 @@ abstract class Options extends GeneratorAbstract
     /**
      * @return boolean
      */
-    public function isConvertDropDownValues() 
+    public function isConvertDropDownValues()
     {
         return $this->convertDropDownValues;
     }
@@ -620,10 +615,9 @@ abstract class Options extends GeneratorAbstract
      *
      * @return $this;
      */
-    public function setConvertDropDownValues($convertDropDownValues) 
+    public function setConvertDropDownValues($convertDropDownValues)
     {
         $this->convertDropDownValues = $convertDropDownValues;
         return $this;
     }
-
 }

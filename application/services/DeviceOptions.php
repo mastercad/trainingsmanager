@@ -8,14 +8,13 @@
 
 namespace Service;
 
-use Service\Options;
-
-
-
-
+/**
+ * Class DeviceOptions
+ *
+ * @package Service
+ */
 class DeviceOptions extends Options
 {
-
     protected $hierarchy = [
         'device_x_device_option',
         'exercise_x_device_option',

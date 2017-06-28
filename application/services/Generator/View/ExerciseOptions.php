@@ -8,20 +8,26 @@
 
 namespace Service\Generator\View;
 
-use Service\Generator\View\Options;
 use Model\DbTable\ExerciseOptions as ModelDbTableExerciseOptions;
 use Model\DbTable\TrainingPlanXExerciseOption;
 use Model\DbTable\ExerciseXExerciseOption;
 use Zend_Registry;
 
-
-
-
+/**
+ * Class ExerciseOptions
+ *
+ * @package Service\Generator\View
+ */
 class ExerciseOptions extends Options
 {
-
+    /**
+     * @var string
+     */
     protected $optionType = 'exercise';
 
+    /**
+     * @var array
+     */
     protected $optionValuePriorities = [
         'training_diary_x_exercise_option_exercise_option_value',
         'training_plan_x_exercise_option_exercise_option_value',
@@ -32,26 +38,33 @@ class ExerciseOptions extends Options
     /**
      * @return string
      */
-    public function generate() 
+    public function generate()
     {
         $exerciseOptionsContent = '';
         $this->setOptionClassName('exercise-option');
         $exerciseOptionCollection = $this->collectOptions();
 
         foreach ($exerciseOptionCollection as $exerciseOptionId => $exerciseOption) {
-            $trainingPlanExerciseId = isset($exerciseOption['training_plan_x_exercise_option_id']) ? $exerciseOption['training_plan_x_exercise_option_id'] : null;
-            $trainingDiaryExerciseOptionId = isset($exerciseOption['training_diary_x_exercise_option_id']) ? $exerciseOption['training_diary_x_exercise_option_id'] : null;
+            $trainingPlanExerciseId = isset($exerciseOption['training_plan_x_exercise_option_id']) ?
+                $exerciseOption['training_plan_x_exercise_option_id'] :
+                null;
+
+            $trainingDiaryExerciseOptionId = isset($exerciseOption['training_diary_x_exercise_option_id']) ?
+                $exerciseOption['training_diary_x_exercise_option_id'] :
+                null;
 
             $this->setOptionId($exerciseOptionId);
             $this->setBaseOptionValue($exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
-            //            $this->setSelectedOptionValue($exerciseOption['training_diary_x_exercise_option_exercise_option_value'] ? $exerciseOption['training_diary_x_exercise_option_exercise_option_value'] : $exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
             $this->setSelectedOptionValue($this->extractOptionValue($exerciseOption));
             $this->setInputFieldUniqueId($trainingPlanExerciseId);
             $this->extractOptionValue($exerciseOption);
             $this->setOptionName($exerciseOption['exercise_option_name']);
             $this->setOptionId($exerciseOption['exercise_option_id']);
             $this->setOptionValue($this->extractOptionValue($exerciseOption));
-            $this->setAdditionalElementAttributes('data-training-plan-exercise-option-id="' . $trainingPlanExerciseId . '" data-training-diary-exercise-option-id="' . $trainingDiaryExerciseOptionId . '"');
+            $this->setAdditionalElementAttributes(
+                'data-training-plan-exercise-option-id="' . $trainingPlanExerciseId .
+                '" data-training-diary-exercise-option-id="' . $trainingDiaryExerciseOptionId . '"'
+            );
 
             $exerciseOptionsContent .= $this->generateOptionInputContent();
         }
@@ -71,18 +84,23 @@ class ExerciseOptions extends Options
     /**
      * @return array
      */
-    protected function collectOptions() 
+    protected function collectOptions()
     {
         $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
         $trainingPlanXExerciseOptionCollection = [];
 
         if (! empty($this->getTrainingPlanXExerciseId())) {
-            $trainingPlanXExerciseOptionCollection = $trainingPlanXExerciseOptionDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($this->getTrainingPlanXExerciseId(), $this->getOptionId());
+            $trainingPlanXExerciseOptionCollection =
+                $trainingPlanXExerciseOptionDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId(
+                    $this->getTrainingPlanXExerciseId(),
+                    $this->getOptionId()
+                );
         }
         $collectedExerciseOptions = [];
 
         $exerciseXExerciseOptionDb = new ExerciseXExerciseOption();
-        $exerciseXExerciseOptionCollection = $exerciseXExerciseOptionDb->findExerciseOptionsForExercise($this->getExerciseId());
+        $exerciseXExerciseOptionCollection =
+            $exerciseXExerciseOptionDb->findExerciseOptionsForExercise($this->getExerciseId());
 
         foreach ($exerciseXExerciseOptionCollection as $exerciseOption) {
             $exerciseOptionId = $exerciseOption->offsetGet('exercise_option_id');
@@ -113,18 +131,23 @@ class ExerciseOptions extends Options
     /**
      * @return string
      */
-    public function generateExerciseOptionsSelectContent() 
+    public function generateExerciseOptionsSelectContent()
     {
         $exerciseOptionsContent = '';
         $exerciseOptionsDb = new ModelDbTableExerciseOptions();
         $exerciseOptionsCollection = $exerciseOptionsDb->findAllOptions();
-        //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);
 
         foreach ($exerciseOptionsCollection as $exerciseOption) {
             $this->getView()->assign('optionClassName', 'exercise-option-select');
-            $this->getView()->assign('optionLabelText', Zend_Registry::get('Zend_Translate')->translate('label_exercise_options') . ':');
-            $this->getView()->assign('optionSelectText', Zend_Registry::get('Zend_Translate')->translate('label_please_select') . '');
+            $this->getView()->assign(
+                'optionLabelText',
+                Zend_Registry::get('Zend_Translate')->translate('label_exercise_options') . ':'
+            );
+            $this->getView()->assign(
+                'optionSelectText',
+                Zend_Registry::get('Zend_Translate')->translate('label_please_select') . ''
+            );
             $this->getView()->assign('optionValue', $exerciseOption->offsetGet('exercise_option_id'));
             $this->getView()->assign('optionText', $exerciseOption->offsetGet('exercise_option_name'));
             $exerciseOptionsContent .= $this->getView()->render('loops/option.phtml');
@@ -134,5 +157,4 @@ class ExerciseOptions extends Options
 
         return $this->getView()->render('globals/select.phtml');
     }
-
 }

@@ -10,51 +10,116 @@ namespace Service\Generator;
 
 use Exception;
 
-
-
-
-class Thumbnail {
-
+/**
+ * Class Thumbnail
+ *
+ * @package Service\Generator
+ */
+class Thumbnail
+{
+    /**
+     * @var null
+     */
     private $sourceFilePathName = null;
 
+    /**
+     * @var null
+     */
     private $destinationFilePathName = null;
 
+    /**
+     * @var null
+     */
     private $thumbHeight = null;
 
+    /**
+     * @var null
+     */
     private $thumbWidth = null;
 
+    /**
+     * @var bool
+     */
     private $priorityHeight = false;
 
+    /**
+     * @var bool
+     */
     private $priorityWidth = false;
 
+    /**
+     * @var null
+     */
     private $sourceImageHeight = null;
 
+    /**
+     * @var null
+     */
     private $sourceImageWidth = null;
 
+    /**
+     * @var int
+     */
     private $destinationStartX = 0;
 
+    /**
+     * @var int
+     */
     private $destinationStartY = 0;
 
+    /**
+     * @var null
+     */
     private $ratio = null;
 
+    /**
+     * @var int
+     */
     private $factorHeight = 1;
 
+    /**
+     * @var int
+     */
     private $factorWidth = 1;
 
+    /**
+     * @var null
+     */
     private $newHeight = null;
 
+    /**
+     * @var null
+     */
     private $newWidth = null;
 
+    /**
+     * @var null
+     */
     private $sourceImageType = null;
 
+    /**
+     * @var null
+     */
     private $sourceImageSize = null;
 
+    /**
+     * @var null
+     */
     private $sourceImage = null;
 
+    /**
+     * @var null
+     */
     private $destinationImage = null;
 
+    /**
+     * @var bool
+     */
     private $defineHeader = true;
 
+    /**
+     * @var array
+     */
     private $map = [
         'width' => 'thumbWidth',
         'height' => 'thumbHeight',
@@ -62,6 +127,10 @@ class Thumbnail {
         'prioHeight' => 'priorityHeight',
         'file' => 'sourceFilePathName'
     ];
+
+    /**
+     * @var array
+     */
     private $validImageTypes = [
         1,
         2,
@@ -82,8 +151,8 @@ class Thumbnail {
      *
      * @throws \Exception
      */
-    public function generate($params = null) {
-
+    public function generate($params = null)
+    {
         return $this->parseParams($params)
             ->prepareSourceImageData()
             ->validateSourceImagePath()
@@ -106,8 +175,8 @@ class Thumbnail {
      *
      * @throws \Exception
      */
-    public function generateImageString($params = null) {
-
+    public function generateImageString($params = null)
+    {
         $this->setDefineHeader(false)
             ->parseParams($params)
             ->prepareSourceImageData()
@@ -129,12 +198,14 @@ class Thumbnail {
         return 'data:image/'.$sourceImageType.';base64,'.base64_encode($imageString);
     }
 
-    private function generateThumbnail() {
-
+    /**
+     * @return $this
+     */
+    private function generateThumbnail()
+    {
         $this->setDestinationImage(imagecreatetruecolor($this->getThumbWidth(), $this->getThumbHeight()));
 
         switch ($this->getSourceImageType()) {
-
             /* gif */
             case 1: {
                 $this->createGifImage();
@@ -158,7 +229,11 @@ class Thumbnail {
         return $this;
     }
 
-    private function prepareSourceImageData() {
+    /**
+     * @return $this
+     */
+    private function prepareSourceImageData()
+    {
         if (!empty($this->getSourceFilePathName())
             && !preg_match('/[\/|\.]/', $this->getSourceFilePathName())
         ) {
@@ -167,7 +242,12 @@ class Thumbnail {
         return $this;
     }
 
-    private function validateSourceImagePath() {
+    /**
+     * @return $this
+     * @throws \Exception
+     */
+    private function validateSourceImagePath()
+    {
 
         if (false === is_readable($this->getSourceFilePathName())) {
             throw new Exception('File not found!');
@@ -175,8 +255,11 @@ class Thumbnail {
         return $this;
     }
 
-    private function parseSourceImageData() {
-
+    /**
+     * @return $this
+     */
+    private function parseSourceImageData()
+    {
         $fileInformation = getimagesize($this->getSourceFilePathName());
         $this->setSourceImageWidth($fileInformation[0]);
         $this->setSourceImageHeight($fileInformation[1]);
@@ -188,8 +271,8 @@ class Thumbnail {
     /**
      * @return $this
      */
-    private function prepareThumbData() {
-
+    private function prepareThumbData()
+    {
         if (!$this->getThumbWidth()
             && $this->getThumbHeight()
         ) {
@@ -211,30 +294,42 @@ class Thumbnail {
         return $this;
     }
 
-    private function calculateRatio() {
-
+    /**
+     * @return $this
+     */
+    private function calculateRatio()
+    {
         $this->setRatio($this->getSourceImageWidth() / $this->getSourceImageHeight());
         return $this;
     }
 
-    private function calculateFactorHeight() {
-
+    /**
+     * @return $this
+     */
+    private function calculateFactorHeight()
+    {
         if ($this->getSourceImageHeight() > $this->getThumbHeight()) {
             $this->setFactorHeight($this->getThumbHeight() / $this->getSourceImageHeight());
         }
         return $this;
     }
 
-    private function calculateFactorWidth() {
-
+    /**
+     * @return $this
+     */
+    private function calculateFactorWidth()
+    {
         if ($this->getSourceImageWidth() > $this->getThumbWidth()) {
             $this->setFactorWidth($this->getThumbWidth() / $this->getSourceImageWidth());
         }
         return $this;
     }
 
-    private function calculateDestinationImageDimensions() {
-
+    /**
+     * @return $this
+     */
+    private function calculateDestinationImageDimensions()
+    {
         if ($this->isPriorityWidth()) {
             $this->setNewHeight($this->getSourceImageHeight() * $this->getFactorWidth());
             $this->setNewWidth($this->getSourceImageWidth() * $this->getFactorWidth());
@@ -245,8 +340,11 @@ class Thumbnail {
         return $this;
     }
 
-    private function calculateDestinationStartPoints() {
-
+    /**
+     * @return $this
+     */
+    private function calculateDestinationStartPoints()
+    {
         if ($this->getNewHeight() < $this->getThumbHeight()) {
             $this->setDestinationStartY(($this->getThumbHeight() - $this->getNewHeight()) / 2);
         } else {
@@ -268,7 +366,8 @@ class Thumbnail {
      *
      * @return $this
      */
-    private function parseParams($params) {
+    private function parseParams($params)
+    {
         if (is_array($params)) {
             foreach ($params as $key => $param) {
                 if (array_key_exists($key, $this->map)) {
@@ -280,7 +379,11 @@ class Thumbnail {
         return $this;
     }
 
-    private function createPngImage() {
+    /**
+     * @return $this
+     */
+    private function createPngImage()
+    {
 
         if ($this->isDefineHeader()) {
             header('Content-Type: image/png');
@@ -313,7 +416,11 @@ class Thumbnail {
         return $this;
     }
 
-    private function createJpgImage() {
+    /**
+     * @return $this
+     */
+    private function createJpgImage()
+    {
 
         if ($this->isDefineHeader()) {
             header('Content-Type: image/jpeg');
@@ -341,12 +448,20 @@ class Thumbnail {
         return $this;
     }
 
-    private function createBmpImage() {
+    /**
+     * @return $this
+     */
+    private function createBmpImage()
+    {
 
         return $this;
     }
 
-    private function createGifImage() {
+    /**
+     * @return $this
+     */
+    private function createGifImage()
+    {
 
         if ($this->isDefineHeader()) {
             header('Content-Type: image/gif');
@@ -362,8 +477,12 @@ class Thumbnail {
 
         if ($transparent_index != (-1)) {
             @$transparent_color = imagecolorsforindex($img_src, $transparent_index);
-            @$transparent_new = imagecolorallocate($img_src, $transparent_color['red'], $transparent_color['green'],
-                $transparent_color['blue']);
+            @$transparent_new = imagecolorallocate(
+                $img_src,
+                $transparent_color['red'],
+                $transparent_color['green'],
+                $transparent_color['blue']
+            );
             $transparent_new_index = imagecolortransparent($img_src, $transparent_new);
             imagefill($img_src, 0, 0, $transparent_new_index);
         }
@@ -388,7 +507,13 @@ class Thumbnail {
         return $this;
     }
 
-    private function generateErrorImage($errorText) {
+    /**
+     * @param $errorText
+     *
+     * @return $this
+     */
+    private function generateErrorImage($errorText)
+    {
 
         if ($this->isDefineHeader()) {
             header('Content-Type: image/png');
@@ -406,301 +531,344 @@ class Thumbnail {
     /**
      * @return null
      */
-    public function getDestinationFilePathName() {
+    public function getDestinationFilePathName()
+    {
         return $this->destinationFilePathName;
     }
 
     /**
      * @param null $destinationFilePathName
      */
-    public function setDestinationFilePathName($destinationFilePathName) {
+    public function setDestinationFilePathName($destinationFilePathName)
+    {
         $this->destinationFilePathName = $destinationFilePathName;
     }
 
     /**
      * @return null
      */
-    public function getSourceFilePathName() {
+    public function getSourceFilePathName()
+    {
         return $this->sourceFilePathName;
     }
 
     /**
      * @param null $sourceFilePathName
      */
-    public function setSourceFilePathName($sourceFilePathName) {
+    public function setSourceFilePathName($sourceFilePathName)
+    {
         $this->sourceFilePathName = $sourceFilePathName;
     }
 
     /**
      * @return null
      */
-    public function getThumbHeight() {
+    public function getThumbHeight()
+    {
         return $this->thumbHeight;
     }
 
     /**
      * @param null $thumbHeight
      */
-    public function setThumbHeight($thumbHeight) {
+    public function setThumbHeight($thumbHeight)
+    {
         $this->thumbHeight = $thumbHeight;
     }
 
     /**
      * @return null
      */
-    public function getThumbWidth() {
+    public function getThumbWidth()
+    {
         return $this->thumbWidth;
     }
 
     /**
      * @param null $thumbWidth
      */
-    public function setThumbWidth($thumbWidth) {
+    public function setThumbWidth($thumbWidth)
+    {
         $this->thumbWidth = $thumbWidth;
     }
 
     /**
      * @return boolean
      */
-    public function isPriorityHeight() {
+    public function isPriorityHeight()
+    {
         return $this->priorityHeight;
     }
 
     /**
      * @param boolean $priorityHeight
      */
-    public function setPriorityHeight($priorityHeight) {
+    public function setPriorityHeight($priorityHeight)
+    {
         $this->priorityHeight = $priorityHeight;
     }
 
     /**
      * @return boolean
      */
-    public function isPriorityWidth() {
+    public function isPriorityWidth()
+    {
         return $this->priorityWidth;
     }
 
     /**
      * @param boolean $priorityWidth
      */
-    public function setPriorityWidth($priorityWidth) {
+    public function setPriorityWidth($priorityWidth)
+    {
         $this->priorityWidth = $priorityWidth;
     }
 
     /**
      * @return null
      */
-    public function getSourceImageHeight() {
+    public function getSourceImageHeight()
+    {
         return $this->sourceImageHeight;
     }
 
     /**
      * @param null $sourceImageHeight
      */
-    public function setSourceImageHeight($sourceImageHeight) {
+    public function setSourceImageHeight($sourceImageHeight)
+    {
         $this->sourceImageHeight = $sourceImageHeight;
     }
 
     /**
      * @return null
      */
-    public function getSourceImageWidth() {
+    public function getSourceImageWidth()
+    {
         return $this->sourceImageWidth;
     }
 
     /**
      * @param null $sourceImageWidth
      */
-    public function setSourceImageWidth($sourceImageWidth) {
+    public function setSourceImageWidth($sourceImageWidth)
+    {
         $this->sourceImageWidth = $sourceImageWidth;
     }
 
     /**
      * @return null
      */
-    public function getSourceImageSize() {
+    public function getSourceImageSize()
+    {
         return $this->sourceImageSize;
     }
 
     /**
      * @param null $sourceImageSize
      */
-    public function setSourceImageSize($sourceImageSize) {
+    public function setSourceImageSize($sourceImageSize)
+    {
         $this->sourceImageSize = $sourceImageSize;
     }
 
     /**
      * @return null
      */
-    public function getSourceImageType() {
+    public function getSourceImageType()
+    {
         return $this->sourceImageType;
     }
 
     /**
      * @param null $sourceImageType
      */
-    public function setSourceImageType($sourceImageType) {
+    public function setSourceImageType($sourceImageType)
+    {
         $this->sourceImageType = $sourceImageType;
     }
 
     /**
      * @return null
      */
-    public function getRatio() {
+    public function getRatio()
+    {
         return $this->ratio;
     }
 
     /**
      * @param null $ratio
      */
-    public function setRatio($ratio) {
+    public function setRatio($ratio)
+    {
         $this->ratio = $ratio;
     }
 
     /**
      * @return null
      */
-    public function getFactorHeight() {
+    public function getFactorHeight()
+    {
         return $this->factorHeight;
     }
 
     /**
      * @param null $factorHeight
      */
-    public function setFactorHeight($factorHeight) {
+    public function setFactorHeight($factorHeight)
+    {
         $this->factorHeight = $factorHeight;
     }
 
     /**
      * @return null
      */
-    public function getFactorWidth() {
+    public function getFactorWidth()
+    {
         return $this->factorWidth;
     }
 
     /**
      * @param null $factorWidth
      */
-    public function setFactorWidth($factorWidth) {
+    public function setFactorWidth($factorWidth)
+    {
         $this->factorWidth = $factorWidth;
     }
 
     /**
      * @return null
      */
-    public function getNewHeight() {
+    public function getNewHeight()
+    {
         return $this->newHeight;
     }
 
     /**
      * @param null $newHeight
      */
-    public function setNewHeight($newHeight) {
+    public function setNewHeight($newHeight)
+    {
         $this->newHeight = $newHeight;
     }
 
     /**
      * @return null
      */
-    public function getNewWidth() {
+    public function getNewWidth()
+    {
         return $this->newWidth;
     }
 
     /**
      * @param null $newWidth
      */
-    public function setNewWidth($newWidth) {
+    public function setNewWidth($newWidth)
+    {
         $this->newWidth = $newWidth;
     }
 
     /**
      * @return int
      */
-    public function getDestinationStartX() {
+    public function getDestinationStartX()
+    {
         return $this->destinationStartX;
     }
 
     /**
      * @param int $destinationStartX
      */
-    public function setDestinationStartX($destinationStartX) {
+    public function setDestinationStartX($destinationStartX)
+    {
         $this->destinationStartX = $destinationStartX;
     }
 
     /**
      * @return int
      */
-    public function getDestinationStartY() {
+    public function getDestinationStartY()
+    {
         return $this->destinationStartY;
     }
 
     /**
      * @param int $destinationStartY
      */
-    public function setDestinationStartY($destinationStartY) {
+    public function setDestinationStartY($destinationStartY)
+    {
         $this->destinationStartY = $destinationStartY;
     }
 
     /**
      * @return null
      */
-    public function getSourceImage() {
+    public function getSourceImage()
+    {
         return $this->sourceImage;
     }
 
     /**
      * @param null $sourceImage
      */
-    public function setSourceImage($sourceImage) {
+    public function setSourceImage($sourceImage)
+    {
         $this->sourceImage = $sourceImage;
     }
 
     /**
      * @return null
      */
-    public function getDestinationImage() {
+    public function getDestinationImage()
+    {
         return $this->destinationImage;
     }
 
     /**
      * @param null $destinationImage
      */
-    public function setDestinationImage($destinationImage) {
+    public function setDestinationImage($destinationImage)
+    {
         $this->destinationImage = $destinationImage;
     }
 
     /**
      * @return array
      */
-    public function getMap() {
+    public function getMap()
+    {
         return $this->map;
     }
 
     /**
      * @param array $map
      */
-    public function setMap($map) {
+    public function setMap($map)
+    {
         $this->map = $map;
     }
 
     /**
      * @return array
      */
-    public function getValidImageTypes() {
+    public function getValidImageTypes()
+    {
         return $this->validImageTypes;
     }
 
     /**
      * @param array $validImageTypes
      */
-    public function setValidImageTypes($validImageTypes) {
+    public function setValidImageTypes($validImageTypes)
+    {
         $this->validImageTypes = $validImageTypes;
     }
 
     /**
      * @return boolean
      */
-    private function isDefineHeader() {
+    private function isDefineHeader()
+    {
         return $this->defineHeader;
     }
 
@@ -709,7 +877,8 @@ class Thumbnail {
      *
      * @return $this
      */
-    private function setDefineHeader($defineHeader) {
+    private function setDefineHeader($defineHeader)
+    {
         $this->defineHeader = $defineHeader;
         return $this;
     }

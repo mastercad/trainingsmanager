@@ -8,16 +8,18 @@
 
 namespace Service;
 
-use Service\AbstractService;
-
-
-
-
+/**
+ * Class TrainingDiaries
+ *
+ * @package Service
+ */
 class TrainingDiaries extends AbstractService
 {
 
-    public function save($params) 
+    /**
+     * @param $params
+     */
+    public function save($params)
     {
-
     }
 }

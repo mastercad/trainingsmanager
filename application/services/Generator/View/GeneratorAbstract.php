@@ -11,20 +11,23 @@ namespace Service\Generator\View;
 use Zend_View_Abstract;
 use Zend_Registry;
 use Auth\Model\Role\Member;
+use Model\DbTable\AbstractDbTable;
 
-
-
-
+/**
+ * Class GeneratorAbstract
+ *
+ * @package Service\Generator\View
+ */
 abstract class GeneratorAbstract
 {
 
     /**
-     * @var Zend_View_Abstract 
+     * @var Zend_View_Abstract
      */
     private $view = null;
 
     /**
-     * @var string name of current controller 
+     * @var string name of current controller
      */
     private $controllerName = null;
 
@@ -35,7 +38,7 @@ abstract class GeneratorAbstract
     /**
      * @return Zend_View_Abstract
      */
-    public function getView() 
+    public function getView()
     {
         return $this->view;
     }
@@ -43,12 +46,12 @@ abstract class GeneratorAbstract
     /**
      * @param Zend_View_Abstract $view
      */
-    public function setView($view) 
+    public function setView($view)
     {
         $this->view = $view;
     }
 
-    public function __construct(Zend_View_Abstract $view) 
+    public function __construct(Zend_View_Abstract $view)
     {
         $this->setView($view);
     }
@@ -60,7 +63,7 @@ abstract class GeneratorAbstract
      * @return mixed
      * @throws \Zend_Exception
      */
-    protected function translate($tag, $locale = null) 
+    protected function translate($tag, $locale = null)
     {
         return Zend_Registry::get('Zend_Translate')->translate($tag, $locale);
     }
@@ -70,13 +73,14 @@ abstract class GeneratorAbstract
      *
      * @return string
      */
-    protected function generateDetailOptionsContent($id) 
+    protected function generateDetailOptionsContent($id)
     {
         $currentControllerName = $this->convertControllerName($this->getControllerName());
         $dbClassName = 'Model_DbTable_'.$currentControllerName;
+
         /**
- * @var Model_DbTable_Abstract $db 
-*/
+         * @var AbstractDbTable $db
+        */
         $db = new $dbClassName();
         $row = $db->findByPrimary($id);
 
@@ -86,27 +90,42 @@ abstract class GeneratorAbstract
         $resource = new $resourceClassName($row);
         $resourceName = $this->getModuleName().':'.$this->getControllerName();
 
-        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'edit');
-        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'delete');
+        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource(
+            $role->getRole(),
+            $resourceName,
+            'edit'
+        );
+        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource(
+            $role->getRole(),
+            $resourceName,
+            'delete'
+        );
 
         if (Zend_Registry::get('acl')->isAllowed($role, $resource, 'edit')) {
             $content .= '<div class="glyphicon glyphicon-edit edit-button" data-id="' . $id . '"></div>';
         }
 
         if (Zend_Registry::get('acl')->isAllowed($role, $resource, 'delete')) {
-            $content .= '<div class="glyphicon glyphicon-trash delete-button" data-id="' . $id . '"></div>';;
+            $content .= '<div class="glyphicon glyphicon-trash delete-button" data-id="' . $id . '"></div>';
         }
 
         return $content;
     }
 
-    protected function convertControllerName($controllerName) 
+    /**
+     * @param $controllerName
+     *
+     * @return string
+     */
+    protected function convertControllerName($controllerName)
     {
         return ucFirst(
             preg_replace_callback(
-                '/(\-[a-z]{1})/', function (array $piece) {
+                '/(\-[a-z]{1})/',
+                function (array $piece) {
                     return ucfirst(str_replace('-', '', $piece[1]));
-                }, $controllerName
+                },
+                $controllerName
             )
         );
     }
@@ -114,7 +133,7 @@ abstract class GeneratorAbstract
     /**
      * @return string
      */
-    public function getControllerName() 
+    public function getControllerName()
     {
         return $this->controllerName;
     }
@@ -124,7 +143,7 @@ abstract class GeneratorAbstract
      *
      * @return $this;
      */
-    public function setControllerName($controllerName) 
+    public function setControllerName($controllerName)
     {
         $this->controllerName = $controllerName;
         return $this;
@@ -133,7 +152,7 @@ abstract class GeneratorAbstract
     /**
      * @return null
      */
-    public function getModuleName() 
+    public function getModuleName()
     {
         return $this->moduleName;
     }
@@ -143,7 +162,7 @@ abstract class GeneratorAbstract
      *
      * @return $this;
      */
-    public function setModuleName($moduleName) 
+    public function setModuleName($moduleName)
     {
         $this->moduleName = $moduleName;
         return $this;
@@ -152,7 +171,7 @@ abstract class GeneratorAbstract
     /**
      * @return null
      */
-    public function getActionName() 
+    public function getActionName()
     {
         return $this->actionName;
     }
@@ -162,10 +181,9 @@ abstract class GeneratorAbstract
      *
      * @return $this;
      */
-    public function setActionName($actionName) 
+    public function setActionName($actionName)
     {
         $this->actionName = $actionName;
         return $this;
     }
-
 }

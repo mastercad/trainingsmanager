@@ -8,15 +8,10 @@
 
 namespace Service;
 
-
-
-
-
 class Widget
 {
 
-    public function generateWidgetContent($widget) 
+    public function generateWidgetContent($widget)
     {
-
     }
 }

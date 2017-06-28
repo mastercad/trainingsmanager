@@ -11,11 +11,15 @@ namespace Service;
 use Model\DbTable\Exercises;
 use Zend_Db_Table_Abstract;
 
+/**
+ * Class Exercise
+ *
+ * @package Service
+ */
 class Exercise extends AbstractService
 {
-
     /**
-     * @var Zend_Db_Table_Abstract 
+     * @var Zend_Db_Table_Abstract
      */
     private $storage = null;
 

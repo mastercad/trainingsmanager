@@ -8,11 +8,11 @@
 
 namespace Service\Generator\View;
 
-
-
-
-
+/**
+ * Class Exercise
+ *
+ * @package Service\Generator\View
+ */
 class Exercise
 {
-
 }

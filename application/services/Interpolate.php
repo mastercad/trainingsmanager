@@ -21,12 +21,17 @@ use Model\DbTable\TrainingDiaryXDeviceOption;
 use Zend_Db_Table_Rowset_Abstract;
 use Zend_Auth;
 
-
-
-
+/**
+ * Class Interpolate
+ *
+ * @package Service
+ */
 class Interpolate
 {
 
+    /**
+     * @var array
+     */
     private $optionsAllowedToIncrease = [
         'devices' => [
             'GEWICHT' => 0.25,
@@ -42,9 +47,8 @@ class Interpolate
      *
      * @return $this
      */
-    public function trainingDiary($userId) 
+    public function trainingDiary($userId)
     {
-
         $trainingPlansDb = new TrainingPlans();
         $currentTrainingPlan = $trainingPlansDb->findActiveTrainingPlanByUserId($userId);
         $processedExerciseOptions = [];
@@ -83,7 +87,8 @@ class Interpolate
                     ];
                     $currentTrainingDiaryXTrainingPlanId = $trainingDiaryXTrainingPlanDb->insert($data);
                     foreach ($trainingPlanXExercises as $trainingPlanXExercise) {
-                        $currentTrainingPlanXExerciseId = $trainingPlanXExercise->offsetGet('training_plan_x_exercise_id');
+                        $currentTrainingPlanXExerciseId =
+                            $trainingPlanXExercise->offsetGet('training_plan_x_exercise_id');
                         $currentDate = date('Y-m-d', strtotime($startDate . ' ' . $additionalDayCount . 'DAYS'));
 
                         $trainingPlanXExerciseId = $trainingPlanXExercise->offsetGet('training_plan_x_exercise_id');
@@ -92,48 +97,68 @@ class Interpolate
                             'training_diary_x_training_plan_exercise_comment' => 'Interpolated on ' . $startDate,
                             'training_diary_x_training_plan_exercise_flag_finished' => 1,
                             'training_diary_x_training_plan_exercise_training_diary_fk' => $currentTrainingDiaryId,
-                            'training_diary_x_training_plan_exercise_t_d_x_t_p_fk' => $currentTrainingDiaryXTrainingPlanId,
+                            'training_diary_x_training_plan_exercise_t_d_x_t_p_fk' =>
+                                $currentTrainingDiaryXTrainingPlanId,
                             'training_diary_x_training_plan_exercise_create_date' => $currentDate,
                             'training_diary_x_training_plan_exercise_create_user_fk' => $this->findCurrentUserId()
                         ];
 
                         $trainingDiaryXTrainingPlanExerciseId = $trainingDiaryXTrainingPlanExerciseDb->insert($data);
-                        $exerciseOptions = $trainingPlanXExerciseOptionDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($trainingPlanXExerciseId);
+                        $exerciseOptions =
+                            $trainingPlanXExerciseOptionDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId(
+                                $trainingPlanXExerciseId
+                            );
 
                         foreach ($exerciseOptions as $exerciseOption) {
                             $optionName = mb_strtoupper($exerciseOption->offsetGet('exercise_option_name'));
                             $optionHash = $trainingPlanXExerciseId . '_' . $optionName;
                             if (array_key_exists($optionName, $this->optionsAllowedToIncrease['exercises'])) {
                                 if (!array_key_exists($optionHash, $processedExerciseOptions)) {
-                                    $processedExerciseOptions[$optionHash] = $exerciseOption->offsetGet('training_plan_x_exercise_option_exercise_option_value');
+                                    $processedExerciseOptions[$optionHash] =
+                                        $exerciseOption->offsetGet(
+                                            'training_plan_x_exercise_option_exercise_option_value'
+                                        );
                                 } else {
-                                    $processedExerciseOptions[$optionHash] += (number_format(mt_rand(-1, 5) * $this->optionsAllowedToIncrease['exercises'][$optionName], 1, '.', ''));
+                                    $processedExerciseOptions[$optionHash] += (number_format(mt_rand(-1, 5) *
+                                        $this->optionsAllowedToIncrease['exercises'][$optionName], 1, '.', ''));
                                 }
                                 $data = [
-                                    'training_diary_x_exercise_option_exercise_option_fk' => $exerciseOption->offsetGet('exercise_option_id'),
-                                    'training_diary_x_exercise_option_exercise_option_value' => $processedExerciseOptions[$optionHash],
-                                    'training_diary_x_exercise_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
+                                    'training_diary_x_exercise_option_exercise_option_fk' =>
+                                        $exerciseOption->offsetGet('exercise_option_id'),
+                                    'training_diary_x_exercise_option_exercise_option_value' =>
+                                        $processedExerciseOptions[$optionHash],
+                                    'training_diary_x_exercise_option_t_d_x_t_p_e_fk' =>
+                                        $trainingDiaryXTrainingPlanExerciseId,
                                     'training_diary_x_exercise_option_create_date' => $currentDate,
                                     'training_diary_x_exercise_option_create_user_fk' => $this->findCurrentUserId(),
                                 ];
                                 $trainingDiaryXExerciseOptionDb->insert($data);
                             }
                         }
-                        $deviceOptions = $trainingPlanXDeviceOptionDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($trainingPlanXExerciseId);
+                        $deviceOptions =
+                            $trainingPlanXDeviceOptionDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId(
+                                $trainingPlanXExerciseId
+                            );
 
                         foreach ($deviceOptions as $deviceOption) {
                             $optionName = mb_strtoupper($deviceOption->offsetGet('device_option_name'));
                             $optionHash = $trainingPlanXExerciseId . '_' . $optionName;
                             if (array_key_exists($optionName, $this->optionsAllowedToIncrease['devices'])) {
                                 if (!array_key_exists($optionHash, $processedDeviceOptions)) {
-                                    $processedDeviceOptions[$optionHash] = $deviceOption->offsetGet('training_plan_x_device_option_device_option_value');
+                                    $processedDeviceOptions[$optionHash] =
+                                        $deviceOption->offsetGet('training_plan_x_device_option_device_option_value');
                                 } else {
-                                    $processedDeviceOptions[$optionHash] += (number_format(mt_rand(-1, 5) * $this->optionsAllowedToIncrease['devices'][$optionName], 1, '.', ''));
+                                    $processedDeviceOptions[$optionHash] += (number_format(mt_rand(-1, 5) *
+                                        $this->optionsAllowedToIncrease['devices'][$optionName], 1, '.', '')
+                                    );
                                 }
                                 $data = [
-                                    'training_diary_x_device_option_device_option_fk' => $deviceOption->offsetGet('device_option_id'),
-                                    'training_diary_x_device_option_device_option_value' => $processedDeviceOptions[$optionHash],
-                                    'training_diary_x_device_option_t_d_x_t_p_e_fk' => $trainingDiaryXTrainingPlanExerciseId,
+                                    'training_diary_x_device_option_device_option_fk' =>
+                                        $deviceOption->offsetGet('device_option_id'),
+                                    'training_diary_x_device_option_device_option_value' =>
+                                        $processedDeviceOptions[$optionHash],
+                                    'training_diary_x_device_option_t_d_x_t_p_e_fk' =>
+                                        $trainingDiaryXTrainingPlanExerciseId,
                                     'training_diary_x_device_option_create_date' => $currentDate,
                                     'training_diary_x_device_option_create_user_fk' => $this->findCurrentUserId(),
                                 ];
@@ -148,7 +173,10 @@ class Interpolate
         return $this;
     }
 
-    private function findCurrentUserId() 
+    /**
+     * @return bool
+     */
+    private function findCurrentUserId()
     {
         $user = Zend_Auth::getInstance()->getIdentity();
 

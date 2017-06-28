@@ -8,7 +8,6 @@
 
 namespace Service\Generator\View;
 
-use Service\Generator\View\Options;
 use Model\DbTable\DeviceOptions as ModelDbTableDeviceOptions;
 use Model\DbTable\TrainingDiaryXDeviceOption;
 use Model\DbTable\DeviceXDeviceOption;
@@ -17,12 +16,13 @@ use Model\DbTable\ExerciseXDeviceOption;
 use Zend_Db_Table_Row;
 use Zend_Registry;
 
-
-
-
+/**
+ * Class DeviceOptions
+ *
+ * @package Service\Generator\View
+ */
 class DeviceOptions extends Options
 {
-
     protected $optionType = 'device';
 
     protected $optionValuePriorities = [
@@ -37,7 +37,7 @@ class DeviceOptions extends Options
      *
      * @throws \Zend_View_Exception
      */
-    public function generate() 
+    public function generate()
     {
         $deviceOptionsContent = '';
         $this->setOptionClassName('device-option');
@@ -48,8 +48,16 @@ class DeviceOptions extends Options
          * @var array $deviceOption
          */
         foreach ($deviceOptionsCollection as $deviceOptionId => $deviceOption) {
-            $trainingPlanDeviceOptionId = (isset($deviceOption['training_plan_x_device_option_id']) ? $deviceOption['training_plan_x_device_option_id'] : null);
-            $trainingDiaryDeviceOptionId = (isset($deviceOption['training_diary_x_device_option_id']) ? $deviceOption['training_diary_x_device_option_id'] : null);
+            $trainingPlanDeviceOptionId = (
+                isset($deviceOption['training_plan_x_device_option_id']) ?
+                    $deviceOption['training_plan_x_device_option_id'] :
+                    null
+            );
+            $trainingDiaryDeviceOptionId = (
+                isset($deviceOption['training_diary_x_device_option_id']) ?
+                    $deviceOption['training_diary_x_device_option_id'] :
+                    null
+            );
             $this->setOptionId($deviceOptionId);
             $this->setDeviceId($deviceOption['device_id']);
 
@@ -57,7 +65,10 @@ class DeviceOptions extends Options
                 $this->setBaseOptionValue($deviceOption['training_plan_x_device_option_device_option_value']);
             }
             $this->setSelectedOptionValue($this->extractOptionValue($deviceOption));
-            $this->setAdditionalElementAttributes('data-training-plan-device-option-id="' . $trainingPlanDeviceOptionId . '" data-training-diary-device-option-id="' . $trainingDiaryDeviceOptionId . '"');
+            $this->setAdditionalElementAttributes(
+                'data-training-plan-device-option-id="' . $trainingPlanDeviceOptionId .
+                '" data-training-diary-device-option-id="' . $trainingDiaryDeviceOptionId . '"'
+            );
 
             /**
  * TODO überprüfen, was hier sinnvoller, weil unique ist! diese ID KANN in device und exercise vorkommen! 
@@ -83,7 +94,7 @@ class DeviceOptions extends Options
     /**
      * @return array
      */
-    protected function collectOptions() 
+    protected function collectOptions()
     {
         $trainingDiaryXDeviceOptionDb = new TrainingDiaryXDeviceOption();
         $deviceXDeviceOptionDb = new DeviceXDeviceOption();
@@ -91,9 +102,10 @@ class DeviceOptions extends Options
         $trainingDiaryXDeviceOptionCollection = [];
 
         if (!empty($this->getTrainingDiaryXTrainingPlanExerciseId())) {
-            $trainingDiaryXDeviceOptionCollection = $trainingDiaryXDeviceOptionDb->findDeviceOptionsByTrainingDiaryTrainingPlanExerciseId(
-                $this->getTrainingDiaryXTrainingPlanExerciseId()
-            );
+            $trainingDiaryXDeviceOptionCollection =
+                $trainingDiaryXDeviceOptionDb->findDeviceOptionsByTrainingDiaryTrainingPlanExerciseId(
+                    $this->getTrainingDiaryXTrainingPlanExerciseId()
+                );
         }
 
         $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
@@ -101,9 +113,11 @@ class DeviceOptions extends Options
         $trainingPlanXDeviceOptionCollection = [];
 
         if (!empty($this->getTrainingPlanXExerciseId())) {
-            $trainingPlanXDeviceOptionCollection = $trainingPlanXDeviceOptionDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId(
-                $this->getTrainingPlanXExerciseId(), $this->getOptionId()
-            );
+            $trainingPlanXDeviceOptionCollection =
+                $trainingPlanXDeviceOptionDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId(
+                    $this->getTrainingPlanXExerciseId(),
+                    $this->getOptionId()
+                );
         }
         $collectedDeviceOptions = [];
 
@@ -125,7 +139,8 @@ class DeviceOptions extends Options
             $deviceXDeviceOption = $deviceXDeviceOptionDb->findDeviceOption($this->getOptionId(), $this->getDeviceId());
 
             if ($deviceXDeviceOption instanceof Zend_Db_Table_Row) {
-                $collectedDeviceOptions[$deviceXDeviceOption->offsetGet('device_option_id')] = $deviceXDeviceOption->toArray();
+                $collectedDeviceOptions[$deviceXDeviceOption->offsetGet('device_option_id')] =
+                    $deviceXDeviceOption->toArray();
             }
         }
 
@@ -133,7 +148,8 @@ class DeviceOptions extends Options
             && empty($this->getOptionId())
         ) {
             $exerciseXDeviceOptionCollection = $exerciseXDeviceOptionDb->findDeviceOptionsForExercise(
-                $this->getExerciseId(), $this->getOptionId()
+                $this->getExerciseId(),
+                $this->getOptionId()
             );
 
             foreach ($exerciseXDeviceOptionCollection as $deviceOption) {
@@ -199,12 +215,11 @@ class DeviceOptions extends Options
     /**
      * @return string
      */
-    public function generateDeviceOptionsSelectContent() 
+    public function generateDeviceOptionsSelectContent()
     {
         $deviceOptionsContent = '';
         $deviceOptionsDb = new ModelDbTableDeviceOptions();
         $deviceOptionsCollection = $deviceOptionsDb->findAllOptions();
-        //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);
         $this->getView()->assign('selectId', '');
 
@@ -212,12 +227,16 @@ class DeviceOptions extends Options
             $this->getView()->assign('optionClassName', 'device-option-select');
             $this->getView()->assign('optionValue', $deviceOption->offsetGet('device_option_id'));
             $this->getView()->assign('optionText', $deviceOption->offsetGet('device_option_name'));
-            $this->getView()->assign('optionLabelText', Zend_Registry::get('Zend_Translate')->translate('label_device_options') . ':');
-            $this->getView()->assign('optionSelectText', Zend_Registry::get('Zend_Translate')->translate('label_please_select') . '');
+            $this->getView()->assign(
+                'optionLabelText',
+                Zend_Registry::get('Zend_Translate')->translate('label_device_options') . ':'
+            );
+            $this->getView()->assign(
+                'optionSelectText',
+                Zend_Registry::get('Zend_Translate')->translate('label_please_select') . ''
+            );
             $deviceOptionsContent .= $this->getView()->render('loops/option.phtml');
         }
-
-        //        $this->getView()->assign('optionLabelText', Zend_Registry::get('Zend_Translate')->translate('label_please_select'));
         $this->getView()->assign('optionsContent', $deviceOptionsContent);
 
         return $this->getView()->render('globals/select.phtml');
