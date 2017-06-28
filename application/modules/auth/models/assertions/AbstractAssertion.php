@@ -2,17 +2,28 @@
 /**
  * Created by PhpStorm.
  * User: mastercad
- * Date: 01.09.15
- * Time: 23:00
+ * Date: 02.06.17
+ * Time: 22:08
+ * PHP Version: 5.5
+ *
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
 
 namespace Auth\Model\Assertion;
 
+use Auth\Model\Resource\AbstractResource;
 use Zend_Acl_Assert_Interface;
 use Zend_Acl;
-use Zend_Acl_Role_Interface;
-use Zend_Acl_Resource_Interface;
 use Zend_Acl_Role;
+use Zend_Acl_Role_Interface;
+use Zend_Acl_Resource;
+use Zend_Acl_Resource_Interface;
+use Auth\Model\Role\Member as MemberRole;
+
 
 class AbstractAssertion implements Zend_Acl_Assert_Interface {
 
@@ -37,7 +48,7 @@ class AbstractAssertion implements Zend_Acl_Assert_Interface {
      */
     public function assert(Zend_Acl $oAcl, Zend_Acl_Role_Interface $oRole = null,
         Zend_Acl_Resource_Interface $oResource = null, $sPrivilege = null) {
-        return $this->_considerAclRole($oAcl, $oRole, $oResource, $sPrivilege);
+        return $this->considerAclRole($oAcl, $oRole, $oResource, $sPrivilege);
     }
 
     /**
@@ -47,11 +58,11 @@ class AbstractAssertion implements Zend_Acl_Assert_Interface {
      * @param $sPrivilege
      * @return bool
      */
-    private function _considerAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
+    private function considerAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
         if ($oRole instanceof Zend_Acl_Role) {
-            return $this->_considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege);
+            return $this->considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege);
         }
-        return $this->_considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege);
+        return $this->considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege);
     }
 
     /**
@@ -68,7 +79,7 @@ class AbstractAssertion implements Zend_Acl_Assert_Interface {
      * @param string $sPrivilege
      * @return bool
      */
-    private function _considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
+    private function considerZendAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
         return false;
     }
 
@@ -80,12 +91,12 @@ class AbstractAssertion implements Zend_Acl_Assert_Interface {
      * $role, $resource, or $privilege parameters are null, it means that the query applies to all Roles, Resources, or
      * privileges, respectively.
      *
-     * @param  Auth_Model_Role_Member $oRole
-     * @param  Auth_Model_Resource_Abstract $oResource
+     * @param  MemberRole $oRole
+     * @param AbstractResource $oResource
      *
      * @return boolean
      */
-    protected function _considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
+    protected function considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
         // if the current user the owner of the resource?
         // or group admin and in the same group like to owner
         // or if the current user member of one of the global right groups?

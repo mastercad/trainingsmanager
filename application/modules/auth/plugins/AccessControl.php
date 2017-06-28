@@ -11,7 +11,6 @@ use Zend_Controller_Request_Abstract;
 use Zend_Session_Namespace;
 use Zend_Session;
 use Zend_Filter_StripTags;
-use Auth\Plugin\AuthAdapter;
 use Zend_Registry;
 use stdClass;
 use CAD_Tool_Extractor;
@@ -19,8 +18,6 @@ use Auth\Model\DbTable\Users;
 use Auth\Model\Role\Member;
 use Service\GlobalMessageHandler;
 use Service\Translator;
-
-
 
 class AccessControl extends Zend_Controller_Plugin_Abstract
 {
@@ -387,7 +384,7 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
         return $this;
     }
 
-    protected function _getCurrentUserRole() {
+    protected function getCurrentUserRole() {
 
         if ($this->_auth->hasIdentity()) {
             $authData = $this->_auth->getIdentity();
@@ -399,19 +396,22 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
         return $role;
     }
 
-    private function convertControllerName($controllerName) {
+    private function convertControllerName($controllerName)
+    {
         return ucFirst(preg_replace_callback('/(\-[a-z]{1})/', function(array $piece) {
             return ucfirst(str_replace('-', '', $piece[1]));
         }, $controllerName));
     }
 
-    private function translate($key) {
+    private function translate($key)
+    {
         GlobalMessageHandler::getMessageEntity()->setState(300);
         $translator = new Translator();
         return $translator->getTranslation()->translate($key);
     }
 
-    private function persistMessage($key) {
+    private function persistMessage($key)
+    {
         GlobalMessageHandler::getMessageEntity()->setMessage($this->translate($key));
     }
 }

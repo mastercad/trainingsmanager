@@ -11,9 +11,6 @@ namespace Auth\Model\Role;
 use Zend_Acl_Role_Interface;
 use Zend_Auth;
 
-
-
-
 class Member implements Zend_Acl_Role_Interface {
 
     private $role = null;

@@ -1,9 +1,16 @@
 <?php
-/*
- * Created on 17.06.2011
+/**
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 02.06.17
+ * Time: 22:08
+ * PHP Version: 5.5
  *
- * To change the template for this generated file go to
- * Window - Preferences - PHPeclipse - PHP - Code Templates
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
 
 namespace Model\DbTable;

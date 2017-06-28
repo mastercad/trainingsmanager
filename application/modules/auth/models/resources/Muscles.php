@@ -8,18 +8,14 @@
 
 namespace Auth\Model\Resource;
 
-use Auth\Model\Resource\AbstractResource;
 use CAD_Tool_Extractor;
-
-
-
 
 class Muscles extends AbstractResource {
 
     /** @var string ID der aktuellen Resource in der ACL */
     protected $resourceId = 'default:muscles';
 
-    protected function _prepareData($oRow)
+    protected function prepareData($oRow)
     {
         $this->setMemberId(CAD_Tool_Extractor::extractOverPath($oRow, 'muscle_create_user_fk'));
     }

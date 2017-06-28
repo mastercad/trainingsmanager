@@ -8,18 +8,14 @@
 
 namespace Auth\Model\Resource;
 
-use Auth\Model\Resource\AbstractResource;
 use CAD_Tool_Extractor;
-
-
-
 
 class TrainingDiaries extends AbstractResource {
 
     /** @var string ID der aktuellen Resource in der ACL */
     protected $resourceId = 'default:training-diaries';
 
-    protected function _prepareData($oRow)
+    protected function prepareData($oRow)
     {
         $this->setMemberId(CAD_Tool_Extractor::extractOverPath($oRow, 'training_diary_create_user_fk'));
         $this->setAlternativeMemberId(CAD_Tool_Extractor::extractOverPath($oRow, 'training_plan_user_fk'));

@@ -2,16 +2,18 @@
 /**
  * Created by PhpStorm.
  * User: mastercad
- * Date: 14.06.15
- * Time: 09:50
+ * Date: 02.06.17
+ * Time: 22:08
+ * PHP Version: 5.5
+ *
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
 
 namespace Auth\Model\Assertion;
-
-use Auth\Model\Assertion\AbstractAssertion;
-
-
-
 
 /**
  * klasse hatte das interface Zend_Acl_Assert_Interface implementiert, da diese assert funktion aber vorschreibt
@@ -20,18 +22,19 @@ use Auth\Model\Assertion\AbstractAssertion;
  * bestehen, da man sonst nicht sauber auf die funktionalitäten zugreifen kann, die die einzelnen role und resource
  * klassen zur verfügung stellen, das assert interface schreibt eh nur eine assert funktion vor ... PRIMA ....
  *
- * Class Application_Model_RecipeAssertion
+ * Class TrainingPlans
+ *
+ * @package Auth\Model\Assertion
  */
-
 class TrainingPlans extends AbstractAssertion {
 
     /**
      * @inheritdoc
      */
-    protected function _considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
+    protected function considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
         $bReturn = false;
 
-        if (parent::_considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege)
+        if (parent::considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege)
             || (null !== $oResource->getMemberId()
                 && $oRole->getMemberId() === $oResource->getAlternativeMemberId())
         ) {

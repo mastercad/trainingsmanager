@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Auth\Plugin;
 
 use Zend_Acl;
@@ -10,16 +9,19 @@ use Zend_Acl_Role;
 use CAD_Tool_Extractor;
 use Zend_Acl_Resource;
 
+/*
+ * aufbau:
+ *
+ * Modul: modul:
+ * Modul + Controller : Modul:Controller
+ *
+ */
 
-
-	/*
-	 * aufbau:
-	 *
-	 * Modul: modul:
-	 * Modul + Controller : Modul:Controller
-	 *
-	 */
-
+/**
+ * Class Acl
+ *
+ * @package Auth\Plugin
+ */
 class Acl extends Zend_Acl
 {
     const DEFAULT_ROLE = 'guest';
@@ -94,7 +96,7 @@ class Acl extends Zend_Acl
         }
     }
 
-    private function _registerValidatorClassForRoleAndChildren($sRole, $sModuleControllerActionResource,
+    private function registerValidatorClassForRoleAndChildren($sRole, $sModuleControllerActionResource,
         $sAction, $sValidatorClass) {
 
         $this->_aDynamicPermissions[$sModuleControllerActionResource] = array(
@@ -110,7 +112,7 @@ class Acl extends Zend_Acl
             && 0 < count($aChildren)
         ) {
             foreach ($aChildren as $sNewRole => $oAclRole) {
-                $this->_registerValidatorClassForRoleAndChildren($sNewRole, $sModuleControllerActionResource,
+                $this->registerValidatorClassForRoleAndChildren($sNewRole, $sModuleControllerActionResource,
                     $sAction, $sValidatorClass);
             }
         }

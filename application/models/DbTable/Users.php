@@ -1,17 +1,16 @@
 <?php
 /**
- * @Filename: User.php
- * @Usage: php
- * @Description:
- * @Date: 24.03.2012
- * @Author: Andreas Kempe
- * @Company: byte-artist
- * @Email: andreas.kempe@byte-artist.de
- * @Copyright: Andreas Kempe, 2011
- * @License: GNU General Public License
- * @Version:
- * @Last changed: 24.03.2013 10:05:13
- * 
+ * Created by PhpStorm.
+ * User: mastercad
+ * Date: 02.06.17
+ * Time: 22:08
+ * PHP Version: 5.5
+ *
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
 
 namespace Model\DbTable;

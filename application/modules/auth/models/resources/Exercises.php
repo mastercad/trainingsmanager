@@ -8,18 +8,14 @@
 
 namespace Auth\Model\Resource;
 
-use Auth\Model\Resource\AbstractResource;
 use CAD_Tool_Extractor;
-
-
-
 
 class Exercises extends AbstractResource {
 
     /** @var string ID der aktuellen Resource in der ACL */
     protected $resourceId = 'default:exercises';
 
-    protected function _prepareData($oRow) {
+    protected function prepareData($oRow) {
         $this->setMemberId(CAD_Tool_Extractor::extractOverPath($oRow, 'exercise_create_user_fk'))
             ->setGroupId(CAD_Tool_Extractor::extractOverPath($oRow, 'user_group_id'))
             ->setGroupName(CAD_Tool_Extractor::extractOverPath($oRow, 'user_group_name'));

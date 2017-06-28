@@ -1,10 +1,16 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
+ * Created by PhpStorm.
  * User: mastercad
- * Date: 25.04.13
- * Time: 19:25
- * To change this template use File | Settings | File Templates.
+ * Date: 02.06.17
+ * Time: 22:08
+ * PHP Version: 5.5
+ *
+ * @category Sport
+ * @package  Trainingmanager
+ * @author   andreas kempe <andreas.kempe@byte-artist.de>
+ * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @link     http://www.byte-artist.de
  */
 
 namespace Model\DbTable;

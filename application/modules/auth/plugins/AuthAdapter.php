@@ -49,7 +49,7 @@ class AuthAdapter extends DbTable
             return $authResult;
         }
 
-        if ($this->_alreadyLoggedIn()) {
+        if ($this->alreadyLoggedIn()) {
             $authResult = new Zend_Auth_Result(
                 Zend_Auth_Result::FAILURE_UNCATEGORIZED,
                 $this->_identity,
@@ -61,7 +61,7 @@ class AuthAdapter extends DbTable
         return $authResult;
     }
 
-    private function _alreadyLoggedIn()
+    private function alreadyLoggedIn()
     {
         if ($this->_identity
             && is_array($this->_resultRow)

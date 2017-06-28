@@ -11,9 +11,6 @@ namespace Auth\Model\Resource;
 use Zend_Acl_Resource_Interface;
 use Zend_Db_Table_Row_Abstract;
 
-
-
-
 abstract class AbstractResource implements Zend_Acl_Resource_Interface {
 
     /** @var int|null  */
@@ -31,11 +28,11 @@ abstract class AbstractResource implements Zend_Acl_Resource_Interface {
 
     public function __construct($oRow = null) {
         if ($oRow instanceof Zend_Db_Table_Row_Abstract) {
-            $this->_prepareData($oRow);
+            $this->prepareData($oRow);
         }
     }
 
-    abstract protected function _prepareData($oRow);
+    abstract protected function prepareData($oRow);
 
     /**
      * @return null
