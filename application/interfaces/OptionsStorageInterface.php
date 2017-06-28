@@ -7,7 +7,8 @@
  */
 namespace Interfaces;
 
-interface OptionsStorageInterface {
+interface OptionsStorageInterface
+{
 
     /**
      * find all available options in current table
@@ -28,7 +29,7 @@ interface OptionsStorageInterface {
     /**
      * update option with given data by given id
      *
-     * @param array $data
+     * @param array   $data
      * @param integer $optionId
      *
      * @return bool|integer

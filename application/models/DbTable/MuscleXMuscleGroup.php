@@ -26,7 +26,7 @@ class MuscleXMuscleGroup extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'muscle_x_muscle_group';
+    protected $_name     = 'muscle_x_muscle_group';
 
     /**
      * @var string
@@ -40,19 +40,20 @@ class MuscleXMuscleGroup extends AbstractDbTable
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findMusclesByMuscleGroupId($iMuscleGroupId) {
-		$oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
-		try {
+    public function findMusclesByMuscleGroupId($iMuscleGroupId) 
+    {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+        try {
             $oSelect->join($this->considerTestUserForTableName('muscles'), 'muscle_id = muscle_x_muscle_group_muscle_fk')
                 ->where('muscle_x_muscle_group_muscle_group_fk = ?', $iMuscleGroupId);
 
             return $this->fetchAll($oSelect);
-		} catch(Exception $oException) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oException->getMessage() . "<br />";
-			return false;
-		}
-	}
+        } catch(Exception $oException) {
+               echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+               echo "Meldung : " . $oException->getMessage() . "<br />";
+               return false;
+        }
+    }
 
     /**
      * find muscle group by muscle
@@ -61,7 +62,8 @@ class MuscleXMuscleGroup extends AbstractDbTable
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findMuscleGroupByMuscleId($iMuscleId) {
+    public function findMuscleGroupByMuscleId($iMuscleId) 
+    {
         try {
             return $this->fetchRow("muscle_x_muscle_group_muscle_fk = '" . $iMuscleId . "'");
         } catch(Exception $oException) {
@@ -78,33 +80,35 @@ class MuscleXMuscleGroup extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveMuscleXMuscleGroup($aData) {
-		try {
+    public function saveMuscleXMuscleGroup($aData) 
+    {
+        try {
             return $this->insert($aData);
-		} catch(Exception $oException) {
+        } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 
     /**
      * update muscle group muscle data
      *
      * @param array $aData
-     * @param int $iMuscleGroupMuscleId
+     * @param int   $iMuscleGroupMuscleId
      *
      * @return bool|int
      */
-    public function updateMuscleGroupMuscle($aData, $iMuscleGroupMuscleId) {
-		try {
+    public function updateMuscleGroupMuscle($aData, $iMuscleGroupMuscleId) 
+    {
+        try {
             return $this->update($aData, "muscle_x_muscle_group_id = '" . $iMuscleGroupMuscleId . "'");
-		} catch(Exception $oException) {
+        } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 
     /**
      * delete muscle group muscle
@@ -114,16 +118,19 @@ class MuscleXMuscleGroup extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteMuscleGroupMuscle($iMuscleGroupMuscleId, $muscleGroupId){
-		try {
-            return $this->delete("muscle_x_muscle_group_muscle_fk = '" . $iMuscleGroupMuscleId .
-                "' AND muscle_x_muscle_group_muscle_group_fk = '" . $muscleGroupId . "'");
-		} catch(Exception $oException) {
+    public function deleteMuscleGroupMuscle($iMuscleGroupMuscleId, $muscleGroupId)
+    {
+        try {
+            return $this->delete(
+                "muscle_x_muscle_group_muscle_fk = '" . $iMuscleGroupMuscleId .
+                "' AND muscle_x_muscle_group_muscle_group_fk = '" . $muscleGroupId . "'"
+            );
+        } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 
     /**
      * delete all muscle groups muscles by muscle group
@@ -132,7 +139,8 @@ class MuscleXMuscleGroup extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteAllMuscleGroupsMusclesByMuscleGroupId($iMuscleGroupId){
+    public function deleteAllMuscleGroupsMusclesByMuscleGroupId($iMuscleGroupId)
+    {
         try {
             return $this->delete("muscle_x_muscle_group_muscle_group_fk = '" . $iMuscleGroupId . "'");
         } catch(Exception $oException) {
@@ -149,7 +157,8 @@ class MuscleXMuscleGroup extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteAllMuscleGroupsMusclesByMuscleId($iMuscleId){
+    public function deleteAllMuscleGroupsMusclesByMuscleId($iMuscleId)
+    {
         try {
             return $this->delete("muscle_x_muscle_group_muscle_fk = '" . $iMuscleId . "'");
         } catch(Exception $oException) {
@@ -166,7 +175,8 @@ class MuscleXMuscleGroup extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteMuscleGroupById($muscleGroupId) {
+    public function deleteMuscleGroupById($muscleGroupId) 
+    {
         try {
             return $this->delete("muscle_x_muscle_group_id = '" . $muscleGroupId . "'");
         } catch(Exception $oException) {

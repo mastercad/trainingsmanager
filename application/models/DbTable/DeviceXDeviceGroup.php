@@ -24,10 +24,14 @@ use Exception;
  */
 class DeviceXDeviceGroup extends AbstractDbTable
 {
-    /** @var string */
-    protected $_name 	= 'device_x_device_group';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'device_x_device_group';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'device_x_device_group_id';
 
     /**
@@ -35,7 +39,8 @@ class DeviceXDeviceGroup extends AbstractDbTable
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findDevicesByDeviceGroupId($iDeviceGroupId) {
+    public function findDevicesByDeviceGroupId($iDeviceGroupId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = device_x_device_group_device_fk')
@@ -48,7 +53,8 @@ class DeviceXDeviceGroup extends AbstractDbTable
             return false;
         }
     }
-    public function findAllDeviceGroupsWithDevices() {
+    public function findAllDeviceGroupsWithDevices() 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->joinInner($this->considerTestUserForTableName('devices'), 'device_id = device_x_device_group_device_fk')
@@ -67,7 +73,8 @@ class DeviceXDeviceGroup extends AbstractDbTable
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findDeviceGroupsForDevice($iDeviceId) {
+    public function findDeviceGroupsForDevice($iDeviceId) 
+    {
         try {
             return $this->fetchAll("device_x_device_group_device_fk = '" . $iDeviceId . "'");
         } catch(Exception $oException) {
@@ -82,7 +89,8 @@ class DeviceXDeviceGroup extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveDeviceGroupDevice($aData) {
+    public function saveDeviceGroupDevice($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch(Exception $oException) {
@@ -98,7 +106,8 @@ class DeviceXDeviceGroup extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function updateDeviceGroupDevice($aData, $iDeviceGroupDeviceId) {
+    public function updateDeviceGroupDevice($aData, $iDeviceGroupDeviceId) 
+    {
         try {
             return $this->update($aData, "device_x_device_group_id = '" . $iDeviceGroupDeviceId . "'");
         } catch(Exception $oException) {
@@ -113,7 +122,8 @@ class DeviceXDeviceGroup extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteDeviceFromDeviceGroupDevices($iDeviceGroupDeviceId) {
+    public function deleteDeviceFromDeviceGroupDevices($iDeviceGroupDeviceId) 
+    {
         try {
             return $this->delete("device_x_device_group_id = '" . $iDeviceGroupDeviceId . "'");
         } catch( Exception $oException)
@@ -129,7 +139,8 @@ class DeviceXDeviceGroup extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteAllDeviceGroupDevicesByDeviceGroupId($iDeviceGroupDeviceId) {
+    public function deleteAllDeviceGroupDevicesByDeviceGroupId($iDeviceGroupDeviceId) 
+    {
         try {
             return $this->delete("device_x_device_group_device_group_fk = '" . $iDeviceGroupDeviceId . "'");
         } catch(Exception $oException) {

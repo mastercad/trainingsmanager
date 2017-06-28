@@ -40,7 +40,8 @@ class Auth_Bootstrap extends Zend_Application_Module_Bootstrap
         Zend_Registry::get('view')->addScriptPath(APPLICATION_PATH . "/views/scripts/");
     }
 
-    protected function _initAuth() {
+    protected function _initAuth() 
+    {
         $this->bootstrap('frontController');
         $oAuth = Auth::getInstance();
 
@@ -51,6 +52,7 @@ class Auth_Bootstrap extends Zend_Application_Module_Bootstrap
         Zend_Registry::set('acl', $oAcl);
 
         $this->getResource('frontController')->registerPlugin(
-            new AccessControl($oAuth, $oAcl))->setParam('auth', $oAuth);
+            new AccessControl($oAuth, $oAcl)
+        )->setParam('auth', $oAuth);
     }
 }

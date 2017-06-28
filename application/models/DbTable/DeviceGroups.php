@@ -24,10 +24,14 @@ use Exception;
  */
 class DeviceGroups extends AbstractDbTable
 {
-    /** @var string */
-    protected $_name 	= 'device_groups';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'device_groups';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'device_group_id';
 
     /**
@@ -35,7 +39,8 @@ class DeviceGroups extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllDeviceGroups() {
+    public function findAllDeviceGroups() 
+    {
         return $this->fetchAll(null, "device_group_name");
     }
 
@@ -46,7 +51,8 @@ class DeviceGroups extends AbstractDbTable
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
-    public function findDeviceGroup($iDeviceGroupId) {
+    public function findDeviceGroup($iDeviceGroupId) 
+    {
         try {
             return $this->fetchRow("device_group_id = '" . $iDeviceGroupId . "'");
         } catch( Exception $oException) {
@@ -63,7 +69,8 @@ class DeviceGroups extends AbstractDbTable
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findDeviceGroupByName($sDeviceGroupName) {
+    public function findDeviceGroupByName($sDeviceGroupName) 
+    {
         try {
             return $this->fetchAll("device_group_name LIKE( '" . $sDeviceGroupName . "')", 'device_group_name');
         } catch( Exception $oException) {
@@ -80,7 +87,8 @@ class DeviceGroups extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveDeviceGroup($aData) {
+    public function saveDeviceGroup($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch( Exception $oException) {
@@ -98,7 +106,8 @@ class DeviceGroups extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function updateDeviceGroup($aData, $iDeviceGroupId) {
+    public function updateDeviceGroup($aData, $iDeviceGroupId) 
+    {
         try {
             return $this->update($aData, "device_group_id = '" . $iDeviceGroupId . "'");
         } catch( Exception $oException) {
@@ -115,7 +124,8 @@ class DeviceGroups extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteDeviceGroup($iDeviceGroupId) {
+    public function deleteDeviceGroup($iDeviceGroupId) 
+    {
         try {
             return $this->delete("device_group_id = '" . $iDeviceGroupId . "'");
         } catch( Exception $oException) {

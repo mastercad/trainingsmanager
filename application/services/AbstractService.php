@@ -8,10 +8,11 @@
 
 namespace Service;
 
-
-
-
-
-abstract class AbstractService {
-
+/**
+ * Class AbstractService
+ *
+ * @package Service
+ */
+abstract class AbstractService
+{
 }

@@ -27,7 +27,7 @@ class TrainingPlanLayouts extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'training_plan_layouts';
+    protected $_name     = 'training_plan_layouts';
 
     /**
      * @var string
@@ -41,7 +41,8 @@ class TrainingPlanLayouts extends AbstractDbTable
      *
      * @return null|Zend_Db_Table_Row_Abstract
      */
-    public function findTrainingPlanLayout($iTrainingPlanLayoutId) {
+    public function findTrainingPlanLayout($iTrainingPlanLayoutId) 
+    {
         return $this->fetchRow('training_plan_layout_id = ' . $iTrainingPlanLayoutId);
     }
 

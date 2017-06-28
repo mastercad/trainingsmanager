@@ -13,9 +13,12 @@ use Zend_Translate;
 
 
 
-class Translator {
+class Translator
+{
 
-    /** @var  Zend_Translate */
+    /**
+     * @var  Zend_Translate 
+     */
     private $translation;
     /**
      * @var array
@@ -33,14 +36,16 @@ class Translator {
 
     ];
 
-    public function __construct() {
+    public function __construct() 
+    {
         $this->initTranslation();
     }
 
     /**
      *
      */
-    private function initTranslation() {
+    private function initTranslation() 
+    {
 
         $this->prepareLanguage();
 
@@ -51,7 +56,8 @@ class Translator {
             $this->favoriteLanguage = $matches[1];
         }
 
-        $this->translation = new Zend_Translate([
+        $this->translation = new Zend_Translate(
+            [
                 'adapter' => 'array',
                 'content' =>  $baseTranslationPath . $this->favoriteLanguage . '/',
                 'locale'  => $this->favoriteLanguage,
@@ -63,9 +69,9 @@ class Translator {
      * prepares the language for translations, first prio is param string in get
      * second prio is HTTP_ACCEPT_LANGUAGE in SERVER vars
      * third set fallback to "en"
-     *
      */
-    private function prepareLanguage() {
+    private function prepareLanguage() 
+    {
 
         if (!$this->favoriteLanguage) {
             $langString = '';
@@ -94,9 +100,10 @@ class Translator {
 
     /**
      * @param     $lang
-     * @param int $pos
+     * @param int  $pos
      */
-    protected function addUserDefinedLanguage($lang, $pos = 1) {
+    protected function addUserDefinedLanguage($lang, $pos = 1) 
+    {
         $this->userDefinedLanguages[$pos . '#' . $lang] = $lang;
         krsort($this->userDefinedLanguages);
     }
@@ -108,7 +115,8 @@ class Translator {
      *
      * @return $this
      */
-    protected function addTranslationSource($translationSource) {
+    protected function addTranslationSource($translationSource) 
+    {
         $this->translationSources[] = $translationSource;
         return $this;
     }
@@ -118,7 +126,8 @@ class Translator {
      *
      * @return $this
      */
-    protected function setTranslation($translation) {
+    protected function setTranslation($translation) 
+    {
         $this->translation = $translation;
         return $this;
     }
@@ -126,24 +135,27 @@ class Translator {
     /**
      * @return \Zend_Translate
      */
-    public function getTranslation() {
+    public function getTranslation() 
+    {
         return $this->translation;
     }
 
     /**
      * @return \Zend_Translate_Adapter
      */
-    protected function getTranslator() {
+    protected function getTranslator() 
+    {
         return $this->getTranslation()->getAdapter();
     }
 
     /**
      * @param string $tag
-     * @param null $locale
+     * @param null   $locale
      *
      * @return string
      */
-    protected function translate($tag, $locale = null) {
+    protected function translate($tag, $locale = null) 
+    {
         return $this->getTranslator()->translate($tag, $locale);
     }
 }

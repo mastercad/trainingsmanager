@@ -26,7 +26,7 @@ class UserRightGroupRights extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'user_right_group_rights';
+    protected $_name     = 'user_right_group_rights';
     /**
      * @var string
      */

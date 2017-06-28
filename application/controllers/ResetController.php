@@ -13,16 +13,18 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Service\Reset;
 
 /**
  * Class ResetController
  */
-class ResetController extends AbstractController {
+class ResetController extends AbstractController
+{
 
-    public function indexAction() {
+    public function indexAction() 
+    {
         $resetService = new Reset();
         $resetService->cleanTestActivities();
     }

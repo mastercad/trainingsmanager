@@ -12,7 +12,8 @@ namespace Service;
 
 
 
-abstract class Options {
+abstract class Options
+{
 
     protected $hierarchy = [];
 
@@ -20,16 +21,19 @@ abstract class Options {
 
     protected $storageClassName;
 
-    protected function getStorage() {
+    protected function getStorage() 
+    {
         return $this->storage;
     }
 
-    protected function setStorage($storage) {
+    protected function setStorage($storage) 
+    {
         $this->storage = $storage;
         return $this;
     }
 
-    protected function useStorage() {
+    protected function useStorage() 
+    {
         if (is_null($this->storage)) {
             $this->storage = new $this->storageClassName();
         }

@@ -29,14 +29,15 @@ class TrainingPlans extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'training_plans';
+    protected $_name     = 'training_plans';
     /**
      * @var string
      */
     protected $_primary = 'training_plan_id';
 
-    public function findByPrimary($trainingPlanId) {
-        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findByPrimary($trainingPlanId) 
+    {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->joinInner($this->considerTestUserForTableName('users'), 'user_id = training_plan_user_fk')
             ->joinLeft($this->considerTestUserForTableName('user_x_user_group'), 'user_x_user_group_user_fk = user_id')
@@ -53,7 +54,8 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return null|Zend_Db_Table_Row_Abstract
      */
-    public function findTrainingPlan($iTrainingPlanId) {
+    public function findTrainingPlan($iTrainingPlanId) 
+    {
         return $this->fetchRow('training_plan_id = ' . $iTrainingPlanId);
     }
 
@@ -64,11 +66,14 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return null|Zend_Db_Table_Row_Abstract
      */
-    public function findFirstExerciseInTrainingPlan($iTrainingPlanId) {
-        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findFirstExerciseInTrainingPlan($iTrainingPlanId) 
+    {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $select->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
-            'training_plan_x_exercise_training_plan_fk = ' . $iTrainingPlanId)
+        $select->joinInner(
+            $this->considerTestUserForTableName('training_plan_x_exercise'),
+            'training_plan_x_exercise_training_plan_fk = ' . $iTrainingPlanId
+        )
             ->order('training_plan_x_exercise_exercise_order DESC')
             ->limit(1);
 
@@ -82,12 +87,12 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllTrainingPlansForUser($userId) {
-        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findAllTrainingPlansForUser($userId) 
+    {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->order('training_plan_create_date DESC')
-            ->where('training_plan_user_fk = ?', $userId)
-        ;
+            ->where('training_plan_user_fk = ?', $userId);
 
         return $this->fetchAll($select);
     }
@@ -99,13 +104,13 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllSingleOrParentTrainingPlansForUser($userId) {
-        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findAllSingleOrParentTrainingPlansForUser($userId) 
+    {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->order('training_plan_create_date ASC')
             ->where('training_plan_user_fk = ?', $userId)
-            ->where('(training_plan_parent_fk IS NULL OR training_plan_parent_fk = 0)')
-        ;
+            ->where('(training_plan_parent_fk IS NULL OR training_plan_parent_fk = 0)');
 
         return $this->fetchAll($select);
     }
@@ -117,7 +122,8 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findActiveTrainingPlan($userId) {
+    public function findActiveTrainingPlan($userId) 
+    {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->where('training_plan_active = 1')
@@ -134,10 +140,12 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId) {
+    public function findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId) 
+    {
         return $this->fetchAll(
             'training_plan_id = ' . $trainingPlanId . ' OR training_plan_parent_fk = ' . $trainingPlanId,
-            ['training_plan_parent_fk', 'training_plan_order']);
+            ['training_plan_parent_fk', 'training_plan_order']
+        );
     }
 
     /**
@@ -147,7 +155,8 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllTrainingPlansInArchive($userId) {
+    public function findAllTrainingPlansInArchive($userId) 
+    {
         return $this->fetchAll(
             'training_plan_user_fk = ' . $userId . ' AND (training_plan_active = 0 OR training_plan_active IS NULL) AND (' .
                 'training_plan_parent_fk IS NULL OR training_plan_parent_fk = 0)',
@@ -162,7 +171,8 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findChildTrainingPlans($iParentTrainingPlanId) {
+    public function findChildTrainingPlans($iParentTrainingPlanId) 
+    {
         return $this->fetchAll('training_plan_parent_fk = ' . $iParentTrainingPlanId, 'training_plan_order');
     }
 
@@ -171,8 +181,9 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllActiveTrainingPlans() {
-        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findAllActiveTrainingPlans() 
+    {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->join($this->considerTestUserForTableName('users'), 'user_id = training_plan_user_fk')
             ->where('training_plan_active = 1')
@@ -187,8 +198,9 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllInactiveTrainingPlans() {
-        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findAllInactiveTrainingPlans() 
+    {
+        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->join('users', 'user_id = training_plan_user_fk')
             ->where('training_plan_active = 0')
@@ -205,8 +217,9 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return null|\Zend_Db_Table_Row_Abstract
      */
-    public function findActiveTrainingPlanByUserId($userId) {
-        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findActiveTrainingPlanByUserId($userId) 
+    {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->where('training_plan_user_fk = ?', $userId)
             ->where('training_plan_active = 1')
@@ -225,8 +238,9 @@ class TrainingPlans extends AbstractDbTable
      *
      * @return null|\Zend_Db_Table_Row_Abstract
      */
-    public function findNextActiveTrainingPlan($userId, $currentTrainingPlanOrder) {
-        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(FALSE);
+    public function findNextActiveTrainingPlan($userId, $currentTrainingPlanOrder) 
+    {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->where('training_plan_user_fk = ?', $userId)
             ->where('training_plan_active = 1')

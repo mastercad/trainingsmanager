@@ -90,17 +90,17 @@ class AuthAdapter extends DbTable
 
         /* SESSION ID ziehen */
         if (isset($_COOKIE)
-           && is_array($_COOKIE)
-           && array_key_exists('PHPSESSID', $_COOKIE)
+            && is_array($_COOKIE)
+            && array_key_exists('PHPSESSID', $_COOKIE)
         ) {
             $session_id = $_COOKIE['PHPSESSID'];
         }
         $obj_users = new Users();
-        $last_login = date( "Y-m-d H:i:s");
+        $last_login = date("Y-m-d H:i:s");
 
         $data = Array(
                 'user_last_login' => $last_login,
-                'user_login_count' => new Zend_Db_Expr( 'user_login_count + 1' ),
+                'user_login_count' => new Zend_Db_Expr('user_login_count + 1'),
                 'user_session_id' => $session_id
         );
         $obj_users->updateUser($data, $this->_resultRow['user_id']);

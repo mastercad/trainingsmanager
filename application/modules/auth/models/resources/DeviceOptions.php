@@ -10,9 +10,12 @@ namespace Auth\Model\Resource;
 
 use CAD_Tool_Extractor;
 
-class DeviceOptions extends AbstractResource {
+class DeviceOptions extends AbstractResource
+{
 
-    /** @var string ID der aktuellen Resource in der ACL */
+    /**
+     * @var string ID der aktuellen Resource in der ACL 
+     */
     protected $resourceId = 'default:device-options';
 
     protected function prepareData($oRow)

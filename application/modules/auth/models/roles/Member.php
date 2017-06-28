@@ -11,14 +11,16 @@ namespace Auth\Model\Role;
 use Zend_Acl_Role_Interface;
 use Zend_Auth;
 
-class Member implements Zend_Acl_Role_Interface {
+class Member implements Zend_Acl_Role_Interface
+{
 
     private $role = null;
     private $memberId = null;
     private $group = null;
     private $groupId = null;
 
-    public function __construct(array $config = null) {
+    public function __construct(array $config = null) 
+    {
         if (!empty($config)) {
             $this->parseConfig($config);
         } else {
@@ -29,7 +31,8 @@ class Member implements Zend_Acl_Role_Interface {
         }
     }
 
-    private function parseConfig(array $config) {
+    private function parseConfig(array $config) 
+    {
         if (array_key_exists('userId', $config)) {
             $this->setMemberId($config['userId']);
         }
@@ -49,63 +52,72 @@ class Member implements Zend_Acl_Role_Interface {
      *
      * @return string
      */
-    public function getRoleId() {
+    public function getRoleId() 
+    {
         return $this->role;
     }
 
     /**
      * @return null
      */
-    public function getRole() {
+    public function getRole() 
+    {
         return $this->role;
     }
 
     /**
      * @return null
      */
-    public function getMemberId() {
+    public function getMemberId() 
+    {
         return $this->memberId;
     }
 
     /**
      * @param null $memberId
      */
-    public function setMemberId($memberId) {
+    public function setMemberId($memberId) 
+    {
         $this->memberId = $memberId;
     }
 
     /**
      * @param string $sRole
      */
-    public function setRole($sRole) {
+    public function setRole($sRole) 
+    {
         $this->role = $sRole;
     }
 
     /**
      * @return null
      */
-    public function getGroup() {
+    public function getGroup() 
+    {
         return $this->group;
     }
 
     /**
      * @param null $group
      */
-    public function setGroup($group) {
+    public function setGroup($group) 
+    {
         $this->group = $group;
     }
 
     /**
      * @return null
      */
-    public function getGroupId() {
+    public function getGroupId() 
+    {
         return $this->groupId;
     }
 
     /**
      * @param null $groupId
      */
-    public function setGroupId($groupId) {
+    public function setGroupId($groupId) 
+    {
         $this->groupId = $groupId;
     }
 }

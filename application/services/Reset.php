@@ -16,14 +16,16 @@ use Zend_Registry;
 
 
 
-class Reset {
+class Reset
+{
 
     private $testUserCollection = [];
 
     /**
      * removes all activities from test user login
      */
-    public function cleanTestActivities() {
+    public function cleanTestActivities() 
+    {
 
         $this->collectCurrentTestUsers();
         $this->cleanExerciseUploadPictures();
@@ -34,7 +36,8 @@ class Reset {
     /**
      * collect user ids to remove specific data from tables and folders
      */
-    private function collectCurrentTestUsers() {
+    private function collectCurrentTestUsers() 
+    {
         $usersDb = new Users();
         $testUsersCollection = $usersDb->findTestUsers();
         $this->testUserCollection = [];
@@ -43,7 +46,8 @@ class Reset {
         }
     }
 
-    private function cleanExerciseUploadPictures() {
+    private function cleanExerciseUploadPictures() 
+    {
         $exercisesBaseImagesPath = APPLICATION_PATH . '/../public/images/content/dynamisch/exercises/';
 
         foreach ($this->testUserCollection as $testUser) {
@@ -53,7 +57,8 @@ class Reset {
         }
     }
 
-    private function cleanDeviceUploadPictures() {
+    private function cleanDeviceUploadPictures() 
+    {
         $devicesBaseImagesPath = APPLICATION_PATH . '/../public/images/content/dynamisch/devices/';
 
         foreach ($this->testUserCollection as $testUser) {
@@ -66,11 +71,14 @@ class Reset {
     /**
      * imports all stored dumps and reset the contained tables
      */
-    private function resetDatabase() {
+    private function resetDatabase() 
+    {
         $dumpFolder = APPLICATION_PATH . '/../data/dumps/';
 
         $directoryIterator = new DirectoryIterator($dumpFolder);
-        /** @var Zend_Db_Adapter_Abstract $db */
+        /**
+ * @var Zend_Db_Adapter_Abstract $db 
+*/
         $db = Zend_Registry::get('db');
 
         foreach ($directoryIterator as $file) {

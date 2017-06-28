@@ -18,7 +18,8 @@ use \Auth\Model\Role\Member;
 /**
  * Class AbstractController
  */
-abstract class AbstractController extends Zend_Controller_Action {
+abstract class AbstractController extends Zend_Controller_Action
+{
 
     /**
      * @var
@@ -38,7 +39,8 @@ abstract class AbstractController extends Zend_Controller_Action {
     /**
      * post dispatch function
      */
-    public function postDispatch() {
+    public function postDispatch() 
+    {
 
         $params = $this->getRequest()->getParams();
 
@@ -58,11 +60,14 @@ abstract class AbstractController extends Zend_Controller_Action {
      *
      * @return string
      */
-    protected function generateDetailOptionsContent($optionId) {
+    protected function generateDetailOptionsContent($optionId) 
+    {
         $currentControllerName = $this->convertControllerName($this->getRequest()->getControllerName());
         $dbClassName = '\Model\DbTable\\'.$currentControllerName;
 
-        /** @var \Model\DbTable\AbstractDbTable $db */
+        /**
+ * @var \Model\DbTable\AbstractDbTable $db 
+*/
         $db = new $dbClassName();
         $row = $db->findByPrimary($optionId);
 
@@ -91,7 +96,8 @@ abstract class AbstractController extends Zend_Controller_Action {
      *
      * @return bool
      */
-    protected function findCurrentUserId() {
+    protected function findCurrentUserId() 
+    {
         $user = Zend_Auth::getInstance()->getIdentity();
 
         if (true == is_object($user)) {
@@ -107,10 +113,15 @@ abstract class AbstractController extends Zend_Controller_Action {
      *
      * @return string
      */
-    protected function convertControllerName($controllerName) {
-        return ucFirst(preg_replace_callback('/(\-[a-z]{1})/', function(array $piece) {
-            return ucfirst(str_replace('-', '', $piece[1]));
-        }, $controllerName));
+    protected function convertControllerName($controllerName) 
+    {
+        return ucFirst(
+            preg_replace_callback(
+                '/(\-[a-z]{1})/', function (array $piece) {
+                    return ucfirst(str_replace('-', '', $piece[1]));
+                }, $controllerName
+            )
+        );
     }
 
     /**
@@ -121,7 +132,8 @@ abstract class AbstractController extends Zend_Controller_Action {
      * @return mixed
      * @throws \Zend_Exception
      */
-    protected function translate($key) {
+    protected function translate($key) 
+    {
         return Zend_Registry::get('Zend_Translate')->translate($key);
     }
 }

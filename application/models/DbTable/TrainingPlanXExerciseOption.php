@@ -23,7 +23,7 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'training_plan_x_exercise_option';
+    protected $_name     = 'training_plan_x_exercise_option';
     /**
      * @var string
      */
@@ -33,20 +33,27 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      * find training plan exercise options by training plan exercise and optional exercise option
      *
      * @param int $iTrainingPlanExerciseId
-     * @param int $exerciseOptionId optional
+     * @param int $exerciseOptionId        optional
      *
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
-    public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($iTrainingPlanExerciseId, $exerciseOptionId = null) {
+    public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($iTrainingPlanExerciseId, $exerciseOptionId = null) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
-            'training_plan_x_exercise_id = training_plan_x_exercise_option_training_plan_exercise_fk')
-            ->joinLeft($this->considerTestUserForTableName('exercise_options'),
-                'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
-            ->joinLeft($this->considerTestUserForTableName('exercise_x_exercise_option'),
+        $oSelect->joinInner(
+            $this->considerTestUserForTableName('training_plan_x_exercise'),
+            'training_plan_x_exercise_id = training_plan_x_exercise_option_training_plan_exercise_fk'
+        )
+            ->joinLeft(
+                $this->considerTestUserForTableName('exercise_options'),
+                'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('exercise_x_exercise_option'),
                 'exercise_x_exercise_option_exercise_option_fk = training_plan_x_exercise_option_exercise_option_fk '.
-                'AND exercise_x_exercise_option_exercise_fk = training_plan_x_exercise_exercise_fk')
+                'AND exercise_x_exercise_option_exercise_fk = training_plan_x_exercise_exercise_fk'
+            )
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $iTrainingPlanExerciseId);
 
         if (!empty($exerciseOptionId)) {
@@ -63,16 +70,23 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      *
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
-    public function findTrainingPlanExerciseOptionsByTrainingDiaryExerciseId($trainingPlanXExerciseId) {
+    public function findTrainingPlanExerciseOptionsByTrainingDiaryExerciseId($trainingPlanXExerciseId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect
-            ->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
-                'training_plan_x_exercise_id = ' . $trainingPlanXExerciseId)
-            ->joinInner($this->considerTestUserForTableName('exercises'),
-                'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner($this->considerTestUserForTableName('exercise_options'),
-                'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+            ->joinInner(
+                $this->considerTestUserForTableName('training_plan_x_exercise'),
+                'training_plan_x_exercise_id = ' . $trainingPlanXExerciseId
+            )
+            ->joinInner(
+                $this->considerTestUserForTableName('exercises'),
+                'exercise_id = training_plan_x_exercise_exercise_fk'
+            )
+            ->joinInner(
+                $this->considerTestUserForTableName('exercise_options'),
+                'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk'
+            )
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $trainingPlanXExerciseId);
 
         return $this->fetchAll($oSelect);
@@ -86,12 +100,15 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      *
      * @return null|Zend_Db_Table_Rowset_Abstract
      */
-    public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseIdAndExerciseOptionId($iTrainingPlanExerciseId, $exerciseOptionId) {
+    public function findTrainingPlanExerciseOptionsByTrainingPlanExerciseIdAndExerciseOptionId($iTrainingPlanExerciseId, $exerciseOptionId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
 
-        $oSelect->joinLeft($this->considerTestUserForTableName('exercise_options'),
-            'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk')
+        $oSelect->joinLeft(
+            $this->considerTestUserForTableName('exercise_options'),
+            'exercise_option_id = training_plan_x_exercise_option_exercise_option_fk'
+        )
             ->where('training_plan_x_exercise_option_training_plan_exercise_fk = ?', $iTrainingPlanExerciseId)
             ->where('training_plan_x_exercise_option_exercise_option_fk = ?', $exerciseOptionId);
 
@@ -105,7 +122,8 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      *
      * @return mixed
      */
-    public function saveTrainingPlanExerciseOption($aData) {
+    public function saveTrainingPlanExerciseOption($aData) 
+    {
         return $this->insert($aData);
     }
 
@@ -113,11 +131,12 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      * update training plan exercise option data
      *
      * @param array $aData
-     * @param int $iTrainingPlanExerciseOptionId
+     * @param int   $iTrainingPlanExerciseOptionId
      *
      * @return int
      */
-    public function updateTrainingPlanExerciseOption($aData, $iTrainingPlanExerciseOptionId) {
+    public function updateTrainingPlanExerciseOption($aData, $iTrainingPlanExerciseOptionId) 
+    {
         return $this->update($aData, 'training_plan_x_exercise_option_id = ' . $iTrainingPlanExerciseOptionId);
     }
 
@@ -128,7 +147,8 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      *
      * @return int
      */
-    public function deleteTrainingPlanExerciseOption($iTrainingPlanExerciseOptionId) {
+    public function deleteTrainingPlanExerciseOption($iTrainingPlanExerciseOptionId) 
+    {
         return $this->delete('training_plan_x_exercise_option_id = ' . $iTrainingPlanExerciseOptionId);
     }
 
@@ -137,7 +157,8 @@ class TrainingPlanXExerciseOption extends AbstractDbTable
      *
      * @param int $trainingPlanXExerciseId
      */
-    public function deleteTrainingPlanExerciseOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId) {
+    public function deleteTrainingPlanExerciseOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId) 
+    {
         $this->delete('training_plan_x_exercise_option_training_plan_exercise_fk = ' . $trainingPlanXExerciseId);
     }
 }

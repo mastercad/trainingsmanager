@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Interfaces\OptionsStorageInterface;
 use Service\GlobalMessageHandler;
@@ -22,37 +22,50 @@ use Model\Entity\Message;
 /**
  * Class OptionsController
  */
-abstract class OptionsController extends AbstractController {
-
-    private $optionsStorage = null;
-
+abstract class OptionsController extends AbstractController
+{
+    /**
+     * @var array
+     */
     protected $map = [];
 
     /**
      * @return OptionsStorageInterface
      */
-    protected abstract function useOptionsStorage();
+    abstract protected function useOptionsStorage();
 
-    public function init() {
+    /**
+     * Initial Function for Controller
+     */
+    public function init()
+    {
         if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
-                'text/javascript');
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
-                'text/javascript');
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript'
+            );
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript'
+            );
         }
     }
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction()
+    {
         $optionsCollection = $this->useOptionsStorage()->findAllOptions();
         $optionsContent = 'Es konnten leider keine optionen gefunden werden!';
 
         if (0 < count($optionsCollection)) {
             $optionsContent = '';
             foreach ($optionsCollection as $option) {
-                $this->view->assign('editLink', '/'.$this->getRequest()->getControllerName().'/edit/id/' . $option->offsetGet($this->map['option_id']));
+                $this->view->assign(
+                    'editLink',
+                    '/'.$this->getRequest()->getControllerName().'/edit/id/' . $option->offsetGet($this->map['option_id'])
+                );
                 $this->view->assign('name', $option->offsetGet($this->map['option_name']));
                 $this->view->assign('id', $option->offsetGet($this->map['option_id']));
                 $optionsContent .= $this->view->render('loops/item-row.phtml');
@@ -64,14 +77,16 @@ abstract class OptionsController extends AbstractController {
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction()
+    {
         $this->forward('edit');
     }
 
     /**
      * edit action
      */
-    public function editAction() {
+    public function editAction()
+    {
         $params = $this->getRequest()->getParams();
 
         $optionName = '';
@@ -109,7 +124,8 @@ abstract class OptionsController extends AbstractController {
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction()
+    {
 
         $optionId = intval($this->getParam('id'));
         if (0 < $optionId) {
@@ -127,7 +143,8 @@ abstract class OptionsController extends AbstractController {
     /**
      * save action
      */
-    public function saveAction() {
+    public function saveAction()
+    {
         if ($this->getRequest()->isPost()) {
             $optionId = $this->getParam('id');
             $optionName = $this->getParam('name');
@@ -138,7 +155,6 @@ abstract class OptionsController extends AbstractController {
                 GlobalMessageHandler::appendMessage('Es muss ein name angegeben werden', Message::STATUS_ERROR);
                 $this->view->assign('json_string', json_encode($messages));
             } else {
-
                 $data = [
                     $this->map['option_name'] => $optionName,
                     $this->map['option_value'] => $optionValue
@@ -161,7 +177,8 @@ abstract class OptionsController extends AbstractController {
     /**
      * delete action
      */
-    public function deleteAction() {
+    public function deleteAction()
+    {
 
         $optionId = intval($this->getParam('id'));
         if (0 < $optionId) {

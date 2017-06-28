@@ -10,12 +10,22 @@ namespace Service;
 
 use Model\Entity\Message;
 
-class GlobalMessageHandler {
+/**
+ * Class GlobalMessageHandler
+ *
+ * @package Service
+ */
+class GlobalMessageHandler
+{
 
-    /** @var Message */
+    /**
+     * @var Message 
+     */
     static private $messageEntity = null;
 
-    /** @var bool */
+    /**
+     * @var bool 
+     */
     static private $init = false;
 
     /**
@@ -26,7 +36,8 @@ class GlobalMessageHandler {
     /**
      *
      */
-    private function __construct() {
+    private function __construct()
+    {
         static::init();
         static::$messageEntity = new Message();
     }
@@ -34,7 +45,8 @@ class GlobalMessageHandler {
     /**
      *
      */
-    private static function init() {
+    private static function init()
+    {
         if (!static::$init) {
             static::$init = true;
             static::$instance = new static();
@@ -44,7 +56,8 @@ class GlobalMessageHandler {
     /**
      * @return GlobalMessageHandler
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         static::init();
         return static::$instance;
     }
@@ -52,7 +65,8 @@ class GlobalMessageHandler {
     /**
      * @return Message
      */
-    public static function getMessageEntity() {
+    public static function getMessageEntity()
+    {
         static::init();
         return static::$messageEntity;
     }
@@ -60,7 +74,8 @@ class GlobalMessageHandler {
     /**
      * @param Message $messageEntity
      */
-    public static function setMessageEntity($messageEntity) {
+    public static function setMessageEntity($messageEntity)
+    {
         static::init();
         static::$messageEntity = $messageEntity;
     }
@@ -68,9 +83,10 @@ class GlobalMessageHandler {
     /**
      * @param string $message
      *
-     * @param int $state
+     * @param int    $state
      */
-    public static function appendMessage($message, $state = Message::STATUS_OK) {
+    public static function appendMessage($message, $state = Message::STATUS_OK)
+    {
         $messageEntity = static::getMessageEntity();
         $currentMessages = $messageEntity->getMessage();
 

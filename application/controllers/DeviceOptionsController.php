@@ -13,14 +13,15 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/OptionsController.php');
+require_once APPLICATION_PATH . '/controllers/OptionsController.php';
 
 use \Model\DbTable\DeviceOptions;
 
 /**
  * Class DeviceOptionsController
  */
-class DeviceOptionsController extends OptionsController {
+class DeviceOptionsController extends OptionsController
+{
 
     protected $map = [
         'option_id' => 'device_option_id',

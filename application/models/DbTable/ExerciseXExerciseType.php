@@ -21,12 +21,13 @@ use Exception;
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class ExerciseXExerciseType extends AbstractDbTable {
+class ExerciseXExerciseType extends AbstractDbTable
+{
 
     /**
      * @var string
      */
-    protected $_name 	= 'exercise_x_exercise_type';
+    protected $_name     = 'exercise_x_exercise_type';
 
     /**
      * @var string
@@ -40,7 +41,8 @@ class ExerciseXExerciseType extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findExerciseTypeForExercise($exerciseId) {
+    public function findExerciseTypeForExercise($exerciseId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->joinInner($this->considerTestUserForTableName('exercises'), 'exercise_id = exercise_x_exercise_type_exercise_fk')
@@ -83,7 +85,8 @@ class ExerciseXExerciseType extends AbstractDbTable {
      *
      * @return bool|mixed
      */
-    public function saveExerciseXExerciseType($aData) {
+    public function saveExerciseXExerciseType($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch (Exception $oException) {
@@ -97,11 +100,12 @@ class ExerciseXExerciseType extends AbstractDbTable {
      * update exercise exercise type data by given exercise exercise type id
      *
      * @param array $aData
-     * @param int $exerciseXExerciseTypeId
+     * @param int   $exerciseXExerciseTypeId
      *
      * @return bool|int
      */
-    public function updateExerciseXExerciseType($aData, $exerciseXExerciseTypeId) {
+    public function updateExerciseXExerciseType($aData, $exerciseXExerciseTypeId) 
+    {
         try {
             return $this->update($aData, "exercise_x_exercise_type_id = '" . $exerciseXExerciseTypeId . "'");
         } catch (Exception $oException) {
@@ -118,9 +122,10 @@ class ExerciseXExerciseType extends AbstractDbTable {
      *
      * @return bool|int
      */
-    public function deleteExerciseXExerciseType($exerciseXExerciseTypeId) {
+    public function deleteExerciseXExerciseType($exerciseXExerciseTypeId) 
+    {
         try {
-            return $this->delete( "exercise_x_exercise_type_id = '" . $exerciseXExerciseTypeId . "'");
+            return $this->delete("exercise_x_exercise_type_id = '" . $exerciseXExerciseTypeId . "'");
         } catch (Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";

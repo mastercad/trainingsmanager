@@ -15,15 +15,19 @@ use Model\Entity\Message;
  *
  * @package Model\Collection
  */
-abstract class AbstractCollection {
+abstract class AbstractCollection
+{
 
-    /** @var array  */
+    /**
+     * @var array  
+     */
     private $data = [];
 
     /**
      * @param $messages
      */
-    public function __construct($messages) {
+    public function __construct($messages) 
+    {
         if (is_array($messages)) {
             foreach ($messages as $message) {
                 $this->addMessage(new Message($message));
@@ -38,7 +42,8 @@ abstract class AbstractCollection {
      *
      * @return $this
      */
-    public function addMessage(Message $message) {
+    public function addMessage(Message $message) 
+    {
         $this->data[] = $message;
 
         return $this;
@@ -47,7 +52,8 @@ abstract class AbstractCollection {
     /**
      * @return array
      */
-    protected function getData() {
+    protected function getData() 
+    {
         return $this->data;
     }
 
@@ -56,7 +62,8 @@ abstract class AbstractCollection {
      *
      * @return $this
      */
-    protected function setData($data) {
+    protected function setData($data) 
+    {
         $this->data = $data;
         return $this;
     }

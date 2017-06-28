@@ -21,12 +21,13 @@ use Exception;
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class ExerciseXMuscle extends AbstractDbTable {
+class ExerciseXMuscle extends AbstractDbTable
+{
 
     /**
      * @var string
      */
-    protected $_name 	= 'exercise_x_muscle';
+    protected $_name     = 'exercise_x_muscle';
 
     /**
      * @var string
@@ -40,14 +41,19 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findMusclesForExercise($iExerciseId) {
+    public function findMusclesForExercise($iExerciseId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('exercise_x_muscle'))
-                ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'),
-                    'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk')
-                ->joinInner($this->considerTestUserForTableName('muscle_groups'),
-                    'muscle_group_id = muscle_x_muscle_group_muscle_group_fk')
+                ->joinInner(
+                    $this->considerTestUserForTableName('muscle_x_muscle_group'),
+                    'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk'
+                )
+                ->joinInner(
+                    $this->considerTestUserForTableName('muscle_groups'),
+                    'muscle_group_id = muscle_x_muscle_group_muscle_group_fk'
+                )
                 ->joinLeft($this->considerTestUserForTableName('muscles'), 'muscle_id = exercise_x_muscle_muscle_fk')
                 ->where('exercise_x_muscle_exercise_fk = ?', $iExerciseId)
                 ->order('muscle_group_name');
@@ -67,14 +73,19 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findMuscleGroupsForExercise($iExerciseId) {
+    public function findMuscleGroupsForExercise($iExerciseId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('exercise_x_muscle'))
-                ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'),
-                    'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk')
-                ->joinInner($this->considerTestUserForTableName('muscle_groups'),
-                    'muscle_group_id = muscle_x_muscle_group_muscle_group_fk')
+                ->joinInner(
+                    $this->considerTestUserForTableName('muscle_x_muscle_group'),
+                    'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk'
+                )
+                ->joinInner(
+                    $this->considerTestUserForTableName('muscle_groups'),
+                    'muscle_group_id = muscle_x_muscle_group_muscle_group_fk'
+                )
                 ->joinLeft($this->considerTestUserForTableName('muscles'), 'muscle_id = exercise_x_muscle_muscle_fk')
                 ->where('exercise_x_muscle_exercise_fk = ?', $iExerciseId)
                 ->order('muscle_group_name')
@@ -96,14 +107,19 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|\Zend_Db_Table_Rowset_Abstract
      */
-    public function findMusclesForExerciseInMuscleGroup($exerciseId, $muscleGroupId) {
+    public function findMusclesForExerciseInMuscleGroup($exerciseId, $muscleGroupId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('exercise_x_muscle'))
-                ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'),
-                    'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk')
-                ->joinInner($this->considerTestUserForTableName('muscle_groups'),
-                    'muscle_group_id = muscle_x_muscle_group_muscle_group_fk')
+                ->joinInner(
+                    $this->considerTestUserForTableName('muscle_x_muscle_group'),
+                    'muscle_x_muscle_group_muscle_fk = exercise_x_muscle_muscle_fk'
+                )
+                ->joinInner(
+                    $this->considerTestUserForTableName('muscle_groups'),
+                    'muscle_group_id = muscle_x_muscle_group_muscle_group_fk'
+                )
                 ->joinLeft($this->considerTestUserForTableName('muscles'), 'muscle_id = exercise_x_muscle_muscle_fk')
                 ->where('exercise_x_muscle_exercise_fk = ?', $exerciseId)
                 ->where('muscle_group_id = ?', $muscleGroupId)
@@ -125,15 +141,20 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|\Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId) {
+    public function findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->from($this->considerTestUserForTableName('muscle_groups'))
-                ->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'),
-                    'muscle_x_muscle_group_muscle_group_fk = muscle_group_id')
+                ->joinInner(
+                    $this->considerTestUserForTableName('muscle_x_muscle_group'),
+                    'muscle_x_muscle_group_muscle_group_fk = muscle_group_id'
+                )
                 ->joinInner($this->considerTestUserForTableName('muscles'), 'muscle_id = muscle_x_muscle_group_muscle_fk')
-                ->joinLeft($this->considerTestUserForTableName('exercise_x_muscle'),
-                    'exercise_x_muscle_muscle_fk = muscle_id AND exercise_x_muscle_exercise_fk = "' . $exerciseId . '"')
+                ->joinLeft(
+                    $this->considerTestUserForTableName('exercise_x_muscle'),
+                    'exercise_x_muscle_muscle_fk = muscle_id AND exercise_x_muscle_exercise_fk = "' . $exerciseId . '"'
+                )
                 ->where('muscle_group_id = ?', $muscleGroupId)
                 ->order('muscle_group_name');
 
@@ -152,7 +173,8 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findExercisesForMuscle($iMuscleId) {
+    public function findExercisesForMuscle($iMuscleId) 
+    {
         try {
             return $this->fetchAll("exercise_x_muscles_muscle_fk = '" . $iMuscleId . "'");
         } catch (Exception $oException) {
@@ -169,7 +191,8 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|mixed
      */
-    public function saveExerciseMuscle($aData) {
+    public function saveExerciseMuscle($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch (Exception $oException) {
@@ -183,11 +206,12 @@ class ExerciseXMuscle extends AbstractDbTable {
      * update exercise muscle data by given exercise muscle id
      *
      * @param array $aData
-     * @param int $iExerciseMuscleId
+     * @param int   $iExerciseMuscleId
      *
      * @return bool|int
      */
-    public function updateExerciseMuscle($aData, $iExerciseMuscleId) {
+    public function updateExerciseMuscle($aData, $iExerciseMuscleId) 
+    {
         try {
             return $this->update($aData, "exercise_x_muscle_id = '" . $iExerciseMuscleId . "'");
         } catch (Exception $oException) {
@@ -204,9 +228,10 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|int
      */
-    public function deleteExerciseMuscle($iExerciseMuscleId) {
+    public function deleteExerciseMuscle($iExerciseMuscleId) 
+    {
         try {
-            return $this->delete( "exercise_x_muscle_id = '" . $iExerciseMuscleId . "'");
+            return $this->delete("exercise_x_muscle_id = '" . $iExerciseMuscleId . "'");
         } catch (Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
@@ -221,7 +246,8 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return bool|int
      */
-    public function deleteExerciseXMuscleByExerciseId($iExerciseId) {
+    public function deleteExerciseXMuscleByExerciseId($iExerciseId) 
+    {
         try {
             return $this->delete("exercise_x_muscle_exercise_fk = '" . $iExerciseId . "'");
         } catch (Exception $oExercise) {
@@ -238,8 +264,10 @@ class ExerciseXMuscle extends AbstractDbTable {
      *
      * @return \Zend_Db_Statement_Interface
      */
-    public function deleteMusclesByMuscleGroupId($muscleGroupId) {
-        return $this->_db->query('DELETE
+    public function deleteMusclesByMuscleGroupId($muscleGroupId) 
+    {
+        return $this->_db->query(
+            'DELETE
                 `exercise_x_muscle`.*
             FROM
                 exercise_x_muscle
@@ -248,6 +276,7 @@ class ExerciseXMuscle extends AbstractDbTable {
             ON
                 muscle_x_muscle_group.muscle_x_muscle_group_muscle_fk = exercise_x_muscle.exercise_x_muscle_muscle_fk
             WHERE
-                muscle_x_muscle_group.muscle_x_muscle_group_muscle_group_fk = ' . $muscleGroupId);
+                muscle_x_muscle_group.muscle_x_muscle_group_muscle_group_fk = ' . $muscleGroupId
+        );
     }
 }

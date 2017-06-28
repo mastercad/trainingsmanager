@@ -13,16 +13,18 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\UserRightGroupRights;
 
 /**
  * Class SyncController
  */
-class SyncController extends AbstractController {
+class SyncController extends AbstractController
+{
 
-    public function databasesAction() {
+    public function databasesAction() 
+    {
         $userRightGroupRightsDb = new UserRightGroupRights();
         $testUserRightGroupRightsDb = new UserRightGroupRights();
         $testUserRightGroupRightsDb->setName('test_user_right_group_rights');

@@ -20,12 +20,13 @@ use Interfaces\OptionsStorageInterface;
 /**
  * Class Application_Model_DbTable_Devices
  */
-class ExerciseOptions extends AbstractDbTable implements OptionsStorageInterface {
+class ExerciseOptions extends AbstractDbTable implements OptionsStorageInterface
+{
 
     /**
      * @var string
      */
-    protected $_name 	= 'exercise_options';
+    protected $_name     = 'exercise_options';
 
     /**
      * @var string
@@ -35,35 +36,40 @@ class ExerciseOptions extends AbstractDbTable implements OptionsStorageInterface
     /**
      * @inheritdoc
      */
-    public function findAllOptions() {
+    public function findAllOptions() 
+    {
         return $this->fetchAll(null, 'exercise_option_name');
     }
 
     /**
      * @inheritdoc
      */
-    public function findOptionById($exerciseOptionId) {
+    public function findOptionById($exerciseOptionId) 
+    {
         return $this->fetchRow('exercise_option_id = "' . $exerciseOptionId . '"');
     }
 
     /**
      * @inheritdoc
      */
-    public function updateOption($data, $optionId) {
+    public function updateOption($data, $optionId) 
+    {
         return $this->update($data, 'exercise_option_id = ' . $optionId);
     }
 
     /**
      * @inheritdoc
      */
-    public function deleteOption($optionId) {
+    public function deleteOption($optionId) 
+    {
         return $this->delete('exercise_option_id = ' . $optionId);
     }
 
     /**
      * @inheritdoc
      */
-    public function insertOption($data) {
+    public function insertOption($data) 
+    {
         return $this->insert($data);
     }
 }

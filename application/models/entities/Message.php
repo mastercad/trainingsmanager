@@ -13,7 +13,8 @@ namespace Model\Entity;
  *
  * @package Model\Entity
  */
-class Message extends AbstractEntity {
+class Message extends AbstractEntity
+{
 
     const STATUS_OK = 1;
     const STATUS_NOTICE = 2;
@@ -29,7 +30,8 @@ class Message extends AbstractEntity {
     /**
      * @return string
      */
-    public function getState() {
+    public function getState() 
+    {
         return $this->get('state');
     }
 
@@ -38,14 +40,16 @@ class Message extends AbstractEntity {
      *
      * @return $this;
      */
-    public function setState($state) {
+    public function setState($state) 
+    {
         return $this->set('state', $state);
     }
 
     /**
      * @return string
      */
-    public function getMessage() {
+    public function getMessage() 
+    {
         return $this->get('message');
     }
 
@@ -54,14 +58,16 @@ class Message extends AbstractEntity {
      *
      * @return $this
      */
-    public function setMessage($message) {
+    public function setMessage($message) 
+    {
         return $this->set('message', $message);
     }
 
     /**
      * @return string|null
      */
-    public function getJsCallBack() {
+    public function getJsCallBack() 
+    {
         return $this->get('jsCallBack');
     }
 
@@ -70,14 +76,16 @@ class Message extends AbstractEntity {
      *
      * @return $this
      */
-    public function setJsCallBack($jsCallBack) {
+    public function setJsCallBack($jsCallBack) 
+    {
         return $this->set('jsCallBack', $jsCallBack);
     }
 
     /**
      * @return string
      */
-    public function getHtmlContent() {
+    public function getHtmlContent() 
+    {
         return $this->get('htmlContent');
     }
 
@@ -86,14 +94,16 @@ class Message extends AbstractEntity {
      *
      * @return $this
      */
-    public function setHtmlContent($htmlContent) {
+    public function setHtmlContent($htmlContent) 
+    {
         return $this->set('htmlContent', $htmlContent);
     }
 
     /**
      * @return null|int
      */
-    public function getRedirectId() {
+    public function getRedirectId() 
+    {
         return $this->get('id');
     }
 
@@ -102,7 +112,8 @@ class Message extends AbstractEntity {
      *
      * @return $this
      */
-    public function setRedirectId($id) {
+    public function setRedirectId($id) 
+    {
         return $this->set('id', $id);
     }
 }

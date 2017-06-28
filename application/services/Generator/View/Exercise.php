@@ -12,6 +12,7 @@ namespace Service\Generator\View;
 
 
 
-class Exercise {
+class Exercise
+{
 
 }

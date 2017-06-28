@@ -13,9 +13,12 @@ namespace Model\Collection;
  *
  * @package Model\Collection
  */
-class Messages {
+class Messages
+{
 
-    /** @var null  */
+    /**
+     * @var null  
+     */
     private $primaryState = null;
 
 }

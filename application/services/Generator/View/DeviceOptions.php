@@ -20,7 +20,8 @@ use Zend_Registry;
 
 
 
-class DeviceOptions extends Options {
+class DeviceOptions extends Options
+{
 
     protected $optionType = 'device';
 
@@ -36,7 +37,8 @@ class DeviceOptions extends Options {
      *
      * @throws \Zend_View_Exception
      */
-    public function generate() {
+    public function generate() 
+    {
         $deviceOptionsContent = '';
         $this->setOptionClassName('device-option');
         $deviceOptionsCollection = $this->collectOptions();
@@ -57,7 +59,9 @@ class DeviceOptions extends Options {
             $this->setSelectedOptionValue($this->extractOptionValue($deviceOption));
             $this->setAdditionalElementAttributes('data-training-plan-device-option-id="' . $trainingPlanDeviceOptionId . '" data-training-diary-device-option-id="' . $trainingDiaryDeviceOptionId . '"');
 
-            /** TODO überprüfen, was hier sinnvoller, weil unique ist! diese ID KANN in device und exercise vorkommen! */
+            /**
+ * TODO überprüfen, was hier sinnvoller, weil unique ist! diese ID KANN in device und exercise vorkommen! 
+*/
             $this->setInputFieldUniqueId($trainingPlanDeviceOptionId);
             $this->setOptionName($deviceOption['device_option_name']);
             $this->setOptionValue($deviceOption['device_x_device_option_device_option_value']);
@@ -79,7 +83,8 @@ class DeviceOptions extends Options {
     /**
      * @return array
      */
-    protected function collectOptions() {
+    protected function collectOptions() 
+    {
         $trainingDiaryXDeviceOptionDb = new TrainingDiaryXDeviceOption();
         $deviceXDeviceOptionDb = new DeviceXDeviceOption();
         $deviceOptionsDb = new ModelDbTableDeviceOptions();
@@ -87,7 +92,8 @@ class DeviceOptions extends Options {
 
         if (!empty($this->getTrainingDiaryXTrainingPlanExerciseId())) {
             $trainingDiaryXDeviceOptionCollection = $trainingDiaryXDeviceOptionDb->findDeviceOptionsByTrainingDiaryTrainingPlanExerciseId(
-                $this->getTrainingDiaryXTrainingPlanExerciseId());
+                $this->getTrainingDiaryXTrainingPlanExerciseId()
+            );
         }
 
         $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
@@ -96,7 +102,8 @@ class DeviceOptions extends Options {
 
         if (!empty($this->getTrainingPlanXExerciseId())) {
             $trainingPlanXDeviceOptionCollection = $trainingPlanXDeviceOptionDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId(
-                $this->getTrainingPlanXExerciseId(), $this->getOptionId());
+                $this->getTrainingPlanXExerciseId(), $this->getOptionId()
+            );
         }
         $collectedDeviceOptions = [];
 
@@ -107,7 +114,8 @@ class DeviceOptions extends Options {
         ) {
 
             $deviceXDeviceOptionCollection = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId(
-                $this->getDeviceId());
+                $this->getDeviceId()
+            );
 
             foreach ($deviceXDeviceOptionCollection as $deviceOption) {
                 $collectedDeviceOptions[$deviceOption->offsetGet('device_option_id')] = $deviceOption->toArray();
@@ -125,15 +133,18 @@ class DeviceOptions extends Options {
             && empty($this->getOptionId())
         ) {
             $exerciseXDeviceOptionCollection = $exerciseXDeviceOptionDb->findDeviceOptionsForExercise(
-                $this->getExerciseId(), $this->getOptionId());
+                $this->getExerciseId(), $this->getOptionId()
+            );
 
             foreach ($exerciseXDeviceOptionCollection as $deviceOption) {
                 $deviceOptionId = $deviceOption->offsetGet('device_option_id');
                 if (! array_key_exists($deviceOptionId, $collectedDeviceOptions)) {
                     $collectedDeviceOptions[$deviceOptionId] = $deviceOption->toArray();
                 } else {
-                    $collectedDeviceOptions[$deviceOptionId] = array_merge($collectedDeviceOptions[$deviceOptionId],
-                        $deviceOption->toArray());
+                    $collectedDeviceOptions[$deviceOptionId] = array_merge(
+                        $collectedDeviceOptions[$deviceOptionId],
+                        $deviceOption->toArray()
+                    );
                 }
             }
 
@@ -144,8 +155,10 @@ class DeviceOptions extends Options {
                 if (! array_key_exists($deviceOptionId, $collectedDeviceOptions)) {
                     $collectedDeviceOptions[$deviceOptionId] = $deviceOption->toArray();
                 } else {
-                    $collectedDeviceOptions[$deviceOptionId] = array_merge($collectedDeviceOptions[$deviceOptionId],
-                        $deviceOption->toArray());
+                    $collectedDeviceOptions[$deviceOptionId] = array_merge(
+                        $collectedDeviceOptions[$deviceOptionId],
+                        $deviceOption->toArray()
+                    );
                 }
             }
         }
@@ -155,8 +168,10 @@ class DeviceOptions extends Options {
             if (! array_key_exists($deviceOptionId, $collectedDeviceOptions)) {
                 $collectedDeviceOptions[$deviceOptionId] = $deviceOption->toArray();
             } else {
-                $collectedDeviceOptions[$deviceOptionId] = array_merge($collectedDeviceOptions[$deviceOptionId],
-                    $deviceOption->toArray());
+                $collectedDeviceOptions[$deviceOptionId] = array_merge(
+                    $collectedDeviceOptions[$deviceOptionId],
+                    $deviceOption->toArray()
+                );
             }
         }
         foreach ($trainingDiaryXDeviceOptionCollection as $deviceOption) {
@@ -164,8 +179,10 @@ class DeviceOptions extends Options {
             if (! array_key_exists($deviceOptionId, $collectedDeviceOptions)) {
                 $collectedDeviceOptions[$deviceOptionId] = $deviceOption->toArray();
             } else {
-                $collectedDeviceOptions[$deviceOptionId] = array_merge($collectedDeviceOptions[$deviceOptionId],
-                    $deviceOption->toArray());
+                $collectedDeviceOptions[$deviceOptionId] = array_merge(
+                    $collectedDeviceOptions[$deviceOptionId],
+                    $deviceOption->toArray()
+                );
             }
         }
 
@@ -182,11 +199,12 @@ class DeviceOptions extends Options {
     /**
      * @return string
      */
-    public function generateDeviceOptionsSelectContent() {
+    public function generateDeviceOptionsSelectContent() 
+    {
         $deviceOptionsContent = '';
         $deviceOptionsDb = new ModelDbTableDeviceOptions();
         $deviceOptionsCollection = $deviceOptionsDb->findAllOptions();
-//        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
+        //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);
         $this->getView()->assign('selectId', '');
 
@@ -199,7 +217,7 @@ class DeviceOptions extends Options {
             $deviceOptionsContent .= $this->getView()->render('loops/option.phtml');
         }
 
-//        $this->getView()->assign('optionLabelText', Zend_Registry::get('Zend_Translate')->translate('label_please_select'));
+        //        $this->getView()->assign('optionLabelText', Zend_Registry::get('Zend_Translate')->translate('label_please_select'));
         $this->getView()->assign('optionsContent', $deviceOptionsContent);
 
         return $this->getView()->render('globals/select.phtml');

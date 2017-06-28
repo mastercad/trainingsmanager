@@ -13,7 +13,7 @@ use \AbstractController;
 
 
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 class LogoutController extends AbstractController
 {

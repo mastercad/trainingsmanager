@@ -13,26 +13,29 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\Users;
 
 /**
  * Class ProfileController
  */
-class ProfileController extends AbstractController {
+class ProfileController extends AbstractController
+{
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
         $usersDb = new \Model\DbTable\Users();
     }
 
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction() 
+    {
         $usersDb = new Users();
         $user = $usersDb->findUser($this->findCurrentUserId());
         $this->view->assign($user->toArray());
@@ -41,14 +44,16 @@ class ProfileController extends AbstractController {
     /**
      * edit action
      */
-    public function editAction() {
+    public function editAction() 
+    {
 
     }
 
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction() 
+    {
 
     }
 }

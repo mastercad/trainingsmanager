@@ -10,9 +10,12 @@ namespace Auth\Model\Resource;
 
 use CAD_Tool_Extractor;
 
-class ExerciseOptions extends AbstractResource {
+class ExerciseOptions extends AbstractResource
+{
 
-    /** @var string ID der aktuellen Resource in der ACL */
+    /**
+     * @var string ID der aktuellen Resource in der ACL 
+     */
     protected $resourceId = 'default:exercise-options';
 
     protected function prepareData($oRow)

@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\Exercises;
 use \Service\Generator\View\ExerciseOptions as ExerciseOptionsViewService;
@@ -32,24 +32,31 @@ use Model\Entity\Message;
 /**
  * Class ExercisesController
  */
-class ExercisesController extends AbstractController {
+class ExercisesController extends AbstractController
+{
 
     /**
      * initial function for controller
      */
-    public function init() {
+    public function init() 
+    {
         if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
-                'text/javascript');
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
-                'text/javascript');
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript'
+            );
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript'
+            );
         }
     }
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
         $exercisesDb = new Exercises();
         $exerciseType = $this->getParam('exercise-type', null);
         $device = $this->getParam('device', null);
@@ -62,13 +69,14 @@ class ExercisesController extends AbstractController {
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction() 
+    {
         $exerciseId = intval($this->getRequest()->getParam('id', null));
         $exercise = null;
 
-//        if ("true" == $this->getParam('tourStarted')) {
-//            $this->generateDummyExerciseShowContent();
-//        } else if (0 < $exerciseId) {
+        //        if ("true" == $this->getParam('tourStarted')) {
+        //            $this->generateDummyExerciseShowContent();
+        //        } else if (0 < $exerciseId) {
         if (0 < $exerciseId) {
             $exerciseDb = new Exercises();
             $exercise = $exerciseDb->findExerciseById($exerciseId);
@@ -89,14 +97,16 @@ class ExercisesController extends AbstractController {
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction() 
+    {
         $this->forward('edit');
     }
 
     /**
      * edit action
      */
-    public function editAction() {
+    public function editAction() 
+    {
         if (true) {
             $exerciseId = intval($this->getRequest()->getParam('id', null));
             $exercise = null;
@@ -107,8 +117,10 @@ class ExercisesController extends AbstractController {
 
                 if ($exercise instanceof Zend_Db_Table_Row) {
                     $this->view->assign($exercise->toArray());
-                    $this->view->assign('exerciseMuscleGroupsContent',
-                        $this->generateExerciseMuscleGroupsEditContent($exercise));
+                    $this->view->assign(
+                        'exerciseMuscleGroupsContent',
+                        $this->generateExerciseMuscleGroupsEditContent($exercise)
+                    );
                     $this->view->assign('exerciseOptionsContent', $this->generateExerciseOptionsEditContent($exercise));
                     $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsEditContent($exercise));
                 } else {
@@ -169,7 +181,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateExerciseMuscleGroupsContent($exercise) {
+    public function generateExerciseMuscleGroupsContent($exercise) 
+    {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
         $exerciseXMuscleDb = new ExerciseXMuscle();
@@ -179,8 +192,10 @@ class ExercisesController extends AbstractController {
 
         foreach ($muscleGroupCollection as $muscleGroup) {
             $muscleGroupId = $muscleGroup->offsetGet('muscle_group_id');
-            $this->view->assign('musclesInMuscleGroupContent',
-                $this->generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId));
+            $this->view->assign(
+                'musclesInMuscleGroupContent',
+                $this->generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId)
+            );
             $this->view->assign($muscleGroup->toArray());
             $content .= $this->view->render('/loops/muscle-group-row.phtml');
         }
@@ -199,7 +214,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId) {
+    public function generateExerciseMuscleGroupContent($muscleGroupId, $exerciseId) 
+    {
         $exerciseXMuscleDb = new ExerciseXMuscle();
         $musclesInMuscleGroupForExerciseCollection = $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
         $musclesInMuscleGroupContent = '';
@@ -230,7 +246,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateExerciseMuscleGroupsEditContent($exercise) {
+    public function generateExerciseMuscleGroupsEditContent($exercise) 
+    {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
         $exerciseXMuscleDb = new ExerciseXMuscle();
@@ -240,8 +257,10 @@ class ExercisesController extends AbstractController {
 
         foreach ($muscleGroupCollection as $muscleGroup) {
             $muscleGroupId = $muscleGroup->offsetGet('muscle_group_id');
-            $this->view->assign('musclesInMuscleGroupContent',
-                $this->generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId));
+            $this->view->assign(
+                'musclesInMuscleGroupContent',
+                $this->generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId)
+            );
             $this->view->assign($muscleGroup->toArray());
             $content .= $this->view->render('/loops/muscle-group-edit.phtml');
         }
@@ -253,7 +272,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    private function generateFilterContent() {
+    private function generateFilterContent() 
+    {
 
         $this->view->assign('exerciseTypeFilterContent', $this->generateExerciseTypeContentForFilter(null));
         $this->view->assign('deviceFilterContent', $this->generateDeviceFilterContentForFilter());
@@ -266,7 +286,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    private function generateDeviceFilterContentForFilter() {
+    private function generateDeviceFilterContentForFilter() 
+    {
 
         $device = $this->getParam('device', null);
         $deviceName = '';
@@ -284,9 +305,9 @@ class ExercisesController extends AbstractController {
 
         foreach ($devicesCollection as $currentDevice) {
             $this->view->assign('optionValue', $currentDevice->offsetGet('device_id'));
-//            $this->view->assign('optionText', $currentDevice->offsetGet('device_name') . ' (' .
-//                $currentDevice->offsetGet('exerciseCount') . ' ' . (1 < $currentDevice->offsetGet('exerciseCount') ?
-//                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+            //            $this->view->assign('optionText', $currentDevice->offsetGet('device_name') . ' (' .
+            //                $currentDevice->offsetGet('exerciseCount') . ' ' . (1 < $currentDevice->offsetGet('exerciseCount') ?
+            //                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
             $this->view->assign('optionText', $currentDevice->offsetGet('device_name'));
 
             if ($device == $currentDevice->offsetGet('device_id')) {
@@ -298,9 +319,11 @@ class ExercisesController extends AbstractController {
 
         if ($exercisesWithoutDevices) {
             $this->view->assign('optionValue', 'WITHOUT');
-            $this->view->assign('optionText', $this->translate('label_exercises_without_device') . ' (' .
+            $this->view->assign(
+                'optionText', $this->translate('label_exercises_without_device') . ' (' .
                 $exercisesWithoutDevices->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutDevices->offsetGet('exerciseCount') ?
-                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+                $this->translate('label_exercises') : $this->translate('label_exercise')) . ') '
+            );
 
             if ($device == 'WITHOUT') {
                 $deviceName = $this->translate('label_exercises_without_exercise_type');
@@ -318,7 +341,7 @@ class ExercisesController extends AbstractController {
         $this->view->assign('optionsContent', $deviceContent);
 
         $this->view->assign('optionSelectText', $optionSelectText);
-//        $this->view->assign('optionLabelText', $this->translate('label_device_name') . ':');
+        //        $this->view->assign('optionLabelText', $this->translate('label_device_name') . ':');
         $this->view->assign('optionLabelText', '');
         $this->view->assign('optionClassName', ' device-select custom-drop-down col-sm-4 ');
 
@@ -330,7 +353,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    private function generateExerciseTypeContentForFilter() {
+    private function generateExerciseTypeContentForFilter() 
+    {
 
         $exerciseType = $this->getParam('exercise-type', null);
         $exerciseTypeName = '';
@@ -340,7 +364,7 @@ class ExercisesController extends AbstractController {
         $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
 
         $exerciseTypeContent = '';
-//        $optionSelectText = $this->translate('label_please_select');
+        //        $optionSelectText = $this->translate('label_please_select');
         $optionSelectText = $this->translate('label_exercise_type');
 
         $this->view->assign('optionValue', 0);
@@ -361,9 +385,11 @@ class ExercisesController extends AbstractController {
 
         if ($exercisesWithoutExerciseTypes) {
             $this->view->assign('optionValue', 'WITHOUT');
-            $this->view->assign('optionText', $this->translate('label_exercises_without_exercise_type') . ' (' .
+            $this->view->assign(
+                'optionText', $this->translate('label_exercises_without_exercise_type') . ' (' .
                 $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') . ' ' . (1 < $exercisesWithoutExerciseTypes->offsetGet('exerciseCount') ?
-                    $this->translate('label_exercises') : $this->translate('label_exercise')) . ') ');
+                $this->translate('label_exercises') : $this->translate('label_exercise')) . ') '
+            );
 
             if ($exerciseType == 'WITHOUT') {
                 $exerciseTypeName = $this->translate('label_exercises_without_exercise_type');
@@ -381,7 +407,7 @@ class ExercisesController extends AbstractController {
         $this->view->assign('optionsContent', $exerciseTypeContent);
 
         $this->view->assign('optionSelectText', $optionSelectText);
-//        $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
+        //        $this->view->assign('optionLabelText', $this->translate('label_exercise_type') . ':');
         $this->view->assign('optionLabelText', '');
         $this->view->assign('optionClassName', ' exercise-type-select custom-drop-down col-sm-4 ');
 
@@ -396,7 +422,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    private function generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId) {
+    private function generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId) 
+    {
         $exerciseXMuscleDb = new ExerciseXMuscle();
         $musclesInMuscleGroupForExerciseCollection =
             $exerciseXMuscleDb->findAllMusclesForMuscleGroupWithExerciseMuscles($exerciseId, $muscleGroupId);
@@ -418,12 +445,15 @@ class ExercisesController extends AbstractController {
     /**
      * get muscle group for exercise edit action
      */
-    public function getMuscleGroupForExerciseEditAction() {
+    public function getMuscleGroupForExerciseEditAction() 
+    {
         $muscleGroupId = $this->getParam('muscle_group_id');
         $exerciseId = $this->getParam('exercise_id');
 
-        $this->view->assign('musclesInMuscleGroupContent',
-            $this->generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId));
+        $this->view->assign(
+            'musclesInMuscleGroupContent',
+            $this->generateExerciseMuscleGroupEditContent($muscleGroupId, $exerciseId)
+        );
 
         $this->view->assign('muscleGroupContent', $this->view->render('/loops/muscle-group.phtml'));
     }
@@ -433,15 +463,18 @@ class ExercisesController extends AbstractController {
      *
      * @param Zend_Db_Table_Row $exercise
      */
-    public function generateDeviceOptionsEditContent($exercise) {
+    public function generateDeviceOptionsEditContent($exercise) 
+    {
         $content = '';
 
         foreach ($this->collectDeviceOptions($exercise) as $deviceOptionId => $deviceOption) {
             $this->view->assign($deviceOption);
-            $this->view->assign('device_option_value',
+            $this->view->assign(
+                'device_option_value',
                 $deviceOption['exercise_x_device_option_device_option_value'] ?
                     $deviceOption['exercise_x_device_option_device_option_value'] :
-                    $deviceOption['device_x_device_option_device_option_value']);
+                $deviceOption['device_x_device_option_device_option_value']
+            );
             $content .= $this->view->render('/loops/device-option-edit.phtml');
         }
         return $content;
@@ -454,7 +487,8 @@ class ExercisesController extends AbstractController {
      *
      * @return array
      */
-    private function collectDeviceOptions($exercise) {
+    private function collectDeviceOptions($exercise) 
+    {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
         $deviceXDeviceOptionDb = new DeviceXDeviceOption();
@@ -463,9 +497,12 @@ class ExercisesController extends AbstractController {
 
         if ($exercise->offsetGet('exercise_x_device_device_fk')) {
             $deviceXDeviceOptionCollection = $deviceXDeviceOptionDb->findAllDeviceXDeviceOptionsByDeviceId(
-                $exercise->offsetGet('exercise_x_device_device_fk'))->toArray();
+                $exercise->offsetGet('exercise_x_device_device_fk')
+            )->toArray();
 
-            /** unify DeviceOptions */
+            /**
+ * unify DeviceOptions 
+*/
             foreach ($deviceXDeviceOptionCollection as $deviceOption) {
                 $deviceOptionCollection[$deviceOption['device_option_id']] = $deviceOption;
             }
@@ -479,8 +516,10 @@ class ExercisesController extends AbstractController {
             if (array_key_exists($deviceOptionId, $deviceOptionCollection)
                 && ! empty($exerciseDeviceOption['exercise_x_device_option_device_option_value'])
             ) {
-                $deviceOptionCollection[$deviceOptionId] = array_merge($deviceOptionCollection[$deviceOptionId],
-                    $exerciseDeviceOption);
+                $deviceOptionCollection[$deviceOptionId] = array_merge(
+                    $deviceOptionCollection[$deviceOptionId],
+                    $exerciseDeviceOption
+                );
             } else if (! array_key_exists($deviceOptionId, $deviceOptionCollection)) {
                 $deviceOptionCollection[$deviceOptionId] = $exerciseDeviceOption;
             }
@@ -492,7 +531,8 @@ class ExercisesController extends AbstractController {
     /**
      * get exercise option for edit action
      */
-    public function getExerciseOptionEditAction() {
+    public function getExerciseOptionEditAction() 
+    {
         $exerciseId = $this->getParam('exercise_id');
         $exerciseOptionId = $this->getParam('exercise_option_id');
 
@@ -511,7 +551,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateExerciseOptionsEditContent($exercise) {
+    public function generateExerciseOptionsEditContent($exercise) 
+    {
         $exerciseId = $exercise->offsetGet('exercise_id');
 
         $exerciseXExerciseOptionDb = new ExerciseXExerciseOption();
@@ -534,7 +575,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    private function generateExerciseTypeContent($exercise) {
+    private function generateExerciseTypeContent($exercise) 
+    {
         $exerciseTypeDb = new ExerciseTypes();
         $exerciseTypesCollection = $exerciseTypeDb->findAllExerciseTypes();
 
@@ -607,7 +649,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    private function generatePreviewPicturePath($exercise) {
+    private function generatePreviewPicturePath($exercise) 
+    {
 
         $previewPicturePath = '/images/content/statisch/grafiken/kein_bild.png';
         if ($exercise instanceof Zend_Db_Table_Row) {
@@ -630,7 +673,8 @@ class ExercisesController extends AbstractController {
     /**
      * upload picture action
      */
-    public function uploadPictureAction() {
+    public function uploadPictureAction() 
+    {
         $this->view->layout()->disableLayout();
         $result = [];
         if (!empty($_FILES)) {
@@ -658,7 +702,8 @@ class ExercisesController extends AbstractController {
     /**
      * get picture for edit action
      */
-    public function getPicturesForEditAction() {
+    public function getPicturesForEditAction() 
+    {
         $req = $this->getRequest();
         $params = $req->getParams();
 
@@ -704,7 +749,8 @@ class ExercisesController extends AbstractController {
     /**
      * delete picture action
      */
-    public function deletePictureAction() {
+    public function deletePictureAction() 
+    {
         $exerciseId = intval($this->getParam('exerciseId'));
         $picture = base64_decode($this->getParam('id'));
 
@@ -738,7 +784,8 @@ class ExercisesController extends AbstractController {
     /**
      * delete action
      */
-    public function deleteAction() {
+    public function deleteAction() 
+    {
         $params = $this->getRequest()->getParams();
 
         if (true === isset($params['id'])
@@ -765,7 +812,8 @@ class ExercisesController extends AbstractController {
     /**
      * save action
      */
-    public function saveAction() {
+    public function saveAction() 
+    {
         $params = $this->getRequest()->getParams();
 
         $userId = $this->findCurrentUserId();
@@ -811,7 +859,7 @@ class ExercisesController extends AbstractController {
                 $exercisePreviewPicture = basename(base64_decode($params['exercise_preview_picture']));
             }
 
-            if (true === isset($params['exercise_id'])){
+            if (true === isset($params['exercise_id'])) {
                 $exerciseId = $params['exercise_id'];
             }
             
@@ -856,26 +904,20 @@ class ExercisesController extends AbstractController {
             if (false === $hasErrors) {
                 // updaten?
                 if (is_numeric($exerciseId)
-                   && 0 < $exerciseId
-                   && is_array($data)
-                   && 0 < count($data)
+                    && 0 < $exerciseId
+                    && is_array($data)
+                    && 0 < count($data)
                 ) {
                     $currentExercise = $exercisesDb->findExerciseById($exerciseId);
-                    if (
-                        (
-                            isset($data['exercise_name'])
-                            && 0 < strlen(trim($data['exercise_name']))
-                            && $currentExercise['exercise_name'] != $data['exercise_name']
-                        ) ||
-                        (
-                            isset($currentExercise['exercise_name'])
-                            && 0 < strlen(trim($currentExercise['exercise_name']))
-                            && ! strlen(trim($currentExercise['exercise_seo_link']))
-                        )
-                    )
-                    {
+                    if ((                        isset($data['exercise_name'])
+                        && 0 < strlen(trim($data['exercise_name']))
+                        && $currentExercise['exercise_name'] != $data['exercise_name']) 
+                        || (                        isset($currentExercise['exercise_name'])
+                        && 0 < strlen(trim($currentExercise['exercise_name']))
+                        && ! strlen(trim($currentExercise['exercise_seo_link'])))
+                    ) {
                         if (isset($data['exercise_name'])
-                           && 0 < strlen(trim($data['exercise_name']))
+                            && 0 < strlen(trim($data['exercise_name']))
                         ) {
                             $exerciseName = $data['exercise_name'];
                         } else if (isset($currentExercise['exercise_name'])
@@ -896,7 +938,7 @@ class ExercisesController extends AbstractController {
 
                     $exercisesDb->updateExercise($data, $exerciseId);
                     GlobalMessageHandler::appendMessage('Diese Übung wurde erfolgreich bearbeitet!', Message::STATUS_OK);
-                // neu anlegen
+                    // neu anlegen
                 } else if (is_array($data)
                     && 0 < count($data)
                 ) {
@@ -984,7 +1026,7 @@ class ExercisesController extends AbstractController {
                 ];
                 $exerciseXDeviceDb->saveExerciseXDevice($data);
             }
-        // empty? delete old entry!
+            // empty? delete old entry!
         } else {
             $exerciseXDevice = $exerciseXDeviceDb->findDeviceForExercise($exerciseId);
 
@@ -999,9 +1041,10 @@ class ExercisesController extends AbstractController {
      * save, update or delete muscles for exercise
      *
      * @param array $params
-     * @param int $exerciseId
+     * @param int   $exerciseId
      */
-    private function saveExerciseXMuscle($params, $exerciseId) {
+    private function saveExerciseXMuscle($params, $exerciseId) 
+    {
         if (array_key_exists('exercise_muscle_groups', $params)
             && is_array($params['exercise_muscle_groups'])
         ) {
@@ -1029,7 +1072,7 @@ class ExercisesController extends AbstractController {
                         // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
                         if (true === array_key_exists($muscle['id'], $musclesCollection)) {
                             // checken ob der aktuelle muskel keine beanspruchung, dann löschen
-                            if (TRUE === empty($muscle['muscle_use'])) {
+                            if (true === empty($muscle['muscle_use'])) {
                                 $bResult = $exerciseXMuscleDb->deleteExerciseMuscle(
                                     $musclesCollection[$muscle['id']]->exercise_x_muscle_id
                                 );
@@ -1059,7 +1102,9 @@ class ExercisesController extends AbstractController {
                             $exerciseXMuscleId = $exerciseXMuscleDb->saveExerciseMuscle($aData);
                         }
                     }
-                    /** hier vielleicht noch checken, ob überhaupt ein muskel in der gruppe verarbeitet wurde */
+                    /**
+ * hier vielleicht noch checken, ob überhaupt ein muskel in der gruppe verarbeitet wurde 
+*/
                     unset($muscleGroupsInDb[$muscleGroupId]);
                 }
             }
@@ -1094,10 +1139,10 @@ class ExercisesController extends AbstractController {
             foreach ($params['exercise_device_options'] as $deviceOption) {
                 // wenn der aktuelle muskel bereits in uebungMuskeln eingetragen
                 if (true === array_key_exists($deviceOption['exerciseXDeviceOptionId'], $deviceOptionsCollection)
-//                    && ! empty($deviceOption['deviceXDeviceOptionId'])
+                    //                    && ! empty($deviceOption['deviceXDeviceOptionId'])
                 ) {
                     // checken ob der aktuelle muskel keine beanspruchung, dann löschen
-                    if (TRUE === empty($deviceOption['value'])) {
+                    if (true === empty($deviceOption['value'])) {
                         $bResult = $exerciseXDeviceOptionDb->deleteExerciseXDeviceOption($deviceOption['exerciseXDeviceOptionId']);
                         // wenn beanspruchung und != eingetragener, dann updaten
                     } else if ($deviceOptionsCollection[$deviceOption['exerciseXDeviceOptionId']]->exercise_x_device_option_device_option_value != $deviceOption['value']) {
@@ -1114,7 +1159,7 @@ class ExercisesController extends AbstractController {
                     }
                     // wenn es den muskel noch nicht gibt
                 } else if (false == array_key_exists($deviceOption['exerciseXDeviceOptionId'], $deviceOptionsCollection)
-//                    && empty($deviceOption['deviceXDeviceOptionId'])
+                    //                    && empty($deviceOption['deviceXDeviceOptionId'])
                     && false == empty($deviceOption['value'])
                 ) {
                     $aData = array(
@@ -1134,7 +1179,7 @@ class ExercisesController extends AbstractController {
      * save, update or delete exercise options for exercise
      *
      * @param array $params
-     * @param int $exerciseId
+     * @param int   $exerciseId
      */
     private function saveExerciseXExerciseOptions($params, $exerciseId)
     {
@@ -1196,7 +1241,8 @@ class ExercisesController extends AbstractController {
      * @return bool|int|mixed
      * @throws \Zend_Db_Table_Rowset_Exception
      */
-    private function processExerciseXExerciseType($params, $exerciseId) {
+    private function processExerciseXExerciseType($params, $exerciseId) 
+    {
         $exerciseXExerciseTypeDb = new ExerciseXExerciseType();
         $exerciseXExerciseType = $exerciseXExerciseTypeDb->findExerciseTypeForExercise($exerciseId);
         $exerciseTypeId = $params['exercise_type_id'];
@@ -1242,7 +1288,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateDeviceOptionEditContent($deviceOption) {
+    public function generateDeviceOptionEditContent($deviceOption) 
+    {
 
         $this->view->assign('device_option_value', $deviceOption->offsetGet('device_x_device_option_device_option_value'));
         $this->view->assign($deviceOption->toArray());
@@ -1256,7 +1303,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateExerciseOptionEditContent($deviceOption) {
+    public function generateExerciseOptionEditContent($deviceOption) 
+    {
 
         $this->view->assign('exercise_option_value', $deviceOption->offsetGet('device_x_device_option_device_option_value'));
         $this->view->assign($deviceOption->toArray());
@@ -1270,7 +1318,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateDeviceOptionsDropDownContent() {
+    public function generateDeviceOptionsDropDownContent() 
+    {
         $deviceOptionsService = new DeviceOptionsViewService($this->view);
         return $deviceOptionsService->generateDeviceOptionsSelectContent();
     }
@@ -1280,7 +1329,8 @@ class ExercisesController extends AbstractController {
      *
      * @return string
      */
-    public function generateExerciseOptionsDropDownContent() {
+    public function generateExerciseOptionsDropDownContent() 
+    {
         $exerciseOptionsService = new ExerciseOptionsViewService($this->view);
         return $exerciseOptionsService->generateExerciseOptionsSelectContent();
     }
@@ -1288,12 +1338,13 @@ class ExercisesController extends AbstractController {
     /**
      * formats bytes in human readable format
      *
-     * @param     $bytes
-     * @param int $decimals
+     * @param $bytes
+     * @param int   $decimals
      *
      * @return string
      */
-    private function humanFileSize($bytes, $decimals = 2) {
+    private function humanFileSize($bytes, $decimals = 2) 
+    {
         $sz = 'BKMGTP';
         $factor = floor((strlen($bytes) - 1) / 3);
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];

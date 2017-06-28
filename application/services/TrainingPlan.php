@@ -22,9 +22,12 @@ use Zend_Auth;
 
 require_once __DIR__ . '/../models/DbTable/Exercises.php';
 
-class TrainingPlan {
+class TrainingPlan
+{
 
-    /** @var Model_DbTable_Exercises */
+    /**
+     * @var Model_DbTable_Exercises 
+     */
     private $_oExerciseStorage = null;
 
     /**
@@ -33,13 +36,14 @@ class TrainingPlan {
      * splits wenn trainingPlanCollection exercises enthält und keinen TrainingPlanParentId => einzelner trianingsplan
      * ohne split
      *
-     * @param      $trainingPlan
-     * @param      $trainingPlanUserId
-     * @param null $trainingPlantParentId
+     * @param $trainingPlan
+     * @param $trainingPlanUserId
+     * @param null               $trainingPlantParentId
      *
      * @return $this
      */
-    public function saveTrainingPlan($trainingPlan, $trainingPlanUserId, $trainingPlantParentId = null) {
+    public function saveTrainingPlan($trainingPlan, $trainingPlanUserId, $trainingPlantParentId = null) 
+    {
         static $trainingPlanCount = 0;
         ++$trainingPlanCount;
         $trainingPlanShouldDeleted = array_key_exists('deleted', $trainingPlan) && 1 == $trainingPlan['deleted'];
@@ -50,14 +54,16 @@ class TrainingPlan {
 
         if ('parent' != $trainingPlanType
             && (!array_key_exists('exercises', $trainingPlan)
-                || 0 == count($trainingPlan['exercises']))
+            || 0 == count($trainingPlan['exercises']))
         ) {
             $trainingPlanShouldDeleted = true;
         }
 
         $userId = $this->findCurrentUserId();
 
-        /** new TrainingPlan */
+        /**
+ * new TrainingPlan 
+*/
         if (!$trainingPlanShouldDeleted
             && empty($trainingPlanId)
         ) {
@@ -87,7 +93,7 @@ class TrainingPlan {
             if (!empty($trainingPlanId)) {
                 $this->deleteTrainingPlan($trainingPlanId);
             }
-        // its a parent training plan => save the child training plans
+            // its a parent training plan => save the child training plans
         } else if ('parent' == $trainingPlanType) {
             foreach ($trainingPlan['trainingPlans'] as $count => $currentTrainingPlan) {
                 $this->saveTrainingPlan($currentTrainingPlan, $trainingPlanUserId, $trainingPlanId);
@@ -115,7 +121,8 @@ class TrainingPlan {
             $resetExerciseOrderCount = true;
             foreach ($trainingPlan['exercises'] as $exercise) {
                 $currentTrainingPlanXExerciseCollection = $this->saveExercise(
-                    $exercise, $trainingPlanId, $currentTrainingPlanXExerciseCollection, $resetExerciseOrderCount);
+                    $exercise, $trainingPlanId, $currentTrainingPlanXExerciseCollection, $resetExerciseOrderCount
+                );
                 $resetExerciseOrderCount = false;
             }
 
@@ -144,7 +151,8 @@ class TrainingPlan {
         return $trainingPlansDb->delete('training_plan_id = ' . $trainingPlanId);
     }
 
-    public function deleteTrainingPlanExercise($trainingPlanXExerciseId) {
+    public function deleteTrainingPlanExercise($trainingPlanXExerciseId) 
+    {
         $trainingPlanXExerciseDb = new TrainingPlanXExercise();
         $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
         $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
@@ -154,8 +162,11 @@ class TrainingPlan {
         $trainingPlanXExerciseDb->delete('training_plan_x_exercise_id = ' . $trainingPlanXExerciseId);
     }
 
-    private function removeWasteExercisesFromDatabase($currentTrainingPlanXExerciseCollection) {
-        /** delete all old exercises in DB */
+    private function removeWasteExercisesFromDatabase($currentTrainingPlanXExerciseCollection) 
+    {
+        /**
+ * delete all old exercises in DB 
+*/
         if (is_array($currentTrainingPlanXExerciseCollection)) {
             foreach ($currentTrainingPlanXExerciseCollection as $exerciseId => $currentTrainingPlanXExercise) {
                 $currentTrainingPlanExerciseId = $currentTrainingPlanXExercise['exercise']->offsetGet('training_plan_x_exercise_id');
@@ -165,7 +176,8 @@ class TrainingPlan {
         return $this;
     }
 
-    private function saveExercise($exercise, $trainingPlanId, $currentTrainingPlanXExerciseCollection, $resetExerciseOrderCount = false) {
+    private function saveExercise($exercise, $trainingPlanId, $currentTrainingPlanXExerciseCollection, $resetExerciseOrderCount = false) 
+    {
 
         $trainingPlanXExerciseDb = new TrainingPlanXExercise();
 
@@ -194,7 +206,7 @@ class TrainingPlan {
             && $exerciseShouldDeleted
         ) {
             $this->deleteTrainingPlanExercise($trainingPlanXExerciseId);
-        // new trainingPlanXExercise
+            // new trainingPlanXExercise
         } else if (empty($trainingPlanXExerciseId)
             && !$exerciseShouldDeleted
         ) {
@@ -245,7 +257,8 @@ class TrainingPlan {
         return $currentTrainingPlanXExerciseCollection;
     }
 
-    private function processExerciseOptions($exerciseOptions, $exerciseId, $trainingPlanXExerciseId, $currentTrainingPlanXExerciseCollection) {
+    private function processExerciseOptions($exerciseOptions, $exerciseId, $trainingPlanXExerciseId, $currentTrainingPlanXExerciseCollection) 
+    {
 
         $userId = $this->findCurrentUserId();
         $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
@@ -255,13 +268,15 @@ class TrainingPlan {
 
             // wenn exerciseOption bereits in der DB
             if (array_key_exists('exerciseOptions', $currentTrainingPlanXExerciseCollection[$exerciseId])
-                && array_key_exists($exerciseOptionId,
-                    $currentTrainingPlanXExerciseCollection[$exerciseId]['exerciseOptions'])
+                && array_key_exists(
+                    $exerciseOptionId,
+                    $currentTrainingPlanXExerciseCollection[$exerciseId]['exerciseOptions']
+                )
             ) {
                 $trainingPlanExerciseOptionInDb = $currentTrainingPlanXExerciseCollection[$exerciseId]['exerciseOptions'][$exerciseOptionId];
                 // wenn value der übergabe leer ist => löschen
                 if ((empty($exerciseOption['exerciseOptionValue'])
-                        || -1 == $exerciseOption['exerciseOptionValue'])
+                    || -1 == $exerciseOption['exerciseOptionValue'])
                     && isset($exerciseOption['trainingPlanXExerciseOptionId'])
                 ) {
                     $trainingPlanXExerciseOptionDb->deleteTrainingPlanExerciseOption($exerciseOption['trainingPlanXExerciseOptionId']);
@@ -271,8 +286,10 @@ class TrainingPlan {
                         'training_plan_x_exercise_option_update_date' => date('Y-m-d H:i:s'),
                         'training_plan_x_exercise_option_update_user_fk' => $userId,
                     ];
-                    $trainingPlanXExerciseOptionDb->updateTrainingPlanExerciseOption($data,
-                        $exerciseOption['trainingPlanXExerciseOptionId']);
+                    $trainingPlanXExerciseOptionDb->updateTrainingPlanExerciseOption(
+                        $data,
+                        $exerciseOption['trainingPlanXExerciseOptionId']
+                    );
                 }
             } else if (! empty($exerciseOption['exerciseOptionValue'])) {
                 $data = [
@@ -290,7 +307,8 @@ class TrainingPlan {
         return $currentTrainingPlanXExerciseCollection;
     }
 
-    private function processDeviceOptions($deviceOptions, $exerciseId, $trainingPlanXExerciseId, $currentTrainingPlanXExerciseCollection) {
+    private function processDeviceOptions($deviceOptions, $exerciseId, $trainingPlanXExerciseId, $currentTrainingPlanXExerciseCollection) 
+    {
 
         $userId = $this->findCurrentUserId();
         $trainingPlanXDeviceOptionDb = new TrainingPlanXDeviceOption();
@@ -300,13 +318,15 @@ class TrainingPlan {
 
             // wenn deviceOption bereits in der DB
             if (array_key_exists('deviceOptions', $currentTrainingPlanXExerciseCollection[$exerciseId])
-                && array_key_exists($deviceOptionId,
-                    $currentTrainingPlanXExerciseCollection[$exerciseId]['deviceOptions'])
+                && array_key_exists(
+                    $deviceOptionId,
+                    $currentTrainingPlanXExerciseCollection[$exerciseId]['deviceOptions']
+                )
             ) {
                 $trainingPlanDeviceOptionInDb = $currentTrainingPlanXExerciseCollection[$exerciseId]['deviceOptions'][$deviceOptionId];
                 // wenn value der übergabe leer ist => löschen
                 if ((empty($deviceOption['deviceOptionValue'])
-                        || -1 == $deviceOption['deviceOptionValue'])
+                    || -1 == $deviceOption['deviceOptionValue'])
                     && 0 < $deviceOption['trainingPlanXDeviceOptionId']
                 ) {
                     $trainingPlanXDeviceOptionDb->deleteTrainingPlanDeviceOption($deviceOption['trainingPlanXDeviceOptionId']);
@@ -316,8 +336,10 @@ class TrainingPlan {
                         'training_plan_x_device_option_update_date' => date('Y-m-d H:i:s'),
                         'training_plan_x_device_option_update_user_fk' => $userId,
                     ];
-                    $trainingPlanXDeviceOptionDb->updateTrainingPlanDeviceOption($data,
-                        $deviceOption['trainingPlanXDeviceOptionId']);
+                    $trainingPlanXDeviceOptionDb->updateTrainingPlanDeviceOption(
+                        $data,
+                        $deviceOption['trainingPlanXDeviceOptionId']
+                    );
                 }
             } else if (! empty($deviceOption['deviceOptionValue'])) {
                 $data = [
@@ -335,7 +357,8 @@ class TrainingPlan {
         return $currentTrainingPlanXExerciseCollection;
     }
 
-    private function collectCurrentExercisesByTrainingPlan($trainingPlanId) {
+    private function collectCurrentExercisesByTrainingPlan($trainingPlanId) 
+    {
 
         $trainingPlanXExerciseDb = new TrainingPlanXExercise();
         $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
@@ -344,7 +367,9 @@ class TrainingPlan {
         $currentTrainingPlanXExercisesInDb = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($trainingPlanId);
         $currentTrainingPlanXExerciseCollection = [];
 
-        /** iterate all trainingPlanXExercises in DB */
+        /**
+ * iterate all trainingPlanXExercises in DB 
+*/
         foreach ($currentTrainingPlanXExercisesInDb as $currentTrainingPlanExercise) {
             $currentTrainingPlanExerciseId = $currentTrainingPlanExercise->offsetGet('training_plan_x_exercise_id');
             $currentExerciseId = $currentTrainingPlanExercise->offsetGet('exercise_id');
@@ -352,14 +377,18 @@ class TrainingPlan {
             $currentTrainingPlanXExerciseCollection[$currentExerciseId]['exercise'] = $currentTrainingPlanExercise;
             $currentExerciseOptionCollection = $trainingPlanXExerciseOptionDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($currentTrainingPlanExerciseId);
 
-            /** iterate all trainingPlanExerciseOptions in Db*/
+            /**
+ * iterate all trainingPlanExerciseOptions in Db
+*/
             foreach ($currentExerciseOptionCollection as $currentExerciseOption) {
                 $currentExerciseOptionId = $currentExerciseOption->offsetGet('training_plan_x_exercise_option_exercise_option_fk');
                 $currentTrainingPlanXExerciseCollection[$currentExerciseId]['exerciseOptions'][$currentExerciseOptionId] = $currentExerciseOption;
             }
 
             $currentDeviceOptionCollection = $trainingPlanXDeviceOptionDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($currentTrainingPlanExerciseId);
-            /** iterate all trainingPlanExerciseOptions in Db*/
+            /**
+ * iterate all trainingPlanExerciseOptions in Db
+*/
             foreach ($currentDeviceOptionCollection as $currentDeviceOption) {
                 $currentDeviceOptionId = $currentDeviceOption->offsetGet('training_plan_x_device_option_device_option_fk');
                 $currentTrainingPlanXExerciseCollection[$currentExerciseId]['deviceOptions'][$currentDeviceOptionId] = $currentDeviceOption;
@@ -369,7 +398,8 @@ class TrainingPlan {
         return $currentTrainingPlanXExerciseCollection;
     }
 
-    public function createBaseTrainingPlan($iUserId) {
+    public function createBaseTrainingPlan($iUserId) 
+    {
         $oTrainingsplanLayouts = new TrainingPlanLayouts();
         $oTrainingsplanLayout = $oTrainingsplanLayouts->findTrainingPlanLayoutByName('Normal');
         $iTrainingsplanLayoutId = $oTrainingsplanLayout->training_plan_layout_id;
@@ -401,12 +431,14 @@ class TrainingPlan {
      *
      * @return int
      */
-    private function deactivateAllCurrentTrainingPlans($userId) {
+    private function deactivateAllCurrentTrainingPlans($userId) 
+    {
         $trainingPlansDb = new TrainingPlans();
         $trainingPlansDb->update(['training_plan_active' => 0], 'training_plan_user_fk = "' . $userId . '"');
     }
 
-    public function createSplitTrainingPlan($iUserId) {
+    public function createSplitTrainingPlan($iUserId) 
+    {
         $oTrainingsplanLayouts = new TrainingPlanLayouts();
         $oTrainingsplanLayout = $oTrainingsplanLayouts->findTrainingPlanLayoutByName('Split');
         $iTrainingsplanLayoutId = $oTrainingsplanLayout->training_plan_layout_id;
@@ -449,7 +481,8 @@ class TrainingPlan {
         }
     }
 
-    public function createTrainingPlan($aData) {
+    public function createTrainingPlan($aData) 
+    {
         $trainingPlansDb = new TrainingPlans();
 
         $trainingPlanId = $trainingPlansDb->insert($aData);
@@ -460,12 +493,15 @@ class TrainingPlan {
     /**
      * search current active training plan
      */
-    public function searchCurrentTrainingPlan($userId) {
+    public function searchCurrentTrainingPlan($userId) 
+    {
         $trainingPlansDb = new TrainingPlans();
         $trainingDiaryXTrainingPlanDb = new TrainingDiaryXTrainingPlan();
         $currentOpenTrainingDiary = $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlanByUserId($userId);
 
-        /** current open training diary entry found! */
+        /**
+ * current open training diary entry found! 
+*/
         if ($currentOpenTrainingDiary instanceof Zend_Db_Table_Row_Abstract) {
             return $currentOpenTrainingDiary;
         }
@@ -495,7 +531,8 @@ class TrainingPlan {
         return $trainingPlansDb->findActiveTrainingPlanByUserId($userId);
     }
 
-    protected function findCurrentUserId() {
+    protected function findCurrentUserId() 
+    {
         $user = Zend_Auth::getInstance()->getIdentity();
 
         if (true == is_object($user)) {
@@ -512,7 +549,8 @@ class TrainingPlan {
      *
      * @return int
      */
-    public function createTrainingPlanFromTemplate($trainingPlanId, $userId) {
+    public function createTrainingPlanFromTemplate($trainingPlanId, $userId) 
+    {
         $trainingPlansDb = new TrainingPlans();
         $trainingPlanCollection = $trainingPlansDb->findTrainingPlanAndChildrenByParentTrainingPlanId($trainingPlanId);
         $primaryTrainingPlanId = null;
@@ -551,7 +589,8 @@ class TrainingPlan {
      * @param $origTrainingPlanId
      * @param $newTrainingPlanId
      */
-    private function copyExercisesFromTrainingPlan($origTrainingPlanId, $newTrainingPlanId) {
+    private function copyExercisesFromTrainingPlan($origTrainingPlanId, $newTrainingPlanId) 
+    {
         $trainingPlanXExerciseDb = new TrainingPlanXExercise();
         $trainingPlanExerciseCollection = $trainingPlanXExerciseDb->findExercisesByTrainingPlanId($origTrainingPlanId);
 
@@ -575,7 +614,8 @@ class TrainingPlan {
      * @param $origTrainingPlanExerciseId
      * @param $newTrainingPlanExerciseId
      */
-    private function copyExerciseOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) {
+    private function copyExerciseOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) 
+    {
         $trainingPlanXExerciseOptionsDb = new TrainingPlanXExerciseOption();
         $trainingPlanXExerciseOptionCollection = $trainingPlanXExerciseOptionsDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId($origTrainingPlanExerciseId);
 
@@ -595,7 +635,8 @@ class TrainingPlan {
      * @param $origTrainingPlanExerciseId
      * @param $newTrainingPlanExerciseId
      */
-    private function copyDeviceOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) {
+    private function copyDeviceOptionsFromTrainingPlanExercise($origTrainingPlanExerciseId, $newTrainingPlanExerciseId) 
+    {
         $trainingPlanXDeviceOptionsDb = new TrainingPlanXDeviceOption();
         $trainingPlanXDeviceOptionCollection = $trainingPlanXDeviceOptionsDb->findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($origTrainingPlanExerciseId);
 

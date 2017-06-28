@@ -20,7 +20,7 @@ use Zend_Mail;
 
 
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 class RegisterController extends AbstractController
 {
@@ -29,7 +29,8 @@ class RegisterController extends AbstractController
     {
     }
 
-    public function saveAction() {
+    public function saveAction() 
+    {
 
         $a_params = $this->getRequest()->getParams();
 
@@ -57,14 +58,14 @@ class RegisterController extends AbstractController
             $b_valid_email = $obj_validate_email->isValid($str_register_email);
             $b_email_exists = false;
 
-            if($b_valid_email){
+            if($b_valid_email) {
                 $b_email_exists = $this->checkEmailExists($str_register_email);
             }
 
             // valid und existiert noch nicht
-            if($b_valid_email &&
-                !$b_email_exists)
-            {
+            if($b_valid_email 
+                && !$b_email_exists
+            ) {
                 $a_data['user_email'] = $str_register_email;
                 $a_data['user_login'] = $str_register_email;
             }
@@ -74,7 +75,7 @@ class RegisterController extends AbstractController
             ) {
                 $b_all_valid = false;
                 GlobalMessageHandler::appendMessage($this->translate('error_email_already_registered'), Message::STATUS_ERROR);
-            // nicht valid
+                // nicht valid
             } else if(!$b_valid_email) {
                 $b_all_valid = false;
                 GlobalMessageHandler::appendMessage($this->translate('please_enter_valid_email'), Message::STATUS_ERROR);
@@ -88,7 +89,7 @@ class RegisterController extends AbstractController
                 $a_data['user_last_name'] = $str_register_nachname;
             }
 
-            if( true === $b_all_valid) {
+            if(true === $b_all_valid) {
                 $obj_tools = new CAD_Tools();
                 $password = $obj_tools->generatePasswort();
                 $a_data['user_password'] = md5($password);
@@ -101,10 +102,10 @@ class RegisterController extends AbstractController
                     GlobalMessageHandler::appendMessage($this->translate('login_successfully_created'), Message::STATUS_OK);
 
                     $str_user_name = $str_register_email;
-                    if(strlen(trim($str_register_vorname))){
+                    if(strlen(trim($str_register_vorname))) {
                         $str_user_name = $str_register_vorname . " ";
                     }
-                    if(strlen(trim($str_register_nachname))){
+                    if(strlen(trim($str_register_nachname))) {
                         $str_user_name .= $str_register_nachname;
                     }
 

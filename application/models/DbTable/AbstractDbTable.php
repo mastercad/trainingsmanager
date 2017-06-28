@@ -24,15 +24,19 @@ use Zend_Auth;
  *
  * @package Model\DbTable
  */
-abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
+abstract class AbstractDbTable extends Zend_Db_Table_Abstract
+{
 
-    /** @var array */
+    /**
+     * @var array 
+     */
     protected static $aTableMetaData;
 
     /**
      * @throws Zend_Db_Table_Exception
      */
-    public function init() {
+    public function init() 
+    {
         if(true === empty(self::$aTableMetaData)) {
             self::$aTableMetaData = $this->info();
         }
@@ -49,7 +53,8 @@ abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
      *
      * @return mixed
      */
-    function findByPrimary($primary) {
+    function findByPrimary($primary) 
+    {
         $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         $select->where($this->_primary[1] . ' = ?', intval($primary));
 
@@ -69,7 +74,8 @@ abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
      *
      * @return bool
      */
-    public function checkIfTestUser() {
+    public function checkIfTestUser() 
+    {
 
         $user = Zend_Auth::getInstance()->getIdentity();
 
@@ -90,7 +96,8 @@ abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
      *
      * @return string
      */
-    public function considerTestUserForTableName($tableName) {
+    public function considerTestUserForTableName($tableName) 
+    {
         if (true === $this->checkIfTestUser()
             && 0 == preg_match('/^test_/', $tableName)
         ) {
@@ -107,7 +114,8 @@ abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
      *
      * @return $this
      */
-    public function setName($name) {
+    public function setName($name) 
+    {
         $this->_name = $name;
         return $this;
     }
@@ -115,7 +123,8 @@ abstract class AbstractDbTable extends Zend_Db_Table_Abstract {
     /**
      * @return string tableName
      */
-    public function getName() {
+    public function getName() 
+    {
         return $this->_name;
     }
 }

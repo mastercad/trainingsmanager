@@ -13,9 +13,11 @@ use Service\AbstractService;
 
 
 
-class TrainingDiaries extends AbstractService {
+class TrainingDiaries extends AbstractService
+{
 
-    public function save($params) {
+    public function save($params) 
+    {
 
     }
 }

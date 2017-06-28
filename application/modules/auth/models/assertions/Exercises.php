@@ -15,11 +15,6 @@
 
 namespace Auth\Model\Assertion;
 
-use Auth\Model\Assertion\AbstractAssertion;
-
-
-
-
 /**
  * klasse hatte das interface Zend_Acl_Assert_Interface implementiert, da diese assert funktion aber vorschreibt
  * die zend interfaces zu übergeben als parameter, die klasse aber speziefisch für eine spezielle rolle und eine
@@ -29,7 +24,6 @@ use Auth\Model\Assertion\AbstractAssertion;
  *
  * Class Application_Model_RecipeAssertion
  */
-
-class Exercises extends AbstractAssertion {
-
+class Exercises extends AbstractAssertion
+{
 }

@@ -23,10 +23,14 @@ use Exception;
  */
 class Widgets extends AbstractDbTable
 {
-    /** @var string */
-    protected $_name 	= 'widgets';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'widgets';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'widget_id';
 
     /**
@@ -34,7 +38,8 @@ class Widgets extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllWidgets() {
+    public function findAllWidgets() 
+    {
         return $this->fetchAll(null, "widget_name");
     }
 
@@ -45,7 +50,8 @@ class Widgets extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveWidgets($aData) {
+    public function saveWidgets($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch( Exception $oException) {
@@ -59,11 +65,12 @@ class Widgets extends AbstractDbTable
      * update widget data
      *
      * @param array $aData
-     * @param int $widgetId
+     * @param int   $widgetId
      *
      * @return bool|int
      */
-    public function updateWidget($aData, $widgetId) {
+    public function updateWidget($aData, $widgetId) 
+    {
         try {
             return $this->update($aData, "widget_id = '" . $widgetId . "'");
         } catch( Exception $oException) {
@@ -80,7 +87,8 @@ class Widgets extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteDashboard($widgetId) {
+    public function deleteDashboard($widgetId) 
+    {
         try {
             return $this->delete("widget_id = '" . $widgetId . "'");
         } catch( Exception $oException) {

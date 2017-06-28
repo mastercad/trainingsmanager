@@ -14,7 +14,7 @@
  */
 
 require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 /**
  * Class QrController

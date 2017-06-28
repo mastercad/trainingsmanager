@@ -1,6 +1,6 @@
 <?php
 
-define('ZEND_LOGGER','zend_logger');
+define('ZEND_LOGGER', 'zend_logger');
 define('SESSION_TIMEOUT', 7400);
 
 use Service\Translator;
@@ -33,31 +33,34 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $autoloader->registerNamespace('Auth'); // this is why is dead simple
         $autoloader->setFallbackAutoloader(true);
 
-//        $resourceLoader->addResourceTypes(array(
-//            'acl' => array(
-//                'path'      => 'acls/',
-//                'namespace' => 'Acl',
-//            ),
-//            'example' => array(
-//                'path'      => 'examples/',
-//                'namespace' => 'Example',
-//            ),
-//        ));
+        //        $resourceLoader->addResourceTypes(array(
+        //            'acl' => array(
+        //                'path'      => 'acls/',
+        //                'namespace' => 'Acl',
+        //            ),
+        //            'example' => array(
+        //                'path'      => 'examples/',
+        //                'namespace' => 'Example',
+        //            ),
+        //        ));
 
         return $autoloader;
     }
 
-    protected function _initResourceloader() {
+    protected function _initResourceloader() 
+    {
 
-//        $resourceloader = $this->getResourceLoader()->addResourceType('plugins', APPLICATION_PATH . '/plugins', 'Plugin');
-//        $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
-//            'basePath'  => APPLICATION_PATH . '/plugins',
-//            'namespace' => 'Plugin',
-//        ));
-        $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
+        //        $resourceloader = $this->getResourceLoader()->addResourceType('plugins', APPLICATION_PATH . '/plugins', 'Plugin');
+        //        $resourceLoader = new Zend_Loader_Autoloader_Resource(array(
+        //            'basePath'  => APPLICATION_PATH . '/plugins',
+        //            'namespace' => 'Plugin',
+        //        ));
+        $resourceLoader = new Zend_Loader_Autoloader_Resource(
+            array(
             'basePath'  => APPLICATION_PATH,
             'namespace' => '',
-        ));
+            )
+        );
         $resourceLoader->addResourceType('plugin', 'plugins', 'Plugin');
         $resourceLoader->addResourceType('service', 'services', 'Service');
         $resourceLoader->addResourceType('interface', 'interfaces', 'Interface');
@@ -71,9 +74,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     public function _initActionHelper()
     {
         Zend_Controller_Action_HelperBroker::addPath(
-                APPLICATION_PATH . '/controllers/helpers', 'Helper');
+            APPLICATION_PATH . '/controllers/helpers', 'Helper'
+        );
 
-//        Zend_Controller_Action_HelperBroker::getStaticHelper('sidebar');
+        //        Zend_Controller_Action_HelperBroker::getStaticHelper('sidebar');
     }
 
     public function _initMVC()
@@ -124,14 +128,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
     {
         $view = new Zend_View();
 
-        $view->headTitle( 'Trainingsmanager');
+        $view->headTitle('Trainingsmanager');
         $view->headTitle()->setSeparator(' | ');
 
         $view->setEncoding('UTF-8');
         $view->env = APPLICATION_ENV;
 
-        $view_renderer = Zend_Controller_Action_HelperBroker::getStaticHelper( 'ViewRenderer');
-        $view_renderer->setView( $view);
+        $view_renderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
+        $view_renderer->setView($view);
 
         Zend_Registry::set('view', $view);
 
@@ -184,42 +188,46 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     protected function _initHeadScripts()
     {
-        /** @var Zend_View $view */
+        /**
+ * @var Zend_View $view 
+*/
         $view = $this->getResource('view');
 
-        /** @var Zend_View_Helper_HeadScript $view->headScript() */
-//        $view->headScript()->prependFile($view->baseUrl() . '/js/default.js', 'text/javascript');
+        /**
+ * @var Zend_View_Helper_HeadScript $view->headScript() 
+*/
+        //        $view->headScript()->prependFile($view->baseUrl() . '/js/default.js', 'text/javascript');
         $view->headScript()->offsetSetFile(1, $view->baseUrl() . '/js/jquery-3.2.0.min.js', 'text/javascript');
         $view->headScript()->offsetSetFile(2, $view->baseUrl() . '/js/base64.js', 'text/javascript');
         $view->headScript()->offsetSetFile(3, $view->baseUrl() . '/js/auth.js', 'text/javascript');
         $view->headScript()->offsetSetFile(5, $view->baseUrl() . '/js/jquery-ui.min.js', 'text/javascript');
         $view->headScript()->offsetSetFile(7, $view->baseUrl() . '/js/bootstrap-tour.min.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(6, $view->baseUrl() . '/js/tether.min.js', 'text/javascript');
-//      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.sharrre-1.3.4.min.js', 'text/javascript');
-//      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery_counts.js', 'text/javascript');
-//      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen.min.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(10, $view->baseUrl() . '/js/funktionen.js', 'text/javascript');
-//      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen_jquery.min.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(15, $view->baseUrl() . '/js/funktionen_jquery.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(20, $view->baseUrl() . '/js/default.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(6, $view->baseUrl() . '/js/tether.min.js', 'text/javascript');
+        //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.sharrre-1.3.4.min.js', 'text/javascript');
+        //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery_counts.js', 'text/javascript');
+        //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen.min.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(10, $view->baseUrl() . '/js/funktionen.js', 'text/javascript');
+        //      $view->headScript()->appendFile($view->baseUrl() . '/js/funktionen_jquery.min.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(15, $view->baseUrl() . '/js/funktionen_jquery.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(20, $view->baseUrl() . '/js/default.js', 'text/javascript');
 
-//        if(TRUE === is_object($obj_device)
-//            && $obj_device->getType() == "desktop"
-//        ) {
-//            $view->headScript()->appendFile($view->baseUrl() . '/js/blur.js', 'text/javascript');
-//        }
-//      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.snippet.min.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(25, $view->baseUrl() . '/js/cad.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(30, $view->baseUrl() . '/js/cad_wrapper.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(35, $view->baseUrl() . '/js/cad_catch_esc.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(40, $view->baseUrl() . '/js/cad_cms.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(45, $view->baseUrl() . '/js/cad_sperre.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(50, $view->baseUrl() . '/js/cad_message.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(55, $view->baseUrl() . '/js/cad_loader.js', 'text/javascript');
-//      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery-ui-1.10.1.custom.min.js', 'text/javascript');
-//        $view->headScript()->offsetSetFile(60, $view->baseUrl() . '/js/auth.js', 'text/javascript');
+        //        if(TRUE === is_object($obj_device)
+        //            && $obj_device->getType() == "desktop"
+        //        ) {
+        //            $view->headScript()->appendFile($view->baseUrl() . '/js/blur.js', 'text/javascript');
+        //        }
+        //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery.snippet.min.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(25, $view->baseUrl() . '/js/cad.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(30, $view->baseUrl() . '/js/cad_wrapper.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(35, $view->baseUrl() . '/js/cad_catch_esc.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(40, $view->baseUrl() . '/js/cad_cms.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(45, $view->baseUrl() . '/js/cad_sperre.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(50, $view->baseUrl() . '/js/cad_message.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(55, $view->baseUrl() . '/js/cad_loader.js', 'text/javascript');
+        //      $view->headScript()->appendFile($view->baseUrl() . '/js/jquery-ui-1.10.1.custom.min.js', 'text/javascript');
+        //        $view->headScript()->offsetSetFile(60, $view->baseUrl() . '/js/auth.js', 'text/javascript');
         $view->headScript()->offsetSetFile(100, $view->baseUrl() . '/js/html5.js', 'text/javascript', ['conditional' => 'lt IE 9']);
-//      $view->headScript()->appendFile('https://apis.google.com/js/plusone.js', 'text/javascript');
+        //      $view->headScript()->appendFile('https://apis.google.com/js/plusone.js', 'text/javascript');
     }
 
     protected function _initLink()
@@ -323,13 +331,15 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $router->addRoute('feed-atom', $route);
     }
 
-    public function _initHelpers() {
-//        Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH . '/controllers/helpers', 'Action_Helper');
+    public function _initHelpers() 
+    {
+        //        Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH . '/controllers/helpers', 'Action_Helper');
         Zend_Controller_Action_HelperBroker::addHelper(new MessageHelper());
         Zend_Controller_Action_HelperBroker::getStack()->offsetSet(-100, new MessageHelper($this));
     }
 
-    public function _initTranslation() {
+    public function _initTranslation() 
+    {
         $translationService = new Translator();
         Zend_Registry::set('Zend_Translate', $translationService->getTranslation());
     }
@@ -339,7 +349,9 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
      */
     protected function _initNavigation()
     {
-        /** @var Zend_Translate_Adapter $translator */
+        /**
+ * @var Zend_Translate_Adapter $translator 
+*/
         $translator = Zend_Registry::get('Zend_Translate')->getAdapter();
         $structure = array(
             array(
@@ -510,31 +522,31 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         'resource' => 'default:training-diaries',
                         'privilege' => 'index',
                     ),
-//                    array(
-//                        'label' => $translator->translate('label_new'),
-//                        'title' => $translator->translate('label_new'),
-//                        'module' => 'default',
-//                        'controller' => 'training-diaries',
-//                        'action' => 'new',
-//                        'resource' => 'default:training-diaries',
-//                        'privilege' => 'edit'
-//                    ),
-//                    array(
-//                        'label' => 'divider',
-//                        'uri' => '#',
-//                        'class' => 'divider',
-//                        'resource' => 'default:training-plans',
-//                        'privilege' => 'archive'
-//                    ),
-//                    array(
-//                        'label' => $translator->translate('label_archive'),
-//                        'title' => $translator->translate('label_archive'),
-//                        'module' => 'default',
-//                        'controller' => 'training-plans',
-//                        'action' => 'archive',
-//                        'resource' => 'default:training-plans',
-//                        'privilege' => 'archive'
-//                    ),
+        //                    array(
+        //                        'label' => $translator->translate('label_new'),
+        //                        'title' => $translator->translate('label_new'),
+        //                        'module' => 'default',
+        //                        'controller' => 'training-diaries',
+        //                        'action' => 'new',
+        //                        'resource' => 'default:training-diaries',
+        //                        'privilege' => 'edit'
+        //                    ),
+        //                    array(
+        //                        'label' => 'divider',
+        //                        'uri' => '#',
+        //                        'class' => 'divider',
+        //                        'resource' => 'default:training-plans',
+        //                        'privilege' => 'archive'
+        //                    ),
+        //                    array(
+        //                        'label' => $translator->translate('label_archive'),
+        //                        'title' => $translator->translate('label_archive'),
+        //                        'module' => 'default',
+        //                        'controller' => 'training-plans',
+        //                        'action' => 'archive',
+        //                        'resource' => 'default:training-plans',
+        //                        'privilege' => 'archive'
+        //                    ),
                 ),
             ),
             */
@@ -545,8 +557,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                 'module' => 'default',
                 'controller' => 'profil',
                 'action' => 'index',
-//                'resource' => 'default:profil',
-//                'privilege' => 'index',
+        //                'resource' => 'default:profil',
+        //                'privilege' => 'index',
                 'pages' => array(
                     array(
                         'label' => 'Ernährungsplan',
@@ -554,8 +566,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                         'module' => 'default',
                         'controller' => 'meal-plan',
                         'action' => 'index',
-//                        'resource' => 'default:meal-plan',
-//                        'privilege' => 'index',
+        //                        'resource' => 'default:meal-plan',
+        //                        'privilege' => 'index',
                         'pages' => array(
                             array(
                                 'label' => 'Hinzufügen',
@@ -563,8 +575,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                                 'module' => 'default',
                                 'controller' => 'meal-plan',
                                 'action' => 'edit',
-//                                'resource' => 'default:meal-plan',
-//                                'privilege' => 'edit',
+        //                                'resource' => 'default:meal-plan',
+        //                                'privilege' => 'edit',
                             ),
                         )
                     ),

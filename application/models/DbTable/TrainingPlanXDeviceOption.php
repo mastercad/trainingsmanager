@@ -28,7 +28,7 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'training_plan_x_device_option';
+    protected $_name     = 'training_plan_x_device_option';
     /**
      * @var string
      */
@@ -42,19 +42,30 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($trainingPlanExerciseId, $deviceOptionId = null) {
+    public function findTrainingPlanDeviceOptionsByTrainingPlanExerciseId($trainingPlanExerciseId, $deviceOptionId = null) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
-            'training_plan_x_exercise_id = training_plan_x_device_option_training_plan_exercise_fk')
-            ->joinInner($this->considerTestUserForTableName('exercises'),
-                'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'),
-                'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft($this->considerTestUserForTableName('device_options'),
-                'device_option_id = training_plan_x_device_option_device_option_fk')
-            ->joinLeft($this->considerTestUserForTableName('device_x_device_option'),
-                'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = exercise_x_device_device_fk')
+        $oSelect->joinInner(
+            $this->considerTestUserForTableName('training_plan_x_exercise'),
+            'training_plan_x_exercise_id = training_plan_x_device_option_training_plan_exercise_fk'
+        )
+            ->joinInner(
+                $this->considerTestUserForTableName('exercises'),
+                'exercise_id = training_plan_x_exercise_exercise_fk'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('exercise_x_device'),
+                'exercise_x_device_exercise_fk = exercise_id'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('device_options'),
+                'device_option_id = training_plan_x_device_option_device_option_fk'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('device_x_device_option'),
+                'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = exercise_x_device_device_fk'
+            )
             ->where('training_plan_x_device_option_training_plan_exercise_fk = ?', $trainingPlanExerciseId);
 
         if (! empty($deviceOptionId)) {
@@ -71,21 +82,32 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
      *
      * @return null|\Zend_Db_Table_Row_Abstract
      */
-    public function findTrainingPlanDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) {
+    public function findTrainingPlanDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $oSelect->joinInner($this->considerTestUserForTableName('training_plan_x_exercise'),
-            'training_plan_x_exercise_id = ' . $trainingPlanExerciseId)
-            ->joinInner($this->considerTestUserForTableName('exercises'),
-                'exercise_id = training_plan_x_exercise_exercise_fk')
+        $oSelect->joinInner(
+            $this->considerTestUserForTableName('training_plan_x_exercise'),
+            'training_plan_x_exercise_id = ' . $trainingPlanExerciseId
+        )
+            ->joinInner(
+                $this->considerTestUserForTableName('exercises'),
+                'exercise_id = training_plan_x_exercise_exercise_fk'
+            )
             ->joinInner($this->considerTestUserForTableName('device_options'), 'device_option_id = ' . $deviceOptionId)
-            ->joinLeft($this->considerTestUserForTableName('exercise_x_device'),
-                'exercise_x_device_exercise_fk = exercise_id')
-            ->joinLeft($this->considerTestUserForTableName('exercise_x_device_option'),
+            ->joinLeft(
+                $this->considerTestUserForTableName('exercise_x_device'),
+                'exercise_x_device_exercise_fk = exercise_id'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('exercise_x_device_option'),
                 'exercise_x_device_option_device_option_fk = ' . $deviceOptionId .
-                ' AND exercise_x_device_option_exercise_fk = exercise_id')
-            ->joinLeft($this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_id = ' .
-                $deviceOptionId . ' AND device_x_device_option_device_fk = exercise_x_device_device_fk')
+                ' AND exercise_x_device_option_exercise_fk = exercise_id'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('device_x_device_option'), 'device_x_device_option_id = ' .
+                $deviceOptionId . ' AND device_x_device_option_device_fk = exercise_x_device_device_fk'
+            )
             ->where('training_plan_x_device_option_training_plan_exercise_fk = ?', $trainingPlanExerciseId)
             ->where('training_plan_x_device_option_device_option_fk = ?', $deviceOptionId);
 
@@ -100,18 +122,27 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
      *
      * @return null|\Zend_Db_Table_Row_Abstract
      */
-    public function findExerciseDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) {
+    public function findExerciseDeviceOptionByTrainingPlanExerciseIdAndDeviceOptionId($trainingPlanExerciseId, $deviceOptionId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITHOUT_FROM_PART)->setIntegrityCheck(false);
 
         $oSelect->from($this->considerTestUserForTableName('training_plan_x_exercise'))
-            ->joinInner($this->considerTestUserForTableName('exercises'),
-                'exercise_id = training_plan_x_exercise_exercise_fk')
-            ->joinInner($this->considerTestUserForTableName('exercise_x_device_option'),
-                'exercise_x_device_option_exercise_fk = exercise_id')
-            ->joinLeft($this->considerTestUserForTableName('device_options'),
-                'device_option_id = exercise_x_device_option_device_option_fk')
-            ->joinLeft($this->considerTestUserForTableName('device_x_device_option'),
-                'device_x_device_option_id = exercise_x_device_option_device_option_fk')
+            ->joinInner(
+                $this->considerTestUserForTableName('exercises'),
+                'exercise_id = training_plan_x_exercise_exercise_fk'
+            )
+            ->joinInner(
+                $this->considerTestUserForTableName('exercise_x_device_option'),
+                'exercise_x_device_option_exercise_fk = exercise_id'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('device_options'),
+                'device_option_id = exercise_x_device_option_device_option_fk'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('device_x_device_option'),
+                'device_x_device_option_id = exercise_x_device_option_device_option_fk'
+            )
             ->where('training_plan_x_exercise_id = ?', $trainingPlanExerciseId)
             ->where('exercise_x_device_option_device_option_fk = ?', $deviceOptionId);
 
@@ -125,7 +156,8 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
      *
      * @return mixed
      */
-    public function saveTrainingPlanDeviceOption($aData) {
+    public function saveTrainingPlanDeviceOption($aData) 
+    {
         return $this->insert($aData);
     }
 
@@ -133,11 +165,12 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
      * update training plan device option data by training plan exercise option
      *
      * @param array $aData
-     * @param int $iTrainingPlanExerciseOptionId
+     * @param int   $iTrainingPlanExerciseOptionId
      *
      * @return int
      */
-    public function updateTrainingPlanDeviceOption($aData, $iTrainingPlanExerciseOptionId) {
+    public function updateTrainingPlanDeviceOption($aData, $iTrainingPlanExerciseOptionId) 
+    {
         return $this->update($aData, 'training_plan_x_device_option_id = ' . $iTrainingPlanExerciseOptionId);
     }
 
@@ -148,7 +181,8 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
      *
      * @return int
      */
-    public function deleteTrainingPlanDeviceOption($iTrainingPlanExerciseOptionId) {
+    public function deleteTrainingPlanDeviceOption($iTrainingPlanExerciseOptionId) 
+    {
         return $this->delete('training_plan_x_device_option_id = ' . $iTrainingPlanExerciseOptionId);
     }
 
@@ -159,7 +193,8 @@ class TrainingPlanXDeviceOption extends AbstractDbTable
      *
      * @return int
      */
-    public function deleteTrainingPlanDeviceOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId) {
+    public function deleteTrainingPlanDeviceOptionsByTrainingPlanXExerciseId($trainingPlanXExerciseId) 
+    {
         return $this->delete('training_plan_x_device_option_training_plan_exercise_fk = ' . $trainingPlanXExerciseId);
     }
 }

@@ -19,9 +19,10 @@ use Zend_Db_Table_Row_Abstract;
 
 
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-class AdminController extends AbstractController {
+class AdminController extends AbstractController
+{
 
     /**
      * @var array
@@ -53,7 +54,8 @@ class AdminController extends AbstractController {
      *
      * @return $this
      */
-    public function init() {
+    public function init() 
+    {
         $userRightGroupsDb = new AuthModelDbTableUserRightGroups();
         $userRightGroups = $userRightGroupsDb->findUserRightGroups();
 
@@ -169,10 +171,10 @@ class AdminController extends AbstractController {
         $this->view->assign('sContent', $sContent);
     }
 
-//    private function initAuth() {
-//        $oAcl = new Auth_Plugin_Acl();
-//        Zend_Registry::set('acl', $oAcl);
-//    }
+    //    private function initAuth() {
+    //        $oAcl = new Auth_Plugin_Acl();
+    //        Zend_Registry::set('acl', $oAcl);
+    //    }
 
     /**
      * Collect user right group rights by user right group id
@@ -205,7 +207,8 @@ class AdminController extends AbstractController {
      *
      * @throws \Zend_Db_Table_Exception
      */
-    private function generatesUserRightGroupsHierarchy() {
+    private function generatesUserRightGroupsHierarchy() 
+    {
         $userRightGroupsDb = new ModelDbTableUserRightGroups();
         $userRightGroups = $userRightGroupsDb->findAllUserRightGroups();
         $userRightGroupsHierarchy = [];
@@ -227,7 +230,8 @@ class AdminController extends AbstractController {
      *
      * @return string
      */
-    private function generateUserRightGroupSelect($selectedUserRightGroupId, $labelText, $prefix) {
+    private function generateUserRightGroupSelect($selectedUserRightGroupId, $labelText, $prefix) 
+    {
 
         $this->view->assign('selectedValue', $selectedUserRightGroupId);
         $this->view->assign('value', null);
@@ -256,7 +260,8 @@ class AdminController extends AbstractController {
      *
      * @return string
      */
-    private function createModuleFieldSet($sMoCcAcDataModule, $aMoCcAcDataModule, $iUserRechteGruppeId) {
+    private function createModuleFieldSet($sMoCcAcDataModule, $aMoCcAcDataModule, $iUserRechteGruppeId) 
+    {
         $sContent = '';
         foreach ($aMoCcAcDataModule as $sMoCcAcDataController => $aMoCcAcDataController) {
             $this->view->assign('sModuleName', $sMoCcAcDataModule);
@@ -276,7 +281,8 @@ class AdminController extends AbstractController {
      *
      * @return string
      */
-    private function createControllerInputContent($sMoCcAcDataModule, $sMoCcAcDataController, $aMoCcAcDataController, $iUserRechteGruppeId) {
+    private function createControllerInputContent($sMoCcAcDataModule, $sMoCcAcDataController, $aMoCcAcDataController, $iUserRechteGruppeId) 
+    {
         $sContent = '';
         $bGlobaleControllerChecked = false;
         $this->_iCurrentRechteUserGruppenRechtId = null;
@@ -372,7 +378,8 @@ class AdminController extends AbstractController {
      *
      * @return bool
      */
-    private function checkCurrentUserRightGroupInheritFromUserRightGroup($currentUserRightGroupId, $userRightGroupId) {
+    private function checkCurrentUserRightGroupInheritFromUserRightGroup($currentUserRightGroupId, $userRightGroupId) 
+    {
         // current ID exists in userRightGroups hierarchy
         if (array_key_exists($currentUserRightGroupId, $this->userRightGroupsHierarchy)
             && $this->userRightGroupsHierarchy[$currentUserRightGroupId] != $userRightGroupId
@@ -393,7 +400,8 @@ class AdminController extends AbstractController {
      *
      * @return array
      */
-    private function collectUserRechteGruppenRechte($oUserRechteGruppenRechteRowSet) {
+    private function collectUserRechteGruppenRechte($oUserRechteGruppenRechteRowSet) 
+    {
         $aUserRechteGruppenRechte = array();
         foreach ($oUserRechteGruppenRechteRowSet as $oUserRechteGruppenRechteRow) {
             if (false === array_key_exists($oUserRechteGruppenRechteRow->user_right_group_fk, $aUserRechteGruppenRechte)) {
@@ -426,7 +434,8 @@ class AdminController extends AbstractController {
      *
      * @return array
      */
-    private function checkResourceExistsInRightGroups($aUserRechteGruppe, $sResource) {
+    private function checkResourceExistsInRightGroups($aUserRechteGruppe, $sResource) 
+    {
         krsort($aUserRechteGruppe);
         $rightAvailableInGroups = [];
 
@@ -439,7 +448,8 @@ class AdminController extends AbstractController {
         return $rightAvailableInGroups;
     }
 
-    private function searchResourceByPath($aUserRechteGruppe, $sResource) {
+    private function searchResourceByPath($aUserRechteGruppe, $sResource) 
+    {
         $mReturn = null;
         $aPath = explode('|', $sResource);
         $sKey = array_shift($aPath);

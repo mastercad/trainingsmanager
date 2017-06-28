@@ -21,7 +21,7 @@ use Model\Entity\Message;
 
 
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 class PasswordLostController extends AbstractController
 {
@@ -30,7 +30,8 @@ class PasswordLostController extends AbstractController
     {
     }
 
-    public function resetPasswordAction() {
+    public function resetPasswordAction() 
+    {
 
         if ($this->getRequest()->isPost()
             && $this->getParam('password_lost_email')

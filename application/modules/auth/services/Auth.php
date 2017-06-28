@@ -2,7 +2,6 @@
 /**
  *
  * @author Andreas Kempe / andreas.kempe@byte-artist.de
- *
  */
 
 namespace Auth\Service;

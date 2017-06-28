@@ -22,12 +22,17 @@ use Exception;
 /**
  * Class Application_Model_DbTable_Devices
  */
-class DeviceXDeviceOption extends AbstractDbTable {
+class DeviceXDeviceOption extends AbstractDbTable
+{
 
-    /** @var string */
-    protected $_name 	= 'device_x_device_option';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'device_x_device_option';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'device_x_device_option_id';
 
     /**
@@ -35,7 +40,8 @@ class DeviceXDeviceOption extends AbstractDbTable {
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllDeviceXDeviceOptionsByDeviceId($deviceId) {
+    public function findAllDeviceXDeviceOptionsByDeviceId($deviceId) 
+    {
 
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
@@ -53,7 +59,8 @@ class DeviceXDeviceOption extends AbstractDbTable {
         }
     }
 
-    public function findDeviceOption($deviceOptionId, $deviceId) {
+    public function findDeviceOption($deviceOptionId, $deviceId) 
+    {
 
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
             ->setIntegrityCheck(false);
@@ -72,15 +79,18 @@ class DeviceXDeviceOption extends AbstractDbTable {
         }
     }
 
-    public function saveDeviceXDeviceOption($data) {
+    public function saveDeviceXDeviceOption($data) 
+    {
         return $this->insert($data);
     }
 
-    public function updateDeviceXDeviceOption($data, $deviceXDeviceOptionId) {
+    public function updateDeviceXDeviceOption($data, $deviceXDeviceOptionId) 
+    {
         return $this->update($data, 'device_x_device_option_id = "' . $deviceXDeviceOptionId . '"');
     }
 
-    public function deleteDeviceXDeviceOption($deviceXDeviceOptionId) {
+    public function deleteDeviceXDeviceOption($deviceXDeviceOptionId) 
+    {
         return $this->delete('device_x_device_option_id = "' . $deviceXDeviceOptionId . '"');
     }
 }

@@ -13,14 +13,15 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/OptionsController.php');
+require_once APPLICATION_PATH . '/controllers/OptionsController.php';
 
 use \Model\DbTable\ExerciseOptions;
 
 /**
  * Class ExerciseOptionsController
  */
-class ExerciseOptionsController extends OptionsController {
+class ExerciseOptionsController extends OptionsController
+{
 
     protected $map = [
         'option_id' => 'exercise_option_id',

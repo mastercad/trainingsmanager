@@ -47,7 +47,8 @@ class Acl extends Zend_Acl
                 if($a_user_right_groups_erbt_von[$a_user_right_group['user_right_group_id']]) {
                     $this->addRole(
                         new Zend_Acl_Role($a_user_right_groups_namen[$a_user_right_group['user_right_group_id']]),
-                        $a_user_right_groups_namen[$a_user_right_groups_erbt_von[$a_user_right_group['user_right_group_id']]]);
+                        $a_user_right_groups_namen[$a_user_right_groups_erbt_von[$a_user_right_group['user_right_group_id']]]
+                    );
                 } else {
                     $this->addRole(new Zend_Acl_Role($a_user_right_groups_namen[$a_user_right_group['user_right_group_id']]));
                 }
@@ -88,16 +89,17 @@ class Acl extends Zend_Acl
             $this->allow($sRole, $sModule, $sModuleControllerResource);
 
             // nur wenn es hier keinen validator gibt, alles klar machen
-//            if (true === empty($sValidatorClass)) {
+            //            if (true === empty($sValidatorClass)) {
                 $this->allow($sRole, $sModuleControllerResource, $sAction);
-//            } else {
-//                $this->deny($sRole, $sModuleControllerResource, $sAction);
-//            }
+            //            } else {
+            //                $this->deny($sRole, $sModuleControllerResource, $sAction);
+            //            }
         }
     }
 
     private function registerValidatorClassForRoleAndChildren($sRole, $sModuleControllerActionResource,
-        $sAction, $sValidatorClass) {
+        $sAction, $sValidatorClass
+    ) {
 
         $this->_aDynamicPermissions[$sModuleControllerActionResource] = array(
             'action' => $sAction,
@@ -106,14 +108,17 @@ class Acl extends Zend_Acl
         );
 
         $aChildren = CAD_Tool_Extractor::extractOverPath(
-            $this->_roleRegistry, 'getRoles->' . $sRole . '->children');
+            $this->_roleRegistry, 'getRoles->' . $sRole . '->children'
+        );
 
         if (true === is_array($aChildren)
             && 0 < count($aChildren)
         ) {
             foreach ($aChildren as $sNewRole => $oAclRole) {
-                $this->registerValidatorClassForRoleAndChildren($sNewRole, $sModuleControllerActionResource,
-                    $sAction, $sValidatorClass);
+                $this->registerValidatorClassForRoleAndChildren(
+                    $sNewRole, $sModuleControllerActionResource,
+                    $sAction, $sValidatorClass
+                );
             }
         }
         return $this;
@@ -124,7 +129,8 @@ class Acl extends Zend_Acl
      * @param $sResource
      * @param $sAction
      */
-    public function prepareDynamicPermissionsForCurrentResource($sCurrentRole, $sResource, $sAction) {
+    public function prepareDynamicPermissionsForCurrentResource($sCurrentRole, $sResource, $sAction) 
+    {
         if (true === array_key_exists($sResource . ':' . $sAction, $this->_aDynamicPermissions)) {
             $sOrigRole = CAD_Tool_Extractor::extractOverPath($this->_aDynamicPermissions, $sResource . ':' . $sAction . '->role');
             $sValidatorClass = CAD_Tool_Extractor::extractOverPath($this->_aDynamicPermissions, $sResource . ':' . $sAction . '->validatorClass');

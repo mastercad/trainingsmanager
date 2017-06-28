@@ -17,7 +17,8 @@ use Zend_Registry;
 
 
 
-class ExerciseOptions extends Options {
+class ExerciseOptions extends Options
+{
 
     protected $optionType = 'exercise';
 
@@ -31,7 +32,8 @@ class ExerciseOptions extends Options {
     /**
      * @return string
      */
-    public function generate() {
+    public function generate() 
+    {
         $exerciseOptionsContent = '';
         $this->setOptionClassName('exercise-option');
         $exerciseOptionCollection = $this->collectOptions();
@@ -42,7 +44,7 @@ class ExerciseOptions extends Options {
 
             $this->setOptionId($exerciseOptionId);
             $this->setBaseOptionValue($exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
-//            $this->setSelectedOptionValue($exerciseOption['training_diary_x_exercise_option_exercise_option_value'] ? $exerciseOption['training_diary_x_exercise_option_exercise_option_value'] : $exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
+            //            $this->setSelectedOptionValue($exerciseOption['training_diary_x_exercise_option_exercise_option_value'] ? $exerciseOption['training_diary_x_exercise_option_exercise_option_value'] : $exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
             $this->setSelectedOptionValue($this->extractOptionValue($exerciseOption));
             $this->setInputFieldUniqueId($trainingPlanExerciseId);
             $this->extractOptionValue($exerciseOption);
@@ -69,7 +71,8 @@ class ExerciseOptions extends Options {
     /**
      * @return array
      */
-    protected function collectOptions() {
+    protected function collectOptions() 
+    {
         $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
         $trainingPlanXExerciseOptionCollection = [];
 
@@ -86,8 +89,10 @@ class ExerciseOptions extends Options {
             if (! array_key_exists($exerciseOptionId, $collectedExerciseOptions)) {
                 $collectedExerciseOptions[$exerciseOptionId] = $exerciseOption->toArray();
             } else {
-                $collectedExerciseOptions[$exerciseOptionId] = array_merge($collectedExerciseOptions[$exerciseOptionId],
-                    $exerciseOption->toArray());
+                $collectedExerciseOptions[$exerciseOptionId] = array_merge(
+                    $collectedExerciseOptions[$exerciseOptionId],
+                    $exerciseOption->toArray()
+                );
             }
         }
 
@@ -96,8 +101,10 @@ class ExerciseOptions extends Options {
             if (! array_key_exists($exerciseOptionId, $collectedExerciseOptions)) {
                 $collectedExerciseOptions[$exerciseOptionId] = $exerciseOption->toArray();
             } else {
-                $collectedExerciseOptions[$exerciseOptionId] = array_merge($collectedExerciseOptions[$exerciseOptionId],
-                    $exerciseOption->toArray());
+                $collectedExerciseOptions[$exerciseOptionId] = array_merge(
+                    $collectedExerciseOptions[$exerciseOptionId],
+                    $exerciseOption->toArray()
+                );
             }
         }
         return $collectedExerciseOptions;
@@ -106,11 +113,12 @@ class ExerciseOptions extends Options {
     /**
      * @return string
      */
-    public function generateExerciseOptionsSelectContent() {
+    public function generateExerciseOptionsSelectContent() 
+    {
         $exerciseOptionsContent = '';
         $exerciseOptionsDb = new ModelDbTableExerciseOptions();
         $exerciseOptionsCollection = $exerciseOptionsDb->findAllOptions();
-//        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
+        //        $this->getView()->assign('optionDeleteShow', $this->isShowDelete());
         $this->getView()->assign('optionDeleteShow', false);
 
         foreach ($exerciseOptionsCollection as $exerciseOption) {

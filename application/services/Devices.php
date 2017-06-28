@@ -13,6 +13,7 @@ use Service\AbstractService;
 
 
 
-class Devices extends AbstractService {
+class Devices extends AbstractService
+{
 
 }

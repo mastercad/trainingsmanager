@@ -13,7 +13,8 @@ use Service\Generator\View\GeneratorAbstract;
 
 
 
-class DropDown extends GeneratorAbstract {
+class DropDown extends GeneratorAbstract
+{
 
 
 }

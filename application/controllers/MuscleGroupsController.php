@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\MuscleGroups;
 use Model\DbTable\Muscles;
@@ -23,24 +23,31 @@ use Model\DbTable\ExerciseXMuscle;
 use Service\GlobalMessageHandler;
 use Model\Entity\Message;
 
-class MuscleGroupsController extends AbstractController {
+class MuscleGroupsController extends AbstractController
+{
 
     /**
      * initial function for controller
      */
-    public function init() {
+    public function init() 
+    {
         if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
-                'text/javascript');
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
-                'text/javascript');
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript'
+            );
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript'
+            );
         }
     }
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
         $muscleGroupsDb = new MuscleGroups();
 
         $muscleGroupsCollection = $muscleGroupsDb->findAllMuscleGroups()->toArray();
@@ -61,7 +68,8 @@ class MuscleGroupsController extends AbstractController {
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction() 
+    {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
@@ -84,7 +92,8 @@ class MuscleGroupsController extends AbstractController {
      *
      * @return string
      */
-    private function generateMusclesContent($muscleGroupId) {
+    private function generateMusclesContent($muscleGroupId) 
+    {
         $content = '';
 
         $musclesDb = new Muscles();
@@ -102,7 +111,8 @@ class MuscleGroupsController extends AbstractController {
     /**
      * delete muscle action
      */
-    public function deleteMuscleAction() {
+    public function deleteMuscleAction() 
+    {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
@@ -115,14 +125,16 @@ class MuscleGroupsController extends AbstractController {
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction() 
+    {
         $this->forward('edit');
     }
 
     /**
      * edit action
      */
-    public function editAction() {
+    public function editAction() 
+    {
         $params = $this->getRequest()->getParams();
 
         if (isset($params['id'])
@@ -159,13 +171,14 @@ class MuscleGroupsController extends AbstractController {
     /**
      * delete action
      */
-    public function deleteAction() {
+    public function deleteAction() 
+    {
         $a_params = $this->getRequest()->getParams();
         $messagesCollection = array();
 
-        if (isset($a_params['id']) &&
-            is_numeric($a_params['id']) &&
-            $a_params['id'] > 0
+        if (isset($a_params['id']) 
+            && is_numeric($a_params['id']) 
+            && $a_params['id'] > 0
         ) {
             $i_muskelgruppe_id = $a_params['id'];
 
@@ -174,34 +187,34 @@ class MuscleGroupsController extends AbstractController {
             $obj_db_uebung_muskelgruppen = new ExerciseXMuscle();
             $obj_db_muskelgruppen_muskeln = new MuscleXMuscleGroup();
 
-//            $a_uebungen = $obj_db_uebung_muskelgruppen->findExercisesForMuscleGroup($i_muskelgruppe_id);
+            //            $a_uebungen = $obj_db_uebung_muskelgruppen->findExercisesForMuscleGroup($i_muskelgruppe_id);
 
             if ($obj_db_muskelgruppen->deleteMuscleGroup($i_muskelgruppe_id)) {
-//                $obj_db_muskelgruppen_muskeln->deleteAllMuscleGroupsMusclesByMuscleGroupId($i_muskelgruppe_id);
-//                $obj_db_uebung_muskelgruppen->deleteExerciseXMuscleByMuscleGroupId($i_muskelgruppe_id);
+                //                $obj_db_muskelgruppen_muskeln->deleteAllMuscleGroupsMusclesByMuscleGroupId($i_muskelgruppe_id);
+                //                $obj_db_uebung_muskelgruppen->deleteExerciseXMuscleByMuscleGroupId($i_muskelgruppe_id);
 
-//                if (is_array($a_uebungen) &&
-//                    count($a_uebungen) > 0
-//                ) {
-//                    foreach ($a_uebungen as $a_uebung) {
-//                        $obj_db_uebungen->deleteExercise($a_uebung['uebung_muskelgruppe_uebung_fk']);
-//                    }
-//                }
+                //                if (is_array($a_uebungen) &&
+                //                    count($a_uebungen) > 0
+                //                ) {
+                //                    foreach ($a_uebungen as $a_uebung) {
+                //                        $obj_db_uebungen->deleteExercise($a_uebung['uebung_muskelgruppe_uebung_fk']);
+                //                    }
+                //                }
 
-//                $i_count_message = count($messagesCollection);
-//                $messagesCollection[$i_count_message]['type'] = "meldung";
-//                $messagesCollection[$i_count_message]['message'] = "Muskelgruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!";
-//                $messagesCollection[$i_count_message]['result'] = true;
-//
-//                $bilder_pfad = getcwd() . '/images/content/dynamisch/muscle-groups/' . $i_muskelgruppe_id . '/';
-//
-//                $obj_file = new CAD_File();
-//                $obj_file->cleanDirRek($bilder_pfad, 2);
-//            } else {
-//                $i_count_message = count($messagesCollection);
-//                $messagesCollection[$i_count_message]['type'] = "fehler";
-//                $messagesCollection[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
-//                $messagesCollection[$i_count_message]['result'] = false;
+                //                $i_count_message = count($messagesCollection);
+                //                $messagesCollection[$i_count_message]['type'] = "meldung";
+                //                $messagesCollection[$i_count_message]['message'] = "Muskelgruppe und mit Ihr verknüpfte Übungen erfolgreich gelöscht!";
+                //                $messagesCollection[$i_count_message]['result'] = true;
+                //
+                //                $bilder_pfad = getcwd() . '/images/content/dynamisch/muscle-groups/' . $i_muskelgruppe_id . '/';
+                //
+                //                $obj_file = new CAD_File();
+                //                $obj_file->cleanDirRek($bilder_pfad, 2);
+                //            } else {
+                //                $i_count_message = count($messagesCollection);
+                //                $messagesCollection[$i_count_message]['type'] = "fehler";
+                //                $messagesCollection[$i_count_message]['message'] = "Übung konnte nicht gelöscht werden!";
+                //                $messagesCollection[$i_count_message]['result'] = false;
             }
         } else {
             $i_count_message = count($messagesCollection);
@@ -218,7 +231,8 @@ class MuscleGroupsController extends AbstractController {
      * @access public
      * @
      */
-    public function getMuscleGroupForEditAction() {
+    public function getMuscleGroupForEditAction() 
+    {
         $aParams = $this->getAllParams();
         $aMessages = array();
 
@@ -229,7 +243,7 @@ class MuscleGroupsController extends AbstractController {
             $aMuskelGruppen = array();
 
             foreach ($aUebungMuskeln as $aUebungMuskel) {
-                if (FALSE === array_key_exists($aUebungMuskel['muscle_group_name'], $aMuskelGruppen)) {
+                if (false === array_key_exists($aUebungMuskel['muscle_group_name'], $aMuskelGruppen)) {
                     $aMuskelGruppen[$aUebungMuskel['muscle_group_name']] = array();
                 }
                 $aMuskelGruppen[$aUebungMuskel['muscle_group_name']]['muscle_group_name'] = $aUebungMuskel['muscle_group_name'];
@@ -244,33 +258,34 @@ class MuscleGroupsController extends AbstractController {
         }
     }
 
-//    public function getMuskelgruppeFuerEditAction() {
-//        $aParams = $this->getAllParams();
-//        $aMessages = array();
-//
-//        if (isset($aParams['id'])) {
-//            $iMuskelGruppeId = $aParams['id'];
-//            $oMuskelGruppenStorage = new Model_DbTable_MuscleGroups();
-//            $aMuskelGruppeInclMuskeln = $oMuskelGruppenStorage->findMuscleGroup($iMuskelGruppeId);
-//            $aMuskelGruppe = array();
-//
-//            foreach ($aMuskelGruppeInclMuskeln as $aMuskel) {
-//                $aMuskelGruppe['muskelgruppe_name'] = $aMuskel->muskelgruppe_name;
-//                $aMuskelGruppe['muskelgruppe_id'] = $aMuskel->muskelgruppe_id;
-//                $aMuskelGruppe['muscles'][] = $aMuskel->toArray();
-//            }
-//            $this->view->assign('aMuskelGruppe', $aMuskelGruppe);
-//        }
-//
-//        if (count($aMessages) > 0) {
-//            $this->view->assign('json_string', json_encode($aMessages));
-//        }
-//    }
+    //    public function getMuskelgruppeFuerEditAction() {
+    //        $aParams = $this->getAllParams();
+    //        $aMessages = array();
+    //
+    //        if (isset($aParams['id'])) {
+    //            $iMuskelGruppeId = $aParams['id'];
+    //            $oMuskelGruppenStorage = new Model_DbTable_MuscleGroups();
+    //            $aMuskelGruppeInclMuskeln = $oMuskelGruppenStorage->findMuscleGroup($iMuskelGruppeId);
+    //            $aMuskelGruppe = array();
+    //
+    //            foreach ($aMuskelGruppeInclMuskeln as $aMuskel) {
+    //                $aMuskelGruppe['muskelgruppe_name'] = $aMuskel->muskelgruppe_name;
+    //                $aMuskelGruppe['muskelgruppe_id'] = $aMuskel->muskelgruppe_id;
+    //                $aMuskelGruppe['muscles'][] = $aMuskel->toArray();
+    //            }
+    //            $this->view->assign('aMuskelGruppe', $aMuskelGruppe);
+    //        }
+    //
+    //        if (count($aMessages) > 0) {
+    //            $this->view->assign('json_string', json_encode($aMessages));
+    //        }
+    //    }
 
     /**
      * get all muscle groups by given search string
      */
-    public function getMuscleGroupProposalsAction() {
+    public function getMuscleGroupProposalsAction() 
+    {
         $params = $this->getRequest()->getParams();
 
         if (isset($params['search'])) {
@@ -285,7 +300,8 @@ class MuscleGroupsController extends AbstractController {
     /**
      * save muscle group
      */
-    public function saveAction() {
+    public function saveAction() 
+    {
 
         $params = $this->getRequest()->getParams();
 
@@ -347,7 +363,8 @@ class MuscleGroupsController extends AbstractController {
                         && 0 < $muscle['id']
                         && isset($muscleXMuscleGroupsCurrent[$muscle['id']])
                     ) {
-                        array_push($muscleXMuscleGroupsUpdates, array(
+                        array_push(
+                            $muscleXMuscleGroupsUpdates, array(
                                 'muscle_x_muscle_group_muscle_fk' => $muscle['id'],
                                 'muscle_x_muscle_group_id' => $muscleXMuscleGroupsCurrent[$muscle['id']]['muscle_x_muscle_group_id']
                             )
@@ -357,7 +374,8 @@ class MuscleGroupsController extends AbstractController {
                         && 0 < $muscle['id']
                         && ! isset($muscleXMuscleGroupsCurrent[$muscle['id']])
                     ) {
-                        array_push($muscleXMuscleGroupsInsert, array(
+                        array_push(
+                            $muscleXMuscleGroupsInsert, array(
                                 'muscle_id' => $muscle['id']
                             )
                         );
@@ -407,17 +425,12 @@ class MuscleGroupsController extends AbstractController {
                 ) {
                     $muscleGroupsCurrent = $muscleGroupsDb->findMuscleGroup($muscleGroupId);
 
-                    if (
-                        (
-                            isset($data['muscle_group_name'])
-                            && 0 < strlen(trim($data['muscle_group_name']))
-                            && $muscleGroupsCurrent['muscle_group_name'] != $data['muscle_group_name']
-                        ) ||
-                        (
-                            isset($muscleGroupsCurrent['muscle_group_name'])
-                            && 0 < strlen(trim($muscleGroupsCurrent['muscle_group_name']))
-                            && ! strlen(trim($muscleGroupsCurrent['muscle_group_name']))
-                        )
+                    if ((                        isset($data['muscle_group_name'])
+                        && 0 < strlen(trim($data['muscle_group_name']))
+                        && $muscleGroupsCurrent['muscle_group_name'] != $data['muscle_group_name']) 
+                        || (                        isset($muscleGroupsCurrent['muscle_group_name'])
+                        && 0 < strlen(trim($muscleGroupsCurrent['muscle_group_name']))
+                        && ! strlen(trim($muscleGroupsCurrent['muscle_group_name'])))
                     ) {
                         if (isset($a_data['muscle_group_name'])
                             && 0 < strlen(trim($a_data['muscle_group_name']))
@@ -483,8 +496,10 @@ class MuscleGroupsController extends AbstractController {
                         $data['muscle_x_muscle_group_update_date'] = date("Y-m-d H:i:s");
                         $data['muscle_x_muscle_group_update_user_fk'] = $userId;
 
-                        $muscleXMuscleGroupsDb->updateMuscleGroupMuscle($data,
-                            $muscleXMuscleGroupMuscle['muscleXMuscleGroupId']);
+                        $muscleXMuscleGroupsDb->updateMuscleGroupMuscle(
+                            $data,
+                            $muscleXMuscleGroupMuscle['muscleXMuscleGroupId']
+                        );
                     }
 
                     foreach ($muscleXMuscleGroupsDeletes as $muscleXMuscleGroupId) {

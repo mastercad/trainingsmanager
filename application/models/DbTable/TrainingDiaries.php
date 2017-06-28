@@ -22,7 +22,7 @@ class TrainingDiaries extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'training_diaries';
+    protected $_name     = 'training_diaries';
     /**
      * @var string
      */
@@ -37,7 +37,9 @@ class TrainingDiaries extends AbstractDbTable
      */
     public function findActualTrainingByTrainingPlanExerciseId($iTrainingPlanExerciseId)
     {
-        return $this->fetchRow('training_training_plan_x_exercise_fk = ' . $iTrainingPlanExerciseId,
-            'training_create_date DESC');
+        return $this->fetchRow(
+            'training_training_plan_x_exercise_fk = ' . $iTrainingPlanExerciseId,
+            'training_create_date DESC'
+        );
     }
 }

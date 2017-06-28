@@ -1,5 +1,5 @@
 <?php
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 class IndexController extends AbstractController
 {
@@ -42,14 +42,13 @@ class IndexController extends AbstractController
                 echo "Login Erfolgreich!";
             }
         } elseif (true === isset($oZendAuth->b_logged_in)
-            && $oZendAuth->b_logged_in == TRUE
+            && $oZendAuth->b_logged_in == true
         ) {
             if (isset($a_params['ajax'])) {
                 $a_messages = array();
                 $a_fehler = "Login Fehlgeschlagen!<br /><br />";
 
-                if(is_array($this->view->a_messages))
-                {
+                if(is_array($this->view->a_messages)) {
                     $a_fehler .= implode("<br />", $this->view->a_messages);
                 }
 
@@ -132,9 +131,9 @@ class IndexController extends AbstractController
                 $a_data['user_login'] = $str_register_email;
             }
             // valid aber existiert
-            else if($b_valid_email &&
-                    $b_email_exists)
-            {
+            else if($b_valid_email 
+                && $b_email_exists
+            ) {
                 $b_all_valid = false;
                 $i_count_messages = count($a_messages);
                 $a_messages[$i_count_messages]['type'] = "fehler";
@@ -142,8 +141,7 @@ class IndexController extends AbstractController
                 $a_messages[$i_count_messages]['result'] = false;
             }
             // nicht valid
-            else if(!$b_valid_email)
-            {
+            else if(!$b_valid_email) {
                 $b_all_valid = false;
                 $i_count_messages = count($a_messages);
                 $a_messages[$i_count_messages]['type'] = "fehler";
@@ -151,8 +149,7 @@ class IndexController extends AbstractController
                 $a_messages[$i_count_messages]['result'] = false;
             }
 
-            if(strlen(trim($str_register_passwort)) >= 8)
-            {
+            if(strlen(trim($str_register_passwort)) >= 8) {
                 $a_data['user_passwort'] = md5($str_register_passwort);
             }
             else
@@ -164,18 +161,15 @@ class IndexController extends AbstractController
                 $a_messages[$i_count_messages]['result'] = false;
             }
 
-            if(strlen(trim($str_register_vorname)) > 0)
-            {
+            if(strlen(trim($str_register_vorname)) > 0) {
                 $a_data['user_vorname'] = $str_register_vorname;
             }
 
-            if(strlen(trim($str_register_nachname)) > 0)
-            {
+            if(strlen(trim($str_register_nachname)) > 0) {
                 $a_data['user_nachname'] = $str_register_nachname;
             }
 
-            if( true === $b_all_valid)
-            {
+            if(true === $b_all_valid) {
                 $a_data['user_status_fk'] = 2;
                 $a_data['user_rechte_gruppe_fk'] = 2;
 
@@ -237,9 +231,9 @@ class IndexController extends AbstractController
         $a_params = $this->getRequest()->getParams();
         $a_messages = array();
 
-        if($this->getRequest()->isPost() &&
-           isset($a_params['passwort_vergessen_email']))
-        {
+        if($this->getRequest()->isPost() 
+            && isset($a_params['passwort_vergessen_email'])
+        ) {
             $str_email = base64_decode($a_params['passwort_vergessen_email']);
 
             $obj_tools = new CAD_Tools();
@@ -248,21 +242,20 @@ class IndexController extends AbstractController
             $str_new_passwort = $obj_tools->generatePasswort();
 
             $b_email_valid = $obj_valid_email->isValid($str_email);
-            if($b_email_valid)
-            {
+            if($b_email_valid) {
                 $a_user = $obj_db_users->getUserByEmail($str_email);
-                if(is_array($a_user) &&
-                   count($a_user) > 0)
-                {
+                if(is_array($a_user) 
+                    && count($a_user) > 0
+                ) {
                     $str_user_name = $str_email;
-                    if(isset($a_user['user_vorname']) &&
-                       strlen(trim($a_user['user_vorname'])))
-                    {
+                    if(isset($a_user['user_vorname']) 
+                        && strlen(trim($a_user['user_vorname']))
+                    ) {
                         $str_user_name = $a_user['user_vorname'] . " ";
                     }
-                    if(isset($a_user['user_nachname']) &&
-                       strlen(trim($a_user['user_nachname'])))
-                    {
+                    if(isset($a_user['user_nachname']) 
+                        && strlen(trim($a_user['user_nachname']))
+                    ) {
                         $str_user_name .= $a_user['user_nachname'];
                     }
 
@@ -282,13 +275,11 @@ class IndexController extends AbstractController
 
                     $result = $obj_mail->send();
 
-                    if($result)
-                    {
+                    if($result) {
                         $a_data = array();
                         $a_data['user_passwort'] = md5($str_new_passwort);
 
-                        if($obj_db_users->updateUser($a_data, $a_user['user_id']))
-                        {
+                        if($obj_db_users->updateUser($a_data, $a_user['user_id'])) {
                             $i_count_messages = count($a_messages);
                             $a_messages[$i_count_messages]['type'] = "meldung";
                             $a_messages[$i_count_messages]['confirm_func'] = "CAD.removeLastObject();";

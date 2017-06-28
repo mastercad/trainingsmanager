@@ -13,19 +13,21 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 /**
  * Class ErrorController
  */
-class ErrorController extends AbstractController {
+class ErrorController extends AbstractController
+{
 
     /**
      * error action
      *
      * @throws \Zend_Controller_Response_Exception
      */
-    public function errorAction() {
+    public function errorAction() 
+    {
         $errors = $this->_getParam('error_handler');
         
         if (!$errors
@@ -36,20 +38,20 @@ class ErrorController extends AbstractController {
         }
         
         switch ($errors->type) {
-            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
-            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
-            case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
-                // 404 error -- controller or action not found
-                $this->getResponse()->setHttpResponseCode(404);
-                $priority = Zend_Log::NOTICE;
-                $this->view->message = 'Page not found';
-                break;
-            default:
-                // application error
-                $this->getResponse()->setHttpResponseCode(500);
-                $priority = Zend_Log::CRIT;
-                $this->view->message = 'Application error';
-                break;
+        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ROUTE:
+        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_CONTROLLER:
+        case Zend_Controller_Plugin_ErrorHandler::EXCEPTION_NO_ACTION:
+            // 404 error -- controller or action not found
+            $this->getResponse()->setHttpResponseCode(404);
+            $priority = Zend_Log::NOTICE;
+            $this->view->message = 'Page not found';
+            break;
+        default:
+            // application error
+            $this->getResponse()->setHttpResponseCode(500);
+            $priority = Zend_Log::CRIT;
+            $this->view->message = 'Application error';
+            break;
         }
         
         // Log exception, if logger available
@@ -74,9 +76,9 @@ class ErrorController extends AbstractController {
     {
         $a_params = $this->getRequest()->getParams();
 
-//        echo "<pre>";
-//        var_dump($a_params);
-//        echo "</pre>";
+        //        echo "<pre>";
+        //        var_dump($a_params);
+        //        echo "</pre>";
     }
 
     /**
@@ -96,7 +98,8 @@ class ErrorController extends AbstractController {
      *
      * @throws \Zend_Exception
      */
-    private function getLog() {
+    private function getLog() 
+    {
         $bootstrap = $this->getInvokeArg('bootstrap');
         if (true === $bootstrap->hasResource('Log')) {
             return $bootstrap->getResource('Log');

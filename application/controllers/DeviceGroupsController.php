@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use \Model\DbTable\DeviceGroups;
 use \Model\DbTable\Devices;
@@ -29,19 +29,25 @@ class DeviceGroupsController extends AbstractController
     /**
      * initial function for controller
      */
-    public function init() {
+    public function init() 
+    {
         if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
-                'text/javascript');
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
-                'text/javascript');
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript'
+            );
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript'
+            );
         }
     }
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
         $deviceGroupsDb = new DeviceGroups();
 
         $deviceGroupsCollection = $deviceGroupsDb->findAllDeviceGroups()->toArray();
@@ -62,7 +68,8 @@ class DeviceGroupsController extends AbstractController
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction() 
+    {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
@@ -85,7 +92,8 @@ class DeviceGroupsController extends AbstractController
      *
      * @return string
      */
-    private function generateDevicesContent($deviceId) {
+    private function generateDevicesContent($deviceId) 
+    {
         $content = '';
 
         $devicesDb = new Devices();
@@ -103,20 +111,22 @@ class DeviceGroupsController extends AbstractController
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction() 
+    {
         $this->forward('edit');
     }
 
     /**
      * edit action
      */
-    public function editAction() {
+    public function editAction() 
+    {
         $params = $this->getRequest()->getParams();
 
-        if(isset($params['id']) &&
-            is_numeric($params['id']) &&
-            $params['id'] > 0)
-        {
+        if(isset($params['id']) 
+            && is_numeric($params['id']) 
+            && $params['id'] > 0
+        ) {
             $i_geraetegruppe_id = $params['id'];
 
             $obj_db_geraetegruppen = new DeviceGroups();
@@ -140,12 +150,13 @@ class DeviceGroupsController extends AbstractController
     /**
      * delete action
      */
-    public function deleteAction() {
+    public function deleteAction() 
+    {
         $params = $this->getRequest()->getParams();
 
         if (isset($params['id'])
-           && is_numeric($params['id'])
-           && 0 < $params['id']
+            && is_numeric($params['id'])
+            && 0 < $params['id']
         ) {
             $i_geraetegruppe_id = $params['id'];
 
@@ -157,18 +168,18 @@ class DeviceGroupsController extends AbstractController
                 if (is_array($a_geraete)
                     && 0 < count($a_geraete)
                 ) {
-//                    foreach ($a_geraete as $a_geraet) {
-//                        $a_uebungen = $obj_db_uebungen->findExerciseForDevice($a_geraet['geraet_id']);
-//                        if(is_array($a_uebungen) &&
-//                           count($a_uebungen) > 0)
-//                        {
-//                            foreach($a_uebungen as $a_uebung)
-//                            {
-//                                $obj_db_uebung_muskelgruppen->loescheUebungMuskelgruppeFuerUebung($a_uebung['uebung_id']);
-//                                $obj_db_uebungen->deleteExercise($a_uebung['uebung_id']);
-//                            }
-//                        }
-//                    }
+                    //                    foreach ($a_geraete as $a_geraet) {
+                    //                        $a_uebungen = $obj_db_uebungen->findExerciseForDevice($a_geraet['geraet_id']);
+                    //                        if(is_array($a_uebungen) &&
+                    //                           count($a_uebungen) > 0)
+                    //                        {
+                    //                            foreach($a_uebungen as $a_uebung)
+                    //                            {
+                    //                                $obj_db_uebung_muskelgruppen->loescheUebungMuskelgruppeFuerUebung($a_uebung['uebung_id']);
+                    //                                $obj_db_uebungen->deleteExercise($a_uebung['uebung_id']);
+                    //                            }
+                    //                        }
+                    //                    }
                 }
 
                 $obj_db_geraetegruppen_geraete->deleteAllDeviceGroupDevicesByDeviceGroupId($i_geraetegruppe_id);
@@ -190,7 +201,8 @@ class DeviceGroupsController extends AbstractController
     /**
      * save action
      */
-    public function saveAction() {
+    public function saveAction() 
+    {
         $params = $this->getRequest()->getParams();
         $userId = $this->findCurrentUserId();
 
@@ -245,11 +257,12 @@ class DeviceGroupsController extends AbstractController
                         && 0 < $device['id']
                         && !isset($deviceGroupDevicesCurrent[$device['id']])
                     ) {
-                        array_push($deviceGroupDevicesInserts, array(
+                        array_push(
+                            $deviceGroupDevicesInserts, array(
                             'device_id' => $device['id'])
                         );
                         $countDevicesInDeviceGroup++;
-                    // update routine, but nothing to do else prevent deletion for device in group
+                        // update routine, but nothing to do else prevent deletion for device in group
                     } else if (isset($device['id'])
                         && 0 < $device['id']
                         && isset($deviceGroupDevicesCurrent[$device['id']])
@@ -298,17 +311,12 @@ class DeviceGroupsController extends AbstractController
                 ) {
                     $deviceGroupCurrent = $deviceGroupsDb->findDeviceGroup($deviceGroupId);
 
-                    if (
-                        (
-                            isset($data['device_group_name'])
-                            && 0 < strlen(trim($data['device_group_name']))
-                            && $deviceGroupCurrent['device_group_name'] != $data['device_group_name']
-                        ) ||
-                        (
-                            isset($deviceGroupCurrent['device_group_name'])
-                            && 0 < strlen(trim($deviceGroupCurrent['device_group_name']))
-                            && !strlen(trim($deviceGroupCurrent['device_group_seo_link']))
-                        )
+                    if ((                        isset($data['device_group_name'])
+                        && 0 < strlen(trim($data['device_group_name']))
+                        && $deviceGroupCurrent['device_group_name'] != $data['device_group_name']) 
+                        || (                        isset($deviceGroupCurrent['device_group_name'])
+                        && 0 < strlen(trim($deviceGroupCurrent['device_group_name']))
+                        && !strlen(trim($deviceGroupCurrent['device_group_seo_link'])))
                     ) {
                         if (isset($data['device_group_name'])
                             && 0 < strlen(trim($data['device_group_name']))
@@ -333,7 +341,7 @@ class DeviceGroupsController extends AbstractController
 
                     $deviceGroupsDb->updateDeviceGroup($data, $deviceGroupId);
                     GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde erfolgreich bearbeitet!', Message::STATUS_OK);
-                // neu anlegen
+                    // neu anlegen
                 } else if (is_array($data)
                     && 0 < count($data)
                 ) {
@@ -359,10 +367,9 @@ class DeviceGroupsController extends AbstractController
                     GlobalMessageHandler::appendMessage('Diese Geraetegruppe wurde nicht geändert!', Message::STATUS_ERROR);
                 }
 
-                if ($deviceGroupId > 0 &&
-                    (
-                        count($deviceGroupDevicesInserts) > 0 ||
-                        count($deviceGroupDevicesDeletes) > 0)
+                if ($deviceGroupId > 0 
+                    && (                    count($deviceGroupDevicesInserts) > 0 
+                    || count($deviceGroupDevicesDeletes) > 0)
                 ) {
                     GlobalMessageHandler::appendMessage('Die Geraete der Geraetegruppen wurden erfolgreich geändert!', Message::STATUS_OK);
                 }

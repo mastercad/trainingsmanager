@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\Muscles;
 use Service\GlobalMessageHandler;
@@ -28,19 +28,25 @@ use Model\DbTable\ExerciseXMuscle;
  */
 class MusclesController extends AbstractController
 {
-    public function init() {
+    public function init() 
+    {
         if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
-                'text/javascript');
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
-                'text/javascript');
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript'
+            );
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript'
+            );
         }
     }
 
     /**
      * shows overview over all stored muscles in database
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
         $musclesDb = new Muscles();
         $musclesCollection = $musclesDb->findAllMuscles();
 
@@ -64,7 +70,8 @@ class MusclesController extends AbstractController
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction() 
+    {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
@@ -81,7 +88,8 @@ class MusclesController extends AbstractController
     /**
      * delete action
      */
-    public function deleteAction() {
+    public function deleteAction() 
+    {
 
         $id = intval($this->getParam('id'));
         if (0 < $id) {
@@ -99,7 +107,8 @@ class MusclesController extends AbstractController
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction() 
+    {
         $this->forward('edit');
     }
 
@@ -125,7 +134,8 @@ class MusclesController extends AbstractController
     /**
      * get muscles for edit action
      */
-    public function getMuscleForEditAction() {
+    public function getMuscleForEditAction() 
+    {
         $params = $this->getRequest()->getParams();
         
         if (isset($params['id'])) {
@@ -143,7 +153,8 @@ class MusclesController extends AbstractController
      *
      * @throws \Zend_Exception
      */
-    public function getMuscleProposalsAction() {
+    public function getMuscleProposalsAction() 
+    {
         $params = $this->getRequest()->getParams();
         
         if (isset($params['search'])) {
@@ -154,9 +165,9 @@ class MusclesController extends AbstractController
             $muscleProposalsContent = Zend_Registry::get('Zend_Translate')->translate('label_no_muscles_found');
 
             if((is_array($musclesCollection)
-                    || $musclesCollection instanceof Zend_Db_Table_Rowset)
-                && 0 < count($musclesCollection))
-            {
+                || $musclesCollection instanceof Zend_Db_Table_Rowset)
+                && 0 < count($musclesCollection)
+            ) {
                 $proposalContent = '';
                 foreach($musclesCollection as $muscle) {
                     $this->view->assign('proposalText', $muscle['muscle_name']);
@@ -188,7 +199,7 @@ class MusclesController extends AbstractController
             $data = array();
             
             if (isset($params['muscle_name'])
-               && 0 < strlen(trim($params['muscle_name']))
+                && 0 < strlen(trim($params['muscle_name']))
             ) {
                 $muscleName = base64_decode($params['muscle_name']);
             }
@@ -198,7 +209,7 @@ class MusclesController extends AbstractController
             }
             
             if (0 == strlen(trim($muscleName))
-               && !$muscleId
+                && !$muscleId
             ) {
                 GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_needs_name'), Message::STATUS_ERROR);
                 $hasError = true;
@@ -210,7 +221,7 @@ class MusclesController extends AbstractController
 
             // keine ID aber Name => neu anlegen
             if (! $muscleId
-               && strlen(trim($muscleName))
+                && strlen(trim($muscleName))
             ) {
                 $muscleCurrent = $musclesDb->findMusclesByName($muscleName);
                 if (0 < count($muscleCurrent)) {
@@ -222,33 +233,27 @@ class MusclesController extends AbstractController
             if (!$hasError) {
                 // updaten?
                 if (is_numeric($muscleId)
-                   && 0 < $muscleId
-                   && 0 < count($data)
+                    && 0 < $muscleId
+                    && 0 < count($data)
                 ) {
                     $muscleCurrent = $musclesDb->findMuscle($muscleId);
-                    if (
-                        (
-                            isset($data['muscle_name'])
+                    if ((                        isset($data['muscle_name'])
+                        && 0 < strlen(trim($data['muscle_name']))
+                        && $muscleCurrent['muscle_name'] != $data['muscle_name']) 
+                        || (                        isset($muscleCurrent['muscle_name'])
+                        && 0 < strlen(trim($muscleCurrent['muscle_name']))
+                        && !strlen(trim($muscleCurrent['muscle_name'])))
+                    ) {
+                        if (isset($data['muscle_name'])
                             && 0 < strlen(trim($data['muscle_name']))
-                            && $muscleCurrent['muscle_name'] != $data['muscle_name']
-                        ) ||
-                        (
-                            isset($muscleCurrent['muscle_name'])
-                            && 0 < strlen(trim($muscleCurrent['muscle_name']))
-                            && !strlen(trim($muscleCurrent['muscle_name']))
-                        )
-                    )
-                    {
-                            if (isset($data['muscle_name'])
-                               && 0 < strlen(trim($data['muscle_name']))
-                            ) {
-                                $muscleName = $data['muscle_name'];
-                            }
-                            else if(isset($muscleCurrent['muscle_name']) &&
-                                    strlen(trim($muscleCurrent['muscle_name'])) > 0)
-                            {
-                                $muscleName = $musclesDb['muscle_name'];
-                            }
+                        ) {
+                            $muscleName = $data['muscle_name'];
+                        }
+                        else if(isset($muscleCurrent['muscle_name']) 
+                            && strlen(trim($muscleCurrent['muscle_name'])) > 0
+                        ) {
+                            $muscleName = $musclesDb['muscle_name'];
+                        }
                             $cadSeo->setLinkName($muscleName);
                             $cadSeo->setDbTable($musclesDb);
                             $cadSeo->setTableFieldName("muscle_seo_link");
@@ -265,8 +270,7 @@ class MusclesController extends AbstractController
                     GlobalMessageHandler::appendMessage($this->translate('tooltip_muscle_edited_successfully'), Message::STATUS_OK);
                 }
                 // neu anlegen
-                else if(count($data) > 0)
-                {
+                else if(count($data) > 0) {
                     $cadSeo->setLinkName($data['muscle_name']);
                     $cadSeo->setDbTable($musclesDb);
                     $cadSeo->setTableFieldName("muscle_seo_link");
@@ -282,8 +286,8 @@ class MusclesController extends AbstractController
 
                     if ($muscleId) {
                         GlobalMessageHandler::appendMessage('Dieser Muskel wurde erfolgreich angelegt!', Message::STATUS_OK);
-//                    } else {
-//                        GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Message::STATUS_ERROR);
+                        //                    } else {
+                        //                        GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Message::STATUS_ERROR);
                     }
                 } else {
                     GlobalMessageHandler::appendMessage('Dieser Muskel wurde nicht geändert!', Message::STATUS_ERROR);
@@ -293,8 +297,8 @@ class MusclesController extends AbstractController
                     /* bilder verschieben */
                     /*
                     $obj_files = new CAD_File();
-//                    $str_src_path = getcwd() . '/tmp/muscle-groups/';
-//                    $str_dest_path = getcwd() . '/images/content/dynamisch/muscle-groups/' . $i_muskelgruppe_id . '/';
+                    //                    $str_src_path = getcwd() . '/tmp/muscle-groups/';
+                    //                    $str_dest_path = getcwd() . '/images/content/dynamisch/muscle-groups/' . $i_muskelgruppe_id . '/';
 
                     if($obj_files->checkAndCreateDir($str_dest_path))
                     {
@@ -305,8 +309,8 @@ class MusclesController extends AbstractController
                     }
                     */
                 }
-//            } else {
-//                GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Message::STATUS_ERROR);
+                //            } else {
+                //                GlobalMessageHandler::appendMessage('Beim Speichern des Muskels trat ein unbekannter Fehler auf!', Message::STATUS_ERROR);
             }
         } else {
             GlobalMessageHandler::appendMessage('Falscher Aufruf von Muskel speichern!', Message::STATUS_ERROR);
@@ -321,10 +325,10 @@ class MusclesController extends AbstractController
         $params = $this->getRequest()->getParams();
         $messageCollection = array();
         
-        if(isset($params['id']) &&
-           is_numeric($params['id']) &&
-           $params['id'] > 0)
-        {
+        if(isset($params['id']) 
+            && is_numeric($params['id']) 
+            && $params['id'] > 0
+        ) {
             $i_muskel_id = $params['id'];
             $b_fehler = false;
             
@@ -334,8 +338,7 @@ class MusclesController extends AbstractController
             $obj_db_uebungen = new Exercises();
             $obj_db_uebung_muskelgruppen = new ExerciseXMuscle();
             
-            if($obj_db_muskeln->deleteMuscle($i_muskel_id))
-            {
+            if($obj_db_muskeln->deleteMuscle($i_muskel_id)) {
                 array_push($messageCollection, array('type' => 'meldung', 'message' => 'Muskel erfolgreich gelöscht!', 'result' => true));
             }
             else
@@ -347,18 +350,17 @@ class MusclesController extends AbstractController
             // muscle-groups für muskel holen
             $a_muskelgruppen = $obj_db_muskelgruppen_muskeln->findMuscleGroupsByMuscleId($i_muskel_id);
             
-            if(is_array($a_muskelgruppen) &&
-               count($a_muskelgruppen) > 0 &&
-               !$b_fehler)
-            {
+            if(is_array($a_muskelgruppen) 
+                && count($a_muskelgruppen) > 0 
+                && !$b_fehler
+            ) {
                 foreach($a_muskelgruppen as $a_muskelgruppe)
                 {
                     // exercises für muskelgruppe holen
                     $a_uebungen = $obj_db_uebung_muskelgruppen->getUebungenFuerMuskelgruppe($a_muskelgruppe['muskelgruppe_muskel_muskelgruppe_fk']);
                     
                     // betroffene übungen löschen
-                    if(is_array($a_uebungen))
-                    {
+                    if(is_array($a_uebungen)) {
                         foreach($a_uebungen as $a_uebung)
                         {
                             $obj_db_uebungen->deleteExercise($a_uebung['uebung_muskelgruppe_uebung_fk']);

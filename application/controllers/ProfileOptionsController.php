@@ -12,38 +12,43 @@
  * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     http://www.byte-artist.de
  */
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 /**
  * Class ProfileOptionsController
  */
-class ProfileOptionsController extends AbstractController {
+class ProfileOptionsController extends AbstractController
+{
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
 
     }
 
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction() 
+    {
 
     }
 
     /**
      * edit action
      */
-    public function editAction() {
+    public function editAction() 
+    {
 
     }
 
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction() 
+    {
 
     }
 }

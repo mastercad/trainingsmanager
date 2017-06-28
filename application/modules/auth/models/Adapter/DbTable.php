@@ -8,7 +8,6 @@ use Zend_Db_Expr;
 /**
  *
  * @author Andreas Kempe / andreas.kempe@byte-artist.de
- *
  */
 
 class DbTable extends Zend_Auth_Adapter_DbTable
@@ -43,12 +42,12 @@ class DbTable extends Zend_Auth_Adapter_DbTable
             $this->_zendDb->quoteInto(
                 $this->_zendDb->quoteIdentifier($this->_credentialColumn, true)
                 . ' = ' . $this->_credentialTreatment, $this->_credential
-                )
+            )
             . ' THEN 1 ELSE 0 END) AS '
             . $this->_zendDb->quoteIdentifier(
                 $this->_zendDb->foldCase('zend_auth_credential_match')
-                )
-            );
+            )
+        );
 
         // get select
         $dbSelect = clone $this->getDbSelect();

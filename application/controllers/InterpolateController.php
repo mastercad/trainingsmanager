@@ -13,23 +13,26 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Service\Interpolate;
 
-class InterpolateController extends AbstractController {
+class InterpolateController extends AbstractController
+{
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
 
     }
 
     /**
      * interpolate training diary
      */
-    public function trainingDiaryAction() {
+    public function trainingDiaryAction() 
+    {
         $userId = $this->getParam('userId');
 
         if (0 < $userId) {

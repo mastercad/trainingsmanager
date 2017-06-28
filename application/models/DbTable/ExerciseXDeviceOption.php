@@ -21,11 +21,12 @@ use Exception;
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class ExerciseXDeviceOption extends AbstractDbTable {
+class ExerciseXDeviceOption extends AbstractDbTable
+{
     /**
      * @var string
      */
-    protected $_name 	= 'exercise_x_device_option';
+    protected $_name     = 'exercise_x_device_option';
     /**
      * @var string
      */
@@ -34,12 +35,13 @@ class ExerciseXDeviceOption extends AbstractDbTable {
     /**
      * find device options for exercise
      *
-     * @param int $exerciseId
+     * @param int      $exerciseId
      * @param null|int $deviceOptionId
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findDeviceOptionsForExercise($exerciseId, $deviceOptionId = null) {
+    public function findDeviceOptionsForExercise($exerciseId, $deviceOptionId = null) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect
@@ -67,7 +69,8 @@ class ExerciseXDeviceOption extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findDeviceOptionForExercise($exerciseId, $deviceOptionId) {
+    public function findDeviceOptionForExercise($exerciseId, $deviceOptionId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect
@@ -95,7 +98,8 @@ class ExerciseXDeviceOption extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findExercisesForDeviceOption($deviceOptionId) {
+    public function findExercisesForDeviceOption($deviceOptionId) 
+    {
         try {
             return $this->fetchAll("exercise_x_device_option_device_option_fk = '" . $deviceOptionId . "'");
         } catch (Exception $oException) {
@@ -112,7 +116,8 @@ class ExerciseXDeviceOption extends AbstractDbTable {
      *
      * @return bool|mixed
      */
-    public function saveExerciseXDeviceOption($aData) {
+    public function saveExerciseXDeviceOption($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch (Exception $oException) {
@@ -126,11 +131,12 @@ class ExerciseXDeviceOption extends AbstractDbTable {
      * update exercise device option data by given exercise device option id
      *
      * @param array $aData
-     * @param int $exerciseXDeviceOptionId
+     * @param int   $exerciseXDeviceOptionId
      *
      * @return bool|int
      */
-    public function updateExerciseXDeviceOption($aData, $exerciseXDeviceOptionId) {
+    public function updateExerciseXDeviceOption($aData, $exerciseXDeviceOptionId) 
+    {
         try {
             return $this->update($aData, "exercise_x_device_option_id = '" . $exerciseXDeviceOptionId . "'");
         } catch (Exception $oException) {
@@ -147,9 +153,10 @@ class ExerciseXDeviceOption extends AbstractDbTable {
      *
      * @return bool|int
      */
-    public function deleteExerciseXDeviceOption($exerciseXDeviceOptionId) {
+    public function deleteExerciseXDeviceOption($exerciseXDeviceOptionId) 
+    {
         try {
-            return $this->delete( "exercise_x_device_option_id = '" . $exerciseXDeviceOptionId . "'");
+            return $this->delete("exercise_x_device_option_id = '" . $exerciseXDeviceOptionId . "'");
         } catch (Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";

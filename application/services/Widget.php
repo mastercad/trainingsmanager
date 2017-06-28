@@ -12,9 +12,11 @@ namespace Service;
 
 
 
-class Widget {
+class Widget
+{
 
-    public function generateWidgetContent($widget) {
+    public function generateWidgetContent($widget) 
+    {
 
     }
 }

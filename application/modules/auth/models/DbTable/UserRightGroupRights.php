@@ -14,15 +14,14 @@ use Exception;
 
 class UserRightGroupRights extends Zend_Db_Table_Abstract
 {
-    protected $_name 	= 'user_right_group_rights';
+    protected $_name     = 'user_right_group_rights';
     protected $_primary = 'user_right_group_right_id';
 
     protected static $_oMeta;
 
     public function init()
     {
-        if(!self::$_oMeta)
-        {
+        if(!self::$_oMeta) {
             self::$_oMeta = $this->info();
         }
     }

@@ -26,17 +26,18 @@ namespace Auth\Model\Assertion;
  *
  * @package Auth\Model\Assertion
  */
-class TrainingPlans extends AbstractAssertion {
-
+class TrainingPlans extends AbstractAssertion
+{
     /**
      * @inheritdoc
      */
-    protected function considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege) {
+    protected function considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege)
+    {
         $bReturn = false;
 
         if (parent::considerAuthAclRole($oAcl, $oRole, $oResource, $sPrivilege)
             || (null !== $oResource->getMemberId()
-                && $oRole->getMemberId() === $oResource->getAlternativeMemberId())
+            && $oRole->getMemberId() === $oResource->getAlternativeMemberId())
         ) {
             $bReturn = true;
         }

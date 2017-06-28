@@ -8,9 +8,11 @@
 
 use Service\GlobalMessageHandler;
 
-class MessageHelper extends Zend_Controller_Action_Helper_Abstract {
+class MessageHelper extends Zend_Controller_Action_Helper_Abstract
+{
 
-    public function postDispatch() {
+    public function postDispatch() 
+    {
         if ($this->getRequest()->getParam('ajax')) {
             $messageEntity = GlobalMessageHandler::getMessageEntity();
             if (empty($messageEntity->getState())) {

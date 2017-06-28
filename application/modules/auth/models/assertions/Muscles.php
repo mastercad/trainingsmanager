@@ -26,5 +26,6 @@ namespace Auth\Model\Assertion;
  *
  * @package Auth\Model\Assertion
  */
-class Muscles extends AbstractAssertion {
+class Muscles extends AbstractAssertion
+{
 }

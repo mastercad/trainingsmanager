@@ -21,13 +21,17 @@ use Service\Translator;
 
 class AccessControl extends Zend_Controller_Plugin_Abstract
 {
-    /** @var Auth|null $_auth */
+    /**
+     * @var Auth|null $_auth 
+     */
     protected $_auth = null;
 
-    /** @var null|Zend_Acl  */
+    /**
+     * @var null|Zend_Acl  
+     */
     protected $_acl = null;
     
-//    protected $b_logged_in = false;
+    //    protected $b_logged_in = false;
     protected $b_logged_out = false;
     protected $b_session_timed_out = false;
     protected $a_messages = null;
@@ -44,13 +48,13 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
         $this->_acl  = $acl;
     }
 
-    public function	routeStartup(Zend_Controller_Request_Abstract $request)
+    public function routeStartup(Zend_Controller_Request_Abstract $request)
     {
         $obj_user = null;
         $username = '';
         $password = '';
 
-//        $logger = Zend_Registry::get(ZEND_LOGGER);
+        //        $logger = Zend_Registry::get(ZEND_LOGGER);
 
         $zend_auth_namespace = new Zend_Session_Namespace('Zend_Auth');
 
@@ -295,8 +299,8 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
         $view = Zend_Registry::get('view');
 
         $module     = $request->getModuleName() ? $request->getModuleName() : 'default';
-        $controller	= $request->getControllerName();
-        $action 	= $request->getActionName();
+        $controller    = $request->getControllerName();
+        $action     = $request->getActionName();
 
         $a_params = $request->getParams();
 
@@ -342,7 +346,9 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
                 $dbClassName = 'Model\DbTable\\'.$currentControllerName;
 
                 if (class_exists($dbClassName)) {
-                    /** @var AbstractDbTable $db */
+                    /**
+ * @var AbstractDbTable $db 
+*/
                     $db = new $dbClassName();
                     $row = $db->findByPrimary($id);
 
@@ -384,7 +390,8 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
         return $this;
     }
 
-    protected function getCurrentUserRole() {
+    protected function getCurrentUserRole() 
+    {
 
         if ($this->_auth->hasIdentity()) {
             $authData = $this->_auth->getIdentity();
@@ -398,9 +405,13 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
 
     private function convertControllerName($controllerName)
     {
-        return ucFirst(preg_replace_callback('/(\-[a-z]{1})/', function(array $piece) {
-            return ucfirst(str_replace('-', '', $piece[1]));
-        }, $controllerName));
+        return ucFirst(
+            preg_replace_callback(
+                '/(\-[a-z]{1})/', function (array $piece) {
+                    return ucfirst(str_replace('-', '', $piece[1]));
+                }, $controllerName
+            )
+        );
     }
 
     private function translate($key)

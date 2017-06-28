@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 /**
  * Class WidgetsController
@@ -21,27 +21,32 @@ require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
 class WidgetsController extends AbstractController
 {
     // collect all available widgets an show it
-    public function indexAction() {
+    public function indexAction() 
+    {
 
     }
 
     // show specific widget
-    public function showAction() {
+    public function showAction() 
+    {
 
     }
 
     // edit specific widget
-    public function editAction() {
+    public function editAction() 
+    {
 
     }
 
     // new widget
-    public function newAction() {
+    public function newAction() 
+    {
 
     }
 
     // delete specific widget
-    public function deleteAction() {
+    public function deleteAction() 
+    {
 
     }
 }

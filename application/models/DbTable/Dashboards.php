@@ -23,10 +23,14 @@ use Zend_Db_Table_Rowset_Abstract;
  */
 class Dashboards extends AbstractDbTable
 {
-    /** @var string */
-    protected $_name 	= 'dashboards';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'dashboards';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'dashboard_id';
 
     /**
@@ -34,7 +38,8 @@ class Dashboards extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllDashboards() {
+    public function findAllDashboards() 
+    {
         return $this->fetchAll(null, "dashboard_name");
     }
 
@@ -45,7 +50,8 @@ class Dashboards extends AbstractDbTable
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
-    public function findActiveDashboardByUserId($userId) {
+    public function findActiveDashboardByUserId($userId) 
+    {
         try {
             return $this->fetchRow("dashboard_flag_active = 1 AND dashboard_user_fk = '" . $userId . "'");
         } catch( Exception $oException) {
@@ -62,7 +68,8 @@ class Dashboards extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveDashboard($aData) {
+    public function saveDashboard($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch( Exception $oException) {
@@ -80,7 +87,8 @@ class Dashboards extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function updateDashboard($aData, $dashboardId) {
+    public function updateDashboard($aData, $dashboardId) 
+    {
         try {
             return $this->update($aData, "dashboard_id = '" . $dashboardId . "'");
         } catch( Exception $oException) {
@@ -97,7 +105,8 @@ class Dashboards extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteDashboard($dashboardId) {
+    public function deleteDashboard($dashboardId) 
+    {
         try {
             return $this->delete("dashboard_id = '" . $dashboardId . "'");
         } catch( Exception $oException) {

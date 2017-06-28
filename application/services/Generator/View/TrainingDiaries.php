@@ -19,18 +19,21 @@ use Service\Generator\View\DeviceOptions;
 
 require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
 
-class TrainingDiaries extends GeneratorAbstract{
+class TrainingDiaries extends GeneratorAbstract
+{
 
     private $exercisesCount = 0;
 
-    public function start() {
+    public function start() 
+    {
 
     }
 
     /**
      * generates trainingPlan overview, if is the trainingplan not started already
      */
-    private function generateIntro() {
+    private function generateIntro() 
+    {
 
     }
 
@@ -41,7 +44,8 @@ class TrainingDiaries extends GeneratorAbstract{
      *
      * @return string
      */
-    public function generateExerciseContent($trainingDiaryExercise) {
+    public function generateExerciseContent($trainingDiaryExercise) 
+    {
         static $count = 1;
         static $bFirstActiveSet = false;
 
@@ -50,7 +54,8 @@ class TrainingDiaries extends GeneratorAbstract{
         $usedMuscleMaxScore = null;
         $exerciseXMuscleDb = new ExerciseXMuscle();
         $usedMusclesByExercise = $exerciseXMuscleDb->findMusclesForExercise(
-            $trainingDiaryExercise->training_plan_x_exercise_exercise_fk);
+            $trainingDiaryExercise->training_plan_x_exercise_exercise_fk
+        );
 
         foreach ($usedMusclesByExercise as $usedMuscleByExercise) {
             if (false == array_key_exists($usedMuscleByExercise->muscle_name, $usedMusclesCollection)) {
@@ -111,7 +116,8 @@ class TrainingDiaries extends GeneratorAbstract{
         return $this->getView()->render('loops/training-diary-exercise.phtml');
     }
 
-    public function generateExerciseOptionsContent($trainingDiaryXExercise) {
+    public function generateExerciseOptionsContent($trainingDiaryXExercise) 
+    {
 
         $exerciseOptionsService = new ExerciseOptions($this->getView());
         $exerciseOptionsService->setShowTrainingProgress(true);
@@ -127,16 +133,17 @@ class TrainingDiaries extends GeneratorAbstract{
         return $exerciseOptionsService->generate();
     }
 
-    public function generateDeviceOptionsContent($trainingDiaryXExercise) {
+    public function generateDeviceOptionsContent($trainingDiaryXExercise) 
+    {
 
         $deviceOptionsService = new DeviceOptions($this->getView());
         $deviceOptionsService->setShowTrainingProgress(true);
         $deviceOptionsService->setAllowEdit(true);
 
         // bereits ein value durch eine übung gesetzt
-//        if (array_key_exists('training_diary_x_device_option_device_option_value', $trainingDiaryXExercise)) {
-//            $deviceOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_device_option_device_option_value']);
-//        }
+        //        if (array_key_exists('training_diary_x_device_option_device_option_value', $trainingDiaryXExercise)) {
+        //            $deviceOptionsService->setSelectedOptionValue($trainingDiaryXExercise['training_diary_x_device_option_device_option_value']);
+        //        }
         $deviceOptionsService->setExerciseId($trainingDiaryXExercise['exercise_id']);
         $deviceOptionsService->setTrainingDiaryXTrainingPlanExerciseId($trainingDiaryXExercise['training_diary_x_training_plan_exercise_id']);
         $deviceOptionsService->setTrainingPlanXExerciseId($trainingDiaryXExercise['training_plan_x_exercise_id']);
@@ -148,14 +155,16 @@ class TrainingDiaries extends GeneratorAbstract{
     /**
      * @return int
      */
-    public function getExercisesCount() {
+    public function getExercisesCount() 
+    {
         return $this->exercisesCount;
     }
 
     /**
      * @param int $exercisesCount
      */
-    public function setExercisesCount($exercisesCount) {
+    public function setExercisesCount($exercisesCount) 
+    {
         $this->exercisesCount = $exercisesCount;
     }
 }

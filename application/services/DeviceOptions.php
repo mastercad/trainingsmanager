@@ -13,7 +13,8 @@ use Service\Options;
 
 
 
-class DeviceOptions extends Options {
+class DeviceOptions extends Options
+{
 
     protected $hierarchy = [
         'device_x_device_option',

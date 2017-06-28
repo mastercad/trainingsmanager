@@ -8,13 +8,13 @@
 
 namespace Service;
 
-use Service\Options;
-
-
-
-
-class ExerciseOptions extends Options {
-
+/**
+ * Class ExerciseOptions
+ *
+ * @package Service
+ */
+class ExerciseOptions extends Options
+{
     protected $hierarchy = [
         'exercise_x_exercise_option',
         'training_plan_x_exercise_exercise_option',

@@ -23,13 +23,18 @@ use Exception;
  */
 class Exercises extends AbstractDbTable
 {
-    /** @var string */
-    protected $_name 	= 'exercises';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'exercises';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'exercise_id';
 
-    public function findByPrimary($exerciseId) {
+    public function findByPrimary($exerciseId) 
+    {
         $select = $this->select(static::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = ' . $exerciseId)
@@ -47,7 +52,8 @@ class Exercises extends AbstractDbTable
      *
      * @return array|bool
      */
-    public function findExercises($exerciseType = null, $device = null) {
+    public function findExercises($exerciseType = null, $device = null) 
+    {
         $select = $this->select(static::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         if (is_numeric($exerciseType)
@@ -86,7 +92,8 @@ class Exercises extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findExercisesByName($sExerciseNamePiece) {
+    public function findExercisesByName($sExerciseNamePiece) 
+    {
         return $this->fetchAll("exercise_name LIKE('" . $sExerciseNamePiece . "')", 'exercise_name');
     }
 
@@ -97,7 +104,8 @@ class Exercises extends AbstractDbTable
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
-    public function findExerciseById($iExerciseId) {
+    public function findExerciseById($iExerciseId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
@@ -128,7 +136,8 @@ class Exercises extends AbstractDbTable
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
-    public function findExerciseByTrainingPlanExerciseId($iExerciseId) {
+    public function findExerciseByTrainingPlanExerciseId($iExerciseId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->joinInner($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
@@ -153,7 +162,8 @@ class Exercises extends AbstractDbTable
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
-    public function findExerciseByTrainingExerciseId($iExerciseId) {
+    public function findExerciseByTrainingExerciseId($iExerciseId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->joinInner($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id')
@@ -180,53 +190,55 @@ class Exercises extends AbstractDbTable
      *
      * @return array|bool
      */
-//    public function findExercisesForDevice($iDeviceId) {
-//        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-//            ->setIntegrityCheck(false);
-//        try {
-//            $oSelect->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
-//                ->joinInner('devices', 'device_id = exercise_x_device_device_fk')
-//                ->where('device_id = ?', $iDeviceId);
-//            return $this->fetchAll($oSelect);
-//        } catch(Exception $oExceptions) {
-//            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-//            echo "Meldung : " . $oExceptions->getMessage() . "<br />";
-//            return false;
-//        }
-//    }
+    //    public function findExercisesForDevice($iDeviceId) {
+    //        $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
+    //            ->setIntegrityCheck(false);
+    //        try {
+    //            $oSelect->joinInner('exercise_x_device', 'exercise_x_device_exercise_fk = exercise_id')
+    //                ->joinInner('devices', 'device_id = exercise_x_device_device_fk')
+    //                ->where('device_id = ?', $iDeviceId);
+    //            return $this->fetchAll($oSelect);
+    //        } catch(Exception $oExceptions) {
+    //            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+    //            echo "Meldung : " . $oExceptions->getMessage() . "<br />";
+    //            return false;
+    //        }
+    //    }
 
     /**
      * @param array $aData
      *
      * @return bool|mixed
      */
-    public function saveExercise($aData) {
-		try {
+    public function saveExercise($aData) 
+    {
+        try {
             return $this->insert($aData);
-		} catch(Exception $oException) {
+        } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
-		}
-	}
+        }
+    }
 
     /**
      * update exercise by id
      *
      * @param array $aData
-     * @param int $iExerciseId
+     * @param int   $iExerciseId
      *
      * @return bool|int
      */
-    public function updateExercise($aData, $iExerciseId) {
-		try {
-            return $this->update( $aData, "exercise_id = '" . $iExerciseId . "'");
-		} catch(Exception $oException) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oException->getMessage() . "<br />";
-			return false;
-		}
-	}
+    public function updateExercise($aData, $iExerciseId) 
+    {
+        try {
+            return $this->update($aData, "exercise_id = '" . $iExerciseId . "'");
+        } catch(Exception $oException) {
+               echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+               echo "Meldung : " . $oException->getMessage() . "<br />";
+               return false;
+        }
+    }
 
     /**
      * delete exercise by id
@@ -235,7 +247,8 @@ class Exercises extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteExercise($iExerciseId) {
+    public function deleteExercise($iExerciseId) 
+    {
         try {
             return $this->delete("exercise_id = '" . $iExerciseId . "'");
         } catch(Exception $oException) {
@@ -243,7 +256,7 @@ class Exercises extends AbstractDbTable
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 
     /**
      * delete all exercises by device id
@@ -252,14 +265,14 @@ class Exercises extends AbstractDbTable
      *
      * @return bool|int
      */
-//    public function deleteExerciseByDeviceId($iDeviceId)
-//    {
-//        try {
-//            return $this->delete("uebung_geraet_fk = '" . $iDeviceId . "'");
-//        } catch(Exception $oException) {
-//            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-//            echo "Meldung : " . $oException->getMessage() . "<br />";
-//            return false;
-//        }
-//    }
+    //    public function deleteExerciseByDeviceId($iDeviceId)
+    //    {
+    //        try {
+    //            return $this->delete("uebung_geraet_fk = '" . $iDeviceId . "'");
+    //        } catch(Exception $oException) {
+    //            echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+    //            echo "Meldung : " . $oException->getMessage() . "<br />";
+    //            return false;
+    //        }
+    //    }
 }

@@ -11,22 +11,30 @@ namespace Auth\Model\Resource;
 use Zend_Acl_Resource_Interface;
 use Zend_Db_Table_Row_Abstract;
 
-abstract class AbstractResource implements Zend_Acl_Resource_Interface {
+abstract class AbstractResource implements Zend_Acl_Resource_Interface
+{
 
-    /** @var int|null  */
+    /**
+     * @var int|null  
+     */
     private $memberId = null;
 
-    /** @var array|int|null */
+    /**
+     * @var array|int|null 
+     */
     private $alternativeMemberId = null;
 
     private $groupId = null;
 
     private $groupName = null;
 
-    /** @var string ID der aktuellen Resource in der ACL */
+    /**
+     * @var string ID der aktuellen Resource in der ACL 
+     */
     protected $resourceId = null;
 
-    public function __construct($oRow = null) {
+    public function __construct($oRow = null) 
+    {
         if ($oRow instanceof Zend_Db_Table_Row_Abstract) {
             $this->prepareData($oRow);
         }
@@ -56,7 +64,8 @@ abstract class AbstractResource implements Zend_Acl_Resource_Interface {
     /**
      * @return array|int|null
      */
-    public function getAlternativeMemberId() {
+    public function getAlternativeMemberId() 
+    {
         return $this->alternativeMemberId;
     }
 
@@ -65,7 +74,8 @@ abstract class AbstractResource implements Zend_Acl_Resource_Interface {
      *
      * @return $this
      */
-    public function setAlternativeMemberId($alternativeMemberId) {
+    public function setAlternativeMemberId($alternativeMemberId) 
+    {
         $this->alternativeMemberId = $alternativeMemberId;
         return $this;
     }
@@ -92,7 +102,8 @@ abstract class AbstractResource implements Zend_Acl_Resource_Interface {
     /**
      * @return null
      */
-    public function getGroupName() {
+    public function getGroupName() 
+    {
         return $this->groupName;
     }
 
@@ -101,7 +112,8 @@ abstract class AbstractResource implements Zend_Acl_Resource_Interface {
      *
      * @return $this
      */
-    public function setGroupName($groupName) {
+    public function setGroupName($groupName) 
+    {
         $this->groupName = $groupName;
         return $this;
     }
@@ -109,7 +121,8 @@ abstract class AbstractResource implements Zend_Acl_Resource_Interface {
     /**
      * @return null
      */
-    public function getGroupId() {
+    public function getGroupId() 
+    {
         return $this->groupId;
     }
 
@@ -118,7 +131,8 @@ abstract class AbstractResource implements Zend_Acl_Resource_Interface {
      *
      * @return $this
      */
-    public function setGroupId($groupId) {
+    public function setGroupId($groupId) 
+    {
         $this->groupId = $groupId;
         return $this;
     }

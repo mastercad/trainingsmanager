@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\Entity\Message;
 use Service\GlobalMessageHandler;
@@ -26,24 +26,31 @@ use Model\DbTable\DeviceXDeviceOption;
 use Model\DbTable\Exercises;
 use Model\DbTable\ExerciseXDevice;
 
-class DevicesController extends AbstractController {
+class DevicesController extends AbstractController
+{
 
     /**
      * initial function for controller
      */
-    public function init() {
+    public function init() 
+    {
         if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
-                'text/javascript');
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
-                'text/javascript');
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript'
+            );
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript'
+            );
         }
     }
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
 
         $devicesDb = new Devices();
         $devicesCollection = $devicesDb->findAllDevices();
@@ -63,7 +70,8 @@ class DevicesController extends AbstractController {
     /**
      * show action
      */
-    public function showAction() {
+    public function showAction() 
+    {
         $id = intval($this->getParam('id'));
 
         if (0 < $id) {
@@ -86,14 +94,16 @@ class DevicesController extends AbstractController {
     /**
      * new action
      */
-    public function newAction() {
+    public function newAction() 
+    {
         $this->forward('edit');
     }
 
     /**
      * edit action
      */
-    public function editAction() {
+    public function editAction() 
+    {
         $params = $this->getRequest()->getParams();
 
         $deviceId = intval($this->getRequest()->getParam('id', null));
@@ -155,7 +165,8 @@ class DevicesController extends AbstractController {
      *
      * @return string
      */
-    private function generatePreviewPicturePath($device) {
+    private function generatePreviewPicturePath($device) 
+    {
 
         $previewPicturePath = '/images/content/statisch/grafiken/kein_bild.png';
         if ($device instanceof Zend_Db_Table_Row) {
@@ -180,7 +191,8 @@ class DevicesController extends AbstractController {
      *
      * @return string
      */
-    public function generateDeviceOptionsContent($device) {
+    public function generateDeviceOptionsContent($device) 
+    {
         $deviceOptionsService = new DeviceOptionsViewService($this->view);
         $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
         return $deviceOptionsService->generate();
@@ -193,7 +205,8 @@ class DevicesController extends AbstractController {
      *
      * @return string
      */
-    public function generateDeviceOptionsEditContent($device) {
+    public function generateDeviceOptionsEditContent($device) 
+    {
         $deviceOptionsService = new DeviceOptionsViewService($this->view);
         $deviceOptionsService->setDeviceId($device->offsetGet('device_id'));
         $deviceOptionsService->setAllowEdit(true);
@@ -207,7 +220,8 @@ class DevicesController extends AbstractController {
      *
      * @return string
      */
-    public function generateDeviceOptionsDropDownContent() {
+    public function generateDeviceOptionsDropDownContent() 
+    {
         $content = '';
         $deviceOptions = new DeviceOptions();
         $optionsCollection = $deviceOptions->findAllOptions();
@@ -230,7 +244,8 @@ class DevicesController extends AbstractController {
     /**
      * upload picture action
      */
-    public function uploadPictureAction() {
+    public function uploadPictureAction() 
+    {
         $this->view->layout()->disableLayout();
         $result = [];
         if (true === isset($_FILES['file'])) {
@@ -289,7 +304,8 @@ class DevicesController extends AbstractController {
     /**
      * delete picture action
      */
-    public function deletePictureAction() {
+    public function deletePictureAction() 
+    {
         $deviceId = intval($this->getParam('deviceId'));
         $picture = base64_decode($this->getParam('id'));
 
@@ -323,7 +339,8 @@ class DevicesController extends AbstractController {
     /**
      * get devices for edit action
      */
-    public function getDevicesForEditAction() {
+    public function getDevicesForEditAction() 
+    {
         $params = $this->getRequest()->getParams();
 
         if (isset($params['id'])) {
@@ -342,8 +359,7 @@ class DevicesController extends AbstractController {
     {
         $params = $this->getRequest()->getParams();
 
-        if(isset($params['search']))
-        {
+        if(isset($params['search'])) {
             $search = base64_decode($params['search']) . '%';
             $devicesDb = new Devices();
             $devicesCollection = $devicesDb->findDeviceByName($search);
@@ -373,14 +389,14 @@ class DevicesController extends AbstractController {
             $deviceXDeviceOptionDeletes = array();
             $deviceXDeviceOptionInserts = array();
 
-            if (isset($params['device_name']) &&
-                0 < strlen(trim($params['device_name']))
+            if (isset($params['device_name']) 
+                && 0 < strlen(trim($params['device_name']))
             ) {
                 $deviceName = base64_decode($params['device_name']);
             }
 
-            if (isset($params['device_preview_picture']) &&
-                0 < strlen(trim($params['device_preview_picture']))
+            if (isset($params['device_preview_picture']) 
+                && 0 < strlen(trim($params['device_preview_picture']))
             ) {
                 $devicePreviewPicture = basename(base64_decode($params['device_preview_picture']));
             }
@@ -390,7 +406,7 @@ class DevicesController extends AbstractController {
             }
 
             if (0 == strlen(trim($deviceName))
-               && !$deviceId
+                && !$deviceId
             ) {
                 GlobalMessageHandler::appendMessage('Dieses Geraet benötigt einen Namen', Message::STATUS_ERROR);
                 $hasErrors = true;
@@ -411,7 +427,7 @@ class DevicesController extends AbstractController {
                     $countDeviceOptions = count($currentDeviceOptionsForDeviceInDB);
 
                     if ((is_array($currentDeviceOptionsForDeviceInDB)
-                            || $currentDeviceOptionsForDeviceInDB instanceof Zend_Db_Table_Rowset)
+                        || $currentDeviceOptionsForDeviceInDB instanceof Zend_Db_Table_Rowset)
                         && 0 < count($currentDeviceOptionsForDeviceInDB)
                     ) {
                         foreach ($currentDeviceOptionsForDeviceInDB as $deviceOption) {
@@ -431,7 +447,8 @@ class DevicesController extends AbstractController {
                         && 0 < $deviceOption['id']
                         && isset($deviceXDeviceOptionCurrent[$deviceOption['id']])
                     ) {
-                        array_push($deviceXDeviceOptionUpdates, array(
+                        array_push(
+                            $deviceXDeviceOptionUpdates, array(
                                 'device_x_device_option_device_option_fk' => $deviceOption['id'],
                                 'device_x_device_option_device_option_value' => base64_decode($deviceOption['value']),
                                 'device_x_device_option_id' => $deviceXDeviceOptionCurrent[$deviceOption['id']]['device_x_device_option_id']
@@ -442,7 +459,8 @@ class DevicesController extends AbstractController {
                         && 0 < $deviceOption['id']
                         && ! isset($deviceXDeviceOptionCurrent[$deviceOption['id']])
                     ) {
-                        array_push($deviceXDeviceOptionInserts, array(
+                        array_push(
+                            $deviceXDeviceOptionInserts, array(
                                 'device_option_id' => $deviceOption['id'],
                                 'device_option_value' => base64_decode($deviceOption['value'])
                             )
@@ -455,8 +473,8 @@ class DevicesController extends AbstractController {
             }
 
             if  (!$deviceId
-                && strlen(trim($deviceName)))
-            {
+                && strlen(trim($deviceName))
+            ) {
                 $deviceCurrent = $devicesDb->findDeviceByName($deviceName);
                 if (is_array($deviceCurrent)
                     && 0 < count($deviceCurrent)
@@ -473,19 +491,13 @@ class DevicesController extends AbstractController {
                     && 0 < count($data)
                 ) {
                     $deviceCurrent = $devicesDb->findDeviceById($deviceId);
-                    if(
-                        (
-                            isset($data['device_name'])
-                            && 0 < strlen(trim($data['device_name']))
-                            && $deviceCurrent['device_name'] != $data['device_name']
-                        ) ||
-                        (
-                            isset($deviceCurrent['device_name'])
-                            && 0 < strlen(trim($deviceCurrent['device_name']))
-                            && !strlen(trim($deviceCurrent['device_name']))
-                        )
-                    )
-                    {
+                    if((                        isset($data['device_name'])
+                        && 0 < strlen(trim($data['device_name']))
+                        && $deviceCurrent['device_name'] != $data['device_name']) 
+                        || (                        isset($deviceCurrent['device_name'])
+                        && 0 < strlen(trim($deviceCurrent['device_name']))
+                        && !strlen(trim($deviceCurrent['device_name'])))
+                    ) {
                         if (isset($data['device_name'])
                             && 0 < strlen(trim($data['device_name']))
                         ) {
@@ -508,7 +520,7 @@ class DevicesController extends AbstractController {
 
                     $devicesDb->updateDevice($data, $deviceId);
                     GlobalMessageHandler::appendMessage('Dieses Gerät wurde erfolgreich bearbeitet!', Message::STATUS_OK);
-                // neues gerät anlegen
+                    // neues gerät anlegen
                 } else if (0 < count($data)) {
                     $cadSeo->setLinkName($data['device_name']);
                     $cadSeo->setDbTable($devicesDb);
@@ -533,8 +545,7 @@ class DevicesController extends AbstractController {
                     $sourcePath = getcwd() . '/tmp/devices/';
                     $destinationPath = getcwd() . '/images/content/dynamisch/devices/' . $deviceId . '/';
 
-                    if($cadFile->checkAndCreateDir($destinationPath))
-                    {
+                    if($cadFile->checkAndCreateDir($destinationPath)) {
                         $cadFile->setSourcePath($sourcePath);
                         $cadFile->setDestPath($destinationPath);
                         $cadFile->setAllowedExtensions(array('jpg', 'png', 'gif', 'svg'));
@@ -546,10 +557,12 @@ class DevicesController extends AbstractController {
                         && 0 === count($deviceXDeviceOptionUpdates)
                         && 0 === count($deviceXDeviceOptionDeletes)
                     ) {
-                        array_push($messages, array(
+                        array_push(
+                            $messages, array(
                             'type' => 'meldung', 'message' => 'Das Gerät wurde nicht geändert!', 'result' => true,
                             'id' => $deviceId
-                        ));
+                            )
+                        );
                     } else if ($deviceId) {
 
                         foreach ($deviceXDeviceOptionInserts as $deviceXDeviceOption) {
@@ -572,8 +585,10 @@ class DevicesController extends AbstractController {
                             $data['device_x_device_option_update_date'] = date("Y-m-d H:i:s");
                             $data['device_x_device_option_update_user_fk'] = $userId;
 
-                            $deviceXDeviceOptionDb->updateDeviceXDeviceOption($data,
-                                $deviceXDeviceOption['device_x_device_option_id']);
+                            $deviceXDeviceOptionDb->updateDeviceXDeviceOption(
+                                $data,
+                                $deviceXDeviceOption['device_x_device_option_id']
+                            );
                         }
 
                         foreach ($deviceXDeviceOptionDeletes as $deviceXDeviceOptionId) {
@@ -648,7 +663,8 @@ class DevicesController extends AbstractController {
     /**
      * get device options for edit action
      */
-    public function getDeviceOptionEditAction() {
+    public function getDeviceOptionEditAction() 
+    {
         $deviceOptionId = intval($this->getRequest()->getParam('device_option_id', 0));
         $deviceOptionsContent = '';
 
@@ -667,12 +683,13 @@ class DevicesController extends AbstractController {
     /**
      * formats given bytes in human readable number
      *
-     * @param     $bytes
-     * @param int $decimals
+     * @param $bytes
+     * @param int   $decimals
      *
      * @return string
      */
-    private function humanFileSize($bytes, $decimals = 2) {
+    private function humanFileSize($bytes, $decimals = 2) 
+    {
         $sz = 'BKMGTP';
         $factor = floor((strlen($bytes) - 1) / 3);
         return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . @$sz[$factor];

@@ -22,25 +22,32 @@ use Exception;
 /**
  * Class Application_Model_DbTable_Devices
  */
-class DeviceOptions extends AbstractDbTable implements OptionsStorageInterface {
+class DeviceOptions extends AbstractDbTable implements OptionsStorageInterface
+{
 
-    /** @var string */
-    protected $_name 	= 'device_options';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'device_options';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'device_option_id';
 
     /**
      * @inheritdoc
      */
-    public function findAllOptions() {
+    public function findAllOptions() 
+    {
         return $this->fetchAll(null, 'device_option_name');
     }
 
     /**
      * @inheritdoc
      */
-    public function findOptionById($deviceOptionId) {
+    public function findOptionById($deviceOptionId) 
+    {
         return $this->fetchRow('device_option_id = "' . $deviceOptionId . '"');
     }
 
@@ -51,12 +58,15 @@ class DeviceOptions extends AbstractDbTable implements OptionsStorageInterface {
      *
      * @return bool|\Zend_Db_Table_Rowset_Abstract
      */
-    public function findDeviceOptionsByDeviceId($deviceId) {
+    public function findDeviceOptionsByDeviceId($deviceId) 
+    {
         try {
             $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-            $oSelect->joinInner($this->considerTestUserForTableName('device_x_device_option'),
-                'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = ' . $deviceId)
+            $oSelect->joinInner(
+                $this->considerTestUserForTableName('device_x_device_option'),
+                'device_x_device_option_device_option_fk = device_option_id AND device_x_device_option_device_fk = ' . $deviceId
+            )
                 ->where('device_x_device_option_device_fk = ?', $deviceId);
 
             return $this->fetchAll($oSelect);
@@ -74,15 +84,22 @@ class DeviceOptions extends AbstractDbTable implements OptionsStorageInterface {
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findDeviceOptionsByExerciseId($exerciseId) {
+    public function findDeviceOptionsByExerciseId($exerciseId) 
+    {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
-        $select->joinInner($this->considerTestUserForTableName('exercise_x_device'),
-            'exercise_x_device_exercise_fk = ' . $exerciseId)
-            ->joinInner($this->considerTestUserForTableName('device_x_device_option'),
-                'device_x_device_option_device_fk = exercise_x_device_device_fk')
-            ->joinLeft($this->considerTestUserForTableName('exercise_x_device_option'),
-                'exercise_x_device_option_device_option_fk = device_option_id AND exercise_x_device_option_exercise_fk = ' . $exerciseId)
+        $select->joinInner(
+            $this->considerTestUserForTableName('exercise_x_device'),
+            'exercise_x_device_exercise_fk = ' . $exerciseId
+        )
+            ->joinInner(
+                $this->considerTestUserForTableName('device_x_device_option'),
+                'device_x_device_option_device_fk = exercise_x_device_device_fk'
+            )
+            ->joinLeft(
+                $this->considerTestUserForTableName('exercise_x_device_option'),
+                'exercise_x_device_option_device_option_fk = device_option_id AND exercise_x_device_option_exercise_fk = ' . $exerciseId
+            )
             ->where('device_option_id = device_x_device_option_device_option_fk');
 
         return $this->fetchAll($select);
@@ -91,21 +108,24 @@ class DeviceOptions extends AbstractDbTable implements OptionsStorageInterface {
     /**
      * @inheritdoc
      */
-    public function updateOption($data, $optionId) {
+    public function updateOption($data, $optionId) 
+    {
         return $this->update($data, 'device_option_id = ' . $optionId);
     }
 
     /**
      * @inheritdoc
      */
-    public function deleteOption($optionId) {
+    public function deleteOption($optionId) 
+    {
         return $this->delete('device_option_id = ' . $optionId);
     }
 
     /**
      * @inheritdoc
      */
-    public function insertOption($data) {
+    public function insertOption($data) 
+    {
         return $this->insert($data);
     }
 }

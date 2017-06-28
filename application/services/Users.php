@@ -12,6 +12,7 @@ namespace Service;
 
 
 
-class Users {
+class Users
+{
 
 }

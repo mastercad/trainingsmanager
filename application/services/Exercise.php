@@ -8,19 +8,19 @@
 
 namespace Service;
 
-use Service\AbstractService;
 use Model\DbTable\Exercises;
+use Zend_Db_Table_Abstract;
 
+class Exercise extends AbstractService
+{
 
-
-
-class Exercise extends AbstractService {
-
-    /** @var Zend_Db_Table_Abstract */
+    /**
+     * @var Zend_Db_Table_Abstract 
+     */
     private $storage = null;
 
-    public function generateExerciseOptionsContent($exerciseId) {
-
+    public function generateExerciseOptionsContent($exerciseId)
+    {
     }
 
     /**
@@ -28,7 +28,8 @@ class Exercise extends AbstractService {
      *
      * @return $this
      */
-    private function setStorage($storage) {
+    private function setStorage($storage)
+    {
         $this->storage = $storage;
         return $this;
     }
@@ -36,14 +37,16 @@ class Exercise extends AbstractService {
     /**
      * @return \Zend_Db_Table_Abstract
      */
-    private function getStorage() {
+    private function getStorage()
+    {
         return $this->storage;
     }
 
     /**
      * @return Zend_Db_Table_Abstract
      */
-    private function useStorage() {
+    private function useStorage()
+    {
         if (is_null($this->storage)) {
             $this->storage = new Exercises();
         }

@@ -24,10 +24,14 @@ use Exception;
  */
 class ExerciseTypes extends AbstractDbTable
 {
-    /** @var string */
-    protected $_name 	= 'exercise_types';
+    /**
+     * @var string 
+     */
+    protected $_name     = 'exercise_types';
 
-    /** @var string */
+    /**
+     * @var string 
+     */
     protected $_primary = 'exercise_type_id';
 
     /**
@@ -35,7 +39,8 @@ class ExerciseTypes extends AbstractDbTable
      *
      * @return array|bool
      */
-    public function findAllExerciseTypes() {
+    public function findAllExerciseTypes() 
+    {
         return $this->fetchAll(null, 'exercise_type_name');
     }
 
@@ -46,7 +51,8 @@ class ExerciseTypes extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findExerciseTypeByName($sExerciseTypeNamePiece) {
+    public function findExerciseTypeByName($sExerciseTypeNamePiece) 
+    {
         return $this->fetchRow("exercise_type_name LIKE('" . $sExerciseTypeNamePiece . "')", 'exercise_type_name');
     }
 
@@ -57,7 +63,8 @@ class ExerciseTypes extends AbstractDbTable
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
-    public function findExerciseTypeById($iExerciseTypeId) {
+    public function findExerciseTypeById($iExerciseTypeId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $oSelect->where('exercise_type_id = ?', $iExerciseTypeId);
@@ -75,33 +82,35 @@ class ExerciseTypes extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveExerciseType($aData) {
-		try {
+    public function saveExerciseType($aData) 
+    {
+        try {
             return $this->insert($aData);
-		} catch(Exception $oException) {
+        } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
-		}
-	}
+        }
+    }
 
     /**
      * update exercise by id
      *
      * @param array $aData
-     * @param int $iExerciseTypeId
+     * @param int   $iExerciseTypeId
      *
      * @return bool|int
      */
-    public function updateExerciseType($aData, $iExerciseTypeId) {
-		try {
-            return $this->update( $aData, "exercise_type_id = '" . $iExerciseTypeId . "'");
-		} catch(Exception $oException) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oException->getMessage() . "<br />";
-			return false;
-		}
-	}
+    public function updateExerciseType($aData, $iExerciseTypeId) 
+    {
+        try {
+            return $this->update($aData, "exercise_type_id = '" . $iExerciseTypeId . "'");
+        } catch(Exception $oException) {
+               echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+               echo "Meldung : " . $oException->getMessage() . "<br />";
+               return false;
+        }
+    }
 
     /**
      * delete exercise by id
@@ -110,7 +119,8 @@ class ExerciseTypes extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteExerciseType($iExerciseTypeId) {
+    public function deleteExerciseType($iExerciseTypeId) 
+    {
         try {
             return $this->delete("exercise_type_id = '" . $iExerciseTypeId . "'");
         } catch(Exception $oException) {
@@ -118,5 +128,5 @@ class ExerciseTypes extends AbstractDbTable
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 }

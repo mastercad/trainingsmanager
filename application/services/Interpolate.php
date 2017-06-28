@@ -24,7 +24,8 @@ use Zend_Auth;
 
 
 
-class Interpolate {
+class Interpolate
+{
 
     private $optionsAllowedToIncrease = [
         'devices' => [
@@ -41,7 +42,8 @@ class Interpolate {
      *
      * @return $this
      */
-    public function trainingDiary($userId) {
+    public function trainingDiary($userId) 
+    {
 
         $trainingPlansDb = new TrainingPlans();
         $currentTrainingPlan = $trainingPlansDb->findActiveTrainingPlanByUserId($userId);
@@ -146,7 +148,8 @@ class Interpolate {
         return $this;
     }
 
-    private function findCurrentUserId() {
+    private function findCurrentUserId() 
+    {
         $user = Zend_Auth::getInstance()->getIdentity();
 
         if (true == is_object($user)) {

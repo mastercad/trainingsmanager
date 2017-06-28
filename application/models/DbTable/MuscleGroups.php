@@ -26,7 +26,7 @@ class MuscleGroups extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'muscle_groups';
+    protected $_name     = 'muscle_groups';
     /**
      * @var string
      */
@@ -37,7 +37,8 @@ class MuscleGroups extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllMuscleGroups() {
+    public function findAllMuscleGroups() 
+    {
         return $this->fetchAll(null, "muscle_group_name");
     }
 
@@ -48,9 +49,10 @@ class MuscleGroups extends AbstractDbTable
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findMuscleGroup($iMuscleGroupId) {
+    public function findMuscleGroup($iMuscleGroupId) 
+    {
         $oSelect = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)
-                                   ->setIntegrityCheck(false);
+            ->setIntegrityCheck(false);
         try {
             $oSelect->where("muscle_group_id = '" . $iMuscleGroupId . "'");
 
@@ -60,7 +62,7 @@ class MuscleGroups extends AbstractDbTable
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 
     /**
      * find muscle group by name
@@ -69,7 +71,8 @@ class MuscleGroups extends AbstractDbTable
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findMuscleGroupsByName($sMuscleGroupName) {
+    public function findMuscleGroupsByName($sMuscleGroupName) 
+    {
         try {
             return $this->fetchAll("muscle_group_name LIKE( '" . $sMuscleGroupName . "')", 'muscle_group_name');
         } catch( Exception $oException) {
@@ -86,33 +89,35 @@ class MuscleGroups extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveMuscleGroup($aData) {
-		try {
+    public function saveMuscleGroup($aData) 
+    {
+        try {
             return $this->insert($aData);
-		} catch( Exception $oException) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oException->getMessage() . "<br />";
-			return false;
-		}
-	}
+        } catch( Exception $oException) {
+               echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+               echo "Meldung : " . $oException->getMessage() . "<br />";
+               return false;
+        }
+    }
 
     /**
      * update muscle group data by given muscle group id
      *
      * @param array $aData
-     * @param int $iMuscleGroupId
+     * @param int   $iMuscleGroupId
      *
      * @return bool|int
      */
-    public function updateMuscleGroup($aData, $iMuscleGroupId) {
-		try {
+    public function updateMuscleGroup($aData, $iMuscleGroupId) 
+    {
+        try {
             return $this->update($aData, "muscle_group_id = '" . $iMuscleGroupId . "'");
-		} catch( Exception $oException) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oException->getMessage() . "<br />";
-			return false;
-		}
-	}
+        } catch( Exception $oException) {
+               echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+               echo "Meldung : " . $oException->getMessage() . "<br />";
+               return false;
+        }
+    }
 
     /**
      * delte muscle group
@@ -121,13 +126,14 @@ class MuscleGroups extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteMuscleGroup($iMuscleGroupId) {
-		try {
+    public function deleteMuscleGroup($iMuscleGroupId) 
+    {
+        try {
             return $this->delete("muscle_group_id = '" . $iMuscleGroupId . "'");
-		} catch( Exception $oException) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oException->getMessage() . "<br />";
-			return false;
-		}
-	}
+        } catch( Exception $oException) {
+               echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+               echo "Meldung : " . $oException->getMessage() . "<br />";
+               return false;
+        }
+    }
 }

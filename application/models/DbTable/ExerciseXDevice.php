@@ -21,11 +21,12 @@ use Exception;
 /**
  * Class Application_Model_DbTable_ExerciseMuscles
  */
-class ExerciseXDevice extends AbstractDbTable {
+class ExerciseXDevice extends AbstractDbTable
+{
     /**
      * @var string
      */
-    protected $_name 	= 'exercise_x_device';
+    protected $_name     = 'exercise_x_device';
     /**
      * @var string
      */
@@ -38,7 +39,8 @@ class ExerciseXDevice extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findDeviceForExercise($exerciseId) {
+    public function findDeviceForExercise($exerciseId) 
+    {
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
         try {
             $select->joinInner($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
@@ -66,10 +68,12 @@ class ExerciseXDevice extends AbstractDbTable {
             $select->joinInner($this->considerTestUserForTableName('devices'), 'device_id = exercise_x_device_device_fk')
                 ->joinLeft($this->considerTestUserForTableName('device_x_device_group'), 'device_x_device_group_device_fk = device_id')
                 ->joinLeft($this->considerTestUserForTableName('device_groups'), 'device_group_id = device_x_device_group_device_group_fk')
-                ->columns([
+                ->columns(
+                    [
                     'COUNT(' . $this->considerTestUserForTableName('devices') . '.device_id) AS exerciseCount',
                     $this->considerTestUserForTableName('devices') . '.device_name',
-                    $this->considerTestUserForTableName('devices') . '.device_id'])
+                    $this->considerTestUserForTableName('devices') . '.device_id']
+                )
                 ->order('device_name')
                 ->group($this->considerTestUserForTableName('devices') . '.device_id');
 
@@ -94,8 +98,7 @@ class ExerciseXDevice extends AbstractDbTable {
         $select->from($this->considerTestUserForTableName('exercises'), '')
             ->joinLeft($this->considerTestUserForTableName('exercise_x_device'), 'exercise_x_device_exercise_fk = exercise_id'. '')
             ->where('exercise_x_device_id IS NULL')
-            ->columns(['COUNT(exercise_id) AS exerciseCount'])
-        ;
+            ->columns(['COUNT(exercise_id) AS exerciseCount']);
 
         return $this->fetchRow($select);
     }
@@ -107,7 +110,8 @@ class ExerciseXDevice extends AbstractDbTable {
      *
      * @return bool|Zend_Db_Table_Rowset_Abstract
      */
-    public function findExercisesForDevice($deviceId) {
+    public function findExercisesForDevice($deviceId) 
+    {
         try {
             return $this->fetchAll("exercise_x_device_device_fk = '" . $deviceId . "'");
         } catch (Exception $oException) {
@@ -124,7 +128,8 @@ class ExerciseXDevice extends AbstractDbTable {
      *
      * @return bool|mixed
      */
-    public function saveExerciseXDevice($aData) {
+    public function saveExerciseXDevice($aData) 
+    {
         try {
             return $this->insert($aData);
         } catch (Exception $oException) {
@@ -138,11 +143,12 @@ class ExerciseXDevice extends AbstractDbTable {
      * update exercise device  with given data by given exercise device id
      *
      * @param array $aData
-     * @param int $exerciseXDeviceId
+     * @param int   $exerciseXDeviceId
      *
      * @return bool|int
      */
-    public function updateExerciseXDevice($aData, $exerciseXDeviceId) {
+    public function updateExerciseXDevice($aData, $exerciseXDeviceId) 
+    {
         try {
             return $this->update($aData, "exercise_x_device_id = '" . $exerciseXDeviceId . "'");
         } catch (Exception $oException) {
@@ -159,9 +165,10 @@ class ExerciseXDevice extends AbstractDbTable {
      *
      * @return bool|int
      */
-    public function deleteExerciseXDevice($exerciseXDeviceId) {
+    public function deleteExerciseXDevice($exerciseXDeviceId) 
+    {
         try {
-            return $this->delete( "exercise_x_device_id = '" . $exerciseXDeviceId . "'");
+            return $this->delete("exercise_x_device_id = '" . $exerciseXDeviceId . "'");
         } catch (Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";

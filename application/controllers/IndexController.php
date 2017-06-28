@@ -13,7 +13,7 @@
  * @link     http://www.byte-artist.de
  */
 
-require_once(APPLICATION_PATH . '/controllers/AbstractController.php');
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\Dashboards;
 use Model\DbTable\DashboardXWidget;
@@ -31,24 +31,31 @@ use Model\DbTable\TrainingPlanXExercise;
 /**
  * Class IndexController
  */
-class IndexController extends AbstractController {
+class IndexController extends AbstractController
+{
 
     /**
      * initial function for controller
      */
-    public function init() {
+    public function init() 
+    {
         if (!$this->getParam('ajax')) {
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
-                'text/javascript');
-            $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/trainingsmanager_messages.js',
-                'text/javascript');
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_accordion.js',
+                'text/javascript'
+            );
+            $this->view->headScript()->appendFile(
+                $this->view->baseUrl() . '/js/trainingsmanager_messages.js',
+                'text/javascript'
+            );
         }
     }
 
     /**
      * index action
      */
-    public function indexAction() {
+    public function indexAction() 
+    {
 
         $user = Zend_Auth::getInstance()->getIdentity();
         if ('guest' == $user->user_right_group_name) {
@@ -67,7 +74,8 @@ class IndexController extends AbstractController {
      *
      * @return string
      */
-    private function generateWidgetsContent() {
+    private function generateWidgetsContent() 
+    {
 
         $dashboardsDb = new Dashboards();
         $dashboardXWidgetDb = new DashboardXWidget();
@@ -107,14 +115,16 @@ class IndexController extends AbstractController {
     /**
      * welcome content action
      */
-    public function welcomeContentAction() {
+    public function welcomeContentAction() 
+    {
 
     }
 
     /**
      * delete widget action
      */
-    public function deleteWidgetAction() {
+    public function deleteWidgetAction() 
+    {
         $id = intval($this->getParam('id'));
 
         if (0 < $id) {
@@ -126,7 +136,8 @@ class IndexController extends AbstractController {
     /**
      * get widget settings content action
      */
-    public function getWidgetSettingsContentAction() {
+    public function getWidgetSettingsContentAction() 
+    {
         $dashboardsDb = new Dashboards();
         $widgetsDb = new Widgets();
         $dashboardXWidgetDb = new DashboardXWidget();
@@ -156,7 +167,8 @@ class IndexController extends AbstractController {
     /**
      * load widget edit content action
      */
-    public function loadWidgetEditContentAction() {
+    public function loadWidgetEditContentAction() 
+    {
         $id = intval($this->getParam('id'));
         $content = '';
 
@@ -221,7 +233,8 @@ class IndexController extends AbstractController {
     /**
      * load widget content action
      */
-    public function loadWidgetContentAction() {
+    public function loadWidgetContentAction() 
+    {
         $widgetId = intval($this->getParam('id'));
         $content = '';
 
@@ -253,12 +266,13 @@ class IndexController extends AbstractController {
     /**
      * register widget
      *
-     * @param      $widgetId
-     * @param null $type
+     * @param $widgetId
+     * @param null     $type
      *
      * @return mixed
      */
-    private function registerWidget($widgetId, $type = null) {
+    private function registerWidget($widgetId, $type = null) 
+    {
         $dashboardsDb = new Dashboards();
         $dashboard = $dashboardsDb->findActiveDashboardByUserId($this->findCurrentUserId());
         $dashboardId = null;
@@ -299,7 +313,8 @@ class IndexController extends AbstractController {
      *
      * @return array
      */
-    private function collectWidgets($widgetsInDb) {
+    private function collectWidgets($widgetsInDb) 
+    {
         $widgetsCollection = [];
 
         if ($widgetsInDb instanceof Zend_Db_Table_Rowset_Abstract) {
@@ -316,7 +331,8 @@ class IndexController extends AbstractController {
      *
      * @return string
      */
-    private function generateActiveTrainingDiaryContent() {
+    private function generateActiveTrainingDiaryContent() 
+    {
 
         $content = '';
         $trainingPlanService = new TrainingPlanService();
@@ -336,7 +352,8 @@ class IndexController extends AbstractController {
      *
      * @return string
      */
-    private function generateCurrentTrainingPlanContent($trainingPlanRow) {
+    private function generateCurrentTrainingPlanContent($trainingPlanRow) 
+    {
         $exercisesContent = '';
         $trainingPlanId = $trainingPlanRow->offsetGet('training_plan_id');
         $trainingDiaryXTrainingPlanId = null;
@@ -368,7 +385,8 @@ class IndexController extends AbstractController {
      *
      * @return string
      */
-    private function generateChartsContent($exerciseId = null) {
+    private function generateChartsContent($exerciseId = null) 
+    {
         $chartDataCollection = $this->collectDataForExerciseChart($exerciseId);
 
         $chartContent = '';
@@ -386,7 +404,8 @@ class IndexController extends AbstractController {
      *
      * @return array
      */
-    private function collectDataForExerciseChart($exerciseId) {
+    private function collectDataForExerciseChart($exerciseId) 
+    {
         $trainingDiaryExerciseOptionDb = new TrainingDiaryXExerciseOption();
         $trainingDiaryDeviceOptionDb = new TrainingDiaryXDeviceOption();
 
@@ -440,7 +459,8 @@ class IndexController extends AbstractController {
      *
      * @return string
      */
-    private function generateChartContent($exerciseName, $chartData) {
+    private function generateChartContent($exerciseName, $chartData) 
+    {
         $chartCount = uniqid();
         $columns = [];
         // bring values in one row per option
@@ -474,7 +494,7 @@ class IndexController extends AbstractController {
             'bindto' => '#chart' . $chartCount,
             'data' => [
                 'x' => 'x',
-//                'xFormat' => '%Y-%m-%d %H:%M:%S',
+        //                'xFormat' => '%Y-%m-%d %H:%M:%S',
                 'xFormat' => '%Y-%m-%d',
                 'columns' => $cleanColumns,
             ],
@@ -482,7 +502,7 @@ class IndexController extends AbstractController {
                 'x' => [
                     'type' => 'timeseries',
                     'tick' => [
-//                        'format' => '%Y-%m-%d %H:%M:%S',
+            //                        'format' => '%Y-%m-%d %H:%M:%S',
                         'format' => '%Y-%m-%d',
                     ]
                 ]

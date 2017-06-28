@@ -10,9 +10,12 @@ namespace Auth\Model\Resource;
 
 use CAD_Tool_Extractor;
 
-class TrainingDiaries extends AbstractResource {
+class TrainingDiaries extends AbstractResource
+{
 
-    /** @var string ID der aktuellen Resource in der ACL */
+    /**
+     * @var string ID der aktuellen Resource in der ACL 
+     */
     protected $resourceId = 'default:training-diaries';
 
     protected function prepareData($oRow)

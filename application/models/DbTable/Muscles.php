@@ -26,7 +26,7 @@ class Muscles extends AbstractDbTable
     /**
      * @var string
      */
-    protected $_name 	= 'muscles';
+    protected $_name     = 'muscles';
     /**
      * @var string
      */
@@ -37,7 +37,8 @@ class Muscles extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllMuscles() {
+    public function findAllMuscles() 
+    {
         return $this->fetchAll(null, 'muscle_name');
     }
 
@@ -48,7 +49,8 @@ class Muscles extends AbstractDbTable
      *
      * @return Zend_Db_Table_Rowset_Abstract
      */
-    public function findMusclesByName($muscleName) {
+    public function findMusclesByName($muscleName) 
+    {
         return $this->fetchAll("muscle_name LIKE('" . $muscleName . "')", 'muscle_name');
     }
 
@@ -59,15 +61,16 @@ class Muscles extends AbstractDbTable
      *
      * @return bool|null|Zend_Db_Table_Row_Abstract
      */
-    public function findMuscle($iMuscleId) {
-		try {
+    public function findMuscle($iMuscleId) 
+    {
+        try {
             return $this->fetchRow("muscle_id = '" . $iMuscleId . "'");
-		} catch( Exception $oException) {
-			echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
-			echo "Meldung : " . $oException->getMessage() . "<br />";
-			return false;
-		}
-	}
+        } catch( Exception $oException) {
+               echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
+               echo "Meldung : " . $oException->getMessage() . "<br />";
+               return false;
+        }
+    }
 
     /**
      * find all muscles by muscle group
@@ -76,11 +79,14 @@ class Muscles extends AbstractDbTable
      *
      * @return \Zend_Db_Table_Rowset_Abstract
      */
-    public function findAllMusclesByMuscleGroupId($muscleGroupId) {
+    public function findAllMusclesByMuscleGroupId($muscleGroupId) 
+    {
 
         $select = $this->select(self::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
-        $select->joinInner($this->considerTestUserForTableName('muscle_x_muscle_group'),
-            'muscle_x_muscle_group_muscle_fk = muscle_id AND muscle_x_muscle_group_muscle_group_fk = ' . $muscleGroupId);
+        $select->joinInner(
+            $this->considerTestUserForTableName('muscle_x_muscle_group'),
+            'muscle_x_muscle_group_muscle_fk = muscle_id AND muscle_x_muscle_group_muscle_group_fk = ' . $muscleGroupId
+        );
 
         return $this->fetchAll($select);
     }
@@ -92,33 +98,35 @@ class Muscles extends AbstractDbTable
      *
      * @return bool|mixed
      */
-    public function saveMuscle($aData) {
-		try {
+    public function saveMuscle($aData) 
+    {
+        try {
             return $this->insert($aData);
-		} catch(Exception $oException) {
+        } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 
     /**
      * update muscle data by given muscle id
      *
      * @param array $aData
-     * @param int $iMuscleId
+     * @param int   $iMuscleId
      *
      * @return bool|int
      */
-    public function updateMuscle($aData, $iMuscleId) {
-		try {
+    public function updateMuscle($aData, $iMuscleId) 
+    {
+        try {
             return $this->update($aData, "muscle_id = '" . $iMuscleId . "'");
         } catch(Exception $oException) {
             echo "Fehler in " . __FUNCTION__ . " der Klasse " . __CLASS__ . "<br />";
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 
     /**
      * delete muscle
@@ -127,8 +135,9 @@ class Muscles extends AbstractDbTable
      *
      * @return bool|int
      */
-    public function deleteMuscle($iMuscleId) {
-		try {
+    public function deleteMuscle($iMuscleId) 
+    {
+        try {
             return $this->delete("muscle_id = '" . $iMuscleId . "'");
 
         } catch(Exception $oException) {
@@ -136,5 +145,5 @@ class Muscles extends AbstractDbTable
             echo "Meldung : " . $oException->getMessage() . "<br />";
             return false;
         }
-	}
+    }
 }
