@@ -12,7 +12,6 @@
  * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     http://www.byte-artist.de
  */
-
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\Users;

@@ -14,13 +14,13 @@
  */
 
 use \Auth\Model\Role\Member;
+use Auth\Service\Auth;
 
 /**
  * Class AbstractController
  */
 abstract class AbstractController extends Zend_Controller_Action
 {
-
     /**
      * @var
      */
@@ -39,7 +39,7 @@ abstract class AbstractController extends Zend_Controller_Action
     /**
      * post dispatch function
      */
-    public function postDispatch() 
+    public function postDispatch()
     {
 
         $params = $this->getRequest()->getParams();
@@ -66,8 +66,8 @@ abstract class AbstractController extends Zend_Controller_Action
         $dbClassName = '\Model\DbTable\\'.$currentControllerName;
 
         /**
- * @var \Model\DbTable\AbstractDbTable $db 
-*/
+         * @var \Model\DbTable\AbstractDbTable $db
+         */
         $db = new $dbClassName();
         $row = $db->findByPrimary($optionId);
 
@@ -77,15 +77,23 @@ abstract class AbstractController extends Zend_Controller_Action
         $resource = new $resourceClassName($row);
         $resourceName = $this->getRequest()->getModuleName().':'.$this->getRequest()->getControllerName();
 
-        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'edit');
-        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource($role->getRole(), $resourceName, 'delete');
+        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource(
+            $role->getRole(),
+            $resourceName,
+            'edit'
+        );
+        Zend_Registry::get('acl')->prepareDynamicPermissionsForCurrentResource(
+            $role->getRole(),
+            $resourceName,
+            'delete'
+        );
 
         if (Zend_Registry::get('acl')->isAllowed($role, $resource, 'edit')) {
             $content .= '<div class="glyphicon glyphicon-edit edit-button" data-id="' . $optionId . '"></div>';
         }
 
         if (Zend_Registry::get('acl')->isAllowed($role, $resource, 'delete')) {
-            $content .= '<div class="glyphicon glyphicon-trash delete-button" data-id="' . $optionId . '"></div>';;
+            $content .= '<div class="glyphicon glyphicon-trash delete-button" data-id="' . $optionId . '"></div>';
         }
 
         return $content;
@@ -96,9 +104,9 @@ abstract class AbstractController extends Zend_Controller_Action
      *
      * @return bool
      */
-    protected function findCurrentUserId() 
+    protected function findCurrentUserId()
     {
-        $user = Zend_Auth::getInstance()->getIdentity();
+        $user = Auth::getInstance()->getIdentity();
 
         if (true == is_object($user)) {
             return $user->user_id;
@@ -113,13 +121,15 @@ abstract class AbstractController extends Zend_Controller_Action
      *
      * @return string
      */
-    protected function convertControllerName($controllerName) 
+    protected function convertControllerName($controllerName)
     {
         return ucFirst(
             preg_replace_callback(
-                '/(\-[a-z]{1})/', function (array $piece) {
+                '/(\-[a-z]{1})/',
+                function (array $piece) {
                     return ucfirst(str_replace('-', '', $piece[1]));
-                }, $controllerName
+                },
+                $controllerName
             )
         );
     }
@@ -132,7 +142,7 @@ abstract class AbstractController extends Zend_Controller_Action
      * @return mixed
      * @throws \Zend_Exception
      */
-    protected function translate($key) 
+    protected function translate($key)
     {
         return Zend_Registry::get('Zend_Translate')->translate($key);
     }

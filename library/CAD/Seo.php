@@ -212,7 +212,7 @@
 		 *
 		 *
 		 */
-		public function createUniqueDbEntry($str_link_name = null, Zend_DbTable &$ref_obj_db = null, $str_table_field_name = null)
+		public function createUniqueDbEntry($str_link_name = null, \Zend_Db_Table &$ref_obj_db = null, $str_table_field_name = null)
 		{
 			if(!$str_link_name)
 			{
@@ -244,7 +244,7 @@
 			   $str_table_field_name)
 			{
 			
-				$select = $ref_obj_db->select(ZEND_DB_TABLE::SELECT_WITH_FROM_PART);
+				$select = $ref_obj_db->select(Zend_Db_Table::SELECT_WITH_FROM_PART);
 				$i_max_count = 100;
 				$i_count = 0;
 				

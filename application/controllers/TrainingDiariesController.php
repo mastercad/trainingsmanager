@@ -12,7 +12,6 @@
  * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     http://www.byte-artist.de
  */
-
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
 use Model\DbTable\TrainingPlans;
@@ -32,8 +31,19 @@ use Model\DbTable\TrainingPlanXExercise;
  */
 class TrainingDiariesController extends AbstractController
 {
+    /**
+     * @var null
+     */
     protected $_iMinBeanspruchterMuskel = null;
+
+    /**
+     * @var null
+     */
     protected $_iMaxBeanspruchterMuskel = null;
+
+    /**
+     * @var array
+     */
     protected $_aBeanspruchteMuskeln = array();
 
     /**
@@ -56,7 +66,7 @@ class TrainingDiariesController extends AbstractController
     /**
      * index action
      */
-    public function indexAction() 
+    public function indexAction()
     {
     }
 
@@ -65,7 +75,7 @@ class TrainingDiariesController extends AbstractController
      * und weiter zu leiten, oder zu entscheiden ob der aktuell angeforderte training-plans nicht "trainierbar" ist,
      * oder um einen bereits angelegten zu öffnen und dahin weiter zu leiten
      */
-    public function startAction() 
+    public function startAction()
     {
         // lade aktuellen training-plans, bei einem splitplan den aktuell laufenden oder den nächsten anstehenden
         // wird der split als hauptplan angefordert, wird ein link angeboten zur übersicht des trainingsplanes
@@ -106,12 +116,15 @@ class TrainingDiariesController extends AbstractController
 
                     // checken ob ein anderer alter training-plans offen ist
                     /**
- * @todo ausformulieren 
-*/
+                     * @todo ausformulieren
+                    */
 
                     // checken ob der training-plans fortgesetzt werden soll oder neu angelegt
                     $oAktuellesTrainingstagebuch =
-                        $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId($trainingPlanId, $iUserId);
+                        $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(
+                            $trainingPlanId,
+                            $iUserId
+                        );
 
                     // keine tagebucheinträge vorhanden
                     if (! $oAktuellesTrainingstagebuch->count()) {
@@ -139,15 +152,22 @@ class TrainingDiariesController extends AbstractController
                             $trainingDiaryXTrainingPlanId
                         );
 
-                        $oAktuellesTrainingstagebuch = $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId($trainingPlanId, $iUserId);
+                        $oAktuellesTrainingstagebuch =
+                            $trainingDiaryXTrainingPlanStorage->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(
+                                $trainingPlanId,
+                                $iUserId
+                            );
                         $this->redirect(
-                            '/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_diary_x_training_plan_id, $aParams
+                            '/training-diaries/show-exercise/id/' .
+                            $oAktuellesTrainingstagebuch->current()->training_diary_x_training_plan_id,
+                            $aParams
                         );
 
                         // habe einen offenen training-plans gefunden, leite an die übersicht der übungen weiter
                     } elseif (1 <= $oAktuellesTrainingstagebuch->count()) {
                         $this->redirect(
-                            '/training-diaries/show-exercise/id/' . $oAktuellesTrainingstagebuch->current()->training_diary_x_training_plan_id,
+                            '/training-diaries/show-exercise/id/' .
+                            $oAktuellesTrainingstagebuch->current()->training_diary_x_training_plan_id,
                             $aParams
                         );
                     } else {
@@ -167,8 +187,11 @@ class TrainingDiariesController extends AbstractController
      *
      * @return mixed
      */
-    private function createTrainingDiaryExerciseEntry($trainingPlanXExerciseId, $trainingDiaryId, $trainingDiaryXTrainingPlanId)
-    {
+    private function createTrainingDiaryExerciseEntry(
+        $trainingPlanXExerciseId,
+        $trainingDiaryId,
+        $trainingDiaryXTrainingPlanId
+    ) {
         $iUserId = $this->findCurrentUserId();
 
         $trainingDiaryXTrainingPlanExerciseDb = new TrainingDiaryXTrainingPlanExercise();
@@ -186,7 +209,7 @@ class TrainingDiariesController extends AbstractController
     /**
      * show action
      */
-    public function showAction() 
+    public function showAction()
     {
         $this->view->headScript()->appendFile(
             $this->view->baseUrl() . '/js/jquery.touchSwipe.min.js',
@@ -200,9 +223,11 @@ class TrainingDiariesController extends AbstractController
         ) {
             $trainingPlanId = $aParams['id'];
             $trainingDiaryXTrainingPlanDb = new TrainingDiaryXTrainingPlan();
-            $trainingDiaryExerciseCollection = $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(
-                $trainingPlanId, $this->findCurrentUserId()
-            );
+            $trainingDiaryExerciseCollection =
+                $trainingDiaryXTrainingPlanDb->findLastOpenTrainingPlanByTrainingPlanIdAndUserId(
+                    $trainingPlanId,
+                    $this->findCurrentUserId()
+                );
 
             if (0 < count($trainingDiaryExerciseCollection)) {
                 $trainingsExercise = null;
@@ -213,9 +238,9 @@ class TrainingDiariesController extends AbstractController
                 $iMaxBeanspruchterMuskel = null;
 
                 foreach ($trainingDiaryExerciseCollection as $trainingsExercise) {
-                    if (false === empty($oTrainingstagebuchTrainingsplanRow->trainingsplan_uebung_fk)) {
+                    if (false === empty($trainingsExercise->trainingsplan_uebung_fk)) {
                         $oBeanspruchteMuskelnFuerUebung = $exerciseXMuscleDb->findMusclesForExercise(
-                            $oTrainingstagebuchTrainingsplanRow->trainingsplan_uebung_fk
+                            $trainingsExercise->trainingsplan_uebung_fk
                         );
 
                         foreach ($oBeanspruchteMuskelnFuerUebung as $oBeanspruchterMuskelFuerUebung) {
@@ -231,22 +256,24 @@ class TrainingDiariesController extends AbstractController
                             if (null == $iMinBeanspruchterMuskel
                                 || $iMinBeanspruchterMuskel > $aBeanspruchteMuskeln[$oBeanspruchterMuskelFuerUebung->muskel_name]
                             ) {
-                                $iMinBeanspruchterMuskel = $aBeanspruchteMuskeln[$oBeanspruchterMuskelFuerUebung->muskel_name];
+                                $iMinBeanspruchterMuskel =
+                                    $aBeanspruchteMuskeln[$oBeanspruchterMuskelFuerUebung->muskel_name];
                             }
                             if (null == $iMaxBeanspruchterMuskel
                                 || $iMaxBeanspruchterMuskel < $aBeanspruchteMuskeln[$oBeanspruchterMuskelFuerUebung->muskel_name]
                             ) {
-                                $iMaxBeanspruchterMuskel = $aBeanspruchteMuskeln[$oBeanspruchterMuskelFuerUebung->muskel_name];
+                                $iMaxBeanspruchterMuskel =
+                                    $aBeanspruchteMuskeln[$oBeanspruchterMuskelFuerUebung->muskel_name];
                             }
                         }
-                        $sContent .= $this->generateViewForTrainingPlan($oTrainingstagebuchTrainingsplanRow);
+                        $sContent .= $this->generateViewForTrainingPlan($trainingsExercise);
                     }
                 }
                 $aViewContent = $this->getTrainingPlanInfo($trainingsExercise);
                 $this->view->assign('iMinBeanspruchterMuskel', $iMinBeanspruchterMuskel);
                 $this->view->assign('iMaxBeanspruchterMuskel', $iMaxBeanspruchterMuskel);
                 $this->view->assign('aBeanspruchteMuskeln', $aBeanspruchteMuskeln);
-                $this->view->assign('iTrainingsplanId', $iTrainingstagebuchTrainingsplanId);
+                $this->view->assign('iTrainingsplanId', $trainingPlanId);
                 $this->view->assign('iPrevTrainingsplanId', $aViewContent['prevTrainingsplanId']);
                 $this->view->assign('iNextTrainingsplanId', $aViewContent['nextTrainingsplanId']);
                 $this->view->assign('iActualPos', $aViewContent['actualPos']);
@@ -261,20 +288,24 @@ class TrainingDiariesController extends AbstractController
     /**
      * show exercise action
      */
-    public function showExerciseAction() 
+    public function showExerciseAction()
     {
-
-        $this->view->headScript()->appendFile($this->view->baseUrl() . '/js/jquery.touchSwipe.min.js', 'text/javascript');
+        $this->view->headScript()->appendFile(
+            $this->view->baseUrl() . '/js/jquery.touchSwipe.min.js',
+            'text/javascript'
+        );
         $trainingDiaryXTrainingPlanId = $this->getParam('id');
 
         if (0 < $trainingDiaryXTrainingPlanId) {
             $this->_aBeanspruchteMuskeln = array();
             $this->_iMinBeanspruchterMuskel = null;
             $this->_iMaxBeanspruchterMuskel = null;
-            $trainingPlanExerciseId = $aParams['id'];
 
             $trainingPlanXExerciseDb = new TrainingDiaryXTrainingPlan();
-            $trainingPlanXExerciseCollection = $trainingPlanXExerciseDb->findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId($trainingDiaryXTrainingPlanId);
+            $trainingPlanXExerciseCollection =
+                $trainingPlanXExerciseDb->findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId(
+                    $trainingDiaryXTrainingPlanId
+                );
 
             $exercisesContent = '';
             $count = 0;
@@ -286,8 +317,14 @@ class TrainingDiariesController extends AbstractController
                     $trainingDiaryViewGenerator->setExercisesCount(count($trainingPlanXExerciseCollection));
                     $exercisesContent .= $trainingDiaryViewGenerator->generateExerciseContent($trainingPlanXExercise);
                     $aViewContent = $this->getExerciseInfo($trainingPlanXExercise);
-                    $this->view->assign('trainingDiaryId', $trainingPlanXExercise->offsetGet('training_diary_x_training_plan_training_diary_fk'));
-                    $this->view->assign('trainingPlanExerciseId', $trainingPlanExerciseId);
+                    $this->view->assign(
+                        'trainingDiaryId',
+                        $trainingPlanXExercise->offsetGet('training_diary_x_training_plan_training_diary_fk')
+                    );
+                    $this->view->assign(
+                        'trainingPlanExerciseId',
+                        $trainingPlanXExercise->offsetGet('training_x_exercise_id')
+                    );
                     $this->view->assign('prevTrainingPlanExerciseId', $aViewContent['prevTrainingPlanExerciseId']);
                     $this->view->assign('nextTrainingPlanExerciseId', $aViewContent['nextTrainingPlanExerciseId']);
                     $this->view->assign('iActualPos', $aViewContent['actualPos']);
@@ -311,7 +348,7 @@ class TrainingDiariesController extends AbstractController
     /**
      * edit action
      */
-    public function editAction() 
+    public function editAction()
     {
         // hier kann man die übung bearbeiten, vielleicht ist das unnötig, oder man hat hier die ansicht einer
         // übung des aktuellen trainingsplanes drin
@@ -320,7 +357,7 @@ class TrainingDiariesController extends AbstractController
     /**
      * save action
      */
-    public function saveAction() 
+    public function saveAction()
     {
 
         if (0 < $this->getParam('trainingDiaryExerciseInformation')) {

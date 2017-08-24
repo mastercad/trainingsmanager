@@ -12,9 +12,8 @@
  * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     http://www.byte-artist.de
  */
-
-require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
+require_once APPLICATION_PATH . "/../library/qrlib/qrlib.php";
 
 /**
  * Class QrController

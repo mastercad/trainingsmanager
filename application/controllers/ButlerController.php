@@ -12,10 +12,9 @@
  * @license  GPL http://opensource.org/licenses/gpl-license.php GNU Public License
  * @link     http://www.byte-artist.de
  */
-
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-use \Service\Generator\Thumbnail;
+use Service\Generator\Thumbnail;
 
 /**
  * Class ButlerController
@@ -27,7 +26,7 @@ class ButlerController extends AbstractController
      *
      * this action generates image
      */
-    public function createThumbAction() 
+    public function createThumbAction()
     {
         $this->view->layout()->disableLayout();
         $this->getHelper('viewRenderer')->setNoRender();
@@ -41,7 +40,7 @@ class ButlerController extends AbstractController
      *
      * this action generates source string
      */
-    public function createImageStringAction() 
+    public function createImageStringAction()
     {
 
         $this->view->layout()->disableLayout();

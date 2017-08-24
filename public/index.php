@@ -48,6 +48,8 @@ function customAutoload($class) {
             if (is_readable($classFilePathName)) {
                 require_once $classFilePathName;
                 return true;
+            } else {
+                return false;
             }
         }
 
@@ -58,7 +60,7 @@ function customAutoload($class) {
             if (array_key_exists($pathPiece, $map)) {
                 $pathPiece = str_replace(array_keys($map), array_values($map), $pathPiece);
                 $replacedPath .= '/' . $pathPiece;
-            } else if (!$moduleDirectoryFound
+            } elseif (!$moduleDirectoryFound
                 && array_key_exists(strtoupper($pathPiece), $modules)
             ) {
                 $replacedPath .= '/modules/' . $modules[strtoupper($pathPiece)];

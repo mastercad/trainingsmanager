@@ -76,7 +76,7 @@ abstract class GeneratorAbstract
     protected function generateDetailOptionsContent($id)
     {
         $currentControllerName = $this->convertControllerName($this->getControllerName());
-        $dbClassName = 'Model_DbTable_'.$currentControllerName;
+        $dbClassName = '\Model\DbTable\\'.$currentControllerName;
 
         /**
          * @var AbstractDbTable $db
@@ -86,7 +86,7 @@ abstract class GeneratorAbstract
 
         $content = '';
         $role = new Member();
-        $resourceClassName = 'Auth_Model_Resource_'.$currentControllerName;
+        $resourceClassName = '\Auth\Model\Resource\\'.$currentControllerName;
         $resource = new $resourceClassName($row);
         $resourceName = $this->getModuleName().':'.$this->getControllerName();
 
