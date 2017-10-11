@@ -124,6 +124,12 @@
         </h3>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-sm-12 exercise-video">
+        <?php echo $this->videoContent;?>
+    </div>
+</div>
 <!--    <div id="exercise_video"-->
 <!--         style="margin-top: 5px;">-->
 <!--    </div>-->
@@ -198,7 +204,8 @@
 <script type="text/javascript">
 
     jQuery(document).ready(function() {
-        var dropzone = null;
+        var previewPictureDropzone = null;
+        var videoDropzone = null;
 
         function save() {
             var hasErrors = false;
@@ -211,7 +218,7 @@
                 messages.push({'type': 'fehler', 'message': '<?php echo $this->translate('tooltip_exercise_needs_name');?>'});
             }
 
-            if (!jQuery.trim(jQuery('#exercise_description').html()).length) {
+            if (!jQuery.trim(jQuery('#exercise_description').val()).length) {
                 hasErrors = true;
                 messages.push({'type': 'fehler', 'message': 'Die Beschreibung der Übung fehlt!'});
             }
@@ -550,8 +557,8 @@
         initOptions();
         initPreviewThumbRemove();
 
-        function initDropZone() {
-            dropzone = new Dropzone('#upload', {
+        function initPreviewPictureDropZone() {
+            previewPictureDropzone = new Dropzone('#upload', {
                 url: '/' + controller + '/upload-picture',
                 previewTemplate: document.querySelector('#preview-template').innerHTML,
                 parallelUploads: 2,
@@ -615,6 +622,29 @@
                     });
                     jQuery(".dz-details").on("click", function (e) {
                         refreshPreviewPicture(jQuery(this));
+                    });
+                }
+            });
+        }
+
+        function initVideoDropZone() {
+            videoDropzone = new Dropzone('#upload_video', {
+                url: '/' + controller + '/upload-video',
+                parallelUploads: 2,
+                thumbnailHeight: 120,
+                thumbnailWidth: 120,
+                maxFilesize: 35,
+                filesizeBase: 1000,
+                init: function () {
+                    this.on("success", function (file, response) {
+                        var files = JSON.parse(response);
+                        file.serverId = files[0].id;
+                        jQuery(file.previewElement).find('.dz-details').data('source-path', files[0].paths.html_pfad)
+                            .unbind('click')
+                            .click(function () {
+                                refreshPreviewPicture(jQuery(this));
+                            }
+                        );
                     });
                 }
             });
@@ -778,8 +808,12 @@
                     considerDropZoneBackgroundDimensions();
                 });
 
-                if (!dropzone) {
-                    initDropZone();
+                if (!previewPictureDropzone) {
+                    initPreviewPictureDropZone();
+                }
+
+                if (!videoDropzone) {
+                    initVideoDropZone();
                 }
             }
         }

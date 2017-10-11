@@ -6,23 +6,20 @@
  * Time: 23:40
  */
 
-namespace Auth;
+//namespace Auth;
 
-use \AbstractController;
+//use \AbstractController;
 use Auth\Model\DbTable\Users;
-use Zend_Validate_EmailAddress;
+//use Zend_Validate_EmailAddress;
 use Service\GlobalMessageHandler;
 use Model\Entity\Message;
-use CAD_Tools;
-use CAD_Tool_TemplateHandler;
-use Zend_Mail;
-
-
-
+//use CAD_Tools;
+//use CAD_Tool_TemplateHandler;
+//use Zend_Mail;
 
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-class RegisterController extends AbstractController
+class Auth_RegisterController extends AbstractController
 {
 
     public function indexAction()

@@ -1,0 +1,10 @@
+<?php
+if (isset($this->videoName)) {
+    ?>
+    <video src="<?php echo $this->videoName;?>" width="512" height="288"
+           poster="video/titelbild-maus.jpg" controls>
+        <div> Schade – hier käme ein Video, wenn Ihr Browser HTML5
+            Unterstützung für OGG hätte, wie z.B. der aktuelle Firefox</div>
+    </video>
+<?php
+}

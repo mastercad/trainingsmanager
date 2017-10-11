@@ -5,20 +5,20 @@
  * Date: 30.04.15
  * Time: 20:30
  */
+#namespace Auth;
 
-namespace Auth;
+require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-use \AbstractController;
+//use \AbstractController;
 use Auth\Model\DbTable\UserRightGroups as AuthModelDbTableUserRightGroups;
-use CAD_Tool_ModuleControllerActionLister;
+//use CAD_Tool_ModuleControllerActionLister;
 use Model\DbTable\UserRightGroups as ModelDbTableUserRightGroups;
 use Auth\Model\DbTable\UserRightGroupRights;
-use CAD_Tool_Extractor;
-use Zend_Db_Table_Row_Abstract;
+//use CAD_Tool_Extractor;
+//use Zend_Db_Table_Row_Abstract;
 
-class AdminController extends AbstractController
+class Auth_AdminController extends AbstractController
 {
-
     /**
      * @var array
      */

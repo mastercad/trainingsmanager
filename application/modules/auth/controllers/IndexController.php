@@ -1,7 +1,7 @@
 <?php
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-class IndexController extends AbstractController
+class Auth_IndexController extends AbstractController
 {
     public function __init()
     {

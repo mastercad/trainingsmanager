@@ -160,6 +160,13 @@ function removeContent() {
 }
 
 function showDialog(message, state) {
+    if (jQuery.isArray(message)) {
+        var tempMessage = '';
+        for (var pos = 0; pos < message.length; pos++) {
+            tempMessage += message[pos].message + "\r\n";
+        }
+        message = tempMessage;
+    }
     BootstrapDialog.show({
         message: message,
         type: state,

@@ -5,16 +5,12 @@
  * Date: 12.06.15
  * Time: 23:38
  */
-
-namespace Auth;
-
-use \AbstractController;
-
-
-
+#namespace Auth;
 
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-class LogoutController extends AbstractController
+#use \AbstractController;
+
+class Auth_LogoutController extends AbstractController
 {
 }

@@ -84,7 +84,9 @@ class ExercisesController extends AbstractController
                 $this->view->assign($exercise->toArray());
                 $this->view->assign('detailOptionsContent', $this->generateDetailOptionsContent($exerciseId));
                 $this->view->assign('previewPictureContent', $this->generatePreviewPictureContent($exercise));
-                $this->view->assign('exerciseMuscleGroupsContent', $this->generateExerciseMuscleGroupsContent($exercise));
+                $this->view->assign('videoContent', $this->generateVideoContent($exercise));
+                $this->view->assign('exerciseMuscleGroupsContent',
+                    $this->generateExerciseMuscleGroupsContent($exercise));
                 $this->view->assign('exerciseOptionsContent', $this->generateExerciseOptionsContent($exerciseId));
                 $this->view->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($exerciseId));
             } else {
@@ -128,6 +130,7 @@ class ExercisesController extends AbstractController
             }
             $this->view->assign('previewPicturesContent', $this->generatePreviewPicturesForEditContent($exerciseId));
             $this->view->assign('previewPictureContent', $this->generatePreviewPictureForEditContent($exercise));
+            $this->view->assign('videoContent', $this->generateVideoForEditContent($exercise));
             $this->view->assign('exerciseTypeSelectContent', $this->generateExerciseTypeContent($exercise));
             $this->view->assign('deviceOptionsDropDownContent', $this->generateDeviceOptionsDropDownContent());
             $this->view->assign('exerciseOptionsDropDownContent', $this->generateExerciseOptionsDropDownContent());
@@ -536,10 +539,15 @@ class ExercisesController extends AbstractController
         $exerciseOptionId = $this->getParam('exercise_option_id');
 
         $exerciseXExerciseOptionDb = new ExerciseXExerciseOption();
-        $exerciseXExerciseOption = $exerciseXExerciseOptionDb->findExerciseOptionForExercise($exerciseId, $exerciseOptionId);
+        $exerciseXExerciseOption = $exerciseXExerciseOptionDb->findExerciseOptionForExercise(
+            $exerciseId,
+            $exerciseOptionId
+        );
 
         $this->view->assign($exerciseXExerciseOption->toArray());
-        $this->view->assign('exercise_option_value', $exerciseXExerciseOption->offsetGet('exercise_x_exercise_option_exercise_option_value'));
+        $this->view->assign('exercise_option_value',
+            $exerciseXExerciseOption->offsetGet('exercise_x_exercise_option_exercise_option_value')
+        );
         $this->view->assign('exerciseOptionContent', $this->view->render('/loops/exercise-option-edit.phtml'));
     }
 
@@ -561,7 +569,9 @@ class ExercisesController extends AbstractController
 
         foreach ($exerciseXExerciseOptionCollection as $exerciseOption) {
             $this->view->assign($exerciseOption->toArray());
-            $this->view->assign('exercise_option_value', $exerciseOption->offsetGet('exercise_x_exercise_option_exercise_option_value'));
+            $this->view->assign('exercise_option_value', $exerciseOption->offsetGet(
+                'exercise_x_exercise_option_exercise_option_value')
+            );
             $content .= $this->view->render('/loops/exercise-option-edit.phtml');
         }
         return $content;
@@ -642,19 +652,73 @@ class ExercisesController extends AbstractController
     }
 
     /**
+     * generate preview picture content for edit
+     *
+     * @param $exercise
+     *
+     * @return string
+     */
+    private function generateVideoForEditContent($exercise)
+    {
+        $videoPath = $this->generateVideoPath($exercise);
+        $tempVideoPath = '/tmp/exercises/videos';
+
+        $fileService = new CAD_File();
+        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4']);
+        $tempFiles = $fileService->holeDateienAusPfad( APPLICATION_PATH.'/../public'.$tempVideoPath.'/');
+        $fileService = new CAD_File();
+        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4']);
+        $files = $fileService->holeDateienAusPfad( APPLICATION_PATH.'/../public'.$videoPath.'/');
+        if (is_array($files)
+            && 0 < count($files)
+        ) {
+            $this->view->assign('videoName', $videoPath.'/'.basename($files[0]));
+        } elseif (is_array($tempFiles)
+            && 0 < $tempFiles
+        ) {
+            $this->view->assign('videoName', $tempVideoPath.'/'.basename($tempFiles[0]));
+        }
+        $this->view->assign('dropZoneBackgroundImage',$videoPath);
+        return $this->view->render('loops/video-for-edit.phtml');
+    }
+
+    private function generateVideoContent($exercise) {
+        $videoPath = $this->generateVideoPath($exercise);
+        $fileService = new CAD_File();
+        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4']);
+        $files = $fileService->holeDateienAusPfad(APPLICATION_PATH.'/../public'.$videoPath.'/');
+        if (is_array($files)
+            && 0 < count($files)
+        ) {
+            $this->view->assign('videoName', $videoPath.'/'.basename($files[0]));
+        }
+        $this->view->assign('dropZoneBackgroundImage',$videoPath);
+        return $this->view->render('loops/video.phtml');
+    }
+
+    private function generateVideoPath($exercise) {
+        $previewPicturePath = '';
+        if ($exercise instanceof Zend_Db_Table_Row) {
+            $previewPicturePath = '/videos/exercises/' . $exercise->offsetGet('exercise_id') . '/';
+            $tempPicturePath = '/tmp/exercises/videos/';
+            $this->view->assign('videoPath', $previewPicturePath);
+            $this->view->assign('tempVideoPath', $tempPicturePath);
+        }
+        return $previewPicturePath;
+    }
+
+    /**
      * generate preview picture path
      *
      * @param Zend_Db_Table_Row $exercise
      *
      * @return string
      */
-    private function generatePreviewPicturePath($exercise) 
-    {
-
+    private function generatePreviewPicturePath($exercise) {
         $previewPicturePath = '/images/content/statisch/grafiken/kein_bild.png';
         if ($exercise instanceof Zend_Db_Table_Row) {
             $picturePath = '/images/content/dynamisch/exercises/' . $exercise->offsetGet('exercise_id') . '/';
-            $tempPicturePath = '/tmp/exercises/';
+            $tempPicturePath = '/tmp/exercises/pictures/';
 
             if (0 < strlen(trim($exercise->offsetGet('exercise_preview_picture')))
                 && file_exists(getcwd() . $picturePath . $exercise->offsetGet('exercise_preview_picture'))
@@ -672,12 +736,11 @@ class ExercisesController extends AbstractController
     /**
      * upload picture action
      */
-    public function uploadPictureAction() 
-    {
+    public function uploadPictureAction() {
         $this->view->layout()->disableLayout();
         $result = [];
         if (!empty($_FILES)) {
-            $temp_bild_pfad = getcwd() . '/tmp/exercises/';
+            $temp_bild_pfad = getcwd() . '/tmp/exercises/pictures';
 
             foreach ($_FILES as $fileName => $fileData) {
                 $obj_file = new CAD_File();
@@ -696,6 +759,92 @@ class ExercisesController extends AbstractController
             }
         }
         $this->view->assign('json', json_encode($result));
+    }
+
+    /**
+     * upload picture action
+     */
+    public function uploadVideoAction() {
+        $this->view->layout()->disableLayout();
+        $tmpPath = getcwd() . '/tmp/exercises/videos';
+        $result = [];
+        $result = $this->processUploadedFiles('file', $tmpPath, $result);
+
+        $this->view->assign('json', json_encode($result));
+    }
+
+    private function processUploadedFiles($identifier = 'file', $tmpPath, &$result)
+    {
+        if (!is_array($_FILES)) {
+            return ['message' => 'no uploaded files found!', 'status' => 'error'];
+        }
+        if (array_key_exists($identifier, $_FILES)) {
+            return $this->processUploadedFile($_FILES[$identifier], $tmpPath, $result);
+        }
+        foreach ($_FILES as $fileInformation) {
+            $this->processUploadedFile($fileInformation, $tmpPath, $result);
+        }
+        return $result;
+    }
+
+    private function processUploadedFile($fileInformation, $tmpPath, &$result) {
+        if (empty($fileInformation['error'])) {
+
+            $obj_file = new CAD_File();
+            $obj_file->setDestPath($tmpPath);
+            $obj_file->setAllowedExtensions(array('mpg', 'mp4', 'avi'));
+            $obj_file->setUploadedFiles($fileInformation);
+            $obj_file->moveUploadedFiles();
+
+            $a_files = $obj_file->getDestFiles();
+            if (true === isset($a_files[0][CAD_FILE::HTML_PFAD])) {
+                $resultCount = count($result);
+                $result[$resultCount] = [];
+                $result[$resultCount]['id'] = $a_files[0][CAD_FILE::FILE];
+                $result[$resultCount]['paths'] = $a_files[0];
+            }
+        } else {
+            $message = 'Error uploading file';
+            $this_file = $fileInformation['name'];
+
+            switch ($fileInformation['error']) {
+                case UPLOAD_ERR_OK:
+                    $message = false;;
+                    break;
+                case UPLOAD_ERR_INI_SIZE:
+                case UPLOAD_ERR_FORM_SIZE:
+                    $message .= ' - file too large (limit of ' . "35MB" . ' bytes).';
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $message .= ' - file upload was not completed.';
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $message .= ' - zero-length file uploaded.';
+                    break;
+                default:
+                    $message .= ' - internal error #' . $fileInformation['error'];
+                    break;
+            }
+            if (!$message) {
+                if  (!is_uploaded_file($fileInformation['tmp_name'])) {
+                    $message = 'Error uploading file - unknown error.';
+                } else {
+                    // Let's see if we can move the file...
+                    $dest .= '/' . $this_file;
+                    if (! move_uploaded_file($_FILES['file']['tmp_name'], $dest)) { // No error supporession so we can see the underlying error.
+                        $message = 'Error uploading file - could not save upload (this will probably be a permissions problem in ' . $dest . ')';
+                    } else {
+                        $message = 'File uploaded okay.';
+                    }
+                }
+            }
+            $resultCount = count($result);
+            $result[$resultCount] = [
+                'message' => $message,
+                'status' => 'error'
+            ];
+        }
+        return $result;
     }
 
     /**
@@ -721,7 +870,7 @@ class ExercisesController extends AbstractController
     {
         $previewPictureContent = '';
         $obj_files = new CAD_File();
-        $obj_files->setSourcePath(getcwd() . '/tmp/exercises');
+        $obj_files->setSourcePath(getcwd() . '/tmp/exercises/pictures');
         $obj_files->addSourcePath(getcwd() . "/images/content/dynamisch/exercises/" . $exerciseId);
         $obj_files->holeBilderAusPfad();
 
@@ -908,10 +1057,10 @@ class ExercisesController extends AbstractController
                     && 0 < count($data)
                 ) {
                     $currentExercise = $exercisesDb->findExerciseById($exerciseId);
-                    if ((                        isset($data['exercise_name'])
+                    if ((isset($data['exercise_name'])
                         && 0 < strlen(trim($data['exercise_name']))
                         && $currentExercise['exercise_name'] != $data['exercise_name']) 
-                        || (                        isset($currentExercise['exercise_name'])
+                        || (isset($currentExercise['exercise_name'])
                         && 0 < strlen(trim($currentExercise['exercise_name']))
                         && ! strlen(trim($currentExercise['exercise_seo_link'])))
                     ) {
@@ -970,14 +1119,26 @@ class ExercisesController extends AbstractController
                 if ($exerciseId) {
                     /* bilder verschieben */
                     $cadFiles = new CAD_File();
-                    
-                    $sourcePath = getcwd() . '/tmp/exercises/';
+
+                    $sourcePath = getcwd() . '/tmp/exercises/pictures/';
                     $destinationPath = getcwd() . '/images/content/dynamisch/exercises/' . $exerciseId . '/';
 
                     if ($cadFiles->checkAndCreateDir($destinationPath)) {
                         $cadFiles->setSourcePath($sourcePath);
                         $cadFiles->setDestPath($destinationPath);
                         $cadFiles->setAllowedExtensions(array('jpg', 'jpeg', 'png', 'gif', 'svg'));
+                        $cadFiles->verschiebeFiles();
+                    }
+                    /* videos verschieben */
+                    $cadFiles = new CAD_File();
+
+                    $sourcePath = getcwd() . '/tmp/exercises/videos/';
+                    $destinationPath = getcwd() . '/videos/exercises/' . $exerciseId . '/';
+
+                    if ($cadFiles->checkAndCreateDir($destinationPath)) {
+                        $cadFiles->setSourcePath($sourcePath);
+                        $cadFiles->setDestPath($destinationPath);
+                        $cadFiles->setAllowedExtensions(array('avi', 'mpg', 'mp4'));
                         $cadFiles->verschiebeFiles();
                     }
 

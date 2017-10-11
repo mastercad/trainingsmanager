@@ -1,6 +1,3 @@
- 
-
-namespace Auth;
 <?php
 /**
  * Created by PhpStorm.
@@ -8,20 +5,15 @@ namespace Auth;
  * Date: 12.06.15
  * Time: 23:39
  */
-
-
-
-use \AbstractController;
-use Zend_Auth;
+#namespace Auth;
 
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-class LoginController extends AbstractController
-{
-    public function __init()
-    {
-    }
+//use \AbstractController;
+//use Zend_Auth;
 
+class Auth_LoginController extends AbstractController
+{
     public function indexAction()
     {
         $oZendAuth = Zend_Auth::getInstance();

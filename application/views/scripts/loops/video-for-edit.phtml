@@ -1,0 +1,20 @@
+<div id="dropzone_video" class="dropzone col-sm-9">
+    <form class="dropzone needsclick" id="upload_video" enctype="multipart/form-data"
+          style="background-image: url('<?php echo $this->dropZoneBackgroundImage;?>'); background-position: center top;
+        background-size: 100% auto; background-repeat: no-repeat;">
+        <span class="dz-message needsclick">
+            Drop files here or click to upload.<br />
+        </span>
+    </form>
+</div>
+
+<?php
+    if (isset($this->videoName)) {
+?>
+        <video src="<?php echo $this->videoName;?>" width="512" height="288"
+               poster="video/titelbild-maus.jpg" controls>
+            <div> Schade – hier käme ein Video, wenn Ihr Browser HTML5
+                Unterstützung für OGG hätte, wie z.B. der aktuelle Firefox</div>
+        </video>
+<?php
+    }

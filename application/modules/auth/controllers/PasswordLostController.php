@@ -5,25 +5,21 @@
  * Date: 12.06.15
  * Time: 23:41
  */
+//namespace Auth;
 
-namespace Auth;
-
-use \AbstractController;
-use Zend_Validate_EmailAddress;
+//use \AbstractController;
+//use Zend_Validate_EmailAddress;
 use Auth\Model\DbTable\Users;
-use Zend_Db_Table_Row_Abstract;
-use CAD_Tools;
-use CAD_Tool_TemplateHandler;
-use Zend_Mail;
+//use Zend_Db_Table_Row_Abstract;
+//use CAD_Tools;
+//use CAD_Tool_TemplateHandler;
+//use Zend_Mail;
 use Service\GlobalMessageHandler;
 use Model\Entity\Message;
 
-
-
-
 require_once APPLICATION_PATH . '/controllers/AbstractController.php';
 
-class PasswordLostController extends AbstractController
+class Auth_PasswordLostController extends AbstractController
 {
 
     public function indexAction()
