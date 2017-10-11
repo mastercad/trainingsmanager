@@ -1,3 +1,29 @@
-<div class="proposal" data-proposal-text="<?php echo base64_encode($this->muscle_group_name);?>"
-     data-proposal-id="<?php echo $this->muscle_group_id;?>"
-    ><?php echo $this->muscle_group_name;?></div>
+<?php
+    $name = $this->muscle_group_name;
+    $muscleMatch = false;
+    if (preg_match('/'.$this->regexPattern.'/', $this->muscle_name)) {
+        $muscleMatch = true;
+        $name = $this->muscle_name;
+    }
+
+    if (! array_key_exists($this->muscle_group_name, $this->processedMuscleGroups)) {
+        $this->processedMuscleGroups[$this->muscle_group_name] = true;
+?>
+        <div class="proposal"
+             data-proposal-text="<?php echo base64_encode($this->muscle_group_name); ?>"
+             data-proposal-id="<?php echo $this->muscle_group_id; ?>"
+        ><?php echo $this->muscle_group_name; ?></div>
+<?php
+    }
+
+    if ($muscleMatch
+        && ! array_key_exists($this->muscle_name, $this->processedMuscles)
+    ) {
+        $this->processedMuscles[$this->muscle_name] = true;
+    ?>
+    <div class="proposal" style="margin-left: 15px;"
+         data-proposal-text="<?php echo base64_encode($this->muscle_group_name); ?>"
+         data-proposal-id="<?php echo $this->muscle_group_id; ?>"
+        ><?php echo $this->muscle_name; ?></div>
+<?php
+}

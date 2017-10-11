@@ -561,7 +561,7 @@
             previewPictureDropzone = new Dropzone('#upload', {
                 url: '/' + controller + '/upload-picture',
                 previewTemplate: document.querySelector('#preview-template').innerHTML,
-                parallelUploads: 2,
+                parallelUploads: 10,
                 thumbnailHeight: 120,
                 thumbnailWidth: 120,
                 maxFilesize: 3,
@@ -630,7 +630,7 @@
         function initVideoDropZone() {
             videoDropzone = new Dropzone('#upload_video', {
                 url: '/' + controller + '/upload-video',
-                parallelUploads: 2,
+                parallelUploads: 1,
                 thumbnailHeight: 120,
                 thumbnailWidth: 120,
                 maxFilesize: 35,

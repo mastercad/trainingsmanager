@@ -288,11 +288,14 @@ class MuscleGroupsController extends AbstractController
         $params = $this->getRequest()->getParams();
 
         if (isset($params['search'])) {
-            $search = base64_decode($params['search']) . '%';
+            $searchString = base64_decode($params['search']);
+            $search =  $searchString. '%';
             $muscleGroupsDb = new MuscleGroups();
 
-            $muscleGroupsProposals = $muscleGroupsDb->findMuscleGroupsByName($search);
+//            $muscleGroupsProposals = $muscleGroupsDb->findMuscleGroupsByName($search);
+            $muscleGroupsProposals = $muscleGroupsDb->findMuscleGroupsByNameOrMuscleName($search);
             $this->view->assign('muscleGroupProposals', $muscleGroupsProposals);
+            $this->view->assign('regexPattern', $searchString.'.*');
         }
     }
 

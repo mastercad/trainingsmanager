@@ -664,10 +664,10 @@ class ExercisesController extends AbstractController
         $tempVideoPath = '/tmp/exercises/videos';
 
         $fileService = new CAD_File();
-        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4']);
+        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4', 'wmv', 'mkv']);
         $tempFiles = $fileService->holeDateienAusPfad( APPLICATION_PATH.'/../public'.$tempVideoPath.'/');
         $fileService = new CAD_File();
-        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4']);
+        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4', 'wmv', 'mkv']);
         $files = $fileService->holeDateienAusPfad( APPLICATION_PATH.'/../public'.$videoPath.'/');
         if (is_array($files)
             && 0 < count($files)
@@ -685,7 +685,7 @@ class ExercisesController extends AbstractController
     private function generateVideoContent($exercise) {
         $videoPath = $this->generateVideoPath($exercise);
         $fileService = new CAD_File();
-        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4']);
+        $fileService->setAllowedExtensions(['avi', 'mpeg', 'mp4', 'wmv', 'mkv']);
         $files = $fileService->holeDateienAusPfad(APPLICATION_PATH.'/../public'.$videoPath.'/');
         if (is_array($files)
             && 0 < count($files)
@@ -792,7 +792,7 @@ class ExercisesController extends AbstractController
 
             $obj_file = new CAD_File();
             $obj_file->setDestPath($tmpPath);
-            $obj_file->setAllowedExtensions(array('mpg', 'mp4', 'avi'));
+            $obj_file->setAllowedExtensions(array('mpg', 'mp4', 'avi', 'wmv', 'mkv'));
             $obj_file->setUploadedFiles($fileInformation);
             $obj_file->moveUploadedFiles();
 
@@ -1138,7 +1138,7 @@ class ExercisesController extends AbstractController
                     if ($cadFiles->checkAndCreateDir($destinationPath)) {
                         $cadFiles->setSourcePath($sourcePath);
                         $cadFiles->setDestPath($destinationPath);
-                        $cadFiles->setAllowedExtensions(array('avi', 'mpg', 'mp4'));
+                        $cadFiles->setAllowedExtensions(array('avi', 'mpg', 'mp4', 'wmv', 'mkv'));
                         $cadFiles->verschiebeFiles();
                     }
 

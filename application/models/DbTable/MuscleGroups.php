@@ -82,6 +82,18 @@ class MuscleGroups extends AbstractDbTable
         }
     }
 
+    public function findMuscleGroupsByNameOrMuscleName($name) {
+        $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
+
+        $select->joinInner('muscle_x_muscle_group', 'muscle_x_muscle_group_muscle_group_fk = muscle_group_id')
+            ->joinInner('muscles', 'muscle_id = muscle_x_muscle_group_muscle_fk')
+            ->where('muscle_name LIKE("'.$name.'")')
+            ->orWhere('muscle_group_name LIKE("'.$name.'")')
+            ->order(['muscle_group_name', 'muscle_name']);
+
+        return $this->fetchAll($select);
+    }
+
     /**
      * save muscle group data
      *
