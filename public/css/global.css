@@ -951,4 +951,13 @@ form.dropzone {display: table-cell;}
     /*z-index: 9999;*/
 }
 
+.qr-code-container {
+    cursor: pointer;
+}
+
+.i-am-centered {
+    margin: auto;
+    max-width: 600px;
+}
+
 /* ]]> */

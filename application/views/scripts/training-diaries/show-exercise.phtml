@@ -8,42 +8,547 @@
 
     if ($this->exerciseContent) {
 ?>
-    <div id="training_diary_exercises"
-         class="row carousel slide"
-         data-interval="false"
-         data-training-diary-id="<?php echo $this->trainingDiaryId; ?>"
-        >
-        <div class="carousel-inner">
-            <?php echo $this->exerciseContent; ?>
+        <div class="row">
+            <div id="exercise_start" class="glyphicon glyphicon-play"></div>
+            <div id="exercise_pause" class="glyphicon glyphicon-pause"></div>
+            <div id="exercise_stop" class="glyphicon glyphicon-stop"></div>
+            <div id="change_call_state" class="glyphicon glyphicon-time"></div>
         </div>
 
-        <a class="left carousel-control" href="#training_diary_exercises" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-        </a>
-        <a class="right carousel-control" href="#training_diary_exercises" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-        </a>
-    </div>
+        <div class="row text-center" >
+            <span id="state_window" style="padding: 15px; border-radius: 15px; color: white; font-weight: bold; display: none;">
+                <span id="exercise_state" class=""></span>
+                <span>Übrige Zeit: </span>
+                <span id="exercise_remaining_time" class=""></span>
+                <span>Sekunden</span>
+                <span>danach: </span>
+                <span id="exercise_next_state" class=""></span>
+                <span>Wiederholungen</span>
+                <span id="exercise_repeat" class=""></span>
+                <span>von</span>
+                <span id="exercise_repeats" class=""></span>
+                <span>Satz</span>
+                <span id="exercise_training_rate" class=""></span>
+                <span>von</span>
+                <span id="exercise_training_rates" class=""></span>
+            </span>
+        </div>
 
-    <button class="btn btn-default btn-primary save">
-        <?php echo $this->translate('label_end_exercise');?>
-    </button>
+        <div id="training_diary_exercises"
+             class="row carousel slide"
+             data-interval="false"
+             data-training-diary-id="<?php echo $this->trainingDiaryId; ?>" >
+            <div class="carousel-inner">
+                <?php echo $this->exerciseContent; ?>
+            </div>
+
+            <a class="left carousel-control" href="#training_diary_exercises" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" href="#training_diary_exercises" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <button class="btn btn-default btn-primary save">
+            <?php echo $this->translate('label_end_exercise');?>
+        </button>
 
 <?php
     } else {
 ?>
-    <div class="col-sm-12">
-        <p>
-            Es gibt für den aktuell ausgewählten Trainingsplan keine offenen Übungen!
-        </p>
-    </div>
+        <div class="col-sm-12">
+            <p>
+                Es gibt für den aktuell ausgewählten Trainingsplan keine offenen Übungen!
+            </p>
+        </div>
 <?php
     }
 ?>
 <script type="text/javascript" language="JavaScript">
+
+    /*****************************************************************************************************************/
+    /*****************************************************************************************************************/
+    /*******************************  Start OF Exercise Counter   ****************************************************/
+    /*****************************************************************************************************************/
+    /*****************************************************************************************************************/
+    const EXECUTION_TYPE_DEFAULT = 'DEFAULT';
+    const EXECUTION_TYPE_UP_DOWN = 'UP_DOWN';
+    const EXECUTION_TYPE_UP_HOLD_DOWN = 'UP_HOLD_DOWN';
+    const EXECUTION_TYPE_INTERVAL = 'INTERVAL';
+
+    const CURRENT_STATE_EXECUTION = 'EXECUTION';
+    const CURRENT_STATE_HOLD = 'HOLD';
+    const CURRENT_STATE_UP = 'UP';
+    const CURRENT_STATE_DOWN = 'DOWN';
+    const CURRENT_STATE_REST = 'REST';
+    const CURRENT_STATE_RATE_REST = 'RATE_REST';
+    const CURRENT_STATE_END = 'END';
+
+    const EXECUTION_COLOR = 'blue';
+    const HOLD_COLOR = 'black';
+    const UP_COLOR = 'red';
+    const DOWN_COLOR = 'yellow';
+    const REST_COLOR = 'green';
+    const RATE_REST_COLOR = 'green';
+    const END_COLOR = 'gray';
+
     var nextCarouselPosition = null;
+
+    /** exercise has interval vor resting and training phases */
+    var isIntervalExercise = null;
+
+    /** duration of resting phase, e.g. 2 sec */
+    var restingPhase = null;
+    var currentRestingTimer = 0;
+
+    var rateRestingPhase = null;
+    var currentRateRestingTimer = 0;
+
+    /** duration of training phase, e.g. 30 sec */
+    var trainingPhase = null;
+
+    /** duration for up of exercise */
+    var exerciseUp = null;
+
+    /** duration for hold of exercise */
+    var exerciseHold = null;
+
+    /** duration for down of exercise */
+    var exerciseDown = null;
+
+    var currentTrainingTimer = 0;
+
+    /** count of repeats of this exercise set, e.g. 3 */
+    var trainingRates = null;
+    var currentTrainingRateCounter = 0;
+
+    /** count of training rates of this exercise, e.g. 15 */
+    var repeats = null;
+    var currentRepeatCounter = 1;
+
+    /** interval of resting, e.g. 2 means 2 / 4 / 6 / 8 / 10 */
+    var restingInterval = null;
+
+    /** interval of training, e.g. 4 / 8 / 12 / 16 / 20 */
+    var trainingInterval = null;
+    var currentTimer = 0;
+    var currentTimerType = null;
+    var nextTimerType = null;
+    var defaultExerciseOptions = {};
+    var currentExecutionType = EXECUTION_TYPE_DEFAULT;
+
+    /** static counter position */
+    var counter = 10;
+    /** object of current running counter timer */
+    var counterTimeout = null;
+
+    var sounds = {};
+
+    sounds[10] = "/sounds/10.mp3";
+    sounds[9] = "/sounds/9.mp3";
+    sounds[8] = "/sounds/8.mp3";
+    sounds[7] = "/sounds/7.mp3";
+    sounds[6] = "/sounds/6.mp3";
+    sounds[5] = "/sounds/5.mp3";
+    sounds[4] = "/sounds/4.mp3";
+    sounds[3] = "/sounds/3.mp3";
+    sounds[2] = "/sounds/2.mp3";
+    sounds[1] = "/sounds/1.mp3";
+    sounds[0] = "/sounds/0.mp3";
+    sounds["HOLD"] = "/sounds/hold.mp3";
+    sounds["UP"] = "/sounds/up.mp3";
+    sounds["DOWN"] = "/sounds/down.mp3";
+    sounds["EXECUTE"] = "/sounds/execution.mp3";
+    sounds["REST"] = "/sounds/rest.mp3";
+    sounds["RATE_REST"] = "/sounds/rest.mp3";
+    sounds["PREPARE"] = "/sounds/prepare.mp3";
+    sounds["NEXT"] = "/sounds/next_exercise.mp3";
+    sounds["END"] = "/sounds/end.mp3";
+    sounds["Beep"] = "/sounds/clock-tick1.wav";
+
+    var repeatContainer = null;
+    var repeatsContainer = null;
+    var trainingRateContainer = null;
+    var trainingRatesContainer = null;
+    var currentStateContainer = null;
+    var nextStateContainer = null;
+    var remainingTimeContainer = null;
+    var stateWindowContainer = null;
+    var currentStateChanged = true;
+    var callStateBeforeStart = true;
+    var timerRunIsPossible = false;
+    var loadedSoundFiles = 0;
+
+
+    function preLoadSounds() {
+        jQuery.each(sounds, function(key, source) {
+            sounds[key] = preLoadSound(source);
+        })
+    }
+
+    /**
+     * preload sound file to prevent waiting time for download current sound file and crash the real timeout duration
+     */
+    function preLoadSound(src) {
+        var sound = document.createElement("audio");
+        if ("src" in sound) {
+            sound.autoPlay = false;
+        } else {
+            sound = document.createElement("bgsound");
+            sound.volume = -10000;
+        }
+        sound.src = src;
+        sound.onloadeddata = function(event) {
+            console.log("LOADET!");
+            console.log(this);
+            registerLoadedSoundFile();
+        };
+        document.body.appendChild(sound);
+        return sound;
+    }
+
+    function registerLoadedSoundFile()  {
+        ++loadedSoundFiles;
+    }
+
+    /**
+     * reset resting timer to resting phase
+     */
+    function resetCurrentRestingTimer() {
+        currentRestingTimer = restingPhase;
+    }
+
+    /**
+     * reset training timer to training phase
+     */
+    function resetCurrentTrainingTimer() {
+        currentTrainingTimer = trainingPhase;
+    }
+
+    /**
+     * reset repeat counter to 0
+     */
+    function resetCurrentRepeatCounter() {
+        currentRepeatCounter = 0;
+    }
+
+    /**
+     * reset rate counter to 1
+     */
+    function resetCurrentRateCounter() {
+        currentTrainingRateCounter = 1;
+    }
+
+    /**
+     * investigate, what next timer type is, depending on current timer type
+     */
+    function investigateNextTimerType()
+    {
+        if (CURRENT_STATE_DOWN == currentTimerType
+            || CURRENT_STATE_EXECUTION == currentTimerType
+        ) {
+            if (currentTrainingRateCounter == trainingRates
+                && currentRepeatCounter == repeats
+            ) {
+                return CURRENT_STATE_END;
+            } else if (currentRepeatCounter == repeats
+                && !isEmpty(rateRestingPhase)
+            ) {
+                return CURRENT_STATE_RATE_REST;
+            } else if (!isEmpty(restingPhase)) {
+                return CURRENT_STATE_REST;
+            } else {
+                if (EXECUTION_TYPE_UP_HOLD_DOWN == currentExecutionType
+                    || EXECUTION_TYPE_UP_DOWN == currentExecutionType
+                ) {
+                    return CURRENT_STATE_UP;
+                }
+                return CURRENT_STATE_EXECUTION;
+            }
+        } else if (CURRENT_STATE_UP == currentTimerType) {
+            if (EXECUTION_TYPE_UP_HOLD_DOWN == currentExecutionType) {
+                return CURRENT_STATE_HOLD;
+            } else {
+                return CURRENT_STATE_DOWN;
+            }
+        } else if (CURRENT_STATE_HOLD == currentTimerType) {
+            return CURRENT_STATE_DOWN;
+        } else {
+            if (EXECUTION_TYPE_UP_HOLD_DOWN == currentExecutionType
+                || EXECUTION_TYPE_UP_DOWN == currentExecutionType
+            ) {
+                return CURRENT_STATE_UP;
+            }
+        }
+        return CURRENT_STATE_EXECUTION;
+    }
+
+    /**
+     * set the current counter timer type and adjust the counter timer himself
+     */
+    function considerTimerType(timerType) {
+        if (CURRENT_STATE_REST == timerType) {
+            currentTimer = restingPhase;
+        } else if (CURRENT_STATE_RATE_REST == currentTimerType) {
+            currentTimer = rateRestingPhase;
+        } else if (CURRENT_STATE_UP == currentTimerType) {
+            currentTimer = exerciseUp;
+            currentRepeatCounter++;
+            considerCurrentTrainingRepeats();
+        } else if (CURRENT_STATE_HOLD == currentTimerType) {
+            currentTimer = exerciseHold;
+        } else if (CURRENT_STATE_DOWN == currentTimerType) {
+            currentTimer = exerciseDown;
+        } else {
+            currentTimer = trainingPhase;
+            currentRepeatCounter++;
+            considerCurrentTrainingRepeats();
+        }
+        currentStateChanged = true;
+    }
+
+    /**
+     * reset repeat counter and increase rate counter, if repeat counter reaches needed repeats
+     */
+    function considerCurrentTrainingRepeats() {
+        if (currentRepeatCounter > repeats) {
+            resetCurrentRepeatCounter();
+            currentRepeatCounter++;
+            currentTrainingRateCounter++;
+        }
+    }
+
+    /**
+     * run the timeout for counting intervals of exercise, every second the current pos is decreased
+     * and if 1 not reached, the timer runs again
+     */
+    function timeout() {
+        counterTimeout = setTimeout(function() {
+            if (currentTrainingRateCounter <= trainingRates) {
+                provideCurrentTimerStatus();
+
+                if (false === callStateBeforeStart
+                    && currentStateChanged
+                ) {
+                    sounds[currentTimerType].play();
+                    currentStateChanged = false;
+                } else if ((false === callStateBeforeStart
+                    && 10 >= currentTimer)
+                    || (true === callStateBeforeStart
+                    && 1 != currentTimer
+                    && 10 >= currentTimer)
+                ) {
+                    sounds[eval(currentTimer)].play();
+                } else if (true === callStateBeforeStart
+                    && 1 == currentTimer
+                ) {
+                    sounds[nextTimerType].play();
+                } else {
+                    sounds['Beep'].play();
+                }
+                --currentTimer;
+                if (1 <= currentTimer) {
+                    timeout();
+                } else {
+                    currentTimerType = investigateNextTimerType();
+                    nextTimerType = investigateNextTimerType();
+                    considerTimerType(currentTimerType);
+                    timeout();
+                }
+            } else {
+                counterTimeout = null;
+                considerPlayStatus();
+                jQuery('#state_window').fadeOut();
+
+            }
+        }, 1000);
+        considerPlayStatus();
+    }
+
+    /**
+     * shows the current timer status for user
+     */
+    function provideCurrentTimerStatus() {
+        stateWindowContainer.css('background-color', eval(currentTimerType+"_COLOR"));
+        currentStateContainer.html(currentTimerType);
+        nextStateContainer.html(nextTimerType);
+        remainingTimeContainer.html(currentTimer);
+        repeatContainer.html(currentRepeatCounter);
+        repeatsContainer.html(repeats);
+        trainingRateContainer.html(currentTrainingRateCounter);
+        trainingRatesContainer.html(trainingRates);
+    }
+
+    /**
+     * hide and show play and hold buttons, depending on current counter timeout
+     */
+    function considerPlayStatus() {
+        if (counterTimeout != null) {
+            jQuery('#exercise_start').hide();
+            jQuery('#exercise_pause').show();
+        } else {
+            jQuery('#exercise_start').show();
+            jQuery('#exercise_pause').hide();
+        }
+    }
+
+    /**
+     * prepares timer conditions, depending on conditions of current exercise
+     */
+    function prepareTimerConditions() {
+        var json = JSON.parse(Base64.decode(jQuery('.training-diary-exercise.active').find('.exercise-option-json').val()));
+        jQuery.each(json, function(key, value) {
+            if (isEmpty(value)) {
+                value = defaultExerciseOptions[key];
+            }
+            eval(key + "=" + value);
+        });
+        currentExecutionType = investigateCurrentExecutionType();
+    }
+
+    /**
+     * investigates current execution type, depending on prepared timer conditions
+     */
+    function investigateCurrentExecutionType() {
+        if (!isEmpty(exerciseUp)
+            && !isEmpty(exerciseDown)
+        ) {
+            if (!isEmpty(exerciseHold)) {
+                return EXECUTION_TYPE_UP_HOLD_DOWN;
+            }
+            return EXECUTION_TYPE_UP_DOWN;
+        }
+        if (true == isIntervalExercise) {
+            return EXECUTION_TYPE_INTERVAL;
+        }
+        return EXECUTION_TYPE_DEFAULT;
+    }
+
+    /**
+     * check, is given value empty
+     */
+    function isEmpty(value) {
+        return (!$.trim(value).length);
+    }
+
+    jQuery(document).ready(function() {
+        jQuery('#exercise_pause').unbind('click').click(function() {
+            clearTimeout(counterTimeout);
+            counterTimeout = null;
+            considerPlayStatus();
+        });
+        jQuery('#exercise_start').unbind('click').click(function() {
+            if (counterTimeout == null) {
+                timeout();
+            }
+            considerPlayStatus();
+        });
+        jQuery('#exercise_stop').unbind('click').click(function() {
+            clearTimeout(counterTimeout);
+            counterTimeout = null;
+            currentTimerType = null;
+            currentStateChanged = true;
+            considerPlayStatus();
+            prepareTimerForFirstStart();
+        });
+
+        jQuery('#change_call_state').unbind('click').click(function() {
+            callStateBeforeStart = !callStateBeforeStart;
+        });
+
+        currentStateContainer = jQuery('#exercise_state');
+        nextStateContainer = jQuery('#exercise_next_state');
+        remainingTimeContainer = jQuery('#exercise_remaining_time');
+        repeatContainer = jQuery('#exercise_repeat');
+        repeatsContainer = jQuery('#exercise_repeats');
+        trainingRateContainer = jQuery('#exercise_training_rate');
+        trainingRatesContainer = jQuery('#exercise_training_rates');
+        stateWindowContainer = jQuery('#state_window');
+
+        prepareTimerConditions();
+
+        /**
+         * set envorinment for first start of timer
+         */
+        function prepareTimerForFirstStart(){
+            resetCurrentRepeatCounter();
+            resetCurrentRateCounter();
+            resetCurrentRestingTimer();
+            resetCurrentTrainingTimer();
+            currentTimerType = investigateNextTimerType();
+            nextTimerType = investigateNextTimerType();
+            considerTimerType(currentTimerType);
+        }
+
+        /**
+         * initial start of timer
+         */
+        function firstStartTimer() {
+            if (true == validateTimerSettings()) {
+                setTimeout(function () {
+                    sounds['PREPARE'].play();
+                }, 500);
+
+                if (true === callStateBeforeStart) {
+                    setTimeout(function () {
+                        sounds[currentTimerType].play();
+                    }, 1500);
+                }
+
+                setTimeout(function () {
+                    timeout();
+                }, 2000);
+                jQuery('#state_window').fadeIn();
+            }
+        }
+
+        function validateTimerSettings() {
+            return ((!isEmpty(trainingPhase)
+                || (!isEmpty(exerciseUp)
+                    && !isEmpty(exerciseDown))
+                )
+                && !isEmpty(trainingRates)
+                && !isEmpty(repeats)
+            );
+        }
+
+        var loadSoundFilesTries = 0;
+        var soundFilesLoadedTimeout = null;
+
+        function allAudioReady() {
+            if (loadSoundFilesTries < 5
+                && loadedSoundFiles < sounds.length
+            ) {
+                soundFilesLoadedTimeout = setTimeout(allAudioReady, 1000);
+                ++loadSoundFilesTries;
+            } else if (loadSoundFilesTries >= 5) {
+                clearTimeout(soundFilesLoadedTimeout);
+                alert("Fehler beim Laden der Soundfiles!");
+            } else {
+                clearTimeout(soundFilesLoadedTimeout);
+                return true;
+            }
+        }
+
+        prepareTimerForFirstStart();
+        preLoadSounds();
+//        firstStartTimer();
+
+        if (allAudioReady()) {
+            firstStartTimer();
+        }
+    });
+
+
+    /*****************************************************************************************************************/
+    /*****************************************************************************************************************/
+    /*******************************   END OF Exercise Counter   *****************************************************/
+    /*****************************************************************************************************************/
+    /*****************************************************************************************************************/
+
 
     jQuery(document).ready(function() {
 
@@ -53,51 +558,12 @@
             if (0 == jQuery('body .qr-dummy').length) {
                 jQuery('body').append('<div class="qr-dummy"></div>');
                 jQuery('.training-diary-exercise.active .qr-code-container').clone().appendTo('body .qr-dummy');
+                var qrContainer = jQuery('body .qr-dummy .qr-code-container');
+                qrContainer.unbind('click').click(function() {
+                    animateQrContainer(jQuery('.qr-code'));
+                });
             }
-
-            var qrContainer = jQuery('body .qr-dummy .qr-code-container');
-
-            var qrWidth = qrContainer.data('qr-width') ? qrContainer.data('qr-width') : qrContainer.width();
-            var qrHeight = qrContainer.data('qr-height') ? qrContainer.data('qr-height') : qrContainer.height();
-            var windowHeight = jQuery(window).height();
-            var windowWidth = jQuery(window).width();
-            var iconWidth = jQuery(this).width();
-            var iconHeight = jQuery(this).height();
-            var iconTop = jQuery(this).offset().top;
-            var iconLeft = jQuery(this).offset().left;
-            var newTop = 0;
-            var newLeft = 0;
-
-            if (true === qrContainer.data('animated')) {
-                console.log("Blende aus!");
-                qrContainer
-                    .animate({
-                        top: iconTop,
-                        left: iconLeft,
-                        height: iconHeight,
-                        width: iconWidth,
-                        opacity: 0
-                    }, function() {
-                        jQuery(this).parent().remove()
-                    }).data('animated', false);
-            } else {
-                console.log('Blende ein!');
-                qrContainer
-                    .data('qr-height', qrHeight)
-                    .data('qr-width', qrWidth)
-                    .css('height', iconHeight)
-                    .css('width', iconWidth)
-                    .css('top', iconTop)
-                    .css('left', iconLeft)
-                    .css('opacity', '0.5')
-                    .animate({
-                        top: (windowHeight - qrHeight) / 2,
-                        left: (windowWidth - qrWidth) / 2,
-                        height: qrHeight,
-                        width: qrWidth,
-                        opacity: 1
-                    }).data('animated', true);
-            }
+            animateQrContainer(this);
         });
 
         // carousel finished
@@ -147,6 +613,71 @@
             );
             return false;
         });
+
+        function animateQrContainer(target) {
+            var qrContainer = jQuery('body .qr-dummy .qr-code-container');
+
+            if (true === qrContainer.data('animated')) {
+                hideQrContainer(target, qrContainer);
+            } else {
+                showQrContainer(target, qrContainer);
+            }
+        }
+
+        function showQrContainer(target, qrContainer) {
+
+            var qrWidth = qrContainer.data('qr-width') ? qrContainer.data('qr-width') : qrContainer.width();
+            var qrHeight = qrContainer.data('qr-height') ? qrContainer.data('qr-height') : qrContainer.height();
+            var windowHeight = jQuery(window).height();
+            var windowWidth = jQuery(window).width();
+            var iconWidth = jQuery(target).width();
+            var iconHeight = jQuery(target).height();
+            var iconTop = jQuery(target).offset().top;
+            var iconLeft = jQuery(target).offset().left;
+            var newTop = 0;
+            var newLeft = 0;
+
+            qrContainer
+                .data('qr-height', qrHeight)
+                .data('qr-width', qrWidth)
+                .css('height', iconHeight)
+                .css('width', iconWidth)
+                .css('top', iconTop)
+                .css('left', iconLeft)
+                .css('opacity', '0.5')
+                .animate({
+                    top: (windowHeight - qrHeight) / 2,
+                    left: (windowWidth - qrWidth) / 2,
+                    height: qrHeight,
+                    width: qrWidth,
+                    opacity: 1
+                }).data('animated', true);
+        }
+
+        function hideQrContainer(target, qrContainer) {
+
+            var qrWidth = qrContainer.data('qr-width') ? qrContainer.data('qr-width') : qrContainer.width();
+            var qrHeight = qrContainer.data('qr-height') ? qrContainer.data('qr-height') : qrContainer.height();
+            var windowHeight = jQuery(window).height();
+            var windowWidth = jQuery(window).width();
+            var iconWidth = jQuery(target).width();
+            var iconHeight = jQuery(target).height();
+            var iconTop = jQuery(target).offset().top;
+            var iconLeft = jQuery(target).offset().left;
+            var newTop = 0;
+            var newLeft = 0;
+
+            qrContainer
+                .animate({
+                    top: iconTop,
+                    left: iconLeft,
+                    height: iconHeight,
+                    width: iconWidth,
+                    opacity: 0
+                }, function() {
+                    jQuery(this).parent().remove()
+                }).data('animated', false);
+        }
 
         initTrainingDiary();
     });

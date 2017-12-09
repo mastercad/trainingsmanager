@@ -323,7 +323,7 @@ class TrainingDiariesController extends AbstractController
                     );
                     $this->view->assign(
                         'trainingPlanExerciseId',
-                        $trainingPlanXExercise->offsetGet('training_x_exercise_id')
+                        $trainingPlanXExercise->offsetGet('training_plan_x_exercise_id')
                     );
                     $this->view->assign('prevTrainingPlanExerciseId', $aViewContent['prevTrainingPlanExerciseId']);
                     $this->view->assign('nextTrainingPlanExerciseId', $aViewContent['nextTrainingPlanExerciseId']);

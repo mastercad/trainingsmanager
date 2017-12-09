@@ -72,9 +72,6 @@ class TrainingDiaries extends GeneratorAbstract
                 $usedMuscleMaxScore = $usedMusclesCollection[$usedMuscleByExercise->muscle_name];
             }
         }
-        $this->_iMinBeanspruchterMuskel = $usedMuscleMinScore;
-        $this->_iMaxBeanspruchterMuskel = $usedMuscleMaxScore;
-        $this->_aBeanspruchteMuskeln = $usedMusclesCollection;
         $this->getView()->assign('iMinBeanspruchterMuskel', $usedMuscleMinScore);
         $this->getView()->assign('iMaxBeanspruchterMuskel', $usedMuscleMaxScore);
         $this->getView()->assign('aBeanspruchteMuskeln', $usedMusclesCollection);
@@ -82,7 +79,10 @@ class TrainingDiaries extends GeneratorAbstract
             'exerciseOptionsContent',
             $this->generateExerciseOptionsContent($trainingDiaryExercise)
         );
-        $this->getView()->assign('deviceOptionsContent', $this->generateDeviceOptionsContent($trainingDiaryExercise));
+        $this->getView()->assign(
+            'deviceOptionsContent',
+            $this->generateDeviceOptionsContent($trainingDiaryExercise)
+        );
         $this->getView()->assign(
             'trainingDiaryXTrainingPlanId',
             $trainingDiaryExercise->offsetGet('training_diary_x_training_plan_id')

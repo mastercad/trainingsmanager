@@ -122,13 +122,21 @@ abstract class Options extends GeneratorAbstract
     protected function extractOptionValue($option)
     {
         $optionValuePriorities = $this->getOptionValuePriorities();
-        if (!empty($this->getTrainingDiaryXTrainingPlanExerciseId())) {
+        if (!empty($this->getTrainingDiaryXTrainingPlanExerciseId())
+            && !empty($option[$optionValuePriorities[0]])
+        ) {
             return $option[$optionValuePriorities[0]];
-        } elseif (!empty($this->getTrainingPlanXExerciseId())) {
+        } elseif (!empty($this->getTrainingPlanXExerciseId())
+            && !empty($option[$optionValuePriorities[1]])
+        ) {
             return $option[$optionValuePriorities[1]];
-        } elseif (!empty($this->getExerciseId())) {
+        } elseif (!empty($this->getExerciseId())
+            && !empty($option[$optionValuePriorities[2]])
+        ) {
             return $option[$optionValuePriorities[2]];
-        } elseif (!empty($this->getDeviceId())) {
+        } elseif (!empty($this->getDeviceId())
+            && !empty($option[$optionValuePriorities[3]])
+        ) {
             return $option[$optionValuePriorities[3]];
         }
         return null;

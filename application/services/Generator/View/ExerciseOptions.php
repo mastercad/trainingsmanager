@@ -20,6 +20,8 @@ use Zend_Registry;
  */
 class ExerciseOptions extends Options
 {
+    private $options = [];
+
     /**
      * @var string
      */
@@ -44,29 +46,47 @@ class ExerciseOptions extends Options
         $this->setOptionClassName('exercise-option');
         $exerciseOptionCollection = $this->collectOptions();
 
+        $this->options = [
+            'isIntervalExercise' => false,
+            'restingPhase' => null,
+            'trainingPhase' => null,
+            'exerciseUp' => null,
+            'exerciseHold' => null,
+            'exerciseDown' => null,
+            'trainingRates' => null,
+            'repeats' => null,
+            'restingInterval' => null,
+            'trainingInterval' => null,
+        ];
+
         foreach ($exerciseOptionCollection as $exerciseOptionId => $exerciseOption) {
-            $trainingPlanExerciseId = isset($exerciseOption['training_plan_x_exercise_option_id']) ?
-                $exerciseOption['training_plan_x_exercise_option_id'] :
-                null;
+            if ('Phasen' != $exerciseOption['exercise_option_name']) {
+                $trainingPlanExerciseId = isset($exerciseOption['training_plan_x_exercise_option_id']) ?
+                    $exerciseOption['training_plan_x_exercise_option_id'] :
+                    null;
 
-            $trainingDiaryExerciseOptionId = isset($exerciseOption['training_diary_x_exercise_option_id']) ?
-                $exerciseOption['training_diary_x_exercise_option_id'] :
-                null;
+                $trainingDiaryExerciseOptionId = isset($exerciseOption['training_diary_x_exercise_option_id']) ?
+                    $exerciseOption['training_diary_x_exercise_option_id'] :
+                    null;
 
-            $this->setOptionId($exerciseOptionId);
-            $this->setBaseOptionValue($exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
-            $this->setSelectedOptionValue($this->extractOptionValue($exerciseOption));
-            $this->setInputFieldUniqueId($trainingPlanExerciseId);
-            $this->extractOptionValue($exerciseOption);
-            $this->setOptionName($exerciseOption['exercise_option_name']);
-            $this->setOptionId($exerciseOption['exercise_option_id']);
-            $this->setOptionValue($this->extractOptionValue($exerciseOption));
-            $this->setAdditionalElementAttributes(
-                'data-training-plan-exercise-option-id="' . $trainingPlanExerciseId .
-                '" data-training-diary-exercise-option-id="' . $trainingDiaryExerciseOptionId . '"'
-            );
+                $this->setOptionId($exerciseOptionId);
+                $this->setBaseOptionValue($exerciseOption['training_plan_x_exercise_option_exercise_option_value']);
+                $this->setSelectedOptionValue($this->extractOptionValue($exerciseOption));
+                $this->setInputFieldUniqueId($trainingPlanExerciseId);
+                $this->extractOptionValue($exerciseOption);
+                $this->setOptionName($exerciseOption['exercise_option_name']);
+                $this->setOptionId($exerciseOption['exercise_option_id']);
+                $this->setOptionValue($this->extractOptionValue($exerciseOption));
+                $this->setAdditionalElementAttributes(
+                    'data-training-plan-exercise-option-id="' . $trainingPlanExerciseId .
+                    '" data-training-diary-exercise-option-id="' . $trainingDiaryExerciseOptionId . '"'
+                );
 
-            $exerciseOptionsContent .= $this->generateOptionInputContent();
+                $exerciseOptionsContent .= $this->generateOptionInputContent();
+                $this->persistCurrentOptionValue();
+            } else {
+                $this->generatePhaseContent($exerciseOption);
+            }
         }
 
         if (0 == strlen(trim($exerciseOptionsContent))
@@ -78,7 +98,79 @@ class ExerciseOptions extends Options
             $this->setOptionValue($exerciseOption['exercise_option_default_value']);
             $exerciseOptionsContent = $this->generateOptionInputContent();
         }
-        return $exerciseOptionsContent;
+        $this->setDefaultRateRestTime();
+
+        return $exerciseOptionsContent . $this->generateExerciseOptionsJson();
+    }
+
+    private function setDefaultRateRestTime()
+    {
+        if (empty($this->options['rateRestingPhase'])) {
+            $repeats = $this->options['repeats'];
+
+            if (12 <= $repeats) {
+                $this->options['rateRestingPhase'] = 60;
+            } else if (6 <= $repeats
+                && 12 > $repeats
+            ) {
+                $this->options['rateRestingPhase'] = 120;
+            } else if (6 > $repeats) {
+                $this->options['rateRestingPhase'] = 180;
+            }
+        }
+        return $this;
+    }
+
+    private function persistCurrentOptionValue()
+    {
+        switch (strtoupper($this->getOptionName())) {
+            case 'DAUER':
+                $this->options['trainingPhase'] = $this->getOptionValue();
+                break;
+            case 'SäTZE':
+                $this->options['trainingRates'] = $this->getOptionValue();
+                break;
+            case 'WIEDERHOLUNGEN':
+                $this->options['repeats'] = $this->getOptionValue();
+                break;
+            case 'PAUSE':
+                $this->options['restingPhase'] = $this->getOptionValue();
+                break;
+            case 'SATZPAUSE':
+            case 'SATZ_PAUSE':
+            case 'SATZ PAUSE':
+                $this->options['rateRestingPhase'] = $this->getOptionValue();
+                break;
+        }
+        return $this;
+    }
+
+    /**
+     *
+     */
+    private function generatePhaseContent($exerciseOption) {
+        $optionValue = $this->extractOptionValue($exerciseOption);
+        if (false !== strpos($optionValue, '|')) {
+            $values = explode('|', $optionValue);
+
+            if (2 == count($values)) {
+                $this->options['exerciseUp'] = $values[0];
+                $this->options['exerciseDown'] = $values[1];
+            } else if (3 <= count($values)) {
+                $this->options['exerciseUp'] = $values[0];
+                $this->options['exerciseHold'] = $values[1];
+                $this->options['exerciseDown'] = $values[2];
+            }
+        } else {
+            $this->options['trainingPhase'] = $optionValue;
+        }
+        return $this;
+    }
+
+    private function generateExerciseOptionsJson()
+    {
+        $json = json_encode($this->options);
+        return '<input type="hidden" class="exercise-option-json" value="'.base64_encode($json).'" />';
     }
 
     /**
@@ -88,8 +180,8 @@ class ExerciseOptions extends Options
     {
         $trainingPlanXExerciseOptionDb = new TrainingPlanXExerciseOption();
         $trainingPlanXExerciseOptionCollection = [];
-
-        if (! empty($this->getTrainingPlanXExerciseId())) {
+        $trainingPlanXExerciseId = $this->getTrainingPlanXExerciseId();
+        if (! empty($trainingPlanXExerciseId)) {
             $trainingPlanXExerciseOptionCollection =
                 $trainingPlanXExerciseOptionDb->findTrainingPlanExerciseOptionsByTrainingPlanExerciseId(
                     $this->getTrainingPlanXExerciseId(),

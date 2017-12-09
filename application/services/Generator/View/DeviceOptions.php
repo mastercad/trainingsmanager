@@ -65,17 +65,18 @@ class DeviceOptions extends Options
                 $this->setBaseOptionValue($deviceOption['training_plan_x_device_option_device_option_value']);
             }
             $this->setSelectedOptionValue($this->extractOptionValue($deviceOption));
+            $this->extractOptionValue($deviceOption);
             $this->setAdditionalElementAttributes(
                 'data-training-plan-device-option-id="' . $trainingPlanDeviceOptionId .
                 '" data-training-diary-device-option-id="' . $trainingDiaryDeviceOptionId . '"'
             );
 
             /**
- * TODO überprüfen, was hier sinnvoller, weil unique ist! diese ID KANN in device und exercise vorkommen! 
-*/
+             * TODO überprüfen, was hier sinnvoller, weil unique ist! diese ID KANN in device und exercise vorkommen!
+            */
             $this->setInputFieldUniqueId($trainingPlanDeviceOptionId);
             $this->setOptionName($deviceOption['device_option_name']);
-            $this->setOptionValue($deviceOption['device_x_device_option_device_option_value']);
+            $this->setOptionValue($this->extractOptionValue($deviceOption));
             $deviceOptionsContent .= $this->generateOptionInputContent();
         }
 

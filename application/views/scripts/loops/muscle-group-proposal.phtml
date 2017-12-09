@@ -9,7 +9,7 @@
     if (! array_key_exists($this->muscle_group_name, $this->processedMuscleGroups)) {
         $this->processedMuscleGroups[$this->muscle_group_name] = true;
 ?>
-        <div class="proposal"
+        <div class="proposal muscle-group-proposal"
              data-proposal-text="<?php echo base64_encode($this->muscle_group_name); ?>"
              data-proposal-id="<?php echo $this->muscle_group_id; ?>"
         ><?php echo $this->muscle_group_name; ?></div>
@@ -21,7 +21,7 @@
     ) {
         $this->processedMuscles[$this->muscle_name] = true;
     ?>
-    <div class="proposal" style="margin-left: 15px;"
+    <div class="proposal muscle-proposal" style="margin-left: 15px;"
          data-proposal-text="<?php echo base64_encode($this->muscle_group_name); ?>"
          data-proposal-id="<?php echo $this->muscle_group_id; ?>"
         ><?php echo $this->muscle_name; ?></div>
