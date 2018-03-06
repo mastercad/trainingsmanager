@@ -49,7 +49,7 @@ function customAutoload($class) {
             $path = preg_split('/\_/', $class);
         }
         $replacedPath = APPLICATION_PATH;
-        $modulePath = APPLICATION_PATH.'/modules/';
+        $modulePath = APPLICATION_PATH.'/modules';
         $moduleArchived = null;
         foreach ($path as $pathPiece) {
             if (array_key_exists($pathPiece, $map)) {

@@ -8,5 +8,5 @@
 
 require_once 'init.php';
 
-$resetService = new Service_Reset();
+$resetService = new \Service\Reset();
 $resetService->cleanTestActivities();
