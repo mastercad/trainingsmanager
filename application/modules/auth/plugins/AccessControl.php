@@ -339,9 +339,11 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
         $action_erlaubt = false;
 
         if ($this->_acl->has($resource)) {
-            $id = $this->getRequest()->getParam('id');
+            $id = intval($this->getRequest()->getParam('id'));
 
-            if ($id) {
+            if ('index' != $controller
+                && $id
+            ) {
                 $currentControllerName = $this->convertControllerName($controller);
                 $dbClassName = 'Model\DbTable\\'.$currentControllerName;
 

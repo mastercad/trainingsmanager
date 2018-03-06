@@ -55,7 +55,6 @@ class IndexController extends AbstractController
      */
     public function indexAction() 
     {
-
         $user = Zend_Auth::getInstance()->getIdentity();
         if ('guest' == $user->user_right_group_name) {
             $this->forward('welcome-content');
@@ -75,7 +74,6 @@ class IndexController extends AbstractController
      */
     private function generateWidgetsContent() 
     {
-
         $dashboardsDb = new Dashboards();
         $dashboardXWidgetDb = new DashboardXWidget();
         $dashboard = $dashboardsDb->findActiveDashboardByUserId($this->findCurrentUserId());
