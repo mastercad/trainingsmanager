@@ -495,7 +495,7 @@ class TrainingDiariesController extends AbstractController
         $trainingDiary = $trainingPlanXExerciseDb->checkTrainingDiaryFinished($trainingDiaryXTrainingPlanExerciseId)->toArray();
         $userId = $this->findCurrentUserId();
 
-        if ($trainingDiary['trainingPlanIsFinished']) {
+        if ($trainingDiary['countTrainingPlanExercises'] == $trainingDiary['countFinishedExercises']) {
             $trainingDiaryXTrainingPlanDb = new TrainingDiaryXTrainingPlan();
             $data = [
                 'training_diary_x_training_plan_update_date' => date('Y-m-d H:i:s'),
