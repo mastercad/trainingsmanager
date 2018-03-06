@@ -21,6 +21,8 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
+require_once realpath(APPLICATION_PATH . '/../vendor/autoload.php');
+
 function customAutoload($class) {
 
     if (false === strpos($class, 'Zend')) {
@@ -30,6 +32,7 @@ function customAutoload($class) {
             'Interface' => 'interfaces',
             'Service' => 'services',
             'Model' => 'models',
+            'Plugin' => 'plugins',
         ];
 
         if (false !== (strpos($class, 'Helper'))) {
@@ -40,21 +43,38 @@ function customAutoload($class) {
             }
         }
 
-        $path = preg_split('/\_/', $class);
+        if (false !== strpos($class, '\\')) {
+            $path = explode('\\', $class);
+        } else {
+            $path = preg_split('/\_/', $class);
+        }
         $replacedPath = APPLICATION_PATH;
-
+        $modulePath = APPLICATION_PATH.'/modules/';
+        $moduleArchived = null;
         foreach ($path as $pathPiece) {
             if (array_key_exists($pathPiece, $map)) {
                 $pathPiece = str_replace(array_keys($map), array_values($map), $pathPiece);
                 $replacedPath .= '/' . $pathPiece;
+                $modulePath .= '/'.$pathPiece;
             } else {
                 $replacedPath .= '/' . $pathPiece;
+                if (is_null($moduleArchived)) {
+                    $modulePath .= '/' . strtolower($pathPiece);
+                    $moduleArchived = true;
+                } else {
+                    $modulePath .= '/'.$pathPiece;
+                }
             }
         }
         $replacedPath .= '.php';
+        $modulePath .= '.php';
 
         if (is_readable($replacedPath)) {
             require_once $replacedPath;
+            return true;
+        }
+        if (is_readable($modulePath)) {
+            require_once $modulePath;
             return true;
         }
 
