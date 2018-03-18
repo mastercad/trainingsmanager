@@ -78,7 +78,7 @@ class CAD_Tool_ModuleControllerActionLister {
     static private function _collectAllActionsFromController($sControllerPath) {
         $aData = [];
         $className = static::extractClassName($sControllerPath);
-        if (!class_exists($className)) {
+        if (!class_exists($className, false)) {
             include($sControllerPath);
         }
         $class = new ReflectionClass($className);

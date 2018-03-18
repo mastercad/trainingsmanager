@@ -204,7 +204,9 @@ class IndexController extends AbstractController
 
                     foreach ($trainingDiaryXTrainingPlanExercises as $exercise) {
                         $exerciseName = $exercise->offsetGet('exercise_name');
-                        if (!array_key_exists($exerciseName, $currentEnabledWidgets[2])) {
+                        if (is_array($currentEnabledWidgets[2])
+                            && !array_key_exists($exerciseName, $currentEnabledWidgets[2])
+                        ) {
                             $this->view->assign('optionValue', base64_encode($exerciseName));
                             $this->view->assign('optionText', $exerciseName);
                             $exercisesOptionsContent .= $this->view->render('loops/option.phtml');

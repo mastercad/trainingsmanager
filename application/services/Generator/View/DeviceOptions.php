@@ -62,10 +62,24 @@ class DeviceOptions extends Options
             $this->setDeviceId($deviceOption['device_id']);
 
             if (array_key_exists('training_plan_x_device_option_device_option_value', $deviceOption)) {
-                $this->setBaseOptionValue($deviceOption['training_plan_x_device_option_device_option_value']);
+                $baseOptionValue = $deviceOption['training_plan_x_device_option_device_option_value'];
+                // expect the value is never set before, because the current value is the option from device
+                // so get first entry
+                if (false !== strpos($baseOptionValue, '|')) {
+                    $options = explode('|', $baseOptionValue);
+                    $baseOptionValue = $options[0];
+                }
+                $this->setBaseOptionValue($baseOptionValue);
             }
-            $this->setSelectedOptionValue($this->extractOptionValue($deviceOption));
-            $this->extractOptionValue($deviceOption);
+            $selectedOptionValue = $this->extractOptionValue($deviceOption);
+            // expect the value is never set before, because the current value is the option from device
+            // so get first entry
+            if (false !== strpos($selectedOptionValue, '|')) {
+                $options = explode('|', $selectedOptionValue);
+                $selectedOptionValue = $options[0];
+            }
+            $this->setSelectedOptionValue($selectedOptionValue);
+//            $this->extractOptionValue($deviceOption);
             $this->setAdditionalElementAttributes(
                 'data-training-plan-device-option-id="' . $trainingPlanDeviceOptionId .
                 '" data-training-diary-device-option-id="' . $trainingDiaryDeviceOptionId . '"'

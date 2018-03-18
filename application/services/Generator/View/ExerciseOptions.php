@@ -60,7 +60,7 @@ class ExerciseOptions extends Options
         ];
 
         foreach ($exerciseOptionCollection as $exerciseOptionId => $exerciseOption) {
-            if ('Phasen' != $exerciseOption['exercise_option_name']) {
+//            if ('Phasen' != $exerciseOption['exercise_option_name']) {
                 $trainingPlanExerciseId = isset($exerciseOption['training_plan_x_exercise_option_id']) ?
                     $exerciseOption['training_plan_x_exercise_option_id'] :
                     null;
@@ -84,9 +84,9 @@ class ExerciseOptions extends Options
 
                 $exerciseOptionsContent .= $this->generateOptionInputContent();
                 $this->persistCurrentOptionValue();
-            } else {
-                $this->generatePhaseContent($exerciseOption);
-            }
+//            } else {
+//                $this->generatePhaseContent($exerciseOption);
+//            }
         }
 
         if (0 == strlen(trim($exerciseOptionsContent))

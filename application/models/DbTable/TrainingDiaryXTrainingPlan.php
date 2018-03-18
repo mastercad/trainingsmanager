@@ -130,7 +130,6 @@ class TrainingDiaryXTrainingPlan extends AbstractDbTable
      */
     public function findTrainingDiaryExercisesByTrainingDiaryXTrainingPlanId($trainingDiaryXTrainingPlanId) 
     {
-
         $select = $this->select(Zend_Db_Table::SELECT_WITH_FROM_PART)->setIntegrityCheck(false);
 
         $select->joinInner(

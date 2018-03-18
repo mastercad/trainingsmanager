@@ -307,6 +307,9 @@ class TrainingDiariesController extends AbstractController
                     $trainingDiaryXTrainingPlanId
                 );
 
+            // @TODO hier ebenfalls die letzte version des trainingsplanes ziehen um für die jeweiligen übungen
+            // im zweifelsfall den vorhergehenden eintrag zu setzen
+
             $exercisesContent = '';
             $count = 0;
             $countFinished = 0;

@@ -348,9 +348,7 @@ class AccessControl extends Zend_Controller_Plugin_Abstract
                 $dbClassName = 'Model\DbTable\\'.$currentControllerName;
 
                 if (class_exists($dbClassName)) {
-                    /**
- * @var AbstractDbTable $db 
-*/
+                    /** @var AbstractDbTable $db */
                     $db = new $dbClassName();
                     $row = $db->findByPrimary($id);
 

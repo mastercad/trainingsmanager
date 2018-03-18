@@ -79,15 +79,17 @@
     const EXECUTION_TYPE_UP_HOLD_DOWN = 'UP_HOLD_DOWN';
     const EXECUTION_TYPE_INTERVAL = 'INTERVAL';
 
-    const CURRENT_STATE_EXECUTION = 'EXECUTION';
+    const CURRENT_STATE_EXECUTION = 'EXECUTE';
     const CURRENT_STATE_HOLD = 'HOLD';
+    const CURRENT_STATE_PREPARE = 'PREPARE';
     const CURRENT_STATE_UP = 'UP';
+    const CURRENT_STATE_NEXT = 'NEXT';
     const CURRENT_STATE_DOWN = 'DOWN';
     const CURRENT_STATE_REST = 'REST';
     const CURRENT_STATE_RATE_REST = 'RATE_REST';
     const CURRENT_STATE_END = 'END';
 
-    const EXECUTION_COLOR = 'blue';
+    const EXECUTE_COLOR = 'blue';
     const HOLD_COLOR = 'black';
     const UP_COLOR = 'red';
     const DOWN_COLOR = 'yellow';
@@ -158,15 +160,15 @@
     sounds[2] = "/sounds/2.mp3";
     sounds[1] = "/sounds/1.mp3";
     sounds[0] = "/sounds/0.mp3";
-    sounds["HOLD"] = "/sounds/hold.mp3";
-    sounds["UP"] = "/sounds/up.mp3";
-    sounds["DOWN"] = "/sounds/down.mp3";
-    sounds["EXECUTE"] = "/sounds/execution.mp3";
-    sounds["REST"] = "/sounds/rest.mp3";
-    sounds["RATE_REST"] = "/sounds/rest.mp3";
-    sounds["PREPARE"] = "/sounds/prepare.mp3";
-    sounds["NEXT"] = "/sounds/next_exercise.mp3";
-    sounds["END"] = "/sounds/end.mp3";
+    sounds[CURRENT_STATE_HOLD] = "/sounds/hold.mp3";
+    sounds[CURRENT_STATE_UP] = "/sounds/up.mp3";
+    sounds[CURRENT_STATE_DOWN] = "/sounds/down.mp3";
+    sounds[CURRENT_STATE_EXECUTION] = "/sounds/execution.mp3";
+    sounds[CURRENT_STATE_REST] = "/sounds/rest.mp3";
+    sounds[CURRENT_STATE_RATE_REST] = "/sounds/rest.mp3";
+    sounds[CURRENT_STATE_PREPARE] = "/sounds/prepare.mp3";
+    sounds[CURRENT_STATE_NEXT] = "/sounds/next_exercise.mp3";
+    sounds[CURRENT_STATE_END] = "/sounds/end.mp3";
     sounds["Beep"] = "/sounds/clock-tick1.wav";
 
     var repeatContainer = null;
@@ -329,7 +331,7 @@
         counterTimeout = setTimeout(function() {
             if (currentTrainingRateCounter <= trainingRates) {
                 provideCurrentTimerStatus();
-
+                console.log(currentTimerType);
                 if (false === callStateBeforeStart
                     && currentStateChanged
                 ) {
@@ -372,6 +374,9 @@
      * shows the current timer status for user
      */
     function provideCurrentTimerStatus() {
+        if (!stateWindowContainer.is(':visible')) {
+            stateWindowContainer.fadeIn();
+        }
         stateWindowContainer.css('background-color', eval(currentTimerType+"_COLOR"));
         currentStateContainer.html(currentTimerType);
         nextStateContainer.html(nextTimerType);
@@ -489,7 +494,7 @@
         function firstStartTimer() {
             if (true == validateTimerSettings()) {
                 setTimeout(function () {
-                    sounds['PREPARE'].play();
+                    sounds[CURRENT_STATE_PREPARE].play();
                 }, 500);
 
                 if (true === callStateBeforeStart) {
