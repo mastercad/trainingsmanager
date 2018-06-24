@@ -1109,6 +1109,7 @@ class ExercisesController extends AbstractController
                 ) {
                     GlobalMessageHandler::appendMessage('Die beanspruchten Muskeln für diese Übung wurden nicht geändert!', Message::STATUS_OK);
                 }
+
                 if (0 < count($exerciseXMuscleInserts)
                     || 0 < count($exerciseXMuscleUpdates)
                     || 0 < count($exerciseXMuscleDeletes)
@@ -1149,7 +1150,8 @@ class ExercisesController extends AbstractController
                     $this->processExerciseXExerciseType($params, $exerciseId);
                 }
             } else {
-                GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Message::STATUS_OK);
+//                GlobalMessageHandler::appendMessage('Die Muskeln der Übung wurden erfolgreich geändert!', Message::STATUS_OK);
+                GlobalMessageHandler::appendMessage('Es gab Fehler!', Message::STATUS_ERROR);
             }
         } else {
             GlobalMessageHandler::appendMessage('Falscher Aufruf von Übung speichern!', Message::STATUS_ERROR);
@@ -1375,7 +1377,7 @@ class ExercisesController extends AbstractController
                             $exerciseOption['exerciseOptionId']
                         );
                     }
-                    // wenn es den muskel noch nicht gibt
+                    // wenn es die option noch nicht gibt
                 } else if (false == array_key_exists($exerciseOption['exerciseXExerciseOptionId'], $exerciseOptionsCollection)
                     && false == empty($exerciseOption['value'])
                 ) {
@@ -1385,6 +1387,8 @@ class ExercisesController extends AbstractController
                         'exercise_x_exercise_option_exercise_option_value' => $exerciseOption['value'],
                         'exercise_x_exercise_option_create_date' => date('Y-m-d H:i:s'),
                         'exercise_x_exercise_option_create_user_fk' => $userId,
+                        'exercise_x_exercise_option_update_date' => "0000-00-00",
+                        'exercise_x_exercise_option_update_user_fk' => $userId,
                     );
                     $exerciseXDeviceOptionId = $exerciseXExerciseOptionDb->saveExerciseXExerciseOption($aData);
                 }

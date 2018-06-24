@@ -14,9 +14,6 @@
         "phpmd/phpmd": "*",
         "squizlabs/php_codesniffer": "*",
         "sebastian/diff": "*",
-        "apigen/apigen": "^2.8",
-        "mayflower/php-codebrowser": "*",
-        "texy/texy": "*",
-        "nette/nette": "*"
+        "mayflower/php-codebrowser": "*"
     }
 }

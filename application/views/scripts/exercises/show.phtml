@@ -49,21 +49,25 @@
     </div>
 <?php
     }
+
+    if ($this->device_name) {
 ?>
-    <div class="row exercise-device">
-        <div class="col-sm-12">
-            <h3>
-                <?php echo $this->translate('label_device');?>:
-            </h3>
-        </div>
-        <div class="col-sm-12">
-            <div class="form-group">
-                <?php echo $this->device_name;?>
+        <div class="row exercise-device">
+            <div class="col-sm-12">
+                <h3>
+                    <?php echo $this->translate('label_device'); ?>:
+                </h3>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <?php echo $this->device_name; ?>
+                </div>
             </div>
         </div>
-    </div>
 
-    <?php
+<?php
+    }
+
     if ($this->deviceOptionsContent) {
 ?>
     <div class="row exercise-device-options">
@@ -77,9 +81,8 @@
     </div>
 <?php
     }
-?>
-<?php
-    if ($this->exerciseOptionsContent) {
+
+    if (!preg_match('/^<input type="hidden" class="exercise-option-json" value="[^<]*" \/>/', $this->exerciseOptionsContent)) {
 ?>
     <div class="row exercise-exercise-options">
         <div class="col-sm-12">
@@ -91,10 +94,16 @@
         </div>
     </div>
 <?php
-    }
+    } else {
 ?>
-
+    <div class="row exercise-exercise-options">
+        <div class="col-sm-12 exercise-options">
+            <?php echo $this->exerciseOptionsContent;?>
+        </div>
+    </div>
 <?php
+    }
+
     if ($this->exerciseMuscleGroupsContent) {
 ?>
     <div class="row exercise-muscle-groups">
